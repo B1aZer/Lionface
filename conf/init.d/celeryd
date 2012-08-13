@@ -1,0 +1,2 @@
+#!/bin/sh
+DJANGO_PROJECT_DIR=/home/mark/lionface /etc/init.d/celeryd_ $1 "-Q lionface -c 2 -n default -B" 1 lionface

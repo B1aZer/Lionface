@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load media %}
+
+
+{% block body %}
+{% include '_header.html' %}
+
+  {% block content %}
+  <div class="content_area">
+    <div id="profile_top">
+      <div class="left">{% block content_title %}{% endblock %}</div>
+      <div class="center">{% block content_middle %}{% endblock %}</div>
+      <div class="right" style="color: #555;">{% block content_subtitle %}{% endblock %}</div>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="left_col">
+      {% block left_col %}{% endblock %}
+    </div>
+    <div class="right_col">
+      {% block right_col %}{% endblock %}
+    </div>
+  </div>
+  {% endblock %}
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% load media friends %}
+
+<div class="user_thumbnail"></div>
+<a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a><br/>
+<span class="subtext">
+{% if current_user|has_friend:user %}
+  <!-- Mutual friends -->
+{% else %}
+  {% if current_user|has_friend_request:user %}
+    Friend request pending.
+  {% else %}
+    <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">Add Friend</a>
+  {% endif %}
+{% endif %}
+</span>

@@ -1,0 +1,17 @@
+{% for item in items %}
+<hr style="position: relative; left: 50px; background-color: #EEE; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
+  <div class="result">
+    <div class="user_thumbnail"></div>
+    {{ item.render }}
+	<div class="highlight">
+    <div class="subtext">
+      <a href="javascript:;">Comment</a> <span style="color: #FFF;">-</span> 
+      <a href="javascript:;">Like</a> <span style="color: #FFF;">-</span> 
+      <a href="javascript:;">Share</a> <span style="color: #FFF; margin-right: 10px;">-</span> 
+      <span class="timestamp" title="Time Zone: UTO 0">{{ item.timestamp }}</span> <span style="color: #FFF; margin-right: 10px;">-</span> 
+	  <span title="Privacy Settings: Friends Only">Friends</span>
+    </div>
+	</div>
+	
+  </div>
+{% endfor %}

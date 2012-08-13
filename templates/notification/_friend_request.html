@@ -1,0 +1,9 @@
+<li class="friend_request">
+  <div style="padding: 15px; padding-left: 35px;" class="link-output">
+    <div class="right">
+      <a class="settings link-accept-friend { request: '{{ notification.friend_request.id }}' }" href="javascript:;">Yes</a>
+      <a class="settings link-decline-friend { request: '{{ notification.friend_request.id }}' }" style="margin-left: 5px;" href="javascript:;">No</a>
+    </div>
+    Is <a href="{{ notification.friend_request.from_user.get_absolute_url }}">{{ notification.friend_request.from_user.get_full_name }}</a> your friend?
+  </div>
+</li>

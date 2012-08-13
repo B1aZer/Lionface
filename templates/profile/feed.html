@@ -1,0 +1,22 @@
+{% extends 'profile/base.html' %}
+{% load media %}
+
+
+{% block content_title %}{{ user.first_name }} {{ user.last_name }} | News Feed{% endblock %}
+{% block content_subtitle %}<span style="color: #A70;">World Peace</span>{% endblock %}
+{% block left_col %}
+
+    <div style="position: relative; left: 0px; z-index: 100;">
+	<a href="#" class="imageFilter" title="Friends: On"><img src="{% media_url 'images/iconFriends.png' %}" height="18" /></a> <a href="#" class="imageFilter" title="Public: On"><img src="{% media_url 'images/iconPublic.png' %}" height="18" /></a><div style="display: inline-block; width: 15px;"></div>
+    <a href="#" class="imageFilter" title="Text: On"><img src="{% media_url 'images/iconText.png' %}" height="18" /></a> <a href="#" class="imageFilter" style="filter:progid:DXImageTransform.Microsoft.Alpha(opacity=40); -moz-opacity: 0.4; opacity: 0.4;" title="Photos: Off"><img src="{% media_url 'images/iconPhotos.png' %}" height="18" /></a> <a href="#" class="imageFilter" style="filter:progid:DXImageTransform.Microsoft.Alpha(opacity=40); -moz-opacity: 0.4; opacity: 0.4;" title="Videos: Off"><img src="{% media_url 'images/iconVideo.png' %}" height="18" /></a></div><p />
+
+<hr style="position: relative; left: 10px; background-color: #EEE; layer-background-color: #EEE; border: 1px none #000000; height: 1;" width="200" align="left" noshade="noshade" /><p />
+		<span style="color: #777; position: relative; left: 10px;">Tags:</span><p />
+    <a href="#" class="filter">Add +</a>
+{% endblock %}
+
+{% block right_col %}
+  <div id="news_feed" class="{type: 'personal'}" style="position: relative; top: -7px;"></div>
+
+  {% include_media 'feed.js' %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% load media %}
+<div id="header">
+  <div class="content_area">
+    <div class="left_links">
+      <ul>
+        <li><a href="{% url profile.views.profile %}" class="profileNav" style="font-size: 16px;">Profile</a></li>
+        <li><a href="{% url profile.views.feed %}" style="font-size: 12px;" class="profileNav">News Feed</a></li>
+      </ul>
+    </div>
+
+    <form id="quick_search" method="GET" action="/search/">
+    <div id="search_bar">
+        <input name="models" type="hidden" value="auth.user">
+        <input name="q" type="text" value="Search..." onClick="value=''">
+        
+        
+    </div>
+    </form>
+
+  </div>
+</div>
+
+<div align="center"><div style="position: relative; width: 900px; height: 1px;">
+<div style="position: fixed; z-index: 100;"><div style="position: relative; left: 907px; top: 55px;">
+<a href="{% url django.contrib.auth.views.logout_then_login %}" class="imageNav" title=" Sign Out " target="_top" style="color: #555; text-decoration: none; font-weight: bold; border-color: #DDD; background-color: #F7F7F7;">x</a>
+<div style="height: 27px;"></div>
+<a href="user/messages.html" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><p /><div style="height: 7px;"></div>
+        <a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/></a>
+
+</div></div></div></div>

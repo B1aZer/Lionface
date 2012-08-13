@@ -1,0 +1,55 @@
+/* Login */
+#login_box {
+  width: 900px; height: 110px; padding-top: 15px; margin: auto;
+  color: #999; font-size: 12px;
+  text-align: center;
+}
+#login_box table { margin: auto; }
+#login_box .field { padding: 0px 12px; height: 63px; text-align: left; }
+#login_box .field input[type=text], #login_box .field input[type=password] { text-align: right; padding: 6px; color: #555; border: 1px solid #BBB; position: relative; left: 5px; top: -1px; width: 175px; }
+#login_box .field input[type=password] { width: 150px; }
+#login_box .login_button {
+  display: block;
+  border: 1px solid #DDD;
+  border-width: 1px 1px 1px 1px;
+  background-color: #333;
+  padding: 0px 10px;
+  margin-top: 2px; 
+  color: #FFF;
+  height: 27px;
+  cursor: pointer;
+  position: relative; top: -2px;
+  background-image: url(../images/grad.png);
+}
+#login_box .login_button:hover {
+  text-shadow: 0 0 1px #FFF;
+}
+#login_box .subfield { text-align: right; height: 20px; margin-top: 12px; }
+#login_box .subfield label, #login_box .subfield input { }
+#login_box .subfield label { position: relative; }
+#login_box .error { color: #900; margin-top: -10px; }
+#login_box h2 { font-size: 16px; font-weight: normal; color: #777; }
+
+#center_box { height: 310px; background: #FFF url(../images/pubcenter.jpg) center repeat-x; padding: 25px 0px; }
+#center_box .float_box { width: 445px; float: left; height: 304px; text-align: center; }
+.heart { height: 310px !important; color: #fff; }
+.heart .dark_box { color: #FFF; font-size: 13px; background-image: url(../images/bgBlack.png); padding: 10px; padding-top: 20px; min-height: 280px; }
+.heart .dark_box td { padding: 6px; }
+.heart input[type=submit] { padding: 0px 6px; }
+.heart input[type=text], .heart input[type=password] { border: 0px; padding: 5px; width: 175px; }
+a.su:link, a.su:active, a.su:visited {
+  display: inline-block;
+  width: 150px;
+  padding: 6px 7px 6px 7px;
+  border: 1px solid #000;
+  border-width: 1px 1px 1px 1px;
+  background-color: #333;
+  color: #FFF;
+  cursor: pointer;
+  position: relative; top: 40px;
+  background-image: url(../images/grad2.png);
+  font-size: 13px; }
+a.su:hover { text-shadow: 0 0 2px #FFF; text-decoration: none; border: 1px solid #333; }
+.help_text { font-size: 11px; }
+
+.dark_box .errorlist { color: #000; font-weight: normal; background: url(../images/fade.png); padding: 2px; margin-bottom: -6px; font-size: 11px; }

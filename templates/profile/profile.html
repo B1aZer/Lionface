@@ -1,0 +1,37 @@
+{% extends 'profile/base.html' %}
+{% load media friends %}
+
+
+{% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
+{% block content_middle %}{% if profile_user == user %}{{ user|show_friend_count }}{% endif %}{% endblock %}
+
+{% block left_col %}
+<div class="noPhoto"></div>
+{% endblock %}
+
+{% block right_col %}
+  <div style="padding: 10px; position: relative; left: 40px;">
+    <div style="padding: 25px; padding-top: 15px; padding-left: 10px;">
+      <a href="#" style="padding: 7px;">Posts</a>
+    </div>
+    
+    <div id="postbox">
+      <form id="postform">{% csrf_token %}
+      <div style="padding: 10px; text-align: center;">
+        <input class="postcontent" name="content" type="textfield" value="Share something..." style="width: 520px; padding: 4px; border: 1px solid #FFF; color: #777; background-color: #FDFDFD;"><a href="#" class="post" id="postboxbutton">POST</a>
+        
+        <br />
+        <div style="font-size: 11px; padding: 7px; padding-top: 12px; padding-bottom: 0px; text-align: left; display: none;" class="postoptions">
+          <input name="type" type="radio" value="P" checked> Public <input name="type" type="radio" value="F" style="margin-left: 12px;"> Friends</span><a href="#" style="margin-left: 40px; color: #777;">Attach</a>
+        </div>
+        </div>
+      </div>
+      </form>
+<a href="#" style="font-size: 11px; color: #777; position: relative; top: 7px; left: 7px;">Adjust Filters</a>
+    </div>
+    <div id="news_feed" class="{type: 'profile', user: {{ profile_user.id }}}"></div>
+  </div>
+
+  {% include_media 'profile.js' %}
+  {% include_media 'feed.js' %}
+{% endblock %}

@@ -1,0 +1,14 @@
+<form method="POST" action="{% url account.views.login %}">{% csrf_token %}
+<div id="login_box">
+  <table border=0 cellpadding=0 cellspacing=0>
+    <tr><td colspan=99 class="error"><span style="color: #FFF">World</span> {{ login_form.error_message }} <span style="color: #FFF">Peace</span></td></tr>
+    <tr>
+      <td class="field"><label>{{ login_form.email.label }}</label><br /> {{ login_form.email }}</td>
+      <td class="field"><label>{{ login_form.password.label }}</label><br /> {{ login_form.password }}</td>
+      <td class="field"><input type="submit" class="login_button" value="Sign In" style="position: relative; top: 7px;"/></td>
+	  <td class="field"><div style="position: relative; top: 9px;">{{ login_form.preserve }} <label>{{ login_form.preserve.label }}</label><br />
+		<a href="{% url django.contrib.auth.views.password_reset %}">Forgot your password?</a></div></td>
+    </tr>
+  </table>
+</div>
+</form>

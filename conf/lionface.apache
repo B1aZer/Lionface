@@ -1,0 +1,21 @@
+<VirtualHost 95.154.250.141>
+	ServerName lionface.software13.eu
+	ServerAlias lionface.software13.eu
+	ServerAdmin mark@software13.co.uk
+
+	DocumentRoot /var/www/django/lionface/public_html
+
+	WSGIScriptAlias / /var/www/django/lionface/wsgi.py
+	<Directory /var/www/django/lionface>
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	#Alias /robots.txt /srv/www/ducklington.org/public_html/robots.txt
+	#Alias /favicon.ico /srv/www/ducklington.org/public_html/favicon.ico
+	#Alias /images /srv/www/ducklington.org/public_html/images
+	#Alias /static /srv/www/ducklington.org/public_html/static
+
+	ErrorLog ${APACHE_LOG_DIR}/lionface.software13.eu-error.log
+	CustomLog ${APACHE_LOG_DIR}/lionface.software13.eu-access.log combined
+</VirtualHost>
