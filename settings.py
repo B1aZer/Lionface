@@ -1,6 +1,6 @@
 import os, os.path
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -123,7 +123,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     
-    #'south',
+    'south',
     'mediagenerator',
     'haystack',
     'djcelery',
@@ -165,7 +165,7 @@ LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/account/logout/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-MEDIA_DEV_MODE = DEBUG
+MEDIA_DEV_MODE = True
 DEV_MEDIA_URL = '/devmedia/'
 PRODUCTION_MEDIA_URL = '/media/'
 GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),)
