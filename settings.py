@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'kombu.transport.django',  
     
     'south',
     'mediagenerator',
@@ -159,6 +160,19 @@ LOGGING = {
         },
     }
 }
+
+from os.path import abspath, dirname, join
+import os
+import sys
+
+cwd = dirname(abspath(__file__))
+
+sys.path.insert(0, join(cwd, "apps"))
+
+sys.path.append('Users/blaze/Sites/clients/Nick/lionface/')
+
+os.environ["CELERY_LOADER"] = "django"
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'    
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/account/login/'
@@ -204,6 +218,7 @@ HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = '/tmp/lionface_index.db'
 
 SITE_ID = 1
+BROKER_URL = "django://"
 
 try:
     from settings_local import *
