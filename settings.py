@@ -101,7 +101,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "public.context_processors.current_site",    
 )
 
-ROOT_URLCONF = 'lionface.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -230,5 +230,5 @@ djcelery.setup_loader()
 
 ############### Heroku addon
 import dj_database_url
-DATABASES = {'default': dj_database_url.config(default='sqlite:////Users/blaze/Sites/clients/Nick/lionface.db')}
+DATABASES = {'default': dj_database_url.config(default='sqlite:////Users/blaze/Sites/clients/Nick/lionface/lionface.db')}
 
