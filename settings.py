@@ -243,7 +243,3 @@ CELERYBEAT_SCHEDULE = {
 import djcelery
 djcelery.setup_loader()
 
-############### Heroku addon
-import dj_database_url
-DATABASES = {'default': dj_database_url.config(default='sqlite:////Users/blaze/Sites/clients/Nick/lionface/lionface.db')}
-
