@@ -19,6 +19,7 @@ $(function() {
       dataType: 'json',
       success: function(data) {
         $("#postbox .postcontent").val("");
+        alert("Saved");
       },
       error: function() {
         alert("Failed to save new post.  Please try again later.");
