@@ -169,7 +169,7 @@ cwd = dirname(abspath(__file__))
 
 sys.path.insert(0, join(cwd, "apps"))
 
-sys.path.append('Users/blaze/Sites/clients/Nick/lionface/')
+sys.path.append('/var/www/placeless/lionface/whispering-anchorage-2296/')
 
 os.environ["CELERY_LOADER"] = "django"
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'    
