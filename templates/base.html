@@ -13,11 +13,11 @@
     {% include_media 'main.js' %}
     {% block js %}{% endblock %}
 
-<meta name="description" content="Lionface is the next generation in social networking. Simple, elegant, and graceful.">
+<meta name="description" content="">
 
 <meta property="og:title" content="Lionface" />
-<meta property="og:description" content="Lionface is the next generation in social networking. Simple, elegant, and graceful." />
-<meta property="og:image" content="https://fbcdn-sphotos-a.akamaihd.net/hphotos-ak-snc7/419719_188289101281890_188289011281899_297803_2053881850_n.jpg" />
+<meta property="og:description" content="" />
+<meta property="og:image" content="" />
 <meta property="fb:admins" content="1237274210" />
 <meta property="og:type" content="company"/>
 <meta property="og:url" content="http://www.lionface.org"/>
@@ -27,8 +27,7 @@
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-27899213-1']);
-  _gaq.push(['_setDomainName', 'lionface.org']);
+  _gaq.push(['_setAccount', 'UA-33365679-1']);
   _gaq.push(['_trackPageview']);
 
   (function() {
@@ -46,12 +45,9 @@
     {% endblock %}
 
     {% block footer %}
+
       <div id="footer">
         <div class="highlight">
-
-			<div style="color: #FFF">
-          <a href="{% url public.views.about %}" target="_top">About</a> -- <a href="{% url public.views.feedback %}" target="_top">Feedback</a> -- <a href="{% url public.views.terms %}" target="_top">Privacy</a> -- <a href="{% url public.views.terms %}" target="_top">Terms</a>
-			</div>
         
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -64,7 +60,10 @@
   <!--- Hide from old browsers
     document.write(y0);
   // end hiding --->
-</SCRIPT> | World Peace
+</SCRIPT> 
+<span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" target="_top">Terms</a>
+<span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top">Feedback</a>
+<span style="color: transparent;">--</span> World Peace
       </div></div>
     {% endblock %}
 
