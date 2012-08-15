@@ -1,11 +1,27 @@
 /* Imported CSS from prototype */
-body { font-family: Arial, "Esteban", "Palatino Linotype", "Book Antiqua", Palatino, serif; font-size: 10pt; color: #222;
-		margin: 0px; background-color: #FFF; line-height: 18px; }
+body { 
+	font-family: Arial, "Esteban", "Palatino Linotype", "Book Antiqua", Palatino, serif; 
+	font-size: 10pt; 
+	color: #222;
+	margin: 0px; 
+	background-color: #FFF; 
+	line-height: 18px; 
+}
 		
-a:link, a:active, a:visited { text-decoration: none; color: #27B; }
-a:hover { text-decoration: underline; color: #49D; }
+a:link, a:active, a:visited { 
+	text-decoration: none; 
+	color: #27B; 
+}
 
-a img, a:active img, a:visted img, a:hover img { border: 0px; border-width: 0 0 0 0; }
+a:hover { 
+	text-decoration: underline; 
+	color: #49D; 
+}
+
+a img, a:active img, a:visted img, a:hover img { 
+	border: 0px; 
+	border-width: 0 0 0 0; 
+}
 
 .sib { text-align: right; padding: 6px; color: #555; border: 1px solid #BBB; position: relative; left: 5px; top: -1px; }
 a.si:link, a.si:active, a.si:visited { text-decoration: none; color: #777; border: 1px solid #DDD; border-width: 1px 0 1px 1px;
