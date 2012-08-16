@@ -5,7 +5,8 @@ from django.utils.safestring import mark_safe
 from tasks import UpdateNewsFeeds
 
 class Post(models.Model):
-    user = models.ForeignKey(UserProfile)
+    user = models.ForeignKey(UserProfile,  related_name='user')
+    user_to = models.ForeignKey(UserProfile,  related_name='user_to')
     date = models.DateTimeField(auto_now_add=True)
     
     # Function to attempt to return the inherited object for this item.
@@ -46,6 +47,10 @@ class ContentPost(Post):
     def render(self):
         from django.utils.html import escape
         return mark_safe("<a href='%s'>%s</a>: %s" % (self.user.get_absolute_url(), self.user.get_full_name(), escape(self.content)))
+
+    @property
+    def timestamp(self):
+        return self.date  
 
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)

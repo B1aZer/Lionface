@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block right_col %}
+{% include_media 'feed.js' %}
   <div style="padding: 10px; position: relative; left: 40px;">
     <div style="padding: 25px; padding-top: 15px; padding-left: 10px;">
       <a href="#" style="padding: 7px;">Posts</a>
@@ -23,6 +24,8 @@
         
         <br />
         <div style="font-size: 11px; padding: 7px; padding-top: 12px; padding-bottom: 0px; text-align: left; display: none;" class="postoptions">
+            
+          <input name="profile_id" type="hidden" value="{{profile_user.id}}" >
           <input name="type" type="radio" value="P" checked> Public <input name="type" type="radio" value="F" style="margin-left: 12px;"> Friends</span><a href="#" style="margin-left: 40px; color: #777;">Attach</a>
         </div>
         </div>
@@ -34,5 +37,4 @@
   </div>
 
   {% include_media 'profile.js' %}
-  {% include_media 'feed.js' %}
 {% endblock %}

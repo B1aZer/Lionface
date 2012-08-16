@@ -18,8 +18,8 @@ $(function() {
       type: 'POST',
       dataType: 'json',
       success: function(data) {
-        $("#postbox .postcontent").val("");
-        //alert("Saved one");
+        //$("#postbox .postcontent").val("");
+        $("#news_feed").prepend(data.html);
       },
       error: function() {
         alert("Failed to save new post.  Please try again later.");
