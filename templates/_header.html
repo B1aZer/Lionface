@@ -14,7 +14,7 @@
         <input name="models" type="hidden" value="auth.user">
         <input name="q" type="text" value="Search..." onClick="value=''">
         
-        
+        <input type="submit" value="Search" />
     </div>
     </form>
 
@@ -23,8 +23,9 @@
 
 <div align="center"><div style="position: relative; width: 900px; height: 1px;">
 	<div style="position: fixed; z-index: 100;"><div style="position: relative; left: 907px; top: 53px;">
-		 <a href="#" class="imageNav" title=" Settings "><img src="{% media_url 'images/IconSettings.png' %}" height="18" /></a>
-		<a href="{% url django.contrib.auth.views.logout_then_login %}" title=" Sign Out " target="_top" style="position: absolute; left: 34px; top: 0px; color: #C3C3C3; text-decoration: none; font-weight: bold; border: 1px solid #EEE; background: #FFF; width: 15px; height: 18px; ">x</a>
+		<a href="#" class="imageNav" title=" Settings "><img src="{% media_url 'images/IconSettings.png' %}" height="18" /></a>
+		
+		<a href="{% url django.contrib.auth.views.logout_then_login %}" title=" Sign Out " target="_top" class="logout">x</a>
 <div style="height: 22px;"></div>
 		<a href="user/messages.html" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><br />
 		<a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/></a>

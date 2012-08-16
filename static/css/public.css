@@ -39,36 +39,6 @@
 	padding: 6px;
 }
 
-.agw {
-	display: inline-block;
-	padding: 6px 15px 6px 15px;
-	border: 1px solid #EEE;
-	color: #EEE;
-	cursor: pointer;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	background: #606060; /* Old browsers */
-	background: -moz-linear-gradient(top, #606060 0%, #131313 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606060), color-stop(100%,#131313)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #606060 0%,#131313 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #606060 0%,#131313 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #606060 0%,#131313 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #606060 0%,#131313 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606060', endColorstr='#131313',GradientType=0 ); /* IE6-9 */
-}
-
-.agw {
-	color: #FFF;
-	background: #757575; /* Old browsers */
-	background: -moz-linear-gradient(top, #757575 0%, #131313 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#757575), color-stop(100%,#131313)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #757575 0%,#131313 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #757575 0%,#131313 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #757575 0%,#131313 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #757575 0%,#131313 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#757575', endColorstr='#131313',GradientType=0 ); /* IE6-9 */
-}
-
 #center_box { 
 	height: 310px;
 	width: 100%;	
@@ -90,7 +60,7 @@
 .heart .dark_box { color: #FFF; font-size: 10pt; background-image: url(../images/bgBlack.png); padding: 10px; min-height: 290px; }
 .heart .dark_box td { padding: 6px; }
 .heart input[type=submit] { border-color: #333; margin: 0 28px 0 25px;}
-.heart input[type=text], .heart input[type=password] { border: 0px; padding: 5px; width: 175px; -moz-border:-radius: 2px; border-radius: 2px; }
+.heart input[type=text], .heart input[type=password] { border: 0px; padding: 5px; width: 175px; -moz-border:-radius: 3px; border-radius: 3px; }
 
 a.su:link, a.su:active, a.su:visited, #login_box input[type=submit], .heart input[type=submit] {
  	display: inline-block;
@@ -109,8 +79,11 @@ a.su:link, a.su:active, a.su:visited, #login_box input[type=submit], .heart inpu
 	border-radius: 3px;
  	color: #444;
  	cursor: pointer;
- 	margin-top: 30px;
-	font-size: 10pt;
+	font-size: 9pt !important;
+}
+
+a.su:link {
+	margin: 30px 0 0 0;
 }
 
 a.su:hover, #login_box input[type=submit]:hover, .heart input[type=submit]:hover { 
