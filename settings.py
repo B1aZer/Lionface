@@ -100,7 +100,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.static",
     "django.contrib.messages.context_processors.messages",
-    "public.context_processors.current_site",    
+    "public.context_processors.current_site",
 )
 
 ROOT_URLCONF = 'urls'
@@ -109,7 +109,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    
+
     os.path.join(os.path.dirname(__file__), 'templates'),
 )
 
@@ -124,13 +124,13 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'kombu.transport.django',  
-    
+    'kombu.transport.django',
+
     'south',
     'mediagenerator',
     'haystack',
     'djcelery',
-    
+
     'current_user',
     'search',
     'public',
@@ -199,6 +199,9 @@ MEDIA_BUNDLES = (
     ),
     ('profile.js',
         'js/profile.js',
+    ),
+    ('jstz.min.js',
+        'js/jstz.min.js',
     ),
 )
 

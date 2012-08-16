@@ -4,3 +4,5 @@ settings_local.py
 celerybeat-schedule.db
 celerybeat.pid
 celerybeat-schedule
+_generated_media
+_generated_media_names.py
