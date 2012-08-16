@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load media %}
 
@@ -10,12 +11,13 @@
   {% include "public/_login_box.html" %}
   {% endblock %}
   
+<div align="center">
   <div id="center_box">
     <div class="content_area">
       <div class="float_box"><a href="http://www.lionface.org" style="border: 0px none;"><img src="{% media_url 'images/logo300.png' %}" border="0" style="padding-top: 45px;"/></a></div>
       <div class="heart float_box">
         {% block heart %}
-        <div style="font-size: 40px; padding-top: 55px; line-height: 50px; text-shadow: 0px 0px 1px #FFF;"><span style="font-size: 26px;">The</span> Next Generation<br /><span style="font-size: 26px;">in</span> Social Networking</div>
+        <div style="font-size: 28pt; padding-top: 55px; line-height: 40pt;"><span style="font-size: 14pt;">The</span> Next Generation<br /><span style="font-size: 14pt;">in</span> Social Networking</div>
         <div style="font-size: 18px;">
           <a href="{% url account.views.signup %}" class="su">Create an Account</a>
         </div>
@@ -23,4 +25,5 @@
       </div>
     </div>
   </div>
+</div>
 {% endblock %}

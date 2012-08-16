@@ -1,14 +1,21 @@
+<div id="login" align="center">
 <form method="POST" action="{% url account.views.login %}">{% csrf_token %}
-<div id="login_box">
-  <table border=0 cellpadding=0 cellspacing=0>
-    <tr><td colspan=99 class="error"><span style="color: #FFF">World</span> {{ login_form.error_message }} <span style="color: #FFF">Peace</span></td></tr>
-    <tr>
-      <td class="field"><label>{{ login_form.email.label }}</label><br /> {{ login_form.email }}</td>
-      <td class="field"><label>{{ login_form.password.label }}</label><br /> {{ login_form.password }}</td>
-      <td class="field"><input type="submit" class="login_button" value="Sign In" style="position: relative; top: 7px;"/></td>
-	  <td class="field"><div style="position: relative; top: 9px;">{{ login_form.preserve }} <label>{{ login_form.preserve.label }}</label><br />
-		<a href="{% url django.contrib.auth.views.password_reset %}">Forgot your password?</a></div></td>
-    </tr>
-  </table>
+<div id="login_box" align="right">
+
+	<table border="0" cellspacing="0" cellpadding="0" width="900">
+	  <tr>
+		<td></td>
+	    <td align="right" width="200"><label>{{ login_form.email.label }}</label> {{ login_form.email }}</td>
+	    <td align="right" width="225"><label>{{ login_form.password.label }}</label> {{ login_form.password }}</td>
+        <td align="right" width="75"><input type="submit" class="login_button" value="Sign In"/></td>
+      </tr>
+	  <tr>
+	    <td colspan="2" align="right">{{ login_form.error_message }}</td>
+	    <td colspan="2" align="right"><a href="{% url django.contrib.auth.views.password_reset %}" style="margin-right: 20px;">Forgot your password?</a> {{ login_form.preserve }} <label>{{ login_form.preserve.label }}</label></td>
+      </tr>
+    </table>
+
+
 </div>
 </form>
+</div>

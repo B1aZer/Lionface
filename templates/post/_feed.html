@@ -5,13 +5,14 @@
     {{ item.render }}
 	<div class="highlight">
     <div class="subtext">
-      <a href="javascript:;">Comment</a> <span style="color: #FFF;">-</span> 
-      <a href="javascript:;">Like</a> <span style="color: #FFF;">-</span> 
-      <a href="javascript:;">Share</a> <span style="color: #FFF; margin-right: 10px;">-</span> 
-      <span class="timestamp" title="Time Zone: UTO 0">{{ item.timestamp }}</span> <span style="color: #FFF; margin-right: 10px;">-</span> 
-	  <span title="Privacy Settings: Friends Only">Friends</span>
+      <a href="javascript:;">Comment</a> <span style="color: transparent;"> -- </span> 
+      <a href="javascript:;">Share</a> <span style="color: transparent;"> -- </span> 
+	  <a href="javascript:;" style="color: #F58;">Love</a> <span style="color: transparent;"> -- </span> 
     </div>
 	</div>
-	
+		<div style="position: absolute; bottom: -7px; right: 13px; font-size: 8pt; color: #AAA;" class="highlight">
+      <span class="timestamp" title="Time Zone: UTO 0">{{ item.timestamp }}</span> <span style="color: #FFF; margin-right: 10px;">-</span> 
+	  <span title="Privacy Settings: Friends Only">Friends</span>
+		</div>
   </div>
 {% endfor %}

@@ -5,37 +5,32 @@
 <form id="signup_form" method="POST" action="{% url account.views.signup %}">{% csrf_token %}
 <div class="dark_box">
   <table width="100%" border="0" cellspacing="0" cellpadding="4">
+	<tr>
+	  <td colspan="2"><span style="color: transparent;">World Peace</span> {{ signup_form.full_name.errors }} {{ signup_form.password.errors }} {{ signup_form.password2.errors }} {{ signup_form.email.errors }} {{ signup_form.username.errors }} {{ signup_form.terms.errors }}
+	  </td>
+	</tr>
     <tr>
       <td align="right">{{ signup_form.full_name.label }}:<br /><span class="help_text">{{ signup_form.full_name.help_text }}</span></td>
-      <td>{{ signup_form.full_name }}<br/>{{ signup_form.full_name.errors }}</td>
+      <td>{{ signup_form.full_name }}</td>
     </tr>
     <tr>
       <td align="right">{{ signup_form.password.label }}:<br /><span class="help_text">{{ signup_form.password.help_text }}</span></td>
-      <td>{{ signup_form.password }}<br/>{{ signup_form.password.errors }}</td>
+      <td>{{ signup_form.password }}</td>
     </tr>
     <tr>
       <td align="right">{{ signup_form.password2.label }}:<br /><span class="help_text">{{ signup_form.password2.help_text }}</span></td>
-      <td>{{ signup_form.password2 }}<br/>{{ signup_form.password2.errors }}</td>
+      <td>{{ signup_form.password2 }}</td>
     </tr>
     <tr>
       <td align="right">{{ signup_form.email.label }}:<br /><span class="help_text">{{ signup_form.email.help_text }}</span></td>
-      <td>{{ signup_form.email }}<br/>{{ signup_form.email.errors }}</td>
+      <td>{{ signup_form.email }}</td>
     </tr>
     <tr>
       <td align="right">{{ signup_form.username.label }}:<br /><span class="help_text">{{ signup_form.username.help_text }}</span></td>
-      <td>{{ signup_form.username }}<br/>{{ signup_form.username.errors }}</td>
+      <td>{{ signup_form.username }}</td>
     </tr>
     <tr>
-    <td colspan="2" style="font-size: 11px; text-align: right;">{{ signup_form.terms }} I agree to the <a href="{% url public.views.terms %}" target="_blank" style="color: #DDD">Terms</a>. <input id="signup_submit" type="submit" value="Sign Up" style="border: 1px solid #000;
-  border-width: 1px 1px 1px 1px;
-  background-color: #333;
-  padding: 0px 10px;
-  margin-top: 2px; 
-  color: #FFF;
-  height: 27px;
-  cursor: pointer;
-  position: relative; top: 0px; margin-left: 20px;
-  background-image: url(../images/grad.png);"><br/>{{ signup_form.terms.errors }}</td>
+    <td colspan="2" style="font-size: 11px; text-align: right;">{{ signup_form.terms }} I agree to the <a href="{% url public.views.terms %}" target="_blank" style="color: #DDD">Terms</a>. <input id="signup_submit" type="submit" value="Create an Account"></td>
     </tr>
   </table>
 </div>

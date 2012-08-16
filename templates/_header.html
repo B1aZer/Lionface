@@ -4,6 +4,7 @@
     <div class="left_links">
       <ul>
         <li><a href="{% url profile.views.profile %}" class="profileNav" style="font-size: 16px;">Profile</a></li>
+        <li><a href="#" style="font-size: 12px;" class="profileNav">Pages</a></li>
         <li><a href="{% url profile.views.feed %}" style="font-size: 12px;" class="profileNav">News Feed</a></li>
       </ul>
     </div>
@@ -21,10 +22,15 @@
 </div>
 
 <div align="center"><div style="position: relative; width: 900px; height: 1px;">
-<div style="position: fixed; z-index: 100;"><div style="position: relative; left: 907px; top: 55px;">
-<a href="{% url django.contrib.auth.views.logout_then_login %}" class="imageNav" title=" Sign Out " target="_top" style="color: #555; text-decoration: none; font-weight: bold; border-color: #DDD; background-color: #F7F7F7;">x</a>
-<div style="height: 27px;"></div>
-<a href="user/messages.html" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><p /><div style="height: 7px;"></div>
-        <a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/></a>
+	<div style="position: fixed; z-index: 100;"><div style="position: relative; left: 907px; top: 53px;">
+		 <a href="#" class="imageNav" title=" Settings "><img src="{% media_url 'images/IconSettings.png' %}" height="18" /></a>
+		<a href="{% url django.contrib.auth.views.logout_then_login %}" title=" Sign Out " target="_top" style="position: absolute; left: 34px; top: 0px; color: #C3C3C3; text-decoration: none; font-weight: bold; border: 1px solid #EEE; background: #FFF; width: 15px; height: 18px; ">x</a>
+<div style="height: 22px;"></div>
+		<a href="user/messages.html" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><br />
+		<a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/></a>
 
-</div></div></div></div>
+	</div>
+</div>
+
+</div></div>
+
