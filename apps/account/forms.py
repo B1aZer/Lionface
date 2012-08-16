@@ -2,11 +2,13 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 import re, datetime
+import pytz
 
 class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(max_length=20, min_length=4, widget=forms.PasswordInput())
     preserve = forms.BooleanField(label='Stay logged in', required=False)
+    tzone = forms.CharField(max_length=100,label='Timezone', required=False, widget=forms.HiddenInput)
     
     def login(self, request):
         try:
@@ -14,6 +16,8 @@ class LoginForm(forms.Form):
             user = authenticate(username=user.username, password=self.cleaned_data['password'])
             if user is not None:
                 login(request, user)
+            if self.cleaned_data.get('tzone'):
+                request.session['django_timezone'] = pytz.timezone(self.cleaned_data['tzone'])
             if self.cleaned_data['preserve']:
                 request.session.set_expiry(datetime.timedelta(days=365))
             return user
