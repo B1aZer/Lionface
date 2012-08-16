@@ -4,12 +4,14 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from account.models import UserProfile
+from notification.models import Notification
 
 @login_required
 def feed(request):
     return render_to_response(
         'profile/feed.html',
         {
+            'not_count': Notification.objects.filter(user=request.user).count() 
         },
         RequestContext(request)
     )
@@ -29,7 +31,8 @@ def profile(request, username=None):
     return render_to_response(
         'profile/profile.html',
         {
-            'profile_user': profile_user
+            'profile_user': profile_user,
+            'not_count': Notification.objects.filter(user=request.user).count() 
         },
         RequestContext(request)
     )

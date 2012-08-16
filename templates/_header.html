@@ -27,7 +27,7 @@
 		<a href="{% url django.contrib.auth.views.logout_then_login %}" title=" Sign Out " target="_top" style="position: absolute; left: 34px; top: 0px; color: #C3C3C3; text-decoration: none; font-weight: bold; border: 1px solid #EEE; background: #FFF; width: 15px; height: 18px; ">x</a>
 <div style="height: 22px;"></div>
 		<a href="user/messages.html" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><br />
-		<a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/></a>
+        <a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/>{{not_count}}</a>
 
 	</div>
 </div>

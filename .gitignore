@@ -1,3 +1,5 @@
 settings_local.py
 *.pyc
 *.db
+celerybeat-schedule.db
+celerybeat.pid
