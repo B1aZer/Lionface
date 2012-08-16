@@ -38,15 +38,23 @@ def save(request):
         post.save()
 
         data['post_id'] = post.id
+        #import pdb;pdb.set_trace()
+
 
         t = loader.get_template('post/_feed.html')
-        c = RequestContext(request, {'items': [post]})
+        #c = RequestContext(request, {'items': NewsItem.objects.filter(post_id=data['post_id']) })
+        # this is not working because celery is not so fast
+        new_post = post
+        #new_post.id = post.newsitem_set.all()[0].id
+        c = RequestContext(request, {'items': [new_post], 
+                                    'del_false' : True})
         data['html'] = t.render(c)
 
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
 def delete(request, post_id = None):
+    #TODO can not delete after update
     data = {'status': 'OK'}
     if post_id:
         post = NewsItem.objects.get(id=post_id)

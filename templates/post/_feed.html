@@ -5,8 +5,10 @@
     {{ item.render }}
 	<div class="highlight">
     <div class="subtext">
+        {% if not del_false %}
       {% if item.user.id ==  request.user.id  %}
       <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
+      {% endif %}
       {% endif %}
       <a href="javascript:;">Comment</a> <span style="color: transparent;"> -- </span> 
       <a href="javascript:;">Share</a> <span style="color: transparent;"> -- </span> 
