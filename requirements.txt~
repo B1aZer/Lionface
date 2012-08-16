@@ -13,5 +13,4 @@ kombu==2.3.2
 ordereddict==1.1
 psycopg2==2.4.5
 python-dateutil==1.5
-pytz==2012d
 wsgiref==0.1.2

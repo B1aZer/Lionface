@@ -7,6 +7,7 @@
 		<td></td>
 	    <td align="right" width="200"><label>{{ login_form.email.label }}</label> {{ login_form.email }}</td>
 	    <td align="right" width="225"><label>{{ login_form.password.label }}</label> {{ login_form.password }}</td>
+	    {{ login_form.tzone }}
         <td align="right" width="75"><input type="submit" class="login_button" value="Sign In"/></td>
       </tr>
 	  <tr>
@@ -19,3 +20,6 @@
 </div>
 </form>
 </div>
+<script>
+$('#id_login-tzone').val(timezone.name())
+</script>
