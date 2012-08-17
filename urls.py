@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from haystack.views import SearchView, search_view_factory
 import search.forms
+import search.views
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -28,7 +29,8 @@ urlpatterns = patterns('',
     url(r'^notifications/', include('notification.urls')),
     url(r'^posts/', include('post.urls')),
     url(r'^search/', login_required(search_view_factory(
-            view_class=SearchView,
+        #view_class=SearchView,
+            view_class=search.views.CustumSearchView,
             form_class=search.forms.SearchForm,
         ))),
 )

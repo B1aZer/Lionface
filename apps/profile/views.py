@@ -11,7 +11,7 @@ def feed(request):
     return render_to_response(
         'profile/feed.html',
         {
-            'not_count': Notification.objects.filter(user=request.user).count() 
+            'not_count': Notification.objects.filter(user=request.user).count()
         },
         RequestContext(request)
     )
@@ -27,12 +27,12 @@ def profile(request, username=None):
             return Http404()
     else:
         profile_user = request.user
-        
+
     return render_to_response(
         'profile/profile.html',
         {
             'profile_user': profile_user,
-            'not_count': Notification.objects.filter(user=request.user).count() 
+            'not_count': Notification.objects.filter(user=request.user).count()
         },
         RequestContext(request)
     )

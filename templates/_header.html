@@ -28,7 +28,11 @@
 		<a href="{% url django.contrib.auth.views.logout_then_login %}" title=" Sign Out " target="_top" class="logout">x</a>
 <div style="height: 22px;"></div>
 		<a href="user/messages.html" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><br />
+        {% if not_count > 0 %}
         <a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/><span class="count">{{not_count}}</span></a>
+        {% else %}
+        <a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/><span class="count"></span></a>
+        {% endif %}
 
 	</div>
 </div>

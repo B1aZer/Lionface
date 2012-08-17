@@ -1,12 +1,12 @@
 $(function() {
   $("#postbox .postcontent").focus(function() {
-    $("#postbox .postoptions").slideDown();
+    //$("#postbox .postoptions").slideDown();
     if($(this).val() == 'Share something...') {
       $(this).val("");
     }
   });
   $("#postbox .postcontent").focusout(function() {
-    $("#postbox .postoptions").slideUp();
+    //$("#postbox .postoptions").slideUp();
     if($(this).val() == '') {
       $(this).val("Share something...");
     }

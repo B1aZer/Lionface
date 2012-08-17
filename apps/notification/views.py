@@ -9,7 +9,8 @@ def notifications(request):
     return render_to_response(
         'notification/notifications.html',
         {
-            'notifications': Notification.objects.filter(user=request.user).order_by("date")
+            'notifications': Notification.objects.filter(user=request.user).order_by("date"),
+            'not_count': Notification.objects.filter(user=request.user).count() 
         },
         RequestContext(request)
     )
