@@ -46,10 +46,10 @@ class UserProfile(User):
     # Returns a queryset for all news items this user can see in date order.
     def get_news(self):
         from post.models import NewsItem
-        return NewsItem.objects.filter(user=self, hidden=False).order_by('date').reverse()
+        #return NewsItem.objects.filter(user=self, hidden=False).order_by('date').reverse()
         #User can see all public messages,
         #not only his
-        #return NewsItem.objects.filter(hidden=False).order_by('date').reverse()
+        return NewsItem.objects.filter(hidden=False).order_by('date').reverse()
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

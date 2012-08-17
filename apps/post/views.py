@@ -14,9 +14,11 @@ except ImportError:
 @login_required
 def feed(request, user_id = None):
     items = request.user.get_news()
-    #import pdb;pdb.set_trace()
-    if user_id:
-        items = items.filter(post__user_to=user_id)
+    if not user_id: user_id = request.user.id
+    #show messages adressed to user
+    items = items.filter(post__user_to=user_id)
+    if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
+        items = items.filter(post__contentpost__type="P")
     return render_to_response(
         'post/_feed.html',
         {
