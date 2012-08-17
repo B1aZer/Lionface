@@ -50,6 +50,9 @@ class UserProfile(User):
         #User can see all public messages,
         #not only his
         return NewsItem.objects.filter(hidden=False).order_by('date').reverse()
+    def get_messages(self):
+        from post.models import NewsItem
+        return NewsItem.objects.filter(user__in=self.friends.all()).order_by('date').reverse()   
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

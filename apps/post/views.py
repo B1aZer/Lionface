@@ -14,9 +14,24 @@ except ImportError:
 @login_required
 def feed(request, user_id = None):
     items = request.user.get_news()
-    if not user_id: user_id = request.user.id
+    if not user_id:
+        user_id = request.user.id
+        items = request.user.get_messages()
+        #import pdb;pdb.set_trace()
+        """
+        friends = request.user.friends.all()
+        messages=[]
+        for friend in friends:
+            messages.extend(friend.get_messages())
+        """
+        return render_to_response(
+        'post/_feed.html',
+        {
+            'items': items,
+        },
+        RequestContext(request))
+
     #show messages adressed to user
-    #import pdb;pdb.set_trace()
     items = items.filter(post__user_to=user_id)
     if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
         items = items.filter(post__contentpost__type="P")
