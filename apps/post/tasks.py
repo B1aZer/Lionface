@@ -1,5 +1,6 @@
 from celery.task import Task
 from celery.registry import tasks
+from celery.contrib import rdb
 
 class UpdateNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
@@ -8,8 +9,18 @@ class UpdateNewsFeeds(Task):
         else: users = post.get_involved()
         for user in users:
             ni, created = NewsItem.objects.get_or_create(user=user, post=post)
-        
+
 tasks.register(UpdateNewsFeeds)
+
+class DeleteNewsFeeds(Task):
+    def run(self, post, user=None, **kwargs):
+        from models import NewsItem
+        if user: users = [user]
+        else: users = post.get_involved()
+        for user in users:
+            NewsItem.objects.filter(user=user, post=post.post).delete()
+
+tasks.register(DeleteNewsFeeds) 
 
 # Churns through the list of posts for the new friend and adds them to the news feed for this user.
 class AddFriendToFeed(Task):

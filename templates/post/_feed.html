@@ -6,7 +6,7 @@
 	<div class="highlight">
     <div class="subtext">
         {% if not del_false %}
-      {% if item.user.id ==  request.user.id  %}
+      {% if item.post.user.id == request.user.id  or item.post.user_to.id == request.user.id %}
       <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
       {% endif %}
       {% endif %}
@@ -16,7 +16,6 @@
     </div>
 	</div>
 		<div style="position: absolute; bottom: -7px; right: 13px; font-size: 8pt; color: #AAA;" class="highlight">
-            <script>timezone.name();</script>
             <span class="timestamp" title="Time Zone: UTO 0">{{ item.timestamp }}</span> <span style="color: #FFF; margin-right: 10px;">-</span> 
 	  <span title="Privacy Settings: Friends Only">Friends</span>
 		</div>

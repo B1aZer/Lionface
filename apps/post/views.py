@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response,render
 from django.template import RequestContext,loader
 
 from models import *
-from account.models import UserProfile 
+from account.models import UserProfile
 
 try:
     import json
@@ -30,7 +30,7 @@ def save(request):
     data = {'status': 'OK'}
     if request.method == 'POST' and 'content' in request.POST:
         if 'profile_id' in  request.POST:
-            user_to = UserProfile.objects.get(id=request.POST['profile_id']) 
+            user_to = UserProfile.objects.get(id=request.POST['profile_id'])
         post = ContentPost(content = request.POST['content'], user = request.user , user_to=user_to  )
         if 'type' in request.POST:
             post.type = request.POST['type']
@@ -46,7 +46,7 @@ def save(request):
         # this is not working because celery is not so fast
         new_post = post
         #new_post.id = post.newsitem_set.all()[0].id
-        c = RequestContext(request, {'items': [new_post], 
+        c = RequestContext(request, {'items': [new_post],
                                     'del_false' : True})
         data['html'] = t.render(c)
 
@@ -59,4 +59,4 @@ def delete(request, post_id = None):
     if post_id:
         post = NewsItem.objects.get(id=post_id)
         post.delete()
-    return HttpResponse(json.dumps(data), "application/json")   
+    return HttpResponse(json.dumps(data), "application/json")
