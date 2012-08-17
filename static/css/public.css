@@ -39,6 +39,17 @@
 	padding: 6px;
 }
 
+a.reset:link, a.reset:visited, a.reset:active {
+	font-size: 10pt;
+	color: #BBB;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a.reset:hover {
+	color: #333;
+}
+
 #center_box { 
 	height: 310px;
 	width: 100%;	
