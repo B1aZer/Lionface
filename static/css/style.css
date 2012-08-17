@@ -150,22 +150,32 @@ a.post:hover {
 #header #search_bar input[type=submit] {
 	color: #999;
 	background: #FFF;
-	padding: 6px;
+	padding: 6px 8px 6px 8px;
 	border: 0px;
 	cursor: pointer;
+	border: 1px solid #EEE;
+	border-width: 0 0 0 1px;
 }
 
 #header #search_bar input[type=submit]:hover {
-	color: #777;
+	color: #555;
+	border-color: #CCC;
 }
 
 
 a.profileNav:link, a.profileNav:active, a.profileNav:visited { 
-	padding: 7px 10px 7px 10px; 
-	color: #000; }
+	padding: 7px 10px 8px 10px; 
+	color: #777; 
+	font-size: 10pt;
+}
+
 a.profileNav:hover { 
-	color: #38C; 
-	text-decoration: none; }
+	color: #333; 
+	text-decoration: none; 
+	background-image: url(../images/triangle.png);
+	background-repeat: no-repeat;
+	background-position: center bottom;
+}
 
 a.imageNav:link, a.imageNav:active, a.imageNav:visited { 
 	display: inline-block; 
@@ -204,8 +214,8 @@ a.imageNav:hover {
 	color: #FFF;
 	text-decoration: none;
 	background: #B22;
-	padding: 3px 4px 2px 5px;
-	font-size: 9pt;
+	padding: 2px 4px 2px 4px;
+	font-size: 8pt;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	position: absolute; right: -7px; bottom: 0px;
@@ -336,4 +346,36 @@ button.positive, .buttons a.positive{
     background-color:#FFF;
     color:#333;	border: 0px none;
 
+}
+
+.friend_decline a {
+	color: #777;
+}
+
+.blue_btn a, .blue_btn a:active, .blue_btn a:visited { 
+	padding: 5px 12px 5px 12px; 
+	color: #FFF;
+	font-size: 11pt;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	background: rgb(68,153,221); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(68,153,221,1) 0%, rgba(34,119,187,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(68,153,221,1)), color-stop(100%,rgba(34,119,187,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(68,153,221,1) 0%,rgba(34,119,187,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(68,153,221,1) 0%,rgba(34,119,187,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(68,153,221,1) 0%,rgba(34,119,187,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(68,153,221,1) 0%,rgba(34,119,187,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4499dd', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
+}
+
+.blue_btn a:hover { 
+	text-decoration: none;
+	background: rgb(85,170,238); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(85,170,238,1) 0%, rgba(34,119,187,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(85,170,238,1)), color-stop(100%,rgba(34,119,187,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55aaee', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
 }

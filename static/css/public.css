@@ -93,6 +93,11 @@ a.su:link, a.su:active, a.su:visited, #login_box input[type=submit], .heart inpu
 	font-size: 9pt !important;
 }
 
+#login_box input[type=submit]:active {
+	color #F58;
+	background: #DDD;
+}
+
 a.su:link {
 	margin: 30px 0 0 0;
 }
