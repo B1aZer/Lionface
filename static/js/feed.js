@@ -35,6 +35,21 @@ function del_post(elem) {
 
 }
 
+function share_post(elem) { 
+    url = "/posts/share/" + elem + "/";
+
+    $.ajax(url,
+    {
+      success: function(data) {
+        alert("shared");
+      },
+      error: function() {
+        alert('Unable to delete data.');
+      }
+    });    
+
+}   
+
 
 $(document).ready(function(){
   loadNewsFeed($("#news_feed"));

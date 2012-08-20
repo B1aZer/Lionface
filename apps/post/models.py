@@ -8,12 +8,15 @@ class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
     user_to = models.ForeignKey(UserProfile,  related_name='user_to')
     date = models.DateTimeField(auto_now_add=True)
+    shared = models.IntegerField(default=0)
 
     # Function to attempt to return the inherited object for this item.
     def get_inherited(self):
         try: return self.friendpost
         except Exception: pass
         try: return self.contentpost
+        except Exception: pass
+        try: return self.sharepost
         except Exception: pass
         return self
 
@@ -52,6 +55,14 @@ class ContentPost(Post):
     def timestamp(self):
         return self.date
 
+class SharePost(Post):
+    content = models.TextField(null=True)
+    def render(self):
+        #import pdb;pdb.set_trace()
+        return mark_safe("""<a href='%s'>%s</a> shared post from <a href='%s'>%s</a>
+                            <div>Original post:</div>
+                            <div>%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
+
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)
     date = models.DateTimeField(auto_now_add=True)
@@ -64,10 +75,13 @@ class NewsItem(models.Model):
     def render(self):
         return self.post.get_inherited().render()
 
+    def shared(self):
+        return self.post.shared  
+
     def get_involved(self):
         # TODO: Might want to make this everyone for completely public posts?
         # That might overload the news feed thing though.
-        return self.user.friends.all() | UserProfile.objects.filter(id=self.user.id) 
+        return self.user.friends.all() | UserProfile.objects.filter(id=self.user.id)
 
     @property
     def timestamp(self):
@@ -78,6 +92,7 @@ def update_news_feeds(sender, instance, created, **kwargs):
 post_save.connect(update_news_feeds, sender=Post)
 post_save.connect(update_news_feeds, sender=FriendPost)
 post_save.connect(update_news_feeds, sender=ContentPost)
+post_save.connect(update_news_feeds, sender=SharePost)
 def delete_news_feeds(sender, instance, **kwargs):
     DeleteNewsFeeds.delay(instance)
 post_delete.connect(delete_news_feeds, sender=NewsItem)

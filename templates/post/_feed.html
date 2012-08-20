@@ -27,6 +27,8 @@ function ReverseContentDisplay(d) {
             <a href="javascript:;">Share</a> <span style="color: transparent;"> -- </span> 
     </div><br />
             <div class="comments comment_{{ item.id }}" style="display: none; padding: 10px 20px 5px 10px; background-color: #F7F7F7; -moz-border-radius: 5px; border-radius: 5px;">
+            <a href="javascript:share_post({{ item.id }});">Share {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %}  </a> <span style="color: transparent;"> -- </span> 
+            <div class="comments comment_{{ item.id }}" style="display: none;">
                 {% render_comment_list for item %}
                 {% render_comment_form for item %}
             </div>
