@@ -1,0 +1,38 @@
+{% for item in items %}
+<hr style="position: relative; left: 50px; background-color: #EEE; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
+  <div class="result post_{{ item.id }}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 15px 8px;">
+    <div class="user_thumbnail"></div>
+    {{ item.render }}
+	<div class="highlight">
+    <div class="subtext">
+
+      <a href="javascript:;">Comment</a> <span style="color: transparent;"> -- </span> 
+      <a href="javascript:;">Share</a> <span style="color: transparent;"> -- </span> 
+    </div>
+	</div>
+
+<div id="{{item.id}}" style="display: none;">
+
+		<div style="position: absolute; top: 0px; right: 16px; font-size: 8pt; color: #AAA;" class="highlight">
+            <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
+		</div>
+
+
+		<div style="position: absolute; bottom: 0px; right: 16px; font-size: 8pt; color: #AAA;" class="highlight">
+      {% if not del_false %}
+      {% if item.post.user.id == request.user.id  or item.post.user_to.id == request.user.id %}
+      <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
+      {% endif %}
+      {% endif %}
+      {% if item.post.contentpost.type == "P" %}
+	  <span title="Privacy Settings: Public">Public</span>
+      {% elif item.post.contentpost.type == "F" %}
+	  <span title="Privacy Settings: Friends Only">Friends</span>
+      {% else %}
+      {% endif %}
+		</div>
+
+</div>
+
+  </div>
+{% endfor %}

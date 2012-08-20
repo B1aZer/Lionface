@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'kombu.transport.django',
+    'django.contrib.comments',
 
     'south',
     'mediagenerator',
@@ -197,6 +198,9 @@ MEDIA_BUNDLES = (
     ),
     ('feed.js',
         'js/feed.js',
+    ),
+    ('timeline.js',
+        'js/timeline.js',
     ),
     ('profile.js',
         'js/profile.js',

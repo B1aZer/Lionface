@@ -1,1 +1,0 @@
-function loadNewsFeed(c){var a=c;var b=c.metadata();a.html("<div class='large_loader'></div>");url="/posts/feed/";if(b.type=="profile"){url="/posts/feed/"+b.user+"/"}$.ajax(url,{success:function(d){a.html(d)},error:function(){a.html("Unable to retrieve data.")}})}$(function(){loadNewsFeed($("#news_feed"))});

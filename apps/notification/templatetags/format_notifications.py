@@ -13,5 +13,7 @@ def format_notification(notification):
         return render_to_string('notification/_friend_request.html', data)
     if notification.type == 'FA':
         return render_to_string('notification/_friend_accept.html', data)
+    if notification.type == 'CS':
+        return render_to_string('notification/_comment_submitted.html', data)
     return ""
 
