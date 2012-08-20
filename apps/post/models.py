@@ -8,6 +8,7 @@ class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
     user_to = models.ForeignKey(UserProfile,  related_name='user_to')
     date = models.DateTimeField(auto_now_add=True)
+    shared = models.IntegerField(default=0)
 
     # Function to attempt to return the inherited object for this item.
     def get_inherited(self):
@@ -55,14 +56,12 @@ class ContentPost(Post):
         return self.date
 
 class SharePost(Post):
-
-     def render(self):
-        import pdb;pdb.set_trace()
-        return mark_safe("""
-                <a href='%s'>%s</a> shared post from <a href='%s'>%s</a>
-                <div>Original post:</div>
-                <div>%s</div>
-                """ % (self.user.get_absolute_url(), self.user.get_full_name(), self.user_to.get_absolute_url(), self.user_to.get_full_name()))
+    content = models.TextField(null=True)
+    def render(self):
+        #import pdb;pdb.set_trace()
+        return mark_safe("""<a href='%s'>%s</a> shared post from <a href='%s'>%s</a>
+                            <div>Original post:</div>
+                            <div>%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)
@@ -75,6 +74,9 @@ class NewsItem(models.Model):
 
     def render(self):
         return self.post.get_inherited().render()
+
+    def shared(self):
+        return self.post.shared  
 
     def get_involved(self):
         # TODO: Might want to make this everyone for completely public posts?

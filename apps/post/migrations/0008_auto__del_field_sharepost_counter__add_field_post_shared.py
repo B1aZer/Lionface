@@ -8,18 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'SharePost'
-        db.create_table('post_sharepost', (
-            ('post_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['post.Post'], unique=True, primary_key=True)),
-            ('content', self.gf('django.db.models.fields.TextField')(null=True)),
-            ('counter', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal('post', ['SharePost'])
+        # Deleting field 'SharePost.counter'
+        db.delete_column('post_sharepost', 'counter')
+
+        # Adding field 'Post.shared'
+        db.add_column('post_post', 'shared',
+                      self.gf('django.db.models.fields.IntegerField')(default=0),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'SharePost'
-        db.delete_table('post_sharepost')
+        # Adding field 'SharePost.counter'
+        db.add_column('post_sharepost', 'counter',
+                      self.gf('django.db.models.fields.IntegerField')(default=0),
+                      keep_default=False)
+
+        # Deleting field 'Post.shared'
+        db.delete_column('post_post', 'shared')
 
 
     models = {
@@ -87,13 +92,13 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Post'},
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'shared': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user'", 'to': "orm['account.UserProfile']"}),
             'user_to': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_to'", 'to': "orm['account.UserProfile']"})
         },
         'post.sharepost': {
             'Meta': {'object_name': 'SharePost', '_ormbases': ['post.Post']},
             'content': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'counter': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'post_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['post.Post']", 'unique': 'True', 'primary_key': 'True'})
         }
     }

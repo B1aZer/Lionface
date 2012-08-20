@@ -2,6 +2,7 @@ from django.http import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext,loader
+import datetime
 
 from models import *
 from account.models import UserProfile
@@ -79,11 +80,22 @@ def delete(request, post_id = None):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def share(request, post_id = None): 
-    data = {'status': 'OK'} 
+def share(request, post_id = None):
+    data = {'status': 'OK'}
+    #import pdb;pdb.set_trace()
     if post_id:
         post = NewsItem.objects.get(id=post_id)
-        post = SharePost(user = post.user , user_to=request.user  )
-        post.save()
-    return HttpResponse(json.dumps(data), "application/json") 
+        post_type = post.post.get_inherited()
+        if isinstance(post_type, SharePost):
+            shared = post_type
+            shared.user_to = request.user
+            #shared.counter += 1
+            #shared.date = datetime.datetime.now()
+            shared.save()
+        else:
+            post = SharePost(user = post.user , user_to=request.user , content = post.render() )
+            post_type.shared +=1
+            post_type.save()
+            post.save()
+    return HttpResponse(json.dumps(data), "application/json")
 
