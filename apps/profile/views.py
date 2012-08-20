@@ -17,6 +17,16 @@ def feed(request):
     )
 
 @login_required
+def timeline(request):
+    return render_to_response(
+        'profile/timeline.html',
+        {
+            'not_count': Notification.objects.filter(user=request.user).count()
+        },
+        RequestContext(request)
+    )
+       
+@login_required
 def profile(request, username=None):
     # TODO: Logic here needs to see what relation the current user is to the profile user
     # and compare this against their privacy settings to see what can be seen.
