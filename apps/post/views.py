@@ -87,11 +87,14 @@ def share(request, post_id = None):
         post = NewsItem.objects.get(id=post_id)
         post_type = post.post.get_inherited()
         if isinstance(post_type, SharePost):
+            pass
+            """
             shared = post_type
             shared.user_to = request.user
-            #shared.counter += 1
-            #shared.date = datetime.datetime.now()
+            post_type.shared +=1
+            post_type.save()
             shared.save()
+            """
         else:
             post = SharePost(user = post.user , user_to=request.user , content = post.render() )
             post_type.shared +=1
