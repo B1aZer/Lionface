@@ -15,7 +15,14 @@
     {{ field.label_tag }} 
     {% ifequal field.name "comment" %}
     <div>
-        <textarea id="id_comment" rows="10" cols="40" name="comment"></textarea>
+		<table width="100%"><tr>
+		<td align="left">
+        <textarea id="id_comment" cols="40" name="comment" style="width: 100% !important; min-height: 40px !important; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #DDD;"></textarea> 
+		</td><td align="right" width="75" style="position: relative;">
+		<input type="submit" name="post" class="submit-post" value="{% trans "Comment" %}" />
+		</td>
+		</tr></table>
+
     </div> {% else %} 
     {{ field }}
     {% endifequal %}          
@@ -24,7 +31,6 @@
     {% endfor %}
     <p class="submit">
     <input type="hidden" name="next" value="{{ request.META.HTTP_REFERER }}" />
-    <input type="submit" name="post" class="submit-post" value="{% trans "Post" %}" />
-    <input type="submit" name="preview" class="submit-preview" value="{% trans "Preview" %}" />
+    <input type="submit" name="preview" class="submit-preview" value="{% trans "Preview" %}" style="display: none;" />
     </p>
 </form>

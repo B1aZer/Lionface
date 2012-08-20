@@ -19,19 +19,22 @@
     
     <div id="postbox">
       <form id="postform">{% csrf_token %}
-      <div style="padding: 10px; text-align: center;">
-        <input class="postcontent" name="content" type="textfield" value="Share something..." autocomplete="off" style="width: 515px; padding: 5px; border: 1px solid #FFF; color: #777; background-color: #FDFDFD; -moz-border-radius: 3px; border-radius: 3px; margin-right: 4px;"> <a href="#" class="post" id="postboxbutton">Post</a>
-        
+      <div style="padding: 10px;" align="center">
+        <textarea class="postcontent" name="content"></textarea>
         <br />
-        <div style="font-size: 11px; padding: 7px; padding-top: 12px; padding-bottom: 0px; text-align: left;" class="postoptions">
-            
-          <input name="profile_id" type="hidden" value="{{profile_user.id}}" >
-          <input name="type" type="radio" value="P" checked> Public <input name="type" type="radio" value="F" style="margin-left: 12px;"> Friends</span><a href="#" style="margin-left: 40px; color: #777;">Attach</a>
+        <div style="font-size: 11px; padding: 7px 7px 0 7px;" class="postoptions">
+            <table width="100%"><tr>
+				<td align="left" style="color: #999; font-size: 8pt;">
+					<input name="profile_id" type="hidden" value="{{profile_user.id}}" >
+					<input name="type" type="radio" value="P" checked style="margin: 0 5px 0 0;"> Public <input name="type" type="radio" value="F" style="margin: 0 5px 0 20px;"> Friends</span>
+		  		</td><td align="right">
+					<a href="#" class="post" id="postboxbutton">Post</a>
+				</td>
+			</tr></table>
         </div>
         </div>
       </div>
       </form>
-<a href="#" style="font-size: 11px; color: #777; position: relative; top: 7px; left: 7px;">Adjust Filters</a>
     </div>
     <div id="news_feed" class="{type: 'profile', user: {{ profile_user.id }}}"></div>
   </div>

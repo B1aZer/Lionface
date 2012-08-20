@@ -18,19 +18,18 @@ function ReverseContentDisplay(d) {
 
 {% for item in items %}
 <hr style="position: relative; left: 50px; background-color: #EEE; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
-<div class="result post_{{ item.id }}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 15px 8px;">
+<div class="result post_{{ item.id }}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 15px 8px; width: 535px;">
     <div class="user_thumbnail"></div>
     {{ item.render }}
-    <div class="highlight">
         <div class="subtext">
-
+    <div class="highlight">
             <a href="javascript:$('.comment_{{ item.id }}').fadeIn();">Comment</a> <span style="color: transparent;"> -- </span> 
             <a href="javascript:;">Share</a> <span style="color: transparent;"> -- </span> 
-            <div class="comments comment_{{ item.id }}" style="display: none;">
+    </div><br />
+            <div class="comments comment_{{ item.id }}" style="display: none; padding: 10px 20px 5px 10px; background-color: #F7F7F7; -moz-border-radius: 5px; border-radius: 5px;">
                 {% render_comment_list for item %}
                 {% render_comment_form for item %}
             </div>
-        </div>
     </div>
 
     <div id="{{item.id}}" style="display: none;">

@@ -32,7 +32,7 @@ class FriendPost(Post):
         return self.user.friends.all() | self.friend.friends.all()
 
     def render(self):
-        return mark_safe("<a href='%s'>%s</a> is now friends with <a href='%s'>%s</a>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.friend.get_absolute_url(), self.friend.get_full_name()))
+        return mark_safe("<a href='%s'>%s</a> and <a href='%s'>%s</a> are now friends." % (self.user.get_absolute_url(), self.user.get_full_name(), self.friend.get_absolute_url(), self.friend.get_full_name()))
 
 
 class ContentPost(Post):
@@ -46,7 +46,7 @@ class ContentPost(Post):
 
     def render(self):
         from django.utils.html import escape
-        return mark_safe("<a href='%s'>%s</a>: %s" % (self.user.get_absolute_url(), self.user.get_full_name(), escape(self.content)))
+        return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), escape(self.content)))
 
     @property
     def timestamp(self):

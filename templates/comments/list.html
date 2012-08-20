@@ -1,10 +1,18 @@
 <dl id="comments">
   {% for comment in comment_list %}
     <dt id="c{{ comment.id }}">
-        {{ comment.submit_date }} - {{ comment.name }}
+		<table width="100%"><tr>
+			<td align="left">
+        {{ comment.name }}
+			</td>
+			<td align="right"><div class="highlight">
+		{{ comment.submit_date }} 
+			</div></td>
+		</tr></table>
     </dt>
     <dd>
-        <p>{{ comment.comment }}</p>
+        <p style="color: #333; font-size: 9pt; padding: 7px;">{{ comment.comment }}</p>
     </dd>
+	<hr noshade="noshade" style="border: 0px; height: 1px; background: #DDD;" size="1" /><div style="height: 7px;"></div>
   {% endfor %}
 </dl>
