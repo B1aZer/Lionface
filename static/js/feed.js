@@ -36,7 +36,7 @@ function del_post(elem) {
 }
 
 
-$(function() {
+$(document).ready(function(){
   loadNewsFeed($("#news_feed"));
 });
 

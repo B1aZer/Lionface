@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^account/', include('account.urls')),
     url(r'^user/', include('profile.urls')),
     url(r'^notifications/', include('notification.urls')),
+    url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^posts/', include('post.urls')),
     url(r'^search/', login_required(search_view_factory(
         #view_class=SearchView,

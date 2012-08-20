@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'kombu.transport.django',
+    'django.contrib.comments',
 
     'south',
     'mediagenerator',
