@@ -17,13 +17,14 @@ function ReverseContentDisplay(d) {
 {% load comments %}
 
 {% for item in items %}
+{% get_comment_count for item as comment_count %}
 <hr style="position: relative; left: 50px; background-color: #EEE; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 <div class="result post_{{ item.id }}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 15px 8px; width: 535px;">
     <div class="user_thumbnail"></div>
     {{ item.render }}
     <div class="subtext">
         <div class="highlight">
-            <a href="javascript:$('.comment_{{ item.id }}').fadeIn();">Comment</a> <span style="color: transparent;"> -- </span> 
+            <a href="javascript:$('.comment_{{ item.id }}').fadeIn();">Comment {% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %}</a> <span style="color: transparent;"> -- </span> 
             <a href="javascript:share_post({{ item.id }});">Share {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %}  </a> <span style="color: transparent;"> -- </span> 
         </div><br />
         <div class="comments comment_{{ item.id }}" style="display: none; padding: 15px 20px 10px 20px; background-color: #F7F7F7; -moz-border-radius: 5px; border-radius: 5px;">

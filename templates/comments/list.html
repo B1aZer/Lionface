@@ -3,7 +3,7 @@
     <dt id="c{{ comment.id }}">
 		<table width="100%"><tr>
 			<td align="left">
-        {{ comment.name }}
+                <a href='{{ comment.user.get_absolute_url }}'>{{comment.name}}</a>
 			</td>
 			<td align="right"><div class="highlight">
 		{{ comment.submit_date }} 
