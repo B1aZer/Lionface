@@ -34,10 +34,11 @@ def create_friend_request_notification(sender, instance, created, **kwargs):
 post_save.connect(create_friend_request_notification, sender=FriendRequest)
 
 def create_comment_notifiaction(sender, comment, request, **kwargs):
-    Notification(user=comment.content_object.user, type='CS', other_user=comment.user).save()
+    if comment.content_object.user <> comment.user:
+        Notification(user=comment.content_object.user, type='CS', other_user=comment.user).save()
 comment_was_posted.connect(create_comment_notifiaction)
 
 def create_share_notifiaction(sender, instance, created, **kwargs):
-    if created:
+    if created and instance.user <> instance.user_to:
         Notification(user=instance.user, type='PS', other_user=instance.user_to).save()
 post_save.connect(create_share_notifiaction, sender=SharePost)

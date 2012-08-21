@@ -82,7 +82,6 @@ def delete(request, post_id = None):
 @login_required
 def share(request, post_id = None):
     data = {'status': 'OK'}
-    #import pdb;pdb.set_trace()
     if post_id:
         post = NewsItem.objects.get(id=post_id)
         post_type = post.post.get_inherited()

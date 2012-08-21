@@ -190,7 +190,7 @@ MEDIA_BUNDLES = (
         'css/public.css',
     ),
     ('main.js',
-        'js/jquery-1.7.1.min.js',
+        'js/jquery-1.8.0.min.js',
         'js/jquery.metadata.js',
     ),
     ('common.js',
