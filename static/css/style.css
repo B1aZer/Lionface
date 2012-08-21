@@ -103,6 +103,7 @@ a.post:hover, .submit-post:hover {
 	background: #FBFBFB;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
+	margin: 3px 0;
 }
 
 .postcontent {
@@ -113,6 +114,10 @@ a.post:hover, .submit-post:hover {
 	-moz-border-radius: 3px; 
 	border-radius: 3px; 
 	width: 555px !important;
+}
+
+.post_content:hover {
+	background-color: #FCFCFC;
 }
 
 .highlight {
@@ -346,6 +351,19 @@ h3 { text-align: center; font-size: 16px; }
 	border: 1px solid #EEE;
 	-moz-border-radius: 0 0 0 5px;
 	border-radius: 0 0 0 5px;
+}
+
+.comment {
+	color: #333; 
+	font-size: 9pt; 
+	padding: 7px;
+	margin: 3px 0;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.comment:hover {
+	background: #F9F9F9;
 }
 
 /* STANDARD */
