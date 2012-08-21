@@ -6,7 +6,7 @@
 {% block content_middle %}{% if profile_user == user %}{{ user|show_friend_count }}{% endif %}{% endblock %}
 
 {% block left_col %}
-<div class="noPhoto" style="background-image: url({% media_url profile_user.photo|cut:"uploads/" %}); background-size: 200px 200px;"><a onMouseOver="javascript:$('.upload_form').slideDown();" class="upload" style="position: relative; float: right;">upload</a></div>
+<div class="noPhoto" style="background-image: url({% media_url profile_user.photo|cut:"uploads/" %}); background-size: 200px 200px;"><a href="javascript:$('.upload_form').show();" class="upload" style="position: relative; top: 210px; display:none;">upload</a></div>
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none">
     {% csrf_token %}
     {{ form.photo.errors }}
@@ -21,7 +21,7 @@
 {% include_media 'feed.js' %}
 <div style="padding: 10px; position: relative; left: 40px;">
     <div style="padding: 25px; padding-top: 15px; padding-left: 10px;">
-        <a href="#" style="padding: 7px;" onMouseOver="javascript:$('.upload_form').slideDown();">Posts</a>
+        <a href="#" style="padding: 7px;">Posts</a>
         <a href="#" style="padding: 7px;">Loves</a>
     </div>
 

@@ -1,4 +1,8 @@
 $(function() {
+    $('.noPhoto').hover(
+            function(){$('.upload').slideDown(500);},
+            function(){$('.upload').slideUp(500);});
+
     $("#postbox .postcontent").focus(function() {
         //$("#postbox .postoptions").slideDown();
         if($(this).val() == 'Share something...') {
