@@ -36,7 +36,7 @@ class UserProfile(User):
     # Logic is if a friend is in the 'friends' collection then they are verified.
     # If there is an active FriendRequest then it's still pending.
     friends = models.ManyToManyField('self', related_name='friends')
-    photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image")
+    photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
 
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0
