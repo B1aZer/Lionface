@@ -57,6 +57,9 @@ class ContentPost(Post):
 
 class SharePost(Post):
     content = models.TextField(null=True)
+    id_news = models.IntegerField(default=0)
+    def get_original_post(self):
+        return NewsItem.objects.get(id=self.id_news)
     def render(self):
         #import pdb;pdb.set_trace()
         return mark_safe("""<a href='%s'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
@@ -75,7 +78,7 @@ class NewsItem(models.Model):
         return self.post.get_inherited().render()
 
     def shared(self):
-        return self.post.shared  
+        return self.post.shared
 
     def get_involved(self):
         # TODO: Might want to make this everyone for completely public posts?

@@ -1,5 +1,6 @@
 from django.db import models
 from account.models import *
+from post.models import *
 from django.db.models.signals import post_save
 from django.contrib.comments.signals import comment_was_posted
 
@@ -7,6 +8,7 @@ NOTIFICATION_TYPES = (
     ('FR', 'Friend Request'),
     ('FA', 'Friend Accepted'),
     ('CS', 'Comment Submitted'),
+    ('PS', 'Post Shared'),
 )
 
 class Notification(models.Model):
@@ -34,3 +36,8 @@ post_save.connect(create_friend_request_notification, sender=FriendRequest)
 def create_comment_notifiaction(sender, comment, request, **kwargs):
     Notification(user=comment.content_object.user, type='CS', other_user=comment.user).save()
 comment_was_posted.connect(create_comment_notifiaction)
+
+def create_share_notifiaction(sender, instance, created, **kwargs):
+    if created:
+        Notification(user=instance.user, type='PS', other_user=instance.user_to).save()
+post_save.connect(create_share_notifiaction, sender=SharePost)
