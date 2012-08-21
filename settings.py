@@ -173,7 +173,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 MEDIA_DEV_MODE = True
 DEV_MEDIA_URL = '/devmedia/'
 PRODUCTION_MEDIA_URL = '/media/'
-GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),)
+GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),os.path.join(os.path.dirname(__file__), 'uploads'),)
 ROOT_MEDIA_FILTERS = {
     'js': 'mediagenerator.filters.yuicompressor.YUICompressor',
     'css': 'mediagenerator.filters.yuicompressor.YUICompressor',
