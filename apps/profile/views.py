@@ -5,6 +5,7 @@ from django.template import RequestContext
 
 from account.models import UserProfile
 from notification.models import Notification
+from .forms import *
 
 @login_required
 def feed(request):
@@ -30,6 +31,7 @@ def timeline(request):
 def profile(request, username=None):
     # TODO: Logic here needs to see what relation the current user is to the profile user
     # and compare this against their privacy settings to see what can be seen.
+    form = ImageForm()
     if username != None:
         try:
             profile_user = UserProfile.objects.get(username=username)
@@ -38,11 +40,23 @@ def profile(request, username=None):
     else:
         profile_user = request.user
 
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            instance = UserProfile.objects.get(user=request.user)
+            instance.photo = request.FILES['photo']
+            instance.save()
+            from django.http import HttpResponseRedirect
+            
+            return HttpResponseRedirect(request.path)
+
     return render_to_response(
         'profile/profile.html',
         {
             'profile_user': profile_user,
-            'not_count': Notification.objects.filter(user=request.user).count()
+            'not_count': Notification.objects.filter(user=request.user).count(),
+            'form' : form
         },
         RequestContext(request)
     )
+
