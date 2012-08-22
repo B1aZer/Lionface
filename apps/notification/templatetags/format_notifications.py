@@ -17,5 +17,7 @@ def format_notification(notification):
         return render_to_string('notification/_comment_submitted.html', data)
     if notification.type == 'PS':
         return render_to_string('notification/_shared_post.html', data)
+    if notification.type == 'PP':
+        return render_to_string('notification/_profile_post.html', data)
     return ""
 
