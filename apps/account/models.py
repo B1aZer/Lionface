@@ -19,8 +19,7 @@ class FriendRequest(models.Model):
         from post.models import FriendPost
         self.from_user.friends.add(self.to_user)
         self.from_user.save()
-
-        Notification(user=self.from_user, type='FA', other_user=self.to_user).save()
+        Notification(user=self.from_user, type='FA', other_user=self.to_user, content_object = self).save()
 #TODO careful with user_to
 #this should be checked later
         FriendPost(user=self.from_user, friend=self.to_user, user_to=self.to_user).save()

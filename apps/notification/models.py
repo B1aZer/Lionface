@@ -36,8 +36,9 @@ class Notification(models.Model):
             self.save()
 
 def create_friend_request_notification(sender, instance, created, **kwargs):
+    #import pdb;pdb.set_trace()
     if created:
-        Notification(user=instance.to_user, type='FR', friend_request=instance).save()
+        Notification(user=instance.to_user, type='FR', friend_request=instance, content_object=instance).save()
 post_save.connect(create_friend_request_notification, sender=FriendRequest)
 
 def create_profile_post_notification(sender, instance, created, **kwargs):
