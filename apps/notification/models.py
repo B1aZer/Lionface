@@ -3,12 +3,16 @@ from account.models import *
 from post.models import *
 from django.db.models.signals import post_save
 from django.contrib.comments.signals import comment_was_posted
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+
 
 NOTIFICATION_TYPES = (
     ('FR', 'Friend Request'),
     ('FA', 'Friend Accepted'),
     ('CS', 'Comment Submitted'),
     ('PS', 'Post Shared'),
+    ('PP', 'Profile Post'),
 )
 
 class Notification(models.Model):
@@ -16,6 +20,9 @@ class Notification(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     type = models.CharField(max_length='2', choices=NOTIFICATION_TYPES)
     read = models.BooleanField(default=False)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     # Friend request type
     friend_request = models.ForeignKey(FriendRequest, null=True)
@@ -33,12 +40,17 @@ def create_friend_request_notification(sender, instance, created, **kwargs):
         Notification(user=instance.to_user, type='FR', friend_request=instance).save()
 post_save.connect(create_friend_request_notification, sender=FriendRequest)
 
+def create_profile_post_notification(sender, instance, created, **kwargs):
+    if created:
+        Notification(user=instance.user_to, type='PP', other_user=instance.user, content_object=instance).save()
+post_save.connect(create_profile_post_notification, sender=ContentPost)
+
 def create_comment_notifiaction(sender, comment, request, **kwargs):
     if comment.content_object.user <> comment.user:
-        Notification(user=comment.content_object.user, type='CS', other_user=comment.user).save()
+        Notification(user=comment.content_object.user, type='CS', other_user=comment.user, content_object=comment.content_object.post.get_inherited()).save()
 comment_was_posted.connect(create_comment_notifiaction)
 
 def create_share_notifiaction(sender, instance, created, **kwargs):
     if created and instance.user <> instance.user_to:
-        Notification(user=instance.user, type='PS', other_user=instance.user_to).save()
+        Notification(user=instance.user, type='PS', other_user=instance.user_to, content_object=instance).save()
 post_save.connect(create_share_notifiaction, sender=SharePost)

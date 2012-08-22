@@ -1,6 +1,6 @@
 <li class="shared_post">
   <div style="padding: 15px; padding-left: 35px;" class="link-output">
-    <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a> shared your post.
+      <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a> <a href="{{notification.other_user.get_absolute_url}}#{{ notification.content_object.id }}">shared</a> your post.
   </div>
   <div class="separator"></div>
 </li>

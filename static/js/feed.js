@@ -11,6 +11,14 @@ function loadNewsFeed(elem) {
     {
       success: function(data) {
         $elem.html(data);
+        $(window).data('ajax_finished','true');
+        var hash = document.location.hash;
+        if (hash) {
+            var ids = hash.replace("#","");
+            var offs = $('html, body').find('#post_'+ids).offset();
+            $('html, body').animate({scrollTop:offs.top}, 500); 
+        }
+
       },
       error: function() {
         $elem.html('Unable to retrieve data.');

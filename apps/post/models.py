@@ -85,6 +85,10 @@ class NewsItem(models.Model):
         # That might overload the news feed thing though.
         return self.user.friends.all() | UserProfile.objects.filter(id=self.user.id)
 
+    def get_id(self):
+         original = self.post.get_inherited()
+         return original.id
+
     @property
     def timestamp(self):
         return self.date
