@@ -51,9 +51,15 @@ class ContentPost(Post):
         from django.utils.html import escape
         return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), escape(self.content)))
 
+    def get_id(self):
+         return self.id 
+
     @property
     def timestamp(self):
         return self.date
+
+    def get_type(self):
+        return self._meta.verbose_name
 
 class SharePost(Post):
     content = models.TextField(null=True)
@@ -88,6 +94,10 @@ class NewsItem(models.Model):
     def get_id(self):
          original = self.post.get_inherited()
          return original.id
+
+    def get_type(self):
+         original = self.post.get_inherited()
+         return original._meta.verbose_name
 
     @property
     def timestamp(self):

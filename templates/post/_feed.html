@@ -14,13 +14,13 @@ function ReverseContentDisplay(d) {
 }
 </script>
 
-{% load comments %}
+{% load media comments %}
 
 {% for item in items %}
 {% get_comment_count for item as comment_count %}
 <hr style="position: relative; left: 50px; background-color: #EEE; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
-<div id="post_{{ item.get_id }}" class="result post_{{ item.id }}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 15px 8px; width: 535px;">
-    <div class="user_thumbnail"></div>
+<div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {type: '{{item.get_type}}', user: {{ item.user.id }}}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 15px 8px; width: 535px;">
+    <div class="user_thumbnail" style="background-image: url({% media_url item.user.photo|cut:'uploads/' %}); background-size: 50px 50px;"></div>
     {{ item.render }}
     <div class="subtext">
         <div class="highlight">
@@ -42,15 +42,25 @@ function ReverseContentDisplay(d) {
 
         <div style="position: absolute; bottom: 0px; right: 16px; font-size: 8pt; color: #AAA;" class="highlight">
             {% if not del_false %}
-            {% if item.post.user.id == request.user.id  or item.post.user_to.id == request.user.id %}
-            <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
-            {% endif %}
-            {% endif %}
-            {% if item.post.contentpost.type == "P" %}
-            <span title="Privacy Settings: Public">Public</span>
-            {% elif item.post.contentpost.type == "F" %}
-            <span title="Privacy Settings: Friends Only">Friends</span>
+                {% if item.post.user.id == request.user.id  or item.post.user_to.id == request.user.id %}
+                <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
+                {% endif %}
+                {% if item.post.contentpost.type == "P" %}
+                <span title="Privacy Settings: Public">Public</span>
+                {% elif item.post.contentpost.type == "F" %}
+                <span title="Privacy Settings: Friends Only">Friends</span>
+                {% else %}
+                {% endif %}
             {% else %}
+                {% if item.user.id == request.user.id  or item.user_to.id == request.user.id %}
+                <a href="javascript:del_post_single({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
+                {% endif %}
+                {% if item.type == "P" %}
+                <span title="Privacy Settings: Public">Public</span>
+                {% elif item.type == "F" %}
+                <span title="Privacy Settings: Friends Only">Friends</span>
+                {% else %}
+                {% endif %}   
             {% endif %}
         </div>
 
