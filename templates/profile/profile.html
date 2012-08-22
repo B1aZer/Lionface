@@ -6,11 +6,11 @@
 {% block content_middle %}{% if profile_user == user %}{{ user|show_friend_count }}{% endif %}{% endblock %}
 
 {% block left_col %}
-<div class="noPhoto" style="background-image: url({% media_url profile_user.photo|cut:"uploads/" %}); background-size: 200px 200px;"><a href="javascript:$('.upload_form').show();" class="upload" style="position: relative; top: 210px; display:none;">upload</a></div>
+<div class="noPhoto" style="background-image: url({% media_url profile_user.photo|cut:"uploads/" %}); background-size: 200px 200px;"><a href="javascript:$('.upload_form').show();" class="upload" style="display:none;">Upload a New Profile Image</a></div>
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none">
     {% csrf_token %}
     {{ form.photo.errors }}
-    <p><label for="id_photo">Please Upload a Photo Image</label></p>
+    <p><label for="id_photo">Upload a Profile Image</label></p>
     {{ form.photo }}
     <p><input type="submit" value="Upload" /></p>
 </form>

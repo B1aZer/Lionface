@@ -349,8 +349,8 @@ h3 { text-align: center; font-size: 16px; }
 	background-repeat: no-repeat; 
 	position: relative; top: -10px;
 	border: 1px solid #EEE;
-	-moz-border-radius: 0 0 0 5px;
-	border-radius: 0 0 0 5px;
+	-moz-border-radius: 0 0 0 7px;
+	border-radius: 0 0 0 7px;
 }
 
 .comment {
@@ -364,6 +364,40 @@ h3 { text-align: center; font-size: 16px; }
 
 .comment:hover {
 	background: #F9F9F9;
+}
+
+.upload {
+	position: relative;
+	top: 0px;
+	display: block;
+	width: 188px;
+	text-align: center;
+	padding: 5px;
+	font-size: 8pt;
+	background: #FFF; /* Old browsers */
+	background: -moz-linear-gradient(top, #FFF 0%, #EEE 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#EEE)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,#FFF 0%,#EEE 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FFF 0%,#EEE 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FFF 0%,#EEE 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #FFF 0%,#EEE 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#EEE',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #DDD;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=90);
+	-moz-opacity: 0.9;
+	opacity: 0.9;
+}
+
+.upload_form {
+	border: 1px solid #EAEAEA;
+	display: block;
+	width: 173px;
+	padding: 0 10px;
+	position: relative;
+	top: -8px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #FAFAFA;
 }
 
 /* STANDARD */
@@ -400,7 +434,7 @@ button.positive, .buttons a.positive{
 	color: #777;
 }
 
-.blue_btn a, .blue_btn a:active, .blue_btn a:visited { 
+.blue_btn, .blue_btn a, .blue_btn a:active, .blue_btn a:visited { 
 	padding: 5px 12px 5px 12px; 
 	color: #FFF;
 	font-size: 11pt;
@@ -416,7 +450,7 @@ button.positive, .buttons a.positive{
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4499dd', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
 }
 
-.blue_btn a:hover { 
+.blue_btn:hover, .blue_btn a:hover { 
 	text-decoration: none;
 	background: rgb(85,170,238); /* Old browsers */
 	background: -moz-linear-gradient(top, rgba(85,170,238,1) 0%, rgba(34,119,187,1) 100%); /* FF3.6+ */
@@ -426,4 +460,5 @@ button.positive, .buttons a.positive{
 	background: -ms-linear-gradient(top, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* IE10+ */
 	background: linear-gradient(to bottom, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55aaee', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
+	cursor: pointer;
 }
