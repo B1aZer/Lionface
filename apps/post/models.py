@@ -63,7 +63,7 @@ class SharePost(Post):
     def render(self):
         #import pdb;pdb.set_trace()
         return mark_safe("""<a href='%s'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
-                            <div style="padding: 10px; background-color: #FBFBFB;">%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
+                            <div class='share_content'>%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)
