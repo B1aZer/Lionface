@@ -43,7 +43,7 @@ def profile(request, username=None):
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
-            instance = UserProfile.objects.get(user=request.user)
+            instance = UserProfile.objects.get(id=request.user.id)
             instance.photo = request.FILES['photo']
             instance.save()
             from django.http import HttpResponseRedirect

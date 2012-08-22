@@ -7,8 +7,8 @@ class ImageForm(forms.ModelForm):
         fields = ('photo',)
     
      # Add some custom validation to our image field
-    def clean_image(self):
-         image = self.cleaned_data.get('image',False)
+    def clean_photo(self):
+         image = self.cleaned_data.get('photo',False)
          if image:
              if image._size > 1*1024*1024:
                    raise forms.ValidationError("Image file too large ( > 1mb )")
