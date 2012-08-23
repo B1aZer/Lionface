@@ -12,13 +12,20 @@
       {% block left_col %}
         <ul class="notifications_list">
         {% for notification in notifications %}
-          {{ notification|format_notification }}
+            {% if notification.type != 'FR' %}
+              {{ notification|format_notification }}
+              {% endif %}
         {% endfor %}
         </ul>
       {% endblock %}
     </div>
     <div class="right_col">
       {% block right_col %}
+      {% for notification in notifications %}
+            {% if notification.type == 'FR' %}
+              {{ notification|format_notification }}
+              {% endif %}   
+             {% endfor %} 
       <div class="right_content"></div>
       {% endblock %}
     </div>

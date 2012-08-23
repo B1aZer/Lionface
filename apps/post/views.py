@@ -129,6 +129,16 @@ def show(request):
 
     return HttpResponse(json.dumps(data), "application/json")
 
+@login_required
+def delete_own_comment(request, message_id):
+    import pdb;pdb.set_trace()
+    comment = get_object_or_404(comments.get_model(), pk=message_id,
+            site__pk=settings.SITE_ID)
+    if comment.user == request.user:
+        comment.is_removed = True
+        comment.save()
+
+
 
 @login_required
 def delete(request, post_id = None):
