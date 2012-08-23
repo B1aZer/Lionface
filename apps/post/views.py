@@ -86,7 +86,7 @@ def show(request):
                 data['html'] = "Sorry no such post"
                 return HttpResponse(json.dumps(data), "application/json") 
 
-            post = NewsItem.objects.filter(post=cont_post)
+            post = NewsItem.objects.filter(post=cont_post, user=cont_post.user_to)
             if len(post) > 0:
                 t = loader.get_template('post/_notifiacation_post.html')
                 new_post = post
