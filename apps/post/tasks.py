@@ -24,11 +24,16 @@ class DeleteNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
         from models import Post, NewsItem
         #rdb.set_trace()
+        post_wrapper = post
         if user: users = [user]
-        else: users = post.get_involved()
+        else: users = post_wrapper.get_involved()
         for user in users:
-            NewsItem.objects.filter(user=user, post=post.post).delete()
-        Post.objects.get(id=post.post.id).delete()
+            post_news = NewsItem.objects.filter(user=user, post=post_wrapper.post)
+            if post_news:
+                post_news.delete()
+        post_obj = Post.objects.filter(id=post_wrapper.post.id)
+        if post_obj:
+            post_obj.delete() 
 
 tasks.register(DeleteNewsFeeds)
 

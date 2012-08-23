@@ -58,6 +58,10 @@ class ContentPost(Post):
     def timestamp(self):
         return self.date
 
+    @property
+    def post(self):
+        return self
+
     def get_type(self):
         return self._meta.verbose_name
 
@@ -111,7 +115,8 @@ post_save.connect(update_news_feeds, sender=ContentPost)
 post_save.connect(update_news_feeds, sender=SharePost)
 def delete_news_feeds(sender, instance, **kwargs):
     DeleteNewsFeeds.delay(instance)
-post_delete.connect(delete_news_feeds, sender=NewsItem)
+#post_delete.connect(delete_news_feeds, sender=NewsItem)
+#post_delete.connect(delete_news_feeds, sender=ContentPost)
 
 # Logic is that as each post is saved, the news feed for each related user
 # is rebuilt or amended by celery.  The news feed is basically a long timeline

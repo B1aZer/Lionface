@@ -6,6 +6,7 @@ import datetime
 
 from models import *
 from account.models import UserProfile
+from tasks import UpdateNewsFeeds
 
 try:
     import json
@@ -73,16 +74,19 @@ def save(request):
 @login_required
 def delete(request, post_id = None):
     #TODO can not delete after update
+    #import pdb;pdb.set_trace()
     data = {'status': 'OK'}
     if request.method == 'GET' and 'type' in request.GET:
         post_type = request.GET['type']
         if post_type == 'content post':
-            post_news = NewsItem.objects.get(post=ContentPost.objects.get(id=post_id))
-            post_news.delete()
+            post_news = ContentPost.objects.get(id=post_id)
+            #post_news.delete()
+            DeleteNewsFeeds.delay(post_news)
             return HttpResponse(json.dumps(data), "application/json")
     if post_id:
         post = NewsItem.objects.get(id=post_id)
-        post.delete()
+        DeleteNewsFeeds.delay(post)
+        #post.delete()
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
