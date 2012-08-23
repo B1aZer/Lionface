@@ -129,17 +129,17 @@ INSTALLED_APPS = (
     'django.contrib.comments',
 
     'south',
-    #'mediagenerator',
-    #'haystack',
-    #'djcelery',
+    'mediagenerator',
+    'haystack',
+    'djcelery',
 
-    #'current_user',
-    #'search',
-    #'public',
-    #'account',
-    #'profile',
-    #'notification',
-    #'post',
+    'current_user',
+    'search',
+    'public',
+    'account',
+    'profile',
+    'notification',
+    'post',
 )
 
 # A sample logging configuration. The only tangible logging
