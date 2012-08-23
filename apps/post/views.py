@@ -71,6 +71,27 @@ def save(request):
 
     return HttpResponse(json.dumps(data), "application/json")
 
+def show(request):
+    data = {'status': 'OK'}
+    #import pdb;pdb.set_trace()
+    if request.method == 'POST' and 'post_id' in request.POST:
+        post_type = request.POST['post_type']
+        post_id = request.POST['post_id']
+        if post_type == 'content post':
+            post = NewsItem.objects.filter(post=ContentPost.objects.get(id=int(post_id)))
+            if len(post) > 0:
+                t = loader.get_template('post/_notifiacation_post.html')
+                new_post = post
+                c = RequestContext(request,
+                        {
+                            'items': new_post,
+                        })
+                data['html'] = t.render(c)
+        data['status'] = 'post'
+
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 @login_required
 def delete(request, post_id = None):
     #TODO can not delete after update

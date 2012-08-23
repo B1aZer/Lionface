@@ -31,6 +31,9 @@ class Post(models.Model):
 class FriendPost(Post):
     friend = models.ForeignKey(UserProfile)
 
+    def name(self):
+        return self._meta.verbose_name
+
     def get_involved(self):
         return self.user.friends.all() | self.friend.friends.all()
 
@@ -54,6 +57,9 @@ class ContentPost(Post):
     def get_id(self):
          return self.id 
 
+    def name(self):
+        return self._meta.verbose_name
+
     @property
     def timestamp(self):
         return self.date
@@ -68,8 +74,13 @@ class ContentPost(Post):
 class SharePost(Post):
     content = models.TextField(null=True)
     id_news = models.IntegerField(default=0)
+
+    def name(self):
+        return self._meta.verbose_name
+
     def get_original_post(self):
         return NewsItem.objects.get(id=self.id_news)
+
     def render(self):
         #import pdb;pdb.set_trace()
         return mark_safe("""<a href='%s'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
@@ -86,6 +97,9 @@ class NewsItem(models.Model):
 
     def render(self):
         return self.post.get_inherited().render()
+
+    def name(self):
+        return self.post.get_inherited().name()
 
     def shared(self):
         return self.post.shared

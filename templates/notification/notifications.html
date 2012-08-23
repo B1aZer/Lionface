@@ -1,5 +1,5 @@
 {% extends "profile/base.html" %}
-{% load format_notifications %}
+{% load media format_notifications %}
 
 {% block content %}
   <div class="content_area notifications">
@@ -19,7 +19,9 @@
     </div>
     <div class="right_col">
       {% block right_col %}
+      <div class="right_content"></div>
       {% endblock %}
     </div>
   </div>
+  {% include_media 'notification.js' %}
 {% endblock %}
