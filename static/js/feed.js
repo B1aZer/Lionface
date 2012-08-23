@@ -45,25 +45,21 @@ function del_post(elem) {
 
 function del_post_single(elem) { 
     var data = $('.post_'+elem).metadata();
-    url = "/posts/del/" + elem + "/?";
 
     if(data.type !== undefined) {
 
-    url = "/posts/del/" + elem + "/?type="+data.type;
-    //alert(url);
+    url = "/posts/del/" + elem + "?type="+data.type;
     }
-/*
     $.ajax(url,
     {
       success: function(data) {
-        $('.post_'+elem).prev('hr').hide()
-        $('.post_'+elem).fadeOut()
+          $('.post_'+elem).prev('hr').hide();
+          $('.post_'+elem).fadeOut();
       },
       error: function() {
         alert('Unable to delete data.');
       }
     }); 
-    */
 
 }     
 

@@ -74,6 +74,12 @@ def save(request):
 def delete(request, post_id = None):
     #TODO can not delete after update
     data = {'status': 'OK'}
+    if request.method == 'GET' and 'type' in request.GET:
+        post_type = request.GET['type']
+        if post_type == 'content post':
+            post_news = NewsItem.objects.get(post=ContentPost.objects.get(id=post_id))
+            post_news.delete()
+            return HttpResponse(json.dumps(data), "application/json")
     if post_id:
         post = NewsItem.objects.get(id=post_id)
         post.delete()
