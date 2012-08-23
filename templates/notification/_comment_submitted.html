@@ -1,6 +1,6 @@
-<li class="comment_submitted">
+<li class="comment_submitted {type: '{{ notification.content_object.name }}', id: '{{ notification.content_object.id }}'}">
   <div style="padding: 15px; padding-left: 35px;" class="link-output">
-      <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a>  <a href="{{notification.user.get_absolute_url}}#{{ notification.content_object.id }}">commented</a> on your post.
+      <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a> commented on your post.
   </div>
   <div class="separator"></div>
 </li>

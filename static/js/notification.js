@@ -31,7 +31,7 @@ function load_post(post, type) {
 }     
 
 $(document).ready(function(){
-    $(".profile_post, .shared_post").click(function() {
+    $(".profile_post, .shared_post, .comment_submitted").click(function() {
         var meta = $(this).metadata();
         if (meta.id) {
             load_post(meta.id, meta.type)
