@@ -5,6 +5,7 @@ function load_post(post, type) {
     //var $elem = $(document.createElement('div'));
     //$(".right_col").append($elem);
     var $elem = $('.right_content');
+    $elem.html("");
     $elem.addClass("large_loader"); 
 
     $.ajax(

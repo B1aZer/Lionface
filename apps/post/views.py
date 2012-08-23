@@ -74,7 +74,6 @@ def save(request):
 
 def show(request):
     data = {'status': 'OK'}
-    #import pdb;pdb.set_trace()
     if request.method == 'POST' and 'post_id' in request.POST:
         post_type = request.POST['post_type']
         post_id = request.POST['post_id']
@@ -86,7 +85,7 @@ def show(request):
                 data['html'] = "Sorry no such post"
                 return HttpResponse(json.dumps(data), "application/json") 
 
-            post = NewsItem.objects.filter(post=cont_post, user=cont_post.user_to)
+            post = NewsItem.objects.filter(post=cont_post)
             if len(post) > 0:
                 t = loader.get_template('post/_notifiacation_post.html')
                 new_post = post
@@ -110,6 +109,21 @@ def show(request):
                 c = RequestContext(request,
                         {
                             'items': new_post,
+                        })
+                data['html'] = t.render(c)
+
+        if post_type == 'comment post':
+            try:
+                comm_post = NewsItem.objects.filter(id=int(post_id))
+            except ObjectDoesNotExist:
+                data['html'] = "Sorry no such post"
+                return HttpResponse(json.dumps(data), "application/json") 
+
+            if len(comm_post) > 0: 
+                t = loader.get_template('post/_notifiacation_post.html')
+                c = RequestContext(request,
+                        {
+                            'items': comm_post,
                         })
                 data['html'] = t.render(c)
 
