@@ -21,11 +21,13 @@
     </div>
     <div class="right_col">
       {% block right_col %}
+      <ul class="notifications_list"> 
       {% for notification in notifications %}
             {% if notification.type == 'FR' %}
               {{ notification|format_notification }}
               {% endif %}   
              {% endfor %} 
+             </ul> 
       <div class="right_content"></div>
       {% endblock %}
     </div>
