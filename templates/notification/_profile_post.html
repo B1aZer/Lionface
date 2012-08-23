@@ -1,6 +1,6 @@
-<li class="profile_post {type: '{{ notification.content_object.name }}', id: {{ notification.content_object.id }}}">
+<li class="profile_post {type: '{{ notification.content_object.name }}', id: '{{ notification.content_object.id }}'}">
 <div style="padding: 15px; padding-left: 35px;" class="link-output">
-      <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a>  <a href="{{notification.user.get_absolute_url}}#{{ notification.content_object.id }}">posted</a> on your profile.
+      <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a>  posted on your profile.
   </div>
   <div class="separator"></div>
 </li>

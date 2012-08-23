@@ -23,17 +23,21 @@ function load_post(post, type) {
 
       },
       error: function() {
-        alert('Unable to delete data.');
+        alert('Unable to retrieve data.');
+        $elem.removeClass("large_loader");
       }
     });    
 
 }     
 
 $(document).ready(function(){
-    $(".profile_post").click(function() {
+    $(".profile_post, .shared_post").click(function() {
         var meta = $(this).metadata();
-        if (meta.id != undefined) {
+        if (meta.id) {
             load_post(meta.id, meta.type)
+            }
+        else {
+            $('.right_content').html("");
             }
     });
 }); 
