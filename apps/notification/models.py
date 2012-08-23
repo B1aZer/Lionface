@@ -43,7 +43,8 @@ post_save.connect(create_friend_request_notification, sender=FriendRequest)
 
 def create_profile_post_notification(sender, instance, created, **kwargs):
     if created:
-        Notification(user=instance.user_to, type='PP', other_user=instance.user, content_object=instance).save()
+        if instance.user_to <> instance.user:
+            Notification(user=instance.user_to, type='PP', other_user=instance.user, content_object=instance).save()
 post_save.connect(create_profile_post_notification, sender=ContentPost)
 
 def create_comment_notifiaction(sender, comment, request, **kwargs):
