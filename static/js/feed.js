@@ -38,6 +38,12 @@ function del_post_single(elem) {
     if(data.type !== undefined) {
 
     url = "/posts/del/" + elem + "?type="+data.type;
+
+  if (window.location.pathname.indexOf('lionface') >= 0) 
+  { 
+    url = '/lionface' +  url;
+  }
+    
     }
     $.ajax(url,
     {
@@ -54,7 +60,7 @@ function del_post_single(elem) {
 
 $(document).ready(function(){
   loadNewsFeed($("#news_feed"));
-  alert(window.location.pathname);
+  //alert(window.location.pathname);
 });
 
               
