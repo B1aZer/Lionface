@@ -7,3 +7,4 @@ celerybeat-schedule
 _generated_media/
 _generated_media_names.py
 images/
+wsgi.py

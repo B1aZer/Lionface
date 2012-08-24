@@ -122,9 +122,9 @@ a.post:hover, .submit-post:hover {
 }
 
 .highlight {
-	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=40);
-	-moz-opacity: 0.4;
-	opacity: 0.4;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=55);
+	-moz-opacity: 0.55;
+	opacity: 0.55;
 }
 
 .highlight:hover {
@@ -135,7 +135,7 @@ a.post:hover, .submit-post:hover {
 
 /* Base */
 .content_area { width: 900px !important; margin: auto; float: none !important;}
-#footer { color: #777; height: 100px; margin-top: 10px; font-size: 8pt; text-align: center; }
+#footer { color: #777; height: 100px; margin-top: 10px; font-size: 8pt; text-align: center; clear: both; }
 
 /* Errors */
 .errorlist { color: #f00; font-weight: bold; font-size: 10px; display: inline-block; background-color: transparent; }
@@ -295,8 +295,8 @@ a.logout:hover {
   border: 1px solid #EEE; border-width: 1px;
   min-height: 478px;
 }
-.notifications .left_col { width: 450px; border-width: 1px 0 1px 1px; }
-.notifications .right_col { width: 450px; margin-left: 450px; }
+.notifications .left_col { width: 200px; border-width: 1px 0 0 0; }
+.notifications .right_col { width: 700px; margin-left: 200px; padding: 0px; }
 #profile_top { font-size: 12px; height: 26px; margin-top: 26px; }
 
 h3 { text-align: center; font-size: 16px; }
@@ -328,7 +328,7 @@ h3 { text-align: center; font-size: 16px; }
 
 /* Notifications */
 .notifications_list { list-style: none; }
-.notifications_list .separator { background-color: #EEE; border: 1px; height: 1px; width: 430px; margin: auto; margin-top: 6px; margin-bottom: 6px; }
+.notifications_list .separator { background-color: #EEE; border: 1px; height: 1px; width: 200px; margin: auto; margin-top: 6px; margin-bottom: 6px; }
 .notifications_list .friend_request { background-color: #F5F5F5; height: 48px; }
 
 .link-output:hover {
