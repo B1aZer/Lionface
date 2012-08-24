@@ -1,7 +1,7 @@
 #SETTING PY
 import os, os.path
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -170,14 +170,14 @@ LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/account/logout/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-MEDIA_DEV_MODE = True
+MEDIA_DEV_MODE = False
 DEV_MEDIA_URL = '/devmedia/'
-PRODUCTION_MEDIA_URL = '/media/'
+PRODUCTION_MEDIA_URL = '/lionface/media/'
 GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),os.path.join(os.path.dirname(__file__), 'uploads'),)
-ROOT_MEDIA_FILTERS = {
-    'js': 'mediagenerator.filters.yuicompressor.YUICompressor',
-    'css': 'mediagenerator.filters.yuicompressor.YUICompressor',
-}
+#ROOT_MEDIA_FILTERS = {
+#    'js': 'mediagenerator.filters.yuicompressor.YUICompressor',
+#    'css': 'mediagenerator.filters.yuicompressor.YUICompressor',
+#}
 YUICOMPRESSOR_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                   'yuicompressor.jar')
 
