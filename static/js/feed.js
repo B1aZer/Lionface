@@ -6,6 +6,11 @@ function loadNewsFeed(elem) {
   url = "/posts/feed/";
   if($data.type == "profile")
     url = "/posts/feed/" + $data.user + "/";
+
+  if (window.location.pathname.indexOf('lionface') >= 0) 
+  { 
+    url = '/lionface' +  url;
+  }
   
   $.ajax(url,
     {
@@ -49,6 +54,7 @@ function del_post_single(elem) {
 
 $(document).ready(function(){
   loadNewsFeed($("#news_feed"));
+  alert(window.location.pathname);
 });
 
               
