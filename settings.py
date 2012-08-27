@@ -170,7 +170,7 @@ LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/account/logout/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-MEDIA_DEV_MODE = True
+MEDIA_DEV_MODE = False
 DEV_MEDIA_URL = '/devmedia/'
 PRODUCTION_MEDIA_URL = '/lionface/media/'
 GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),os.path.join(os.path.dirname(__file__), 'uploads'),)

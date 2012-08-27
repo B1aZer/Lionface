@@ -50,6 +50,11 @@ a.reset:hover {
 	color: #333;
 }
 
+.reset_box {
+	display: block;
+	height: 200px;
+}
+
 #center_box { 
 	height: 310px;
 	width: 100%;	
