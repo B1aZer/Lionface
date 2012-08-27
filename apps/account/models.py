@@ -54,6 +54,12 @@ class UserProfile(User):
         from post.models import NewsItem
         return NewsItem.objects.filter(user__in=self.friends.all()).order_by('date').reverse()   
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('profile.views.profile', [str(self.username)])
+    
+    
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         up = UserProfile(user_ptr_id=instance.pk)

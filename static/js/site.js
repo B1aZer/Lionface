@@ -139,6 +139,11 @@ function ReverseContentDisplay(d) {
 function share_post(elem) { 
     url = "/posts/share/" + elem + "/";
 
+     if (window.location.pathname.indexOf('lionface') >= 0) 
+  { 
+    url = '/lionface' +  url;
+  }       
+
     $.ajax(url,
     {
       success: function(data) {
@@ -153,6 +158,11 @@ function share_post(elem) {
 
 function del_post(elem) { 
     url = "/posts/del/" + elem + "/";
+
+     if (window.location.pathname.indexOf('lionface') >= 0) 
+  { 
+    url = '/lionface' +  url;
+  }       
 
     $.ajax(url,
     {
