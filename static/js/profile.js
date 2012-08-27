@@ -15,9 +15,17 @@ $(function() {
             $(this).val("Share something...");
         }
     });
+
+    var url = '/posts/save/'
+
+     if (window.location.pathname.indexOf('lionface') >= 0) 
+  { 
+    url = '/lionface' +  url;
+  }       
+    
     $("#postboxbutton").click(function() {
         $.ajax({
-            url: '/posts/save/',
+            url: url,
             data: $('#postform').serialize(),
             type: 'POST',
             dataType: 'json',
@@ -35,7 +43,7 @@ $(function() {
     $('.postcontent').keypress(function(e){
         if(e.which == 13){
             $.ajax({
-                url: '/posts/save/',
+                url: url,
                 data: $('#postform').serialize(),
                 type: 'POST',
                 dataType: 'json',

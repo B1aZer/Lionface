@@ -2,6 +2,12 @@
 
 function load_post(post, type) { 
     url = "/posts/show/";
+
+     if (window.location.pathname.indexOf('lionface') >= 0) 
+  { 
+    url = '/lionface' +  url;
+  }       
+    
     //var $elem = $(document.createElement('div'));
     //$(".right_col").append($elem);
     var $elem = $('.right_content');
