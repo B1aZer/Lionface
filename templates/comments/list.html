@@ -1,19 +1,21 @@
 <dl id="comments">
   {% for comment in comment_list %}
+	<div  onMouseOver="ShowContent('z{{ comment.id }}'); return false;" onMouseOut="HideContent('z{{ comment.id }}'); return false;">
     <dt id="c{{ comment.id }}">
 		<table width="100%"><tr>
 			<td align="left">
                 <a href='{{ comment.user.get_absolute_url }}'>{{comment.name}}</a>
 			</td>
-			<td align="right"><div class="highlight">
-		{{ comment.submit_date }} 
+			<td align="right"><div id="z{{ comment.id }}" style="display: none; color: #AAA;">
+		 {{ comment.submit_date }} <a href="/posts/dlcom/{{ comment.id }}" style="margin-left: 15px;">Delete</a>
 			</div></td>
 		</tr></table>
     </dt>
     <dd>
         <p class="comment">{{ comment.comment }}</p>
     </dd>
-    <div><a href="/posts/dlcom/{{ comment.id }}">delete</a>
+	</div>
+    <div>
 	<hr noshade="noshade" style="border: 0px; height: 1px; background: #DDD;" size="1" /><div style="height: 7px;"></div>
   {% endfor %}
 </dl>

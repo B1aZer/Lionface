@@ -28,3 +28,8 @@ q:before,q:after {
 }
 abbr,acronym { border:0;
 }
+
+.reset_box {
+	display: block;
+	height: 200px;
+}
