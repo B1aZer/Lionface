@@ -174,10 +174,10 @@ MEDIA_DEV_MODE = False
 DEV_MEDIA_URL = '/devmedia/'
 PRODUCTION_MEDIA_URL = '/lionface/media/'
 GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),os.path.join(os.path.dirname(__file__), 'uploads'),)
-ROOT_MEDIA_FILTERS = {
-    'js': 'mediagenerator.filters.yuicompressor.YUICompressor',
-    'css': 'mediagenerator.filters.yuicompressor.YUICompressor',
-}
+#ROOT_MEDIA_FILTERS = {
+    #'js': 'mediagenerator.filters.yuicompressor.YUICompressor',
+    #'css': 'mediagenerator.filters.yuicompressor.YUICompressor',
+#}
 YUICOMPRESSOR_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                                   'yuicompressor.jar')
 
