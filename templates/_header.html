@@ -10,7 +10,11 @@
       </ul>
     </div>
 
-    <form id="quick_search" method="GET" action="/search/">
+    {% if 'lionface' in request.get_full_path %}
+        <form id="quick_search" method="GET" action="/lionface/search/">
+    {% else %}
+        <form id="quick_search" method="GET" action="/search/">
+    {% endif %}
     <div id="search_bar">
         <input name="models" type="hidden" value="auth.user">
         <input name="q" type="text" value="Search..." onClick="value=''">
