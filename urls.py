@@ -43,7 +43,7 @@ urlpatterns = patterns('',
 if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^uploads/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': '/Users/blaze/Sites/clients/Nick/lionface/uploads',
+            'document_root': settings.UPLOAD_DIR,
         }),
    )
 
