@@ -11,3 +11,13 @@ def format_result(object, current_user):
         return render_to_string('search/_result_user.html', { 'user': object, 'current_user': current_user })
     return ""
 
+# Function to format a search result.
+@register.filter(name='format_image')
+def format_image(photo, path):
+    #import pdb;pdb.set_trace()
+    if 'lionface' in path:
+        photo = "/lionface/%s" % photo.name
+    if 'noProfilePhoto.png' in photo.name:
+        photo = 'uploads/images/noProfilePhoto.png'
+    return photo
+
