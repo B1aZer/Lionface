@@ -18,6 +18,6 @@ def format_image(photo, path):
     if 'noProfilePhoto.png' in photo.name:
         photo = 'uploads/images/noProfilePhoto.png'
     if 'lionface' in path:
-        photo = "lionface/%s" % photo.name
+        photo = "lionface/%s" % photo
     return photo
 
