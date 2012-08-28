@@ -17,7 +17,7 @@ def format_image(photo, path):
     #import pdb;pdb.set_trace()
     if 'lionface' in path:
         photo = "/lionface/%s" % photo.name
-    if 'noProfilePhoto.png' in photo.name:
+    if 'noProfilePhoto.png' in photo:
         photo = 'uploads/images/noProfilePhoto.png'
     return photo
 
