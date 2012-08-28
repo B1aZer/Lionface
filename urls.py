@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from haystack.views import SearchView, search_view_factory
 import search.forms
 import search.views
+from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -35,3 +36,14 @@ urlpatterns = patterns('',
             form_class=search.forms.SearchForm,
         ))),
 )
+
+
+# ... the rest of your URLconf goes here ...
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^uploads/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': '/Users/blaze/Sites/clients/Nick/lionface/uploads',
+        }),
+   )
+

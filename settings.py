@@ -173,7 +173,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 MEDIA_DEV_MODE = False
 DEV_MEDIA_URL = '/devmedia/'
 PRODUCTION_MEDIA_URL = '/lionface/media/'
-GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),os.path.join(os.path.dirname(__file__), 'uploads'),)
+GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),)
 # Configure yuicompressor if available
 """
 YUICOMPRESSOR_PATH = os.path.join(
