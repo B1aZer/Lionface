@@ -1,9 +1,9 @@
 {% extends 'profile/base.html' %}
 {% load media friends %}
 
-
 {% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
 {% block content_middle %}{% if profile_user == user %}{{ user|show_friend_count }}{% endif %}{% endblock %}
+{% block content_subtitle %}+ Add/- Remove{% endblock %}
 
 {% block left_col %}
 <div class="noPhoto" style="background-image: url({% media_url profile_user.photo|cut:"uploads/" %}); background-size: 200px 200px;">{% if request.user == profile_user %}<a href="javascript:$('.upload_form').show();" class="upload" style="display:none;">Upload a New Profile Image</a>{% endif %}</div>
@@ -28,7 +28,9 @@
     <div id="postbox">
         <form id="postform">{% csrf_token %}
             <div style="padding: 10px;" align="center">
-                <textarea class="postcontent" name="content"></textarea>
+
+                <textarea class="postcontent" name="content" style="line-height:1; font-size: 110%;"></textarea>
+
                 <br />
                 <div style="font-size: 11px; padding: 7px 7px 0 7px;" class="postoptions">
                     <table width="100%"><tr>

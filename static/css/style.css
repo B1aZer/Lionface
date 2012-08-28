@@ -99,8 +99,9 @@ a.post:hover, .submit-post:hover {
 }
 
 .post_content {
-	padding: 7px 0 7px 15px;
+	padding: 7px 0 7px 0;
 	margin: 3px 0;
+	font-size: 10pt;
 }
 
 .postcontent {
@@ -111,7 +112,9 @@ a.post:hover, .submit-post:hover {
 	-moz-border-radius: 3px; 
 	border-radius: 3px; 
 	width: 555px !important;
-	border: 1px solid #CCC;
+	border: 1px solid #CCC;'
+	overflow: hidden;
+	height: auto;
 }
 
 .highlight {
@@ -274,7 +277,7 @@ a.logout:hover {
 
 .left { float: left; }
 .right { float: right; }
-.center { text-align: center; }
+.center { text-align: center; position: absolute; width: 900px; }
 
 .left_col {
   float: left;
@@ -290,7 +293,8 @@ a.logout:hover {
 }
 .notifications .left_col { width: 200px; border-width: 1px 0 0 0; }
 .notifications .right_col { width: 700px; margin-left: 200px; padding: 0px; }
-#profile_top { font-size: 12px; height: 26px; margin-top: 26px; }
+#profile_top { font-size: 9pt; height: 26px; margin-top: 26px; }
+#profile_top div { display: inline-block; }
 
 h3 { text-align: center; font-size: 16px; }
 
@@ -314,7 +318,7 @@ h3 { text-align: center; font-size: 16px; }
 	border-color: #EEE;
 }
 
-.result .subtext { font-size: 11px; color: #A70; border: 1px solid #F7F7F7; border-width: 1px 0 0 0; padding-top: 5px; }
+.result .subtext { font-size: 8pt; color: #A70; }
 /*.result .subtext a { color: #888; }*/
 .link_loader { width: 16px; height: 16px; float: left; background: url(../images/link_loader.gif) center no-repeat; }
 .large_loader { background: url(../images/loader.png); width: 64px; height: 64px; margin: auto; margin-top: 20px; }
@@ -343,14 +347,14 @@ h3 { text-align: center; font-size: 16px; }
 	background-repeat: no-repeat; 
 	position: relative; top: -10px;
 	border: 1px solid #EEE;
-	-moz-border-radius: 0 0 0 7px;
-	border-radius: 0 0 0 7px;
+	-moz-border-radius: 0 0 0 5px;
+	border-radius: 0 0 0 5px;
 }
 
 .comment {
 	color: #333; 
 	font-size: 9pt; 
-	padding: 7px;
+	padding: 7px 0;
 	margin: 3px 0;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -397,6 +401,26 @@ h3 { text-align: center; font-size: 16px; }
 	border-radius: 3px;
 	border: 1px solid #DDD;
 	margin: 7px 0;
+}
+
+.post_bottom {
+	position: absolute; 
+	bottom: 0px; 
+	right: 10px; 
+	font-size: 8pt; 
+	color: #AAA;
+}
+
+.post_bottom a {
+	color: #AAA;
+}
+
+.post_top {
+	position: absolute; 
+	top: 0px; 
+	right: 10px; 
+	font-size: 8pt; 
+	color: #AAA;
 }
 
 /* STANDARD */

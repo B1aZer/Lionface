@@ -16,10 +16,10 @@ def has_friend_request(user, friend):
 
 @register.filter(name='show_friend_count')
 def show_friend_count(user):
-    wordarray = ['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
-    count = "Nobody is"
+    wordarray = ['2', '3', '4', '5', '6', '7', '8', '9']
+    count = "0 Friends"
     num = user.friends.all().count()
-    if(num == 1): count = "One person is"
-    elif( num > 0 and num < 10): count = "%s people are" % (wordarray[num-2])
-    elif( num > 0): count = "%d people are" % (num)
-    return "%s following you publicly." % (count)
+    if(num == 1): count = "%s Friend"
+    elif( num > 0 and num < 10): count = "%s Friends" % (wordarray[num-2])
+    elif( num > 0): count = "%d Friends" % (num)
+    return "%s" % (count)

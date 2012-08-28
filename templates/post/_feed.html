@@ -2,8 +2,8 @@
 
 {% for item in items %}
 {% get_comment_count for item as comment_count %}
-<hr style="position: relative; left: 50px; background-color: #EEE; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
-<div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {type: '{{item.get_type}}', user: {{ item.user.id }}}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 15px 8px; width: 535px;">
+	<hr style="position: relative; left: 50px; background-color: #EEE; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
+<div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {type: '{{item.get_type}}', user: {{ item.user.id }}}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 5px 8px; width: 535px;">
     <div class="user_thumbnail" style="background-image: url({% media_url item.user.photo|cut:'uploads/' %}); background-size: 50px 50px;"></div>
     {{ item.render }}
     <div class="subtext">
@@ -11,7 +11,7 @@
             <a href="javascript:$('.comment_{{ item.id }}').fadeIn();">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
         </div><br />
-        <div class="comments comment_{{ item.id }}" style="display: none; padding: 15px 20px 10px 20px; background-color: #F7F7F7; -moz-border-radius: 5px; border-radius: 5px;">
+        <div class="comments comment_{{ item.id }}" style="display: none; padding: 15px 20px 10px 20px; margin: 0 0 15px 0; background-color: #F7F7F7; -moz-border-radius: 5px; border-radius: 5px;">
             {% render_comment_list for item %}
             {% render_comment_form for item %}
         </div>
@@ -19,12 +19,12 @@
 
     <div id="{{item.id}}" style="display: none;">
 
-        <div style="position: absolute; top: 0px; right: 16px; font-size: 8pt; color: #AAA;">
+        <div class="post_top">
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
 
 
-        <div style="position: absolute; bottom: 0px; right: 16px; font-size: 8pt; color: #AAA;">
+        <div class="post_bottom">
             {% if not del_false %}
                 {% if item.post.user.id == request.user.id  or item.post.user_to.id == request.user.id %}
                 <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 

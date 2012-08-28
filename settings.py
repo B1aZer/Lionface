@@ -220,10 +220,17 @@ HAYSTACK_WHOOSH_PATH = '/tmp/lionface_index.db'
 SITE_ID = 1
 BROKER_URL = "django://"
 
-try:
-    from settings_local import *
-except ImportError:
-    pass
+if os.environ.get('production'):
+	try:
+	    from settings_production import *
+	except ImportError:
+	    pass
+else:
+
+	try:
+	    from settings_local import *
+	except ImportError:
+	    pass
 
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda o: "/user/profile/%s/" % o.username,
