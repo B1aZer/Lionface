@@ -3,7 +3,11 @@
 {% for item in items %}
 {% get_comment_count for item as comment_count %}
 <div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {type: '{{item.get_type}}', user: {{ item.user.id }}}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 5px 8px; width: 535px;">
-    <div class="user_thumbnail" style="background-image: url({% media_url item.user.photo|cut:'uploads/' %}); background-size: 50px 50px;"></div>
+     {% if 'noProfilePhoto.png' in item.user.photo.name %}
+    <div class="user_thumbnail" style="background-image: url('/uploads/images/noProfilePhoto.png'); background-size: 50px 50px;"></div>
+    {% else %}
+    <div class="user_thumbnail" style="background-image: url('/{{ item.user.photo }}'); background-size: 50px 50px;"></div>
+    {% endif %}     
     {{ item.render }}
     <div class="subtext">
         <div>

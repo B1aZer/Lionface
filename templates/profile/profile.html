@@ -6,7 +6,7 @@
 {% block content_subtitle %}+ Add/- Remove{% endblock %}
 
 {% block left_col %}
-<div class="noPhoto" style="background-image: url(/{{ profile_user.photo }}); background-size: 200px 200px;">{% if request.user == profile_user %}<a href="javascript:$('.upload_form').show();" class="upload" style="display:none;">Upload a New Profile Image</a>{% endif %}</div>
+<div class="noPhoto" style="background-image: url('/{{ profile_user.photo }}'); background-size: 200px 200px;">{% if request.user == profile_user %}<a href="javascript:$('.upload_form').show();" class="upload" style="display:none;">Upload a New Profile Image</a>{% endif %}</div>
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none">
     {% csrf_token %}
     {{ form.photo.errors }}
