@@ -10,7 +10,7 @@
             <a href="javascript:$('.comment_{{ item.id }}').fadeIn();">Comment</a> {% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
         </div><br />
-        <div class="comments comment_{{ item.id }}" style="display: none; padding: 15px 20px 10px 20px; margin: 0 0 15px 0; background-color: #F7F7F7; -moz-border-radius: 5px; border-radius: 5px;">
+        <div class="comments comment_{{ item.id }}" style="display: none; padding: 15px 20px 10px 20px; margin: 0 0 15px 0; background-color: #F7F7F7; -moz-border-radius: 3px; border-radius: 3px;">
             {% render_comment_list for item %}
             {% render_comment_form for item %}
         </div>

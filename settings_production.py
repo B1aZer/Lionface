@@ -1,6 +1,9 @@
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'               
 
 USE_TZ = True
+DEBUG = True
+UPLOAD_DIR = '/var/www/placeless/lionface/whispering-anchorage-2296/uploads' 
+MEDIA_ROOT = '/var/www/placeless/lionface/whispering-anchorage-2296/uploads'
 
 DATABASES = {
     'default': {
