@@ -217,7 +217,7 @@ MEDIA_BUNDLES = (
 
 HAYSTACK_SITECONF = 'search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = '/tmp/lionface_index.db'
+HAYSTACK_WHOOSH_PATH = os.path.join(os.path.dirname(__file__), 'whoosh_index')
 
 SITE_ID = 1
 BROKER_URL = "django://"
