@@ -26,7 +26,7 @@ def timeline(request):
         },
         RequestContext(request)
     )
-       
+
 @login_required
 def profile(request, username=None):
     # TODO: Logic here needs to see what relation the current user is to the profile user
@@ -47,7 +47,7 @@ def profile(request, username=None):
             instance.photo = request.FILES['photo']
             instance.save()
             from django.http import HttpResponseRedirect
-            
+
             return HttpResponseRedirect(request.path)
 
     return render_to_response(
@@ -56,6 +56,16 @@ def profile(request, username=None):
             'profile_user': profile_user,
             'not_count': Notification.objects.filter(user=request.user).count(),
             'form' : form
+        },
+        RequestContext(request)
+    )
+
+@login_required
+def settings(request):
+
+    return render_to_response(
+        'profile/settings.html',
+        {
         },
         RequestContext(request)
     )

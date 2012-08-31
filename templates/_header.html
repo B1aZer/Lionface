@@ -5,7 +5,7 @@
       <ul>
         <li><a href="{% url profile.views.profile %}" style="font-size: 12pt;">Profile</a></li>
         <li><a href="{% url profile.views.feed %}">News Feed</a></li>
-        <li><a href="#">Pages</a></li>
+        <li><a href="{% url pages.views.main %}">Pages</a></li>
 		<li style="display: inline-block; width: 95px;" onMouseOver="ShowContent('signout'); return false;" onMouseOut="HideContent('signout'); return false;"><a href="#" class="settings">Account</a>
 			<a href="{% url django.contrib.auth.views.logout_then_login %}" id="signout" title=" Log Out " target="_top">x</a></li>
 		
