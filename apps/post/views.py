@@ -87,11 +87,12 @@ def show(request):
 
             post = NewsItem.objects.filter(post=cont_post)
             if len(post) > 0:
-                t = loader.get_template('post/_notifiacation_post.html')
+                t = loader.get_template('post/_feed.html')
                 new_post = post
                 c = RequestContext(request,
                         {
                             'items': new_post,
+                            'notification':True,
                         })
                 data['html'] = t.render(c)
 
@@ -104,11 +105,12 @@ def show(request):
 
             post = NewsItem.objects.filter(post=share_post)
             if len(post) > 0:
-                t = loader.get_template('post/_notifiacation_post.html')
+                t = loader.get_template('post/_feed.html')
                 new_post = post
                 c = RequestContext(request,
                         {
                             'items': new_post,
+                            'notification':True,
                         })
                 data['html'] = t.render(c)
 
@@ -120,10 +122,11 @@ def show(request):
                 return HttpResponse(json.dumps(data), "application/json") 
 
             if len(comm_post) > 0: 
-                t = loader.get_template('post/_notifiacation_post.html')
+                t = loader.get_template('post/_feed.html')
                 c = RequestContext(request,
                         {
                             'items': comm_post,
+                            'notification':True,
                         })
                 data['html'] = t.render(c)
 
