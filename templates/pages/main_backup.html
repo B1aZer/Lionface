@@ -1,0 +1,66 @@
+ <script type="text/javascript"> 
+ function check1() { 
+ document.getElementById("checkbox1").checked = "checked"; 
+ } 
+ function check() { 
+ document.getElementById("checkbox").checked = "checked"; 
+ } 
+ </script> 
+
+{% extends 'profile/base.html' %}
+{% load media friends format_results %}
+
+{% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
+{% block content_middle %}{% if profile_user == user %}{{ user|show_friend_count }}{% endif %}{% endblock %}
+{% block content_subtitle %}+ Add/- Remove{% endblock %}
+
+{% block left_col %}
+<div class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;">{% if request.user == profile_user %}<a href="javascript:$('.upload_form').show();" class="upload" style="display:none;">Upload New</a>{% endif %}</div>
+<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none">
+    {% csrf_token %}
+    {{ form.photo.errors }}
+    <p><label for="id_photo">Upload a Profile Image</label></p>
+    {{ form.photo }}
+    <p><input type="submit" value="Upload" /></p>
+</form>
+
+{% endblock %}
+
+{% block right_col %}
+{% include_media 'feed.js' %}
+<div style="padding: 10px; position: relative; left: 40px;">
+    <div style="padding: 15px 0 25px 0px;">
+        <a href="#" class="profile_nav">Posts</a>
+        <a href="#" class="profile_nav">Loves</a>
+    </div>
+
+    <div id="postbox">
+        <form id="postform">{% csrf_token %}
+            <div style="padding: 10px;" align="center">
+
+                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 110%;"></textarea>
+
+                <br />
+                <div class="postoptions_container">
+                    <table width="100%"><tr>
+                            <td align="left" style="color: #999; font-size: 8pt;" width="50%">
+                                <input name="profile_id" type="hidden" value="{{profile_user.id}}" >
+                                	<div style="position: relative; width: 100%; height: 100%;"><div style="position: absolute; left: 0px; top: -12px;">
+							<div class="post_option" onClick="javascript:check1();">
+								<input name="type" type="radio" value="P" checked id="checkbox1"> Public</div> 
+							<div class="post_option" onClick="javascript:check();">
+								<input name="type" type="radio" value="F" id="checkbox"> Friends</div></div></div>
+                        </td><td align="right">
+                            <a href="#" class="post" id="postboxbutton">Post</a>
+                        </td>
+                </tr></table>
+            </div>
+        </div>
+    </div>
+</form>
+    </div>
+    <div id="news_feed" class="{type: 'profile', user: {{ profile_user.id }}}"></div>
+  </div>
+
+  {% include_media 'profile.js' %}
+{% endblock %}

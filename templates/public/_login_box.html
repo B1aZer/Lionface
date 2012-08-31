@@ -5,9 +5,9 @@
 	<table border="0" cellspacing="0" cellpadding="0" width="900">
 	  <tr>
 		<td></td>
-	    <td align="right" width="180"><label>{{ login_form.email.label }}</label> {{ login_form.email }}
+	    <td align="right" width="220"><label>{{ login_form.email.label }}</label> {{ login_form.email }}
 		</td>
-	    <td align="right" width="220"><label>{{ login_form.password.label }}</label> {{ login_form.password }}
+	    <td align="right" width="240"><label>{{ login_form.password.label }}</label> {{ login_form.password }}
 			<a href="{% url django.contrib.auth.views.password_reset %}" title=" Forgot your password? " class="reset">?</a>
 		</td>
 	    {{ login_form.tzone }}

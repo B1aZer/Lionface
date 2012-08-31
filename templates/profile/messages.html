@@ -1,0 +1,36 @@
+{% extends "profile/base.html" %}
+{% load media format_notifications %}
+
+{% block content %}
+  <div class="content_area notifications">
+    <div id="profile_top">
+      <div class="left">{% block content_title %}{{ user.first_name }} {{ user.last_name }} | Notifications{% endblock %}</div>
+      <div class="right" style="color: #555;">{% block content_subtitle %}{% endblock %}</div>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="left_col">
+      {% block left_col %}
+        <ul class="notifications_list">
+        {% for notification in notifications %}
+            {% if notification.type != 'FR' %}
+              {{ notification|format_notification }}
+              {% endif %}
+        {% endfor %}
+        </ul>
+      {% endblock %}
+    </div>
+    <div class="right_col">
+      {% block right_col %}
+      <ul class="notifications_list"> 
+      {% for notification in notifications %}
+            {% if notification.type == 'FR' %}
+              {{ notification|format_notification }}
+              {% endif %}   
+             {% endfor %} 
+             </ul> 
+      <div class="right_content"></div>
+      {% endblock %}
+    </div>
+  </div>
+  {% include_media 'notification.js' %}
+{% endblock %}
