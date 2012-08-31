@@ -176,3 +176,55 @@ function del_post(elem) {
     });    
 
 }       
+
+function del_comm(elem) { 
+    url = "/posts/dlcom/" + elem + "/";
+
+     if (window.location.pathname.indexOf('lionface') >= 0) 
+  { 
+    url = '/lionface' +  url;
+  }       
+
+    $.ajax(url,
+    {
+      success: function(data) {
+          if (data.status == 'removed') {
+            $('#comment_'+data.id).fadeOut();
+            }
+      },
+      error: function() {
+        alert('Unable to delete data.');
+      }
+    });    
+
+} 
+
+function post_comment(form_id, url) {
+    $('#comment_form_'+form_id+' form input.submit-preview').remove();
+
+    $.ajax({
+        type: "POST",
+        data: $('#comment_form_'+form_id+' form').serialize(),
+        url: url,
+        cache: false,
+        dataType: "html",
+        success: function(html, textStatus) {
+            $('#comment_form_'+form_id+' form').replaceWith(html);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#comment_form_'+form_id+' form').replaceWith('Your comment was unable to be posted at this time.  We apologise for the inconvenience.');
+        }
+
+    });
+}      
+
+$(document).ready(function() {
+    /*$(".comment_form_class form").each(function () {*/
+        /*$(this).submit(function() {*/
+            /*alert('dasdsa');*/
+            /*return false;*/
+/*});*/
+/*});*/
+});
+//onsubmit="javascript:bindPostCommentHandler({{item.id}}, '{% comment_form_target %}'); return false;"
+

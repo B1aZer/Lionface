@@ -1,5 +1,35 @@
 {% load comments i18n %}
-<form action="{% comment_form_target %}" method="post">{% csrf_token %}
+
+<script type="text/javascript" charset="utf-8">
+function bindPostCommentHandler() {
+    $('#comment_form form input.submit-preview').remove();
+    $('#comment_form form').submit(function() {
+        $.ajax({
+            type: "POST",
+            data: $('#comment_form form').serialize(),
+            url: "{% comment_form_target %}",
+            cache: false,
+            dataType: "html",
+            success: function(html, textStatus) {
+                $('#comment_form form').replaceWith(html);
+                bindPostCommentHandler();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#comment_form form').replaceWith('Your comment was unable to be posted at this time.  We apologise for the inconvenience.');
+            }
+        });
+        return false;
+    });
+}
+ 
+$(document).ready(function() {
+    bindPostCommentHandler();
+});
+</script>
+
+<div id="comment_form_{{ item.id }}" class="comment_form_class" >
+
+<form onsubmit="javascript:post_comment('{{ item.id }}', '{% comment_form_target %}'); return false;" action="{% comment_form_target %}" method="post">{% csrf_token %}
     {% if next %}<div><input type="hidden" name="next" value="{{ next }}" /></div>{% endif %}
     {% for field in form %}
     {% if field.is_hidden %}
@@ -19,7 +49,7 @@
 		<td align="left">
         <textarea id="id_comment" cols="40" name="comment" style="width: 100% !important; min-height: 40px !important; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #DDD;"></textarea> 
 		</td><td align="right" width="75" style="position: relative;">
-		<input type="submit" name="post" class="submit_comment" value="{% trans "Comment" %}" />
+            <input type="submit" name="post" class="submit_comment" value="{% trans "Comment" %}" />
 		</td>
 		</tr></table>
 
@@ -30,7 +60,9 @@
     {% endif %}
     {% endfor %}
     <p class="submit">
-    <input type="hidden" name="next" value="{{ request.META.HTTP_REFERER }}" />
+    <!--<input type="hidden" name="next" value="{{ request.META.HTTP_REFERER }}" />-->
     <input type="submit" name="preview" class="submit-preview" value="{% trans "Preview" %}" style="display: none;" />
     </p>
 </form>
+
+</div>

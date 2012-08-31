@@ -15,7 +15,12 @@ def format_result(object, current_user):
 @register.filter(name='format_image')
 def format_image(photo, path):
     #import pdb;pdb.set_trace()
-    if 'noProfilePhoto.png' in photo.name:
+    photo_name = getattr(photo, "name", None)
+    if photo_name:
+        photo = photo_name
+    else:
+        photo = photo
+    if 'noProfilePhoto.png' in photo:
         photo = 'uploads/images/noProfilePhoto.png'
     if 'lionface' in path:
         photo = "lionface/%s" % photo

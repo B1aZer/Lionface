@@ -9,6 +9,10 @@ from account.models import UserProfile
 from tasks import UpdateNewsFeeds
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.shortcuts import get_object_or_404
+from django.contrib import comments
+
+
 try:
     import json
 except ImportError:
@@ -83,7 +87,7 @@ def show(request):
                 cont_post = ContentPost.objects.get(id=int(post_id))
             except ObjectDoesNotExist:
                 data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json") 
+                return HttpResponse(json.dumps(data), "application/json")
 
             post = NewsItem.objects.filter(post=cont_post)
             if len(post) > 0:
@@ -101,7 +105,7 @@ def show(request):
                 share_post = SharePost.objects.get(id=int(post_id))
             except ObjectDoesNotExist:
                 data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json") 
+                return HttpResponse(json.dumps(data), "application/json")
 
             post = NewsItem.objects.filter(post=share_post)
             if len(post) > 0:
@@ -119,9 +123,9 @@ def show(request):
                 comm_post = NewsItem.objects.filter(id=int(post_id))
             except ObjectDoesNotExist:
                 data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json") 
+                return HttpResponse(json.dumps(data), "application/json")
 
-            if len(comm_post) > 0: 
+            if len(comm_post) > 0:
                 t = loader.get_template('post/_feed.html')
                 c = RequestContext(request,
                         {
@@ -134,19 +138,21 @@ def show(request):
 
 @login_required
 def delete_own_comment(request, message_id):
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
+    data = {'status': 'OK'}
     comment = get_object_or_404(comments.get_model(), pk=message_id,
             site__pk=settings.SITE_ID)
-    if comment.user == request.user:
+    if comment.user.userprofile == request.user:
         comment.is_removed = True
         comment.save()
+        data['status'] = 'removed'
+        data['id'] = message_id
+    return HttpResponse(json.dumps(data), "application/json")
 
 
 
 @login_required
 def delete(request, post_id = None):
-    #TODO can not delete after update
-    #import pdb;pdb.set_trace()
     data = {'status': 'OK'}
     if request.method == 'GET' and 'type' in request.GET:
         post_type = request.GET['type']
@@ -179,4 +185,12 @@ def share(request, post_id = None):
             post_type.save()
             post.save()
     return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def test(request):
+    from django.contrib.comments.views.comments import post_comment
+    data = post_comment(request)
+    return HttpResponse('You data %s' % data)
+
+
 
