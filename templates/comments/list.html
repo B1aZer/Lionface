@@ -3,12 +3,14 @@
 	<div  onMouseOver="ShowContent('z{{ comment.id }}');ShowContent('p{{ comment.id }}'); return false;" onMouseOut="HideContent('z{{ comment.id }}');HideContent('p{{ comment.id }}'); return false;">
     <dt id="c{{ comment.id }}">
 		<table width="100%"><tr>
-			<td align="left">
-				<div id="p{{ comment.id }}" style="position: absolute; left: -30px; padding: 2px; width: 35px; height: 35px; background: #EEE; display: none;"></div>
+			<td align="left" style="font-size: 9pt !important;">
+				<div id="p{{ comment.id }}" class="comment_thumbnail"></div>
                 <a href='{{ comment.user.get_absolute_url }}'>{{comment.name}}</a>
+				<div style="display: inline-block; color: #CCC; font-size: 8pt !important; margin-left: 10px;">
+		 		<span title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00">{{ comment.submit_date }}</span></div>
 			</td>
-			<td align="right"><div id="z{{ comment.id }}" style="display: none; color: #AAA;">
-		 <span title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00">{{ comment.submit_date }}</span> <a href="/posts/dlcom/{{ comment.id }}" style="margin-left: 15px; color: #AAA;">Delete</a>
+			<td align="right"><div id="z{{ comment.id }}" style="display: none; color: #AAA; font-size: 8pt !important;">
+		 		 <a href="/posts/dlcom/{{ comment.id }}" style="margin-left: 15px; color: #AAA;">Delete</a>
 			</div></td>
 		</tr></table>
     </dt>
