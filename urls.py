@@ -30,6 +30,8 @@ urlpatterns = patterns('',
     url(r'^notifications/', include('notification.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^posts/', include('post.urls')),
+    url(r'^pages/$', 'pages.views.main'),
+    url(r'^messages/$', 'messages.views.main'),
     url(r'^search/', login_required(search_view_factory(
         #view_class=SearchView,
             view_class=search.views.CustumSearchView,
