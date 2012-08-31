@@ -6,5 +6,6 @@ urlpatterns = patterns('',
     url(r'timeline/$', views.timeline),
     url(r'profile/$', views.profile),
     url(r'settings/$', views.settings),
+    url(r'messages/$', views.messages),
     url(r'profile/(?P<username>\w+)/$', views.profile),
 )

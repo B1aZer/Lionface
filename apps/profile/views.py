@@ -70,3 +70,13 @@ def settings(request):
         RequestContext(request)
     )
 
+@login_required
+def messages(request):
+
+    return render_to_response(
+        'profile/messages.html',
+        {
+        },
+        RequestContext(request)
+    )  
+
