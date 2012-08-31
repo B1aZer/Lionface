@@ -2,7 +2,7 @@
 
 {% for item in items %}
 {% get_comment_count for item as comment_count %}
-{% if notification %}
+{% if not notification %}
 	<hr style="position: relative; left: 50px; background-color: #E7E7E7; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
 <div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {type: '{{item.get_type}}', user: {{ item.user.id }}}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 5px 8px; width: 535px;">
