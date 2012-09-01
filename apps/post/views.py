@@ -188,9 +188,27 @@ def share(request, post_id = None):
 
 @login_required
 def test(request):
+    #import pdb;pdb.set_trace()
+    data = {'status': 'OK'}
     from django.contrib.comments.views.comments import post_comment
-    data = post_comment(request)
-    return HttpResponse('You data %s' % data)
+    commented = post_comment(request)
+
+    #hack for finding comment's id
+    location = commented.__getitem__('location')
+    position = location.find('?c=') + 3
+    com_id = location[position:]
+
+    comment = get_object_or_404(comments.get_model(), pk=com_id,
+            site__pk=settings.SITE_ID)
+
+    t = loader.get_template('comments/single.html')
+    c = RequestContext(request,
+            {
+                'comment': comment,
+            })
+    data['html'] = t.render(c)
+
+    return HttpResponse(json.dumps(data), "application/json")
 
 
 

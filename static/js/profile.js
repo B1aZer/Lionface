@@ -1,4 +1,11 @@
 $(function() {
+
+
+    $("#upload_picture").click(function(event){
+      event.stopPropagation();
+      $('.upload_form').show(); 
+    });  
+
     $('.noPhoto').hover(
             function(){$('.upload').slideDown(500);},
             function(){$('.upload').slideUp(500);});

@@ -1,7 +1,5 @@
 {% load format_results %}
-<dl id="comments">
-    {% for comment in comment_list %}
-    <div class="comment_list" id="comment_{{ comment.id }}">
+<div class="comment_list" id="comment_{{ comment.id }}">
         <div  onMouseOver="ShowContent('z{{ comment.id }}');ShowContent('p{{ comment.id }}'); return false;" onMouseOut="HideContent('z{{ comment.id }}');HideContent('p{{ comment.id }}'); return false;">
             <dt id="c{{ comment.id }}">
             <table width="100%">
@@ -29,6 +27,4 @@
         </div>
         <hr noshade="noshade" style="border: 0px; height: 1px; background: #FFF;" size="1" />
         <div style="height: 7px;"></div>
-    </div>
-    {% endfor %}
-</dl>
+    </div>            

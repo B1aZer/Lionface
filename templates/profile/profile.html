@@ -15,7 +15,7 @@
 {% block content_subtitle %}+ Add/- Remove{% endblock %}
 
 {% block left_col %}
-<div class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;">{% if request.user == profile_user %}<a href="javascript:$('.upload_form').show();" class="upload" style="display:none;">Upload New</a>{% endif %}</div>
+<div  onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;">{% if request.user == profile_user %}<a id="upload_picture" class="upload" style="display:none;">Upload New</a>{% endif %}</div>
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none">
     {% csrf_token %}
     {{ form.photo.errors }}
