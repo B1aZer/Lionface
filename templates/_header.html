@@ -7,7 +7,7 @@
         <li><a href="{% url profile.views.feed %}">News Feed</a></li>
         <li><a href="{% url pages.views.main %}">Pages</a></li>
 		<li style="display: inline-block; width: 95px;" onMouseOver="ShowContent('signout'); return false;" onMouseOut="HideContent('signout'); return false;">
-			<a href="#" class="settings">Account</a>
+			<a href="{% url profile.views.settings %}" class="settings">Account</a>
 			<a href="{% url django.contrib.auth.views.logout_then_login %}" id="signout" title=" Log Out " target="_top">x</a></li>
 		
         <!--<li><a href="{% url profile.views.timeline %}" class="profileNav" style="position: absolute; left: 260px; top: 10px; color: #999;">Timeline</a></li>-->
@@ -36,7 +36,7 @@
 <div align="center"><div style="position: relative; width: 900px; height: 1px;">
 
 	<div style="position: fixed; z-index: 100;"><div style="position: relative; left: 907px; top: 53px;">
-		<a href="user/messages.html" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><br />
+		<a href="{% url profile.views.messages %}" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><br />
         {% if not_count > 0 %}
         <a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/><span class="count">{{not_count}}</span></a>
         {% else %}

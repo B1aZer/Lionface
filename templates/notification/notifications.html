@@ -8,7 +8,7 @@
       <div class="right" style="color: #555;">{% block content_subtitle %}{% endblock %}</div>
     </div>
     <div style="clear: both;"></div>
-    <div class="left_col">
+    <div class="left_col" style="border-width: 1px 1px 0 0;">
       {% block left_col %}
         <ul class="notifications_list">
         {% for notification in notifications %}
@@ -17,9 +17,17 @@
               {% endif %}
         {% endfor %}
         </ul>
+
+		<div style="border: 1px solid #DDD; border-width: 1px 0 0 0; margin-top: 5px;">
+		<table width="100%" style="font-size: 8pt; margin-top: 10px;"><tr>
+			<td align="left" width="75"><a href="#" class="profile_nav">< Newer</a></td>
+			<td align="center" width="" style="color: #AAA; font-size: 7pt;">1 of 1</td>
+			<td align="right" width="75"><a href="#" class="profile_nav">Older ></a></td>
+		</tr></table></div>
+
       {% endblock %}
     </div>
-    <div class="right_col">
+    <div class="right_col" style="border-width: 1px 0 0 0;">
       {% block right_col %}
       <ul class="notifications_list"> 
       {% for notification in notifications %}
@@ -28,7 +36,7 @@
               {% endif %}   
              {% endfor %} 
              </ul> 
-      <div class="right_content"></div>
+      <div class="right_content"><div class="notif_land">Click on a notification to the left<br /> to view its details.</div></div>
       {% endblock %}
     </div>
   </div>

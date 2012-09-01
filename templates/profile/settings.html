@@ -1,18 +1,203 @@
 {% extends 'profile/base.html' %}
 
 {% block content_title %}
+{{ user.first_name }} {{ user.last_name }} | Account
 {% endblock %}
 
 {% block content_middle %}
 {% endblock %}
 
 {% block content_subtitle %}
+<a href="{% url profile.views.profile %}" style="color: #AAA;">Cancel</a>
 {% endblock %}
 
+<div class="left_col">
 {% block left_col %}
-
+<div class="settings_nav">
+<ul>
+	<li onClick="ShowContent('basics');ShowContent('basics_header'); HideContent('privacy'); HideContent('privacy_header'); return false;">Basics</li>
+	<li onClick="ShowContent('privacy');ShowContent('privacy_header'); HideContent('basics'); HideContent('basics_header'); return false;">Privacy</li>
+</ul>
+</div>
 {% endblock %}
+</div>
 
+<div class="right_col">
 {% block right_col %}
 
+<div id="basics_header">
+<span style="font-size: 18px;">Basics</span></strong>
+</div>
+<div id="privacy_header">
+<span style="font-size: 18px;">Privacy</span></strong>
+</div>
+
+<div align="center">
+   <table id="basics">
+     <tr>
+       <td width="150" align="right">&nbsp;</td>
+       <td width="405">&nbsp;</td>
+     </tr>
+     <tr>
+       <td align="right">Full Name</td>
+       <td>
+        	<input type="text" name="textfield" id="textfield" style="border: 1px solid #DDD; padding: 7px; width: 300px;" value="First Last">
+        </td>
+     </tr>
+     <tr>
+       <td align="right">Email<br></td>
+       <td>        
+			<input type="text" name="textfield" id="textfield" style="border: 1px solid #DDD; padding: 7px; width: 300px;" value="my@email.com">
+	   </td>
+     </tr>
+     <tr>
+       <td align="right"">&nbsp;</td>
+       <td><a href="#" style="font-size: 12px;">Change Your Password</a></td>
+     </tr>
+     <tr>
+       <td align="right">&nbsp;</td>
+       <td>&nbsp;</td>
+     </tr>
+   </table>
+
+
+       <td>&nbsp;</td>
+     </tr>
+   </table>
+
+
+   <table id="privacy">
+     <tr>
+       <td align="right">&nbsp;</td>
+       <td>&nbsp;</td>
+     </tr>
+     <tr>
+       <td>Posting Default<span style="font-size: 11px; color: #777;"></span></td>
+       <td><label for="select2"></label>
+         <select name="select6" id="select2">
+           <option selected>Public</option>
+           <option>Friends Only</option>
+         </select></td>
+     </tr>
+     <tr>
+       <td width="200">Posting To Friends<span style="font-size: 11px; color: #777;"></span></td>
+       <td>Friends Only</td>
+     </tr>
+     <tr>
+     <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Comments and shares inherit the privacy settings of their parent post. If your post is public then comments, commenting and sharing is also available to the public. </span></td>
+     </tr>
+     <tr>
+       <td width="200">Comment Default<br></td>
+       <td><select name="select2" id="select2">
+         <option selected>Enabled</option>
+         <option>Disabled</option>
+       </select> 
+         </td>
+     </tr>
+     <tr>
+       <td width="200">Share Default</td>
+       <td><select name="select4" id="select4">
+         <option selected>Enabled</option>
+         <option>Disabled</option>
+       </select></td>
+     </tr>
+     <tr>
+       <td>&nbsp;</td>
+       <td>&nbsp;</td>
+     </tr>
+     <tr>
+       <td>Search</td>
+       <td><select name="select5" id="select6">
+         <option selected>Public</option>
+         <option>Friend's Friends</option>
+         <option>Friends</option>
+         </select></td>
+     </tr>
+     <tr>
+       <td>Send Message</td>
+       <td><select name="select7" id="select7">
+         <option selected>Public</option>
+         <option>Friend's Friends</option>
+         <option>Friends</option>
+         <option>Off</option>
+       </select></td>
+     </tr>
+     <tr>
+       <td>Add Friend</td>
+       <td><select name="select5" id="select8">
+         <option selected>Public</option>
+         <option>Friend's Friends</option>
+         <option>Off</option>
+       </select></td>
+     </tr>
+     <tr>
+       <td>Follow</td>
+       <td><select name="select9" id="select11">
+         <option selected>Public</option>
+         <option>Friend's Friends</option>
+         <option>Friends</option>
+         <option>Off</option>
+       </select></td>
+     </tr>
+     <tr>
+       <td>&nbsp;</td>
+       <td>&nbsp;</td>
+     </tr>
+     <tr>
+       <td>Friend List</td>
+       <td><select name="select7" id="select10">
+         <option selected>Public</option>
+         <option>Friend's Friends</option>
+         <option>Friends</option>
+         <option>Just Me</option>
+       </select></td>
+     </tr>
+     <tr>
+       <td>Follower List</td>
+       <td><select name="select8" id="select9">
+         <option selected>Public</option>
+         <option>Friend's Friends</option>
+         <option>Friends</option>
+         <option>Just Me</option>
+       </select></td>
+     </tr>
+     <tr>
+       <td>Following List</td>
+       <td><select name="select10" id="select5">
+         <option selected>Public</option>
+         <option>Friend's Friends</option>
+         <option>Friends</option>
+         <option>Just Me</option>
+       </select></td>
+     </tr>
+     <tr>
+       <td>Loves List</td>
+       <td>Public</td>
+     </tr>
+     <tr>
+       <td>&nbsp;</td>
+       <td>&nbsp;</td>
+     </tr>
+     <tr>
+       <td>Hidden Feeds</td>
+       <td><span style="font-size: 11px; color: #999;">none</span></td>
+     </tr>
+     <tr>
+       <td>Blocked Users</td>
+       <td><span style="font-size: 11px; color: #999;">none</span></td>
+     </tr>
+     <tr>
+       <td>&nbsp;</td>
+       <td>&nbsp;</td>
+     </tr>
+ </table>
+
+
+</div>
+
+<div style="position: absolute; left: 0px; bottom: 0px; padding: 15px 10px; background: #EEE; width: 680px;">
+<a href="#" class="post">Save</a> <a href="#" style="font-size: 11px; color: #BBB;">Delete Account</a>
+</div>
+
 {% endblock %}
+</div>
