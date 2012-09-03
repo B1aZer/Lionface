@@ -76,14 +76,11 @@ def friend_add(request):
 @login_required
 def friend_remove(request):
     if 'user' in request.GET:
-        #import pdb;pdb.set_trace()
         try:
             friend = UserProfile.objects.get(id=request.GET['user'])
         except User.DoesNotExist:
             raise Http404()
-        #req, created = FriendRequest.objects.get_or_create(from_user=request.user, to_user=friend)
         request.user.friends.remove(friend)
-        #req.save()
         return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
     raise Http404()
 

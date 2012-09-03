@@ -12,7 +12,7 @@ def feed(request):
     return render_to_response(
         'profile/feed.html',
         {
-            'not_count': Notification.objects.filter(user=request.user).count()
+            'not_count': Notification.objects.filter(user=request.user,read=False).count()
         },
         RequestContext(request)
     )
@@ -22,7 +22,7 @@ def timeline(request):
     return render_to_response(
         'profile/timeline.html',
         {
-            'not_count': Notification.objects.filter(user=request.user).count()
+            'not_count': Notification.objects.filter(user=request.user,read=False).count()
         },
         RequestContext(request)
     )
@@ -54,7 +54,7 @@ def profile(request, username=None):
         'profile/profile.html',
         {
             'profile_user': profile_user,
-            'not_count': Notification.objects.filter(user=request.user).count(),
+            'not_count': Notification.objects.filter(user=request.user,read=False).count(),
             'form' : form
         },
         RequestContext(request)

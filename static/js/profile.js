@@ -39,6 +39,7 @@ $(function() {
             success: function(data) {
                 //$("#postbox .postcontent").val("");
                 $("#news_feed").prepend(data.html);
+                $('.postbox_textarea').val('');
             },
             error: function() {
                 alert("Failed to save new post.  Please try again later.");
@@ -57,6 +58,7 @@ $(function() {
                 success: function(data) {
                     //$("#postbox .postcontent").val("");
                     $("#news_feed").prepend(data.html);
+                    $('.postbox_textarea').val('');
                 },
                 error: function() {
                     alert("Failed to save new post.  Please try again later.");

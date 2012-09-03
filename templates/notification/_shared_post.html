@@ -1,6 +1,6 @@
 <li class="shared_post {type: '{{ notification.content_object.name }}', id: '{{ notification.content_object.id }}'}">
   <div style="padding: 15px;" class="link-output">
-      <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a><br /><span style="color: #A70;"><i>shared</i></span> your post.
+      <a {% if notification.new_one %} class="new_notification" {% else %} {% endif %} href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a><br /><span style="color: #A70;"><i>shared</i></span> your post.
   </div>
   <div class="separator"></div>
 </li>

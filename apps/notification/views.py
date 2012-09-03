@@ -11,12 +11,12 @@ def notifications(request):
     list1 = Notification.objects.filter(user=request.user, type="FR").order_by("-date")
     list2 = Notification.objects.filter(user=request.user).exclude(type="FR").order_by("-date")
     result_list = list(chain(list1, list2))
-    
+
     return render_to_response(
         'notification/notifications.html',
         {
             'notifications': result_list,
-            'not_count': Notification.objects.filter(user=request.user).count() 
+            'not_count': Notification.objects.filter(user=request.user,read=False).count()
         },
         RequestContext(request)
     )

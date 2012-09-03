@@ -10,7 +10,7 @@ class CustumSearchView(SearchView):
     def extra_context(self):
         extra = super(CustumSearchView, self).extra_context()
 
-        extra['not_count'] =  Notification.objects.filter(user=self.request.user).count()
+        extra['not_count'] =  Notification.objects.filter(user=self.request.user, read=False).count()
 
         return extra
 

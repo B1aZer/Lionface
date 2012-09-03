@@ -648,6 +648,10 @@ a.nav_notifications:hover {
 	color: #777;
 }
 
+a.new_notification {
+	color: #900;
+} 
+
 .notif_land {
 	text-align: center;
 	width: 100%;

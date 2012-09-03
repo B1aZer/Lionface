@@ -7,6 +7,8 @@ register = template.Library()
 # Function to format a search result.
 @register.filter(name='format_notification')
 def format_notification(notification):
+    if not notification.read:
+        notification.new_one = True
     data = { 'notification': notification }
     notification.mark_read()
     if notification.type == 'FR':
