@@ -7,7 +7,7 @@
     <div id="profile_top">
       <div class="left"></div>
       <div class="right" style="position: relative;">
-		<div style="position: absolute; right: -16px; top: -10px; width: 400px; text-align: right; background: #FFF; padding: 10px; display: none;" id="create">
+		<div class="create_options" style="display: none;" id="create">
 			<a href="#" class="business_btn" onClick="ShowContent('create_business'); HideContent('create_nonprofit'); return false;">Create Business</a> 
 			<a href="#" class="nonprofit_btn" onClick="ShowContent('create_nonprofit'); HideContent('create_business'); return false;">Create Nonprofit</a></div>
 		<a href="#" class="profile_nav" style="margin: 0px; font-size: 8pt; color: #555;" onClick="ShowContent('create'); return false;">+ Create Page</a></div>
@@ -17,10 +17,11 @@
 		<div class="pages_nav_area">
 			<table width="100%"><tr>
 			<td align="left">
-			<a href="#">Business Pages</a> <a href="#">Leaderboard</a>
+				<a href="#" class="business_on" style="color: #FFF;">Business Pages</a> 
+				<a href="#" style="margin: 0px;">Leaderboard</a>
 			</td>
 			<td align="right">
-			<a href="#" class="nonprofit_btn">Nonprofit Pages</a>
+				<a href="#" class="nonprofit_btn">Nonprofit Pages</a>
 			</td>
 			</tr></table>
 		</div>
@@ -32,14 +33,14 @@
 			<td width="20%" align="right"><input type="text" /></td>
 			<td width="20%" align="right">Business URL</td>
 			<td width="20%" align="right"><input type="text"  /></td>
-			<td width="20%">
+			<td width="20%" align="left">
 				<select>
 				<option selected>Categories</option>
 				</select></td>
 		</tr><tr>
 			<td colspan="2" align="right" style="font-size: 8pt; color: #999;"><input type="checkbox" /> I have the legal right to represent this business entity.</td>
 			<td colspan="2" align="right" style="font-size: 8pt; color: #999;"><input type="checkbox" /> I agree to the terms.</td>
-			<td><a href="#" class="business_btn">Create Business</a> 
+			<td align="left"><a href="#" class="business_btn">Create Business</a> 
 				<a href="#" title=" Cancel " onClick="HideContent('create_business'); HideContent('create'); return false;" style="color: #777;">x</a></td>
 		</tr></table>
 	</div>
@@ -49,16 +50,66 @@
 			<td width="20%" align="right"><input type="text" /></td>
 			<td width="20%" align="right">Nonprofit URL</td>
 			<td width="20%" align="right"><input type="text" /></td>
-			<td width="20%">
+			<td width="20%" align="left">
 				<select>
 				<option selected>Categories</option>
 				</select></td>
 		</tr><tr>
 			<td colspan="2" align="right" style="font-size: 8pt; color: #999;"><input type="checkbox" /> I have the legal right to represent this nonprofit entity.</td>
 			<td colspan="2" align="right" style="font-size: 8pt; color: #999;"><input type="checkbox" /> I agree to the terms.</td>
-			<td><a href="#" class="nonprofit_btn">Create Nonprofit</a> 
+			<td align="left"><a href="#" class="nonprofit_btn">Create Nonprofit</a> 
 				<a href="#" title=" Cancel " onClick="HideContent('create_nonprofit'); HideContent('create'); return false;" style="color: #777;">x</a></td>
 		</tr></table>
 	</div>
+
+
+<div class="content_pages" id="business">
+<table width="900" border="0" cellspacing="0" cellpadding="3" align="center" style="text-align: center">
+  <tr>
+    <td>
+      <a href="#"> <img src="http://3.bp.blogspot.com/-6nJlSmHSzFA/T3kPcf-wgrI/AAAAAAAAAOM/yybLNzlpahk/s1600/The_ocean_by_xipx.jpg" alt="" width="215" height="150"  /></a></td>
+    <td>
+      <a href="#"> <img src="http://3.bp.blogspot.com/-6nJlSmHSzFA/T3kPcf-wgrI/AAAAAAAAAOM/yybLNzlpahk/s1600/The_ocean_by_xipx.jpg" alt="" width="215" height="150"  /></a></td>
+    <td>
+      <a href="#"> <img src="http://3.bp.blogspot.com/-6nJlSmHSzFA/T3kPcf-wgrI/AAAAAAAAAOM/yybLNzlpahk/s1600/The_ocean_by_xipx.jpg" alt="" width="215" height="150"  /></a></td>
+    <td>
+      <a href="#"> <img src="http://3.bp.blogspot.com/-6nJlSmHSzFA/T3kPcf-wgrI/AAAAAAAAAOM/yybLNzlpahk/s1600/The_ocean_by_xipx.jpg" alt="" width="215" height="150"  /></a></td>
+  </tr>
+    <tr>
+    <td>
+      Random Business<br /><span style="font-size: 11px; color: #E39;">500 Love</span></td>
+    <td>
+      Random Business<br /><span style="font-size: 11px; color: #E39;">500 Love</span></td>
+    <td>
+      Random Business<br /><span style="font-size: 11px; color: #E39;">500 Love</span></td>
+    <td>
+      Random Business<br /><span style="font-size: 11px; color: #E39;">500 Love</span></td>
+  </tr>
+</table>
+<table width="900" border="0" cellspacing="0" cellpadding="3" align="center" style="text-align: center">
+  <tr>
+    <td>
+      <a href="#"> <img src="http://3.bp.blogspot.com/-6nJlSmHSzFA/T3kPcf-wgrI/AAAAAAAAAOM/yybLNzlpahk/s1600/The_ocean_by_xipx.jpg" alt="" width="215" height="150"  /></a></td>
+    <td>
+      <a href="#"> <img src="http://3.bp.blogspot.com/-6nJlSmHSzFA/T3kPcf-wgrI/AAAAAAAAAOM/yybLNzlpahk/s1600/The_ocean_by_xipx.jpg" alt="" width="215" height="150"  /></a></td>
+    <td>
+      <a href="#"> <img src="http://3.bp.blogspot.com/-6nJlSmHSzFA/T3kPcf-wgrI/AAAAAAAAAOM/yybLNzlpahk/s1600/The_ocean_by_xipx.jpg" alt="" width="215" height="150"  /></a></td>
+    <td>
+      <a href="#"> <img src="http://3.bp.blogspot.com/-6nJlSmHSzFA/T3kPcf-wgrI/AAAAAAAAAOM/yybLNzlpahk/s1600/The_ocean_by_xipx.jpg" alt="" width="215" height="150"  /></a></td>
+  </tr>
+    <tr>
+    <td>
+      Random Business<br /><span style="font-size: 11px; color: #E39;">500 Love</span></td>
+    <td>
+      Random Business<br /><span style="font-size: 11px; color: #E39;">500 Love</span></td>
+    <td>
+      Random Business<br /><span style="font-size: 11px; color: #E39;">500 Love</span></td>
+    <td>
+      Random Business<br /><span style="font-size: 11px; color: #E39;">500 Love</span></td>
+  </tr>
+</table>
+</div>
+
+
   </div>
 {% endblock %}

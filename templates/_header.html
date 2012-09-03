@@ -33,18 +33,18 @@
   </div>
 </div>
 
-<div align="center"><div style="position: relative; width: 900px; height: 1px;">
+<div align="center"><div style="position: relative; width: 900px; height: 1px; text-align: right;">
 
-	<div style="position: fixed; z-index: 100;"><div style="position: relative; left: 907px; top: 53px;">
-		<a href="{% url profile.views.messages %}" class="imageNav" title=" Messages "><img src="{% media_url 'images/IconMessages.png' %}" height="18" /></a><br />
+	<div style="position: relative; right: -908px; top: 50px; width: 35px; z-index: 100;">
+		<a href="{% url profile.views.messages %}" class="nav_messages" title=" Messages "></a><br />
         {% if not_count > 0 %}
-        <a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/><span class="count">{{not_count}}</span></a>
+        <a href="{% url notification.views.notifications %}" class="nav_notifications" title=" Notifications " target="_top"><span class="count">{{not_count}}</a>
         {% else %}
-        <a href="{% url notification.views.notifications %}" class="imageNav" title=" Notifications " target="_top"><img src="{% media_url 'images/IconNotifications.png' %}" height="18"/><span class="count"></span></a>
+        <a href="{% url notification.views.notifications %}" class="nav_notifications" title=" Notifications " target="_top"></a>
         {% endif %}
 
 	</div>
 </div>
 
-</div></div>
+</div>
 
