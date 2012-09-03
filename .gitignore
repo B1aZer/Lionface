@@ -6,7 +6,7 @@ celerybeat.pid
 celerybeat-schedule
 _generated_media/
 _generated_media_names.py
-images/
+uploads/
 logs/
 wsgi.py
 whoosh_index/
