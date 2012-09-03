@@ -215,7 +215,12 @@ function post_comment(form_id, url) {
         url: url,
         success: function(html, textStatus) {
             /*$('#comment_form_'+form_id+' form').replaceWith(html.html);*/
-            $('#comment_form_'+form_id).prev().find('.comment_list:last').after(html.html);
+            if ($('#comment_form_'+form_id).prev().find('.comment_list:last').length > 0) {
+                $('#comment_form_'+form_id).prev().find('.comment_list:last').after(html.html);
+            }
+            else {
+                $('#comment_form_'+form_id).prev().append(html.html);   
+            }
             $('#comment_form_'+form_id+' form textarea').val('');
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {

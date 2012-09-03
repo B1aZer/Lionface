@@ -20,9 +20,9 @@ class FriendRequest(models.Model):
         self.from_user.friends.add(self.to_user)
         self.from_user.save()
         Notification(user=self.from_user, type='FA', other_user=self.to_user, content_object = self).save()
-#TODO careful with user_to
-#this should be checked later
         FriendPost(user=self.from_user, friend=self.to_user, user_to=self.to_user).save()
+        #FriendPost(user=self.to_user, friend=self.from_user, user_to=self.from_user).save()
+        #This will duplicate friend post for profile feed of third friend
         AddFriendToFeed.delay(self.from_user, self.to_user)
         AddFriendToFeed.delay(self.to_user, self.from_user)
         self.delete()
@@ -52,7 +52,7 @@ class UserProfile(User):
         return NewsItem.objects.filter(hidden=False).order_by('date').reverse()
     def get_messages(self):
         from post.models import NewsItem
-        return NewsItem.objects.filter(user__in=self.friends.all()).order_by('date').reverse()   
+        return NewsItem.objects.filter(post__user_to__in=self.friends.all()).exclude(post__user=self).order_by('date').reverse()   
 
     @models.permalink
     def get_absolute_url(self):

@@ -22,6 +22,7 @@ except ImportError:
 def feed(request, user_id = None):
     #import pdb;pdb.set_trace()
     items = request.user.get_news()
+    #news feed
     if not user_id:
         user_id = request.user.id
         items = request.user.get_messages()

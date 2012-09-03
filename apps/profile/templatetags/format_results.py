@@ -26,3 +26,12 @@ def format_image(photo, path):
         photo = "lionface/%s" % photo
     return photo
 
+# Function for identifying frinds.
+@register.filter(name='find_friend')
+def find_friend(user, friend):
+    #import pdb;pdb.set_trace()
+    if user == friend or user.has_friend(friend):
+        return True
+    else:
+        return False
+
