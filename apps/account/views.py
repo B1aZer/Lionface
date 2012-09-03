@@ -24,7 +24,7 @@ def signup(request):
             raise HttpResponseServerError()
     else:
         form = SignupForm(prefix='signup')
-    
+
     return render_to_response(
         'account/signup.html',
         {
@@ -33,7 +33,7 @@ def signup(request):
         },
         RequestContext(request)
     )
-    
+
 @public_required
 def login(request, template_name='public/home.html'):
     if request.method == 'POST':
@@ -44,7 +44,7 @@ def login(request, template_name='public/home.html'):
                 return redirect('home')
         form.error_message = "Invalid e-mail address and password provided."
     else: form = LoginForm(prefix='login')
-    
+
     return render_to_response(
         template_name,
         {
@@ -52,15 +52,15 @@ def login(request, template_name='public/home.html'):
         },
         RequestContext(request)
     )
-    
+
 
 def home(request):
     # If the user isn't signed in, forward to the public view.
     if not request.user.is_authenticated(): return public.views.home(request)
-    
+
     # Redirect to the user's feed
     return redirect(profile.views.feed)
-    
+
 @login_required
 def friend_add(request):
     if 'user' in request.GET:
@@ -70,6 +70,20 @@ def friend_add(request):
             raise Http404()
         req, created = FriendRequest.objects.get_or_create(from_user=request.user, to_user=friend)
         req.save()
+        return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
+    raise Http404()
+
+@login_required
+def friend_remove(request):
+    if 'user' in request.GET:
+        #import pdb;pdb.set_trace()
+        try:
+            friend = UserProfile.objects.get(id=request.GET['user'])
+        except User.DoesNotExist:
+            raise Http404()
+        #req, created = FriendRequest.objects.get_or_create(from_user=request.user, to_user=friend)
+        request.user.friends.remove(friend)
+        #req.save()
         return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
     raise Http404()
 

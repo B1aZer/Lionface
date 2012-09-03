@@ -16,18 +16,14 @@
 {% endblock %}
 {% block content_subtitle %}
 {% if request.user == profile_user %}
-{% else %}
-	{% if profile == friend %}
-	<a href="#" class="profile_nav" style="color: #999; margin: 0px;">- Remove</a>
-	{% else %}
-		{% if profile == following %}
+{% elif profile_user|find_friend:request.user %}
+	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px;">- Remove</a>
+{% elif profile_user == following %}
 	<a href="#" class="profile_btn">+ Add</a>
 	<a href="#" class="profile_btn">- Unfollow</a>
-		{% else %}
-	<a href="#" class="profile_btn">+ Add</a>
+{% else %}
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }">+ Add</a>
 	<a href="#" class="profile_btn">+ Follow</a>
-		{% endif %}
-	{% endif %}
 {% endif %}
 {% endblock %}
 

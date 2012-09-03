@@ -64,6 +64,33 @@ function hookLinks() {
     }
     return false;
   });
+
+  $('.link-remove-friend').unbind('click');
+  $('.link-remove-friend').click(function() {
+    var data = $(this).metadata();
+    var $this = $(this);
+    if(data.user !== undefined) {
+      $this.unbind('click');
+      var $ohtml = $this.html();
+      $this.append('<div class="link_loader"></div>');
+      
+      $.ajax('/account/friend/remove/',{
+        type: 'GET',
+        data: 'user=' + encodeURIComponent(data.user),
+        success: function(data) {
+          $this.html($ohtml);
+          if(data.status == 'OK') {
+            $this.html('Friend was removed.');
+          }
+        },
+        error: function() {
+          hookLinks();
+          $this.html($ohtml);
+        }
+      });
+    }
+    return false;
+  });   
   
   $('.link-accept-friend').unbind('click');
   $('.link-accept-friend').click(function() {
