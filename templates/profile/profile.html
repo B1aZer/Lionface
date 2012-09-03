@@ -11,19 +11,45 @@
 {% load media friends format_results %}
 
 {% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
-{% block content_middle %}{% if profile_user == user %}{{ user|show_friend_count }}{% endif %}{% endblock %}
-{% block content_subtitle %}+ Add/- Remove{% endblock %}
+{% block content_middle %}
+{% if profile_user == user %}{{ user|show_friend_count }}{% endif %}
+{% endblock %}
+{% block content_subtitle %}
+{% if request.user == profile_user %}
+{% else %}
+	{% if profile == friend %}
+	<a href="#" class="profile_nav" style="color: #999; margin: 0px;">- Remove</a>
+	{% else %}
+		{% if profile == following %}
+	<a href="#" class="profile_btn">+ Add</a>
+	<a href="#" class="profile_btn">- Unfollow</a>
+		{% else %}
+	<a href="#" class="profile_btn">+ Add</a>
+	<a href="#" class="profile_btn">+ Follow</a>
+		{% endif %}
+	{% endif %}
+{% endif %}
+{% endblock %}
 
 {% block left_col %}
-<div  onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;">{% if request.user == profile_user %}<a id="upload_picture" class="upload" style="display:none;">Upload New</a>{% endif %}</div>
-<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none">
+<div  onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
+	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;">
+		{% if request.user == profile_user %}
+	<div style="position: relative; top: 170px; display: block; width: 200px;" align="center">
+		<a id="upload_picture" class="upload" style="display:none;">Upload</a></div>{% endif %}</div>
+
+<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
     {% csrf_token %}
     {{ form.photo.errors }}
-    <p><label for="id_photo">Upload a Profile Image</label></p>
+    <p><label for="id_photo">Upload</label></p>
     {{ form.photo }}
-    <p><input type="submit" value="Upload" /></p>
+    <p><input type="submit" class="blue_btn" value="Upload" /></p>
 </form>
 
+{% if request.user == profile_user %}
+{% else %}
+<div style="margin: 10px 0;"><a href="#" class="profile_nav" style="font-size: 9pt;">Send Message</a></div>
+ {% endif %}
 {% endblock %}
 
 {% block right_col %}
@@ -31,6 +57,7 @@
 <div style="padding: 10px; position: relative; left: 40px;">
     <div style="padding: 15px 0 25px 0px;">
         <a href="#" class="profile_nav">Posts</a>
+        <a href="#" class="profile_nav">Albums</a>
         <a href="#" class="profile_nav">Loves</a>
     </div>
 

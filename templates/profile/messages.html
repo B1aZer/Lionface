@@ -11,22 +11,19 @@
     <div style="clear: both;"></div>
     <div class="left_col">
       {% block left_col %}
-        <div id="search_messages">
-			<input type="text" /> <input type="submit" value="Search" />
-		</div>
-		
-		<div style="border: 1px solid #DDD; border-width: 1px 0 0 0;"><div class="message">
+<div style="position: relative; top: -10px;">
+		<div class="message">
 			<a href="#"><div class="message_thumbnail"></div></a>
-			<a href="#">First Last</a><br />
+			<a href="#" style="color: #900;">First Last</a><br />
 				<span style="font-size: 8pt; color: #999;">
 				<span style="color: #900; border: 1px solid #900; border-width: 0 0 1px 0; padding: 1px 0;">1 new</span> <span style="color: transparent;">|</span> 
 				<span title=" Total Messages " style="cursor: default;">10m</span> <span style="color: transparent;">|</span> 
 				<span title=" Messages Sent " style="cursor: default;">5s</span> <span style="color: transparent;">|</span> 
 				<span title=" Messages Received " style="cursor: default;">5r</span></span>
 
-		</div></div>
+		</div>
 
-		<div style="border: 1px solid #DDD; border-width: 1px 0 0 0;"><div class="message">
+		<div style="border: 1px solid #EEE; border-width: 1px 0 0 0;"><div class="message">
 			<a href="#"><div class="message_thumbnail"></div></a>
 			<a href="#">First Last</a><br />
 				<span style="font-size: 8pt; color: #999;">
@@ -36,12 +33,14 @@
 
 		</div></div>
 
-		<div style="border: 1px solid #DDD; border-width: 1px 0 0 0; margin-top: 5px;">
+		<div style="border: 1px solid #EEE; border-width: 1px 0 0 0; margin-top: 5px;">
 		<table width="100%" style="font-size: 8pt; margin-top: 10px;"><tr>
 			<td align="left" width="75"><a href="#" class="profile_nav">< Newer</a></td>
 			<td align="center" width="" style="color: #AAA; font-size: 7pt;">1 of 1</td>
 			<td align="right" width="75"><a href="#" class="profile_nav">Older ></a></td>
 		</tr></table></div>
+
+</div>
       {% endblock %}
     </div>
     <div class="right_col">
