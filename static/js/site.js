@@ -203,6 +203,12 @@ function post_comment(form_id, url) {
     $('#comment_form_'+form_id+' form input.submit-preview').remove();
     url = '/posts/test/'
 
+    
+     if (window.location.pathname.indexOf('lionface') >= 0) 
+  { 
+    url = '/lionface' +  url;
+  }     
+
     $.ajax({
         type: "POST",
         data: $('#comment_form_'+form_id+' form').serialize(),
