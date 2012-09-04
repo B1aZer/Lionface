@@ -35,8 +35,16 @@ class SignupForm(forms.Form):
     terms = forms.BooleanField(label='I agree to the Terms.', required=False)
     
     def clean_full_name(self):
+        def titlecase(s):
+                return re.sub("[A-Za-z]+('[A-Za-z]+)?",
+                              lambda mo: mo.group(0)[0].upper() + mo.group(0)[1:],
+                              s)
         if not re.search("[a-zA-Z]{2,} [a-zA-Z]{2,}", self.cleaned_data['full_name']):
             raise forms.ValidationError("Please enter your full name.")
+        if self.cleaned_data['full_name'].isupper():
+            raise forms.ValidationError("Please enter your full name without caps.")
+        self.cleaned_data['full_name'] = titlecase(self.cleaned_data['full_name'].strip())
+
         return self.cleaned_data['full_name']
 
     def clean_email(self):
