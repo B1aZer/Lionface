@@ -1,12 +1,3 @@
- <script type="text/javascript"> 
- function check1() { 
- document.getElementById("checkbox1").checked = "checked"; 
- } 
- function check() { 
- document.getElementById("checkbox").checked = "checked"; 
- } 
- </script> 
-
 {% extends 'profile/base.html' %}
 {% load media friends format_results %}
 
@@ -72,10 +63,13 @@
                                 <input name="profile_id" type="hidden" value="{{profile_user.id}}" >
                                 	<div style="position: relative; width: 100%; height: 100%;">
                                         <div style="position: absolute; left: 0px; top: -12px;">
-                                            <div class="post_option" onClick="javascript:check1();">
-                                                <input name="type" type="radio" value="P" checked id="checkbox1"> Public</div> 
-                                            <div class="post_option" onClick="javascript:check();">
-                                                <input name="type" type="radio" value="F" id="checkbox"> Friends</div>
+                                            <div class="post_option">
+                                                <input name="type" type="radio" value="P" checked id="checkbox1" name="public">
+                                            <label for="checkbox1"> Public</label></div>
+                                            <div class="post_option">
+                                                <input name="type" type="radio" value="F" id="checkbox"> 
+                                            <label for="checkbox"> Friends</label></div>
+                                            </div>
                                         </div>
                                     </div>
                             </td>

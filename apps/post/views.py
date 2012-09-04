@@ -28,7 +28,7 @@ def feed(request, user_id = None):
         items = request.user.get_messages()
     else:
         #show messages adressed to user
-        items = items.filter(post__user_to=user_id)
+        items = items.filter(user=user_id)
     if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
         items = items.filter(post__contentpost__type="P")
     return render_to_response(

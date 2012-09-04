@@ -4,18 +4,20 @@ from celery.contrib import rdb
 
 class UpdateNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
-        from models import NewsItem, FriendPost, SharePost
+        from models import NewsItem, FriendPost, SharePost, ContentPost
         #rdb.set_trace()
         #if user: users = [user]
         #else: users = post.get_involved()
         #this should be checked
         if isinstance(post, FriendPost):
-            pass
-        if isinstance(post, SharePost):
-            pass
-            #for user in users:
-                #ni, created = NewsItem.objects.get_or_create(user=user, post=post)
-        ni, created = NewsItem.objects.get_or_create(user=post.user, post=post)
+            ni, created = NewsItem.objects.get_or_create(user=post.user, post=post)
+            ni, created = NewsItem.objects.get_or_create(user=post.friend, post=post)
+        elif isinstance(post, ContentPost):
+            ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
+        elif isinstance(post, SharePost):
+            ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
+        else:
+            ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
 
 
 tasks.register(UpdateNewsFeeds)
