@@ -19,7 +19,7 @@ def show_friend_count(user):
     wordarray = ['2', '3', '4', '5', '6', '7', '8', '9']
     count = "0 Friends"
     num = user.friends.all().count()
-    if(num == 1): count = "%s Friend"
+    if(num == 1): count = "%s Friend" % (num)
     elif( num > 0 and num < 10): count = "%s Friends" % (wordarray[num-2])
     elif( num > 0): count = "%d Friends" % (num)
     return "%s" % (count)

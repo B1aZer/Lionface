@@ -62,10 +62,17 @@ def profile(request, username=None):
 
 @login_required
 def settings(request):
+    if request.method == 'POST':
+        form = UserInfoForm(request.POST , instance=request.user)
+        if form.is_valid():
+            form.save()
+    else:
+        form = UserInfoForm(instance=request.user)
 
     return render_to_response(
         'profile/settings.html',
         {
+            'form':form,
         },
         RequestContext(request)
     )
@@ -78,5 +85,5 @@ def messages(request):
         {
         },
         RequestContext(request)
-    )  
+    )
 
