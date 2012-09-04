@@ -50,6 +50,7 @@ var timezone = jstz.determine();
 
   </head>
   <body>
+
     {% block body %}
     {% endblock %}
 
@@ -74,6 +75,9 @@ var timezone = jstz.determine();
 <span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top">Feedback</a>
 <span style="color: transparent;">--</span> World Peace
       </div></div>
+
+<image src="{% media_url 'images/IconMessages.png' %}" width="1" height="1" border="0">
+<image src="{% media_url 'images/IconNotifications.png' %}" width="1" height="1" border="0">
     {% endblock %}
 
   {% include_media 'common.js' %}

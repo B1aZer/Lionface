@@ -1,7 +1,7 @@
 <li class="friend_request">
   <div style="padding: 15px; background: #F7F7F7; cursor: default;" class="link-output">
     <div class="right">
-      <span class="blue_btn"><a class="settings link-accept-friend { request: '{{ notification.friend_request.id }}' }" href="javascript:;">Okay</a></span>
+      <span class="blue_btn" style="padding: 0px; margin: 0px; border: 0px;"><a class="settings link-accept-friend { request: '{{ notification.friend_request.id }}' }" href="javascript:;">Okay</a></span>
       <span class="friend_decline"><a class="settings link-decline-friend { request: '{{ notification.friend_request.id }}' }" style="margin-left: 5px;" href="javascript:;">No, thanks.</a></span>
     </div>
     <a href="{{ notification.friend_request.from_user.get_absolute_url }}">{{ notification.friend_request.from_user.get_full_name }}</a> wants to be your friend.
