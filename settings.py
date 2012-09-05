@@ -194,7 +194,7 @@ MEDIA_BUNDLES = (
     ('main.js',
         'js/jquery-1.8.0.min.js',
         'js/jquery.metadata.js',
-        'js/jquery.autogrow-textarea.js',
+        'js/jquery.autosize-min.js',
     ),
     ('common.js',
         'js/site.js',

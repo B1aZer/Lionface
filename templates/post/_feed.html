@@ -11,7 +11,7 @@
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>
-            <a href="javascript:$('.comment_{{ item.id }}').fadeIn(function() {$('.text_comment').autogrow();});">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+            <a href="javascript:$('.comment_{{ item.id }}').fadeIn(function() {$('.text_comment').autosize();});">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
         </div><br />
         <div class="comments comment_{{ item.id }}" style="display: none;">

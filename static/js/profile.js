@@ -70,6 +70,6 @@ $(function() {
     });
     
 
-    $('.postbox_textarea').autogrow();
+    $('.postbox_textarea').autosize();
 
 });

@@ -28,7 +28,7 @@
             </table>
             </dt>
             <dd>
-            <p class="comment">{{ comment.comment }}</p>
+            <p class="comment">{{ comment.comment|strip_comment|safe|linebreaks }}</p>
             </dd>
         </div>
         <hr noshade="noshade" style="border: 0px; height: 1px; background: #FFF;" size="1" />

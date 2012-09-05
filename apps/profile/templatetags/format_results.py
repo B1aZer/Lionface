@@ -26,12 +26,10 @@ def format_image(photo, path):
         photo = "lionface/%s" % photo
     return photo
 
-# Function for identifying frinds.
-@register.filter(name='find_friend')
-def find_friend(user, friend):
-    #import pdb;pdb.set_trace()
-    if user == friend or user.has_friend(friend):
-        return True
-    else:
-        return False
-
+# Function for stripping tags.
+@register.filter(name='strip_comment')
+def strip_comment(comment):
+    import bleach
+    comment = bleach.clean(comment,attributes={'a': ['href', 'rel', 'name'],})
+    comment = bleach.linkify(comment,target='_top',title=True)
+    return comment

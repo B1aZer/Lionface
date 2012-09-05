@@ -51,11 +51,11 @@ class ContentPost(Post):
         return self.user.friends.all() | UserProfile.objects.filter(id=self.user.id)
 
     def render(self):
-        from django.utils.html import escape
+        #from django.utils.html import escape
         import bleach
 
         self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
-        self.content = bleach.linkify(self.content,target='_top',title="link's title")
+        self.content = bleach.linkify(self.content,target='_top',title=True)
 
         return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
