@@ -216,6 +216,10 @@ a.profile_btn:hover {
 	border-radius: 3px;
 }
 
+.post_content p {
+	padding: 4px 0;
+}
+
 .postbox_textarea {
 	padding: 5px; 
 	border: 1px solid #FFF; 
@@ -223,7 +227,7 @@ a.profile_btn:hover {
 	background-color: #FDFDFD; 
 	-moz-border-radius: 3px; 
 	border-radius: 3px; 
-	width: 565px !important;
+	width: 555px !important;
 	border: 1px solid #CCC;
 	overflow: hidden;
 	height: auto;
@@ -570,6 +574,7 @@ a.nav_messages:link, a.nav_messages:active, a.nav_messages:visited, a.nav_notifi
 	text-align: center;
 	-moz-box-shadow: inset 0 2px 4px -2px #777;
 	box-shadow: inset 0 2px 4px -2px #777; 
+	position: relative;
 }
 
 a.nav_messages:link, a.nav_messages:active, a.nav_messages:visited {
@@ -608,7 +613,7 @@ a.nav_notifications:hover {
 	font-size: 8pt;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	position: absolute; right: -7px; bottom: 0px;
+	position: absolute; right: -7px; top: 22px;
 }
 
 /* Search */
