@@ -6,12 +6,12 @@
 	<hr style="position: relative; left: 50px; background-color: #E7E7E7; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
 <div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {type: '{{item.get_type}}', user: {{ item.user.id }}}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 5px 8px; width: 535px;">
-    <a href="{{item.user.get_absolute_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.user.photo|format_image:request.get_full_path }}'); background-size: 50px 50px;"></div></a>
-    {{ item.render }}
+    <a href="{{item.post.user.get_absolute_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.post.user.photo|format_image:request.get_full_path }}'); background-size: 50px 50px;"></div></a>
+    {{ item.render|linebreaks }}
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>
-            <a href="javascript:$('.comment_{{ item.id }}').fadeIn();">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+            <a href="javascript:$('.comment_{{ item.id }}').fadeIn(function() {$('.text_comment').autogrow();});">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
         </div><br />
         <div class="comments comment_{{ item.id }}" style="display: none;">
@@ -31,7 +31,7 @@
 
         <div class="post_bottom">
             {% if not del_false %}
-                {% if item.user.id == request.user.id  or item.user_to.id == request.user.id %}
+                {% if item.post.user.id == request.user.id  or item.user_to.id == request.user.id or item.user.id == request.user.id%}
                 <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
                 {% if item.post.contentpost.type == "P" %}

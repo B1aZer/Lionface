@@ -59,18 +59,27 @@
                 <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 110%;"></textarea>
 
                 <br />
-                <div class="postoptions_container">
+                <div class="postoptions_container" >
                     <table width="100%"><tr>
                             <td align="left" style="color: #999; font-size: 8pt;" width="50%">
                                 <input name="profile_id" type="hidden" value="{{profile_user.id}}" >
                                 	<div style="position: relative; width: 100%; height: 100%;">
-                                        <div style="position: absolute; left: 0px; top: -12px;">
+                                        <div style="position: absolute; left: 0px; top: -12px; {% if profile_user|has_friend:request.user %} display:none {% endif %}">
+                                        {% if profile_user|has_friend:request.user %}
                                             <div class="post_option">
+                                                <input name="type" type="radio" value="P" id="checkbox1" name="public" style="cursor: pointer;">
+                                            <label for="checkbox1" style="cursor: pointer;"> Public</label></div>
+                                            <div class="post_option">
+                                                <input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;"> 
+                                            <label for="checkbox" style="cursor: pointer;"> Friends</label></div>
+                                        {% else %}
+                                        <div class="post_option">
                                                 <input name="type" type="radio" value="P" checked id="checkbox1" name="public" style="cursor: pointer;">
                                             <label for="checkbox1" style="cursor: pointer;"> Public</label></div>
                                             <div class="post_option">
                                                 <input name="type" type="radio" value="F" id="checkbox" style="cursor: pointer;"> 
                                             <label for="checkbox" style="cursor: pointer;"> Friends</label></div>
+                                        {% endif %}
                                             </div>
                                         </div>
                                     </div>

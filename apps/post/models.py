@@ -52,10 +52,15 @@ class ContentPost(Post):
 
     def render(self):
         from django.utils.html import escape
-        return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), escape(self.content)))
+        import bleach
+
+        self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
+        self.content = bleach.linkify(self.content,target='_top',title="link's title")
+
+        return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
     def get_id(self):
-         return self.id 
+         return self.id
 
     def name(self):
         return self._meta.verbose_name

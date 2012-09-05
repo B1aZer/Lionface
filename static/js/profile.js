@@ -68,4 +68,8 @@ $(function() {
             return false;   
         }
     });
+    
+
+    $('.postbox_textarea').autogrow();
+
 });
