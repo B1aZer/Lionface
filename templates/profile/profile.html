@@ -50,13 +50,13 @@
         <a href="#" class="profile_nav">Loves</a>
     </div>
 
-    {% if profile_user|find_friend:request.user %}
+    {% if profile_user|has_friend:request.user or request.user == profile_user %}
 
     <div id="postbox">
         <form id="postform">{% csrf_token %}
             <div style="padding: 10px;" align="center">
 
-                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 110%;"></textarea>
+                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
 
                 <br />
                 <div class="postoptions_container" >
