@@ -48,8 +48,8 @@ def create_profile_post_notification(sender, instance, created, **kwargs):
 post_save.connect(create_profile_post_notification, sender=ContentPost)
 
 def create_comment_notifiaction(sender, comment, request, **kwargs):
-    if comment.content_object.user <> comment.user:
-        Notification(user=comment.content_object.user, type='CS', other_user=comment.user, content_object=comment.content_object).save()
+    if comment.content_object.post.user <> comment.user:
+        Notification(user=comment.content_object.post.user, type='CS', other_user=comment.user, content_object=comment.content_object).save()
 comment_was_posted.connect(create_comment_notifiaction)
 
 def create_share_notifiaction(sender, instance, created, **kwargs):
