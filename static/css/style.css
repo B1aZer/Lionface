@@ -281,15 +281,6 @@ a.profile_btn:hover {
 	cursor: pointer;
 }
 
-.comment {
-	color: #333; 
-	font-size: 9pt !important; 
-	padding: 7px 0;
-	margin: 3px 0;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-}
-
 .upload {
 	position: relative;
 	display: block;
@@ -300,6 +291,7 @@ a.profile_btn:hover {
 	border: 1px solid #DDD;
 	moz-border-radius: 3px;
 	border-radius: 3px;
+	color: #555;
 	background: #FFF; /* Old browsers */
 	background: -moz-linear-gradient(top, #FFF 0%, #EEE 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#EEE)); /* Chrome,Safari4+ */
@@ -314,6 +306,8 @@ a.profile_btn:hover {
 .upload:hover {
 	background: #FFF;
 	border-color: #EEE;
+	color: #555;
+	text-decoration: none;
 }
 
 .upload_form {
@@ -371,10 +365,22 @@ a.profile_btn:hover {
 	border-radius: 3px; 
 	-moz-box-shadow: 0px 4px 10px -6px #AAA;
 	box-shadow: 0px 4px 10px -6px #AAA;
+	position: relative;
 }
 
+.comment {
+	color: #333; 
+	font-size: 9pt !important; 
+	padding: 7px 0;
+	margin: 3px 0;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	position: relative;
+}
+
+
 .comment_thumbnail {
-	position: absolute; left: -50px; 
+	position: absolute; left: -75px; top: 0px;
 	width: 40px; 
 	height: 40px; 
 	background: #F7F7F7; 
