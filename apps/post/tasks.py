@@ -24,7 +24,7 @@ tasks.register(UpdateNewsFeeds)
 
 class DeleteNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
-        from models import Post, NewsItem
+        from models import Post, NewsItem, FriendPost
         #rdb.set_trace()
         post_wrapper = post
         if user: users = [user]
@@ -32,10 +32,14 @@ class DeleteNewsFeeds(Task):
         for user in users:
             post_news = NewsItem.objects.filter(user=user, post=post_wrapper.post)
             if post_news:
-                post_news.delete()
-        post_obj = Post.objects.filter(id=post_wrapper.post.id)
-        if post_obj:
-            post_obj.delete() 
+                if not isinstance(post_news[0].post.get_inherited(), FriendPost):
+                    post_news.delete()
+                else:
+                    if post_news[0].user == user:
+                        post_news.delete()
+        #post_obj = Post.objects.filter(id=post_wrapper.post.id)
+        #if post_obj:
+        #    post_obj.delete()
 
 tasks.register(DeleteNewsFeeds)
 
@@ -43,7 +47,9 @@ tasks.register(DeleteNewsFeeds)
 class AddFriendToFeed(Task):
     def run(self, user, friend, **kwargs):
         from models import Post, NewsItem
-        for post in Post.objects.filter(user=friend):
-            UpdateNewsFeeds.delay(post, user)
+        #for post in Post.objects.filter(user=friend):
+            #UpdateNewsFeeds.delay(post, user)
+        for post in NewsItem.objects.filter(user=friend):
+            UpdateNewsFeeds.delay(post.post.get_inherited(), user)
 
 tasks.register(AddFriendToFeed)

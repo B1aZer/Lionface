@@ -21,8 +21,8 @@ class FriendRequest(models.Model):
         self.from_user.save()
         Notification(user=self.from_user, type='FA', other_user=self.to_user, content_object = self).save()
         FriendPost(user=self.from_user, friend=self.to_user, user_to=self.to_user).save()
-        AddFriendToFeed.delay(self.from_user, self.to_user)
-        AddFriendToFeed.delay(self.to_user, self.from_user)
+        #AddFriendToFeed.delay(self.from_user, self.to_user)
+        #AddFriendToFeed.delay(self.to_user, self.from_user)
         self.delete()
 
     # Decline the friend request

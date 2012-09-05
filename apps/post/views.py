@@ -164,7 +164,7 @@ def delete(request, post_id = None):
             return HttpResponse(json.dumps(data), "application/json")
     if post_id:
         post = NewsItem.objects.get(id=post_id)
-        DeleteNewsFeeds.delay(post)
+        DeleteNewsFeeds.delay(post,user=request.user)
         #post.delete()
     return HttpResponse(json.dumps(data), "application/json")
 

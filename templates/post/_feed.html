@@ -31,7 +31,7 @@
 
         <div class="post_bottom">
             {% if not del_false %}
-                {% if item.post.user.id == request.user.id  or item.post.user_to.id == request.user.id %}
+                {% if item.user.id == request.user.id  or item.user_to.id == request.user.id %}
                 <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
                 {% if item.post.contentpost.type == "P" %}
