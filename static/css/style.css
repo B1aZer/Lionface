@@ -373,18 +373,22 @@ a.profile_btn:hover {
 }
 
 .comment {
-	color: #333; 
+	color: #444; 
 	font-size: 9pt !important; 
-	padding: 7px 0;
-	margin: 3px 0;
+	padding: 0;
+	margin: 0;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	position: relative;
 }
 
+.comment p {
+	padding: 4px 0;
+}
+
 
 .comment_thumbnail {
-	position: absolute; left: -75px; top: 0px;
+	position: absolute; left: -76px; top: 0px;
 	width: 40px; 
 	height: 40px; 
 	background: #F7F7F7; 
