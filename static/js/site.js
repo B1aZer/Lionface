@@ -184,7 +184,8 @@ function share_post(elem) {
 }          
 
 function del_post(elem) { 
-    url = "/posts/del/" + elem + "/";
+    var data = $('.post_'+elem).metadata();
+    url = "/posts/del/" + elem + "?user="+data.user;
 
      if (window.location.pathname.indexOf('lionface') >= 0) 
   { 

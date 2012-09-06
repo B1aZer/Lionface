@@ -30,7 +30,7 @@ def feed(request, user_id = None):
         #show messages adressed to user
         items = items.filter(user=user_id)
     if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
-        items = items.filter(post__contentpost__type="P")
+        items = items.get_public_posts()
     return render_to_response(
         'post/_feed.html',
         {
@@ -163,8 +163,12 @@ def delete(request, post_id = None):
             DeleteNewsFeeds.delay(post_news)
             return HttpResponse(json.dumps(data), "application/json")
     if post_id:
+        if 'user' in request.GET:
+            owner = UserProfile.objects.get(id=int(request.GET['user']))  
+        else:
+            owner = request.user
         post = NewsItem.objects.get(id=post_id)
-        DeleteNewsFeeds.delay(post,user=request.user)
+        DeleteNewsFeeds.delay(post,user=owner)
         #post.delete()
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -175,13 +179,13 @@ def share(request, post_id = None):
         post = NewsItem.objects.get(id=post_id)
         post_type = post.post.get_inherited()
         if isinstance(post_type, SharePost):
-            shared = SharePost(user = post.user , user_to=request.user , content = post_type.content, id_news = post_type.id_news )
             post = post_type.get_original_post().post.get_inherited()
+            shared = SharePost(user = post.user , user_to=request.user , content = post_type.content, id_news = post_type.id_news, content_object = post )
             post.shared += 1
             post.save()
             shared.save()
         else:
-            post = SharePost(user = post.user , user_to=request.user , content = post.render(), id_news = post.id )
+            post = SharePost(user = post.user , user_to=request.user , content = post.render(), id_news = post.id, content_object = post_type)
             post_type.shared +=1
             post_type.save()
             post.save()
