@@ -646,7 +646,7 @@ a.nav_notifications:hover {
 .result .subtext { font-size: 8pt; color: #999; }
 
 .link_loader { width: 16px; height: 16px; float: left; background: url(../images/link_loader.gif) center no-repeat; }
-.large_loader { background: url(../images/loader.png); width: 64px; height: 64px; margin: auto; margin-top: 20px; }
+.large_loader { background: url(../images/loader.gif); background-size: 64px 64px; width: 64px; height: 64px; margin: auto; padding: 50px; background-position: center center; background-repeat: no-repeat; }
 
 /* Notifications */
 
