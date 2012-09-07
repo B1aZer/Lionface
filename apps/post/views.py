@@ -6,11 +6,15 @@ import datetime
 
 from models import *
 from account.models import UserProfile
+from tags.models import Tag
+from post.models import NewsItem
 from tasks import UpdateNewsFeeds
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.shortcuts import get_object_or_404
 from django.contrib import comments
+
+from itertools import chain
 
 
 try:
@@ -25,7 +29,14 @@ def feed(request, user_id = None):
     #news feed
     if not user_id:
         user_id = request.user.id
+        tags = request.user.tags.all()
+        tags = [x.name for x in tags]
+        #items = request.user.get_messages().get_tagged_posts(tags)
         items = request.user.get_messages()
+        tagged_posts = NewsItem.objects.filter(post__tags__name__in=tags).order_by('-date')
+        items = list(chain(items, tagged_posts))
+        items = list(set(items))
+        items = sorted(items,key=lambda post: post.date, reverse=True)
     else:
         #show messages adressed to user
         items = items.filter(user=user_id)

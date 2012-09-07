@@ -58,9 +58,51 @@ function del_post_single(elem) {
 
 }     
 
+function saving_tag(elem) {
+
+}
 $(document).ready(function(){
   loadNewsFeed($("#news_feed"));
   //alert(window.location.pathname);
+  $('.add_tag').click(function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var form = $('<form id="foma" />');
+      form.html('<input type="text" id="editbox" name="tags"><input id="button_save" type="submit" name="submit">')
+      $('.tags').html(form);
+      $('#editbox').focus(); 
+
+      form.submit(function(e) {
+        e.preventDefault();
+        url = '/tags/add/';
+         if (window.location.pathname.indexOf('lionface') >= 0) 
+              { 
+                url = '/lionface' +  url;
+              }    
+
+              $.ajax({
+                type: "POST",
+                data: $(this).serialize(),
+                url: url,
+                success: function(html, textStatus) {
+                alert('added');
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('wrong');
+                }
+
+            });     
+
+
+        });
+
+  });
+    $(document).click(function() {
+        /*$('.tags').html('<span class="add_tag">Add +</span>');*/
+    });
+  
+
+
 });
 
-              

@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from .utils import QuerySetManager
 from tags.models import Tag
+from itertools import chain
 
 class QuerySet(models.query.QuerySet):
     """Base QuerySet class for adding custom methods that are made
@@ -123,6 +124,12 @@ class SharePost(Post):
 class CustomQuerySet(QuerySet):
     def get_public_posts(self):
         return [x for x in self if x.get_privacy == 'P']
+    def get_tagged_posts(self,tags):
+        #import pdb;pdb.set_trace()
+        tagged_posts = [x for x in self if x.post.tags.filter(name__in=tags)]
+        if tagged_posts:
+            self = list(chain(self, tagged_posts))
+        return self
 
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)

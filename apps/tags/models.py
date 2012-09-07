@@ -12,3 +12,4 @@ class Tag(models.Model):
         verbose_name = 'tag'
         verbose_name_plural = 'tags'
 
+
