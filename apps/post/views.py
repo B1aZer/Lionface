@@ -192,12 +192,12 @@ def share(request, post_id = None):
         post_type = post.post.get_inherited()
         if isinstance(post_type, SharePost):
             post = post_type.get_original_post().post.get_inherited()
-            shared = SharePost(user = post.user , user_to=request.user , content = post_type.content, id_news = post_type.id_news, content_object = post )
+            shared = SharePost(user = post_type.content_object.user , user_to=request.user , content = post_type.content, id_news = post_type.id_news, content_object = post )
             post.shared += 1
             post.save()
             shared.save()
         else:
-            post = SharePost(user = post.user , user_to=request.user , content = post.render(), id_news = post.id, content_object = post_type)
+            post = SharePost(user = post_type.user , user_to=request.user , content = post.render(), id_news = post.id, content_object = post_type)
             post_type.shared +=1
             post_type.save()
             post.save()
