@@ -23,9 +23,10 @@ class UserInfoForm(forms.ModelForm):
     full_name = forms.CharField(required=False, label="Full Name" , widget=forms.TextInput(attrs={'style': 'border: 1px solid #DDD; padding: 7px; width: 300px;'}))
     class Meta:
         model = UserProfile
-        fields = ('full_name', 'email', 'first_name', 'last_name')
+        fields = ('full_name', 'email', 'first_name', 'last_name', 'username')
         widgets = {
-            'email': TextInput(attrs={'style': 'border: 1px solid #DDD; padding: 7px; width: 300px;'}),
+            'email' : TextInput(attrs={'style': 'border: 1px solid #DDD; padding: 7px; width: 300px;'}),
+            'username' : TextInput(attrs={'readonly':'readonly'}),
         }
     def __init__(self, *args, **kwargs):
         super(UserInfoForm, self).__init__(*args, **kwargs)

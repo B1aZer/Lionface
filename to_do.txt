@@ -1,4 +1,2 @@
 friends did not see own posts after unfrending.
-settings [form pass + username]
 loading posts live
-sharepost bug

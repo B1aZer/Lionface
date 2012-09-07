@@ -1,4 +1,5 @@
 {% extends 'profile/base.html' %}
+{% load i18n static %}
 
 {% block content_title %}
 {{ user.first_name }} {{ user.last_name }} | Account
@@ -56,12 +57,46 @@
         <tr>
             <td align="right">Username<br></td>
             <td>        
-                (username)
+                {{ form.username }}
             </td>
         </tr>
         <tr>
             <td align="right">&nbsp;</td>
-            <td><a href="{% url django.contrib.auth.views.password_change %}" style="font-size: 12px;">Change Your Password</a></td>
+            <td><a onClick="javascript:$('#pass_changing').fadeIn()" style="font-size: 12px; cursor:pointer;">Change Your Password</a></td>
+        </tr>
+        <tr id="pass_changing" style="display:none">
+            <td align="right">&nbsp;</td>
+            <td>
+
+                <p>{% trans "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly." %}</p>
+
+                <fieldset class="module aligned wide">
+
+                    <div class="form-row">
+                        {{ form_pass.old_password.errors }}
+                        <label for="id_old_password" class="required">{% trans 'Old password' %}:</label>{{ form_pass.old_password }}
+                    </div>
+
+                    <div class="form-row">
+                        {{ form_pass.new_password1.errors }}
+                        <label for="id_new_password1" class="required">{% trans 'New password' %}:</label>{{ form_pass.new_password1 }}
+                    </div>
+
+                    <div class="form-row">
+                        {{ form_pass.new_password2.errors }}
+                        <label for="id_new_password2" class="required">{% trans 'Password (again)' %}:</label>{{ form_pass.new_password2 }}
+                    </div>
+
+                </fieldset>
+
+                {% if changed %}
+                <p> Password changed successfully </p>
+                {% endif %}
+
+                <div class="submit-row">
+                    <input type="submit" value="Change my password" name="change_pass" class="default" />
+                </div>         
+            </td>  
         </tr>
         <tr>
             <td align="right">&nbsp;</td>
@@ -204,7 +239,7 @@
 </div>
 
 <div style="position: absolute; left: 0px; bottom: 0px; padding: 15px 10px; background: #EEE; width: 680px;">
-<input type="submit" class="blue_btn" style="color: #FFF;" value="Save" /> <a href="#" style="font-size: 11px; color: #BBB;">Delete Account</a>
+<input type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> <a href="#" style="font-size: 11px; color: #BBB;">Delete Account</a>
 </div>
 </form>
 

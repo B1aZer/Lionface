@@ -6,6 +6,7 @@ from django.template import RequestContext
 from account.models import UserProfile
 from notification.models import Notification
 from .forms import *
+from django.contrib.auth.forms import PasswordChangeForm
 
 @login_required
 def feed(request):
@@ -62,17 +63,30 @@ def profile(request, username=None):
 
 @login_required
 def settings(request):
+    changed = False
     if request.method == 'POST':
-        form = UserInfoForm(request.POST , instance=request.user)
-        if form.is_valid():
-            form.save()
+        if 'change_pass' in request.POST:
+            form_pass = PasswordChangeForm(user=request.user, data=request.POST)
+            form = UserInfoForm(instance=request.user)
+            if form_pass.is_valid():
+                form_pass.save()
+                changed = True
+        elif 'save' in request.POST:
+            form = UserInfoForm(request.POST , instance=request.user)
+            form_pass = PasswordChangeForm(user=request.user)
+            if form.is_valid():
+                form.save()
     else:
+
         form = UserInfoForm(instance=request.user)
+        form_pass = PasswordChangeForm(user=request.user)
 
     return render_to_response(
         'profile/settings.html',
         {
             'form':form,
+            'form_pass':form_pass,
+            'changed' : changed,
         },
         RequestContext(request)
     )
