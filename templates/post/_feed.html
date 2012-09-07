@@ -13,6 +13,7 @@
         <div>
             <a href="javascript:$('.comment_{{ item.id }}').fadeIn(function() {$('.text_comment').autosize();});">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+			Follow
         </div><br />
         <div class="comments comment_{{ item.id }}" style="display: none;">
 			<div class="comment_container">
@@ -32,7 +33,7 @@
         <div class="post_bottom">
             {% if not del_false %}
                 {% if item.post.user.id == request.user.id  or item.user_to.id == request.user.id or item.user.id == request.user.id%}
-                <a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
+				<a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
                 {% if item.get_privacy == "P" %}
                 <span title="Privacy Settings: Public">Public</span>
