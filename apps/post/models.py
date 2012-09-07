@@ -6,6 +6,7 @@ from tasks import UpdateNewsFeeds,DeleteNewsFeeds
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from .utils import QuerySetManager
+from tags.models import Tag
 
 class QuerySet(models.query.QuerySet):
     """Base QuerySet class for adding custom methods that are made
@@ -13,13 +14,14 @@ class QuerySet(models.query.QuerySet):
 
     @classmethod
     def as_manager(cls, ManagerClass=QuerySetManager):
-        return ManagerClass(cls)    
+        return ManagerClass(cls)
 
 class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
     user_to = models.ForeignKey(UserProfile,  related_name='user_to')
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
+    tags = models.ManyToManyField(Tag)
 
     # Function to attempt to return the inherited object for this item.
     def get_inherited(self):

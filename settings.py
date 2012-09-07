@@ -140,6 +140,7 @@ INSTALLED_APPS = (
     'profile',
     'notification',
     'post',
+    'tags',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -11,3 +11,4 @@ class SearchForm(ModelSearchForm):
                 res = res.exclude(username=user.username)
             # TODO: Privacy settings will come in here too at some point.
         return res
+

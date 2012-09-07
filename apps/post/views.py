@@ -53,6 +53,7 @@ def timeline(request,post_num=5):
 @login_required
 def save(request):
     data = {'status': 'OK'}
+    #import pdb;pdb.set_trace()
     if request.method == 'POST' and 'content' in request.POST:
         if 'profile_id' in  request.POST:
             user_to = UserProfile.objects.get(id=request.POST['profile_id'])
@@ -61,6 +62,17 @@ def save(request):
             post.type = request.POST['type']
         else: post.type = 'P'
         post.save()
+
+        hashtags = [word[1:] for word in request.POST['content'].split() if word.startswith('#')]
+
+        for hashtag in hashtags:
+            try:
+                tag = Tag.objects.get(name=hashtag)
+                post.tags.add(tag)
+            except ObjectDoesNotExist:
+                post.tags.create(name=hashtag)
+
+        #post.save()
 
         data['post_id'] = post.id
         #import pdb;pdb.set_trace()
@@ -164,7 +176,7 @@ def delete(request, post_id = None):
             return HttpResponse(json.dumps(data), "application/json")
     if post_id:
         if 'user' in request.GET:
-            owner = UserProfile.objects.get(id=int(request.GET['user']))  
+            owner = UserProfile.objects.get(id=int(request.GET['user']))
         else:
             owner = request.user
         post = NewsItem.objects.get(id=post_id)
