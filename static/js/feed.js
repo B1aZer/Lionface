@@ -58,15 +58,25 @@ function del_post_single(elem) {
 
 }     
 
-function saving_tag(elem) {
-
-}
 $(document).ready(function(){
+
   loadNewsFeed($("#news_feed"));
-  //alert(window.location.pathname);
-  $('.add_tag').click(function (e) {
+
+  $('.tagged').hover(function () {
+    $(this).find('.remove_tag').show();
+    },function () {
+    $(this).find('.remove_tag').hide();
+    });
+
+  $('.add_tag').live('click',function (e) {
       e.preventDefault();
       e.stopPropagation();
+
+      var self = $(this)
+
+      var link = $(this).parent();
+      var link_add = link.clone();
+      var last_link = link
 
       var form = $('<form id="foma" />');
       form.html('<input type="text" id="editbox" name="tags"><input id="button_save" type="submit" name="submit">')
@@ -86,10 +96,47 @@ $(document).ready(function(){
                 data: $(this).serialize(),
                 url: url,
                 success: function(html, textStatus) {
-                alert('added');
+                console.log(html.tags);
+                    if (html.tags && html.tags.length < 2)
+                    { 
+                        console.log(html.tags.length);
+                        link.html(html.tags).addClass('tagged');
+                        link.append('<span class="remove_tag" style="float:right; display:none">x</span>');
+                        link.hover(function () {
+                            $(this).find('.remove_tag').show();
+                            },function () {
+                            $(this).find('.remove_tag').hide();
+                        });
+                        link.removeClass('tags');
+                        link.after(link_add);
+                    }   
+                    else if (html.tags && html.tags.length >= 2) 
+                    {
+                        for (var i=0; i<html.tags.length; i++) 
+                        {
+                            link_tag = link.clone()
+                            link_tag.html(html.tags[i]).addClass('tagged');
+                            link_tag.append('<span class="remove_tag" style="float:right; display:none">x</span>');
+                            link_tag.hover(function () {
+                                $(this).find('.remove_tag').show();
+                                },function () {
+                                $(this).find('.remove_tag').hide();
+                            });
+                            link_tag.removeClass('tags');
+                            last_link.after(link_tag)
+                            last_link = link_tag
+
+                        }
+                        link.hide();
+                        last_link.after(link_add);
+                    }
+                    else 
+                    {
+                        link.html(link_add.html())
+                    }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert('wrong');
+                    alert('Sorry! impossible to save tag');
                 }
 
             });     
@@ -97,10 +144,45 @@ $(document).ready(function(){
 
         });
 
+      $('#editbox').blur(function(e) {
+          if ($(this).parent().parent().is(':hover') === false) {
+              link.html('<span class="add_tag" >Add +</span>');
+              }
+            
+      });
+
   });
-    $(document).click(function() {
-        /*$('.tags').html('<span class="add_tag">Add +</span>');*/
-    });
+
+    $('.remove_tag').live('click',function (e) {
+        e.preventDefault();
+        e.stopPropagation(); 
+
+        url = '/tags/rem/';
+        if (window.location.pathname.indexOf('lionface') >= 0) 
+          { 
+            url = '/lionface' +  url;
+          }    
+
+       var link = $(this).parent()
+       var tag_val = $(this).parent().contents()[0];
+       var send = 'tag_name='+tag_val.textContent;
+
+        $.ajax({
+            type: "POST",
+            data: send,
+            url: url,
+            success: function(html, textStatus) {
+            if (html.status == 'OK' )
+                { 
+                link.fadeOut();
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert('Impossible to delete tag');
+            }
+
+        }); 
+    }); 
   
 
 

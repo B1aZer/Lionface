@@ -3,4 +3,5 @@ import views
 
 urlpatterns = patterns('',
     url(r'add/$', views.add_tag),
+    url(r'rem/$', views.rem_tag),
 )
