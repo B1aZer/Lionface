@@ -13,10 +13,11 @@
 
 <hr style="position: relative; left: 10px; background-color: #EEE; layer-background-color: #EEE; border: 1px none #000000; height: 1;" width="200" align="left" noshade="noshade" /><p />
 		<span style="color: #555; position: relative; left: 10px; font-weight: bold;">Tags:</span><p />
-        {% for tag in request.user.tags.all %}
-        <a href="#" class="filter tagged" >{{ tag.name }}<span class="remove_tag" style="float:right; display:none">x</span></a>
+        {% for tag in request.user.user_tag_set.all %}
+        <a href="#" onClick="return false;" class="filter tagged {% if tag.active %} filterON {% endif %}" >{{ tag.name }}<span class="remove_tag" style="float:right; display:none">x</span></a>
+        {% empty %}
         {% endfor %}
-        <a href="#" class="filter tags" ><span class="add_tag" >Add +</span></a>
+        <a href="javascript:;" class="filter tags" ><span class="add_tag" >Add +</span></a>
 {% endblock %}
 
 {% block right_col %}

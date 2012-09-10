@@ -31,7 +31,6 @@ function loadNewsFeed(elem) {
     });
 }
 
-
 function del_post_single(elem) { 
     var data = $('.post_'+elem).metadata();
 
@@ -58,14 +57,72 @@ function del_post_single(elem) {
 
 }     
 
+function hide_add_link() { 
+  if ($('.tagged').length >= 7) {
+        $('.tags').hide();
+        }
+  else {
+   $('.tags').show(); 
+   }
+
+}    
+
 $(document).ready(function(){
 
   loadNewsFeed($("#news_feed"));
+
+  hide_add_link();
 
   $('.tagged').hover(function () {
     $(this).find('.remove_tag').show();
     },function () {
     $(this).find('.remove_tag').hide();
+    });
+
+  $('.tagged').live('click',function () {
+        var self = $(this)
+        var tag_val = $(this).contents()[0];
+        var send = 'tag_name='+tag_val.textContent;  
+    if ($(this).hasClass('filterON')) {
+            url = '/tags/deact/';
+             if (window.location.pathname.indexOf('lionface') >= 0) 
+              { 
+                url = '/lionface' +  url;
+              } 
+
+              $.ajax({
+                type: "POST",
+                data: send,
+                url: url,
+                success: function(html, textStatus) {
+                    self.removeClass('filterON');
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('Sorry! impossible to deactivate tag');
+                }
+
+              }); 
+    }
+    else {
+         url = '/tags/act/';
+             if (window.location.pathname.indexOf('lionface') >= 0) 
+              { 
+                url = '/lionface' +  url;
+              } 
+
+              $.ajax({
+                type: "POST",
+                data: send,
+                url: url,
+                success: function(html, textStatus) {
+                    self.addClass('filterON');
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('Sorry! impossible to activate tag');
+                }
+
+              });  
+    }
     });
 
   $('.add_tag').live('click',function (e) {
@@ -108,7 +165,9 @@ $(document).ready(function(){
                             $(this).find('.remove_tag').hide();
                         });
                         link.removeClass('tags');
+                        link.addClass('filterON');
                         link.after(link_add);
+                        hide_add_link(); 
                     }   
                     else if (html.tags && html.tags.length >= 2) 
                     {
@@ -123,12 +182,14 @@ $(document).ready(function(){
                                 $(this).find('.remove_tag').hide();
                             });
                             link_tag.removeClass('tags');
+                            link_tag.addClass('filterON');
                             last_link.after(link_tag)
                             last_link = link_tag
 
                         }
                         link.hide();
                         last_link.after(link_add);
+                        hide_add_link(); 
                     }
                     else 
                     {
@@ -175,6 +236,8 @@ $(document).ready(function(){
             if (html.status == 'OK' )
                 { 
                 link.fadeOut();
+                link.remove();
+                hide_add_link();
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {

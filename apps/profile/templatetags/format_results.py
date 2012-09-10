@@ -1,6 +1,7 @@
 from django import template
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
+import re
 
 register = template.Library()
 
@@ -37,11 +38,6 @@ def strip_comment(comment):
 # Function for stripping tags.
 @register.filter(name='color_tags',is_safe=True)
 def color_tags(text):
-    #import pdb;pdb.set_trace()
-    text = text.split()
-    for idx,word in enumerate(text):
-        if word.startswith('#'):
-            text[idx] = "<a href=\"#\" style=\"color: #A70; text-decoration: underline;\">%s</a>" % word
-    text = ' '.join(text)
+    text = re.sub(r'(#[\w]+)',r'<a href="#" style="color: #A70; text-decoration: underline;">\1</a>',text)
     return text
 

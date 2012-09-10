@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import *
 from django.core.exceptions import ObjectDoesNotExist
-from tags.models import Tag
+from tags.models import *
 import re
 
 try:
@@ -22,13 +22,14 @@ def add_tag(request):
         for tag in tags:
             if tag:
                 try:
-                    tag_obj = Tag.objects.get(name=tag)
-                    if not tag_obj in request.user.tags.all():
-                        request.user.tags.add(tag_obj)
+                    tag_obj = request.user.user_tag_set.get(name=tag)
+                    if not tag_obj in request.user.user_tag_set.all() and len(request.user.user_tag_set.all()) < 7:
+                        request.user.user_tag_set.add(tag_obj)
                         applied.append(tag)
                 except ObjectDoesNotExist:
-                    request.user.tags.create(name=tag)
-                    applied.append(tag)
+                    if len(request.user.user_tag_set.all()) < 7:
+                        request.user.user_tag_set.create(name=tag)
+                        applied.append(tag)
         tag_string = "".join(tags)
         if tag_string and applied:
             data['tags']=applied
@@ -41,9 +42,40 @@ def rem_tag(request):
     if request.method == 'POST' and 'tag_name' in request.POST:
         tag_name = request.POST['tag_name']
         try:
-            tag = Tag.objects.get(name=tag_name)
+            tag = request.user.user_tag_set.get(name=tag_name)
         except ObjectDoesNotExist:
             data = {'status': 'tag not found'}
             return HttpResponse(json.dumps(data), "application/json")
-        request.user.tags.remove(tag)
+        #request.user.user_tag_set.remove(tag)
+        tag.delete()
     return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def deactivate(request):
+    data = {'status': 'OK'}
+    if request.method == 'POST' and 'tag_name' in request.POST:
+        tag_name = request.POST['tag_name']
+        try:
+            tag = request.user.user_tag_set.get(name=tag_name)
+        except ObjectDoesNotExist:
+            data = {'status': 'tag not found'}
+            return HttpResponse(json.dumps(data), "application/json")
+        tag.active = False
+        tag.save()
+    return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def activate(request):
+    data = {'status': 'OK'}
+    if request.method == 'POST' and 'tag_name' in request.POST:
+        tag_name = request.POST['tag_name']
+        try:
+            tag = request.user.user_tag_set.get(name=tag_name)
+        except ObjectDoesNotExist:
+            data = {'status': 'tag not found'}
+            return HttpResponse(json.dumps(data), "application/json")
+        tag.active = True
+        tag.save()
+    return HttpResponse(json.dumps(data), "application/json")
+
+

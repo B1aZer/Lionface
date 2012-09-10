@@ -29,8 +29,8 @@ def feed(request, user_id = None):
     #news feed
     if not user_id:
         user_id = request.user.id
-        tags = request.user.tags.all()
-        tags = [x.name for x in tags]
+        tags = request.user.user_tag_set.all()
+        tags = [x.name for x in tags if x.active]
         #items = request.user.get_messages().get_tagged_posts(tags)
         items = request.user.get_messages()
         tagged_posts = NewsItem.objects.filter(post__tags__name__in=tags).order_by('-date')

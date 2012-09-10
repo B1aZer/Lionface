@@ -1,2 +1,3 @@
 friends did not see own posts after unfrending.
 loading posts live
+linebreaks + color tags

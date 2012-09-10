@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.db.models.query import Q
 from post.tasks import AddFriendToFeed
-from tags.models import Tag
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey('UserProfile', related_name='from_user')
@@ -35,7 +34,6 @@ class UserProfile(User):
     # If there is an active FriendRequest then it's still pending.
     friends = models.ManyToManyField('self', related_name='friends')
     photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
-    tags = models.ManyToManyField(Tag)
 
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0
@@ -63,9 +61,6 @@ class UserProfile(User):
         "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
     full_name = property(_get_full_name)
-    
-
-
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
