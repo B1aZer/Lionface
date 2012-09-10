@@ -38,6 +38,12 @@ urlpatterns = patterns('',
             view_class=search.views.CustumSearchView,
             form_class=search.forms.SearchForm,
         ))),
+    url(r'^tag/', login_required(search_view_factory(
+        #view_class=SearchView,
+            template='search/search_tags.html',
+            view_class=SearchView,
+            form_class=SearchForm,
+        ))),
 )
 
 

@@ -1,6 +1,8 @@
 from django import template
 from django.template.loader import render_to_string
+from django.template import RequestContext
 from django.contrib.auth.models import User
+from tags.models import *
 import re
 
 register = template.Library()
@@ -10,6 +12,19 @@ register = template.Library()
 def format_result(object, current_user):
     if isinstance(object, User):
         return render_to_string('search/_result_user.html', { 'user': object, 'current_user': current_user })
+    return ""
+
+@register.filter(name='format_tag')
+def format_tag(object,request):
+    if isinstance(object, Tag):
+        items = object.post_set.all()
+        result = []
+        if items:
+            for item in items:
+                news_item = item.newsitem_set.all()
+                if news_item:
+                    result.append(news_item[0])
+        return render_to_string('post/_feed.html', { 'items': result },RequestContext(request))
     return ""
 
 # Function to format a search result.
@@ -38,6 +53,6 @@ def strip_comment(comment):
 # Function for stripping tags.
 @register.filter(name='color_tags',is_safe=True)
 def color_tags(text):
-    text = re.sub(r'(#[\w]+)',r'<a href="#" style="color: #A70; text-decoration: underline;">\1</a>',text)
+    text = re.sub(r'(#([\w]+))',r'<a href="/tag/?models=tags_tag&q=\2" style="color: #A70; text-decoration: underline;">\1</a>',text)
     return text
 
