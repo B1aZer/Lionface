@@ -8,6 +8,11 @@ from notification.models import Notification
 from .forms import *
 from django.contrib.auth.forms import PasswordChangeForm
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 @login_required
 def feed(request):
     return render_to_response(
@@ -100,4 +105,44 @@ def messages(request):
         },
         RequestContext(request)
     )
+
+@login_required
+def filter_add(request):
+    data = {'status': 'OK'}
+    if request.method == 'POST' and 'filter_name' in request.POST:
+        filter_name = request.POST['filter_name']
+        filters = request.user.filters.split(',')
+        if filter_name == 'People':
+                if 'F' not in filters:
+                    filters.append('F')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Pages':
+                if 'P' not in filters:
+                    filters.append('P')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+    return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def filter_remove(request):
+    data = {'status': 'OK'}
+    if request.method == 'POST' and 'filter_name' in request.POST:
+        filter_name = request.POST['filter_name']
+        filters = request.user.filters.split(',')
+        if filter_name == 'People':
+                if 'F' in filters:
+                    filters.remove('F')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Pages':
+                if 'P' in filters:
+                    filters.remove('P')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+    return HttpResponse(json.dumps(data), "application/json")
 

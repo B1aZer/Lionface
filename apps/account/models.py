@@ -29,11 +29,19 @@ class FriendRequest(models.Model):
     def decline(self):
         self.delete()
 
+FILTER_TYPE = (
+    ('F', 'Friend Feed'),
+    ('T', 'Tag Feed'),
+    ('P', 'Pages Feed'),
+    ('A', 'Public Feed'),
+)
+
 class UserProfile(User):
     # Logic is if a friend is in the 'friends' collection then they are verified.
     # If there is an active FriendRequest then it's still pending.
     friends = models.ManyToManyField('self', related_name='friends')
     photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
+    filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
 
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0
@@ -52,6 +60,19 @@ class UserProfile(User):
         from post.models import NewsItem
         #return NewsItem.objects.filter(post__user_to__in=self.friends.all()).exclude(post__user=self).order_by('date').reverse()
         return NewsItem.objects.filter(user__in=self.friends.all()).exclude(post__user=self).order_by('date').reverse()
+    def get_filters(self):
+        filters = self.filters.split(',')
+        if self.filters:
+            return filters
+        else:
+            return []
+    def get_active_tags(self):
+        tags = self.user_tag_set.all()
+        tags = [x for x in tags if x.active]
+        if tags:
+            return tags
+        else:
+            return []
 
     @models.permalink
     def get_absolute_url(self):

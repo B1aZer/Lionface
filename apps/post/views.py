@@ -25,18 +25,23 @@ except ImportError:
 @login_required
 def feed(request, user_id = None):
     #import pdb;pdb.set_trace()
+    filters = request.user.filters.split(',')
     items = request.user.get_news()
     #news feed
     if not user_id:
         user_id = request.user.id
-        tags = request.user.user_tag_set.all()
-        tags = [x.name for x in tags if x.active]
         #items = request.user.get_messages().get_tagged_posts(tags)
-        items = request.user.get_messages()
-        tagged_posts = NewsItem.objects.filter(post__tags__name__in=tags).order_by('-date')
-        items = list(chain(items, tagged_posts))
-        items = list(set(items))
-        items = sorted(items,key=lambda post: post.date, reverse=True)
+        if 'F' in filters:
+            items = request.user.get_messages()
+        else:
+            items = []
+        tags = request.user.user_tag_set.all()
+        if tags:
+            tags = [x.name for x in tags if x.active]
+            tagged_posts = NewsItem.objects.filter(post__tags__name__in=tags).order_by('-date')
+            items = list(chain(items, tagged_posts))
+            items = list(set(items))
+            items = sorted(items,key=lambda post: post.date, reverse=True)
     else:
         #show messages adressed to user
         items = items.filter(user=user_id)

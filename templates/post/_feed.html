@@ -57,4 +57,10 @@
     </div>
 
 </div>
+{% empty %}
+{% if request.user.get_filters or request.user.get_active_tags%}
+<p>No messages for selected filters.</p>
+{% else %}
+<p>No filters have been selected.</p>
+{% endif %}
 {% endfor %}

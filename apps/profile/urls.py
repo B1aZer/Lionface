@@ -7,5 +7,7 @@ urlpatterns = patterns('',
     url(r'profile/$', views.profile),
     url(r'settings/$', views.settings),
     url(r'messages/$', views.messages),
+    url(r'filter/add/$', views.filter_add),
+    url(r'filter/remove/$', views.filter_remove),
     url(r'profile/(?P<username>\w+)/$', views.profile),
 )

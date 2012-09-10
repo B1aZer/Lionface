@@ -79,6 +79,65 @@ $(document).ready(function(){
     $(this).find('.remove_tag').hide();
     });
 
+  $('.feed_type').live('click',function () {
+  self = $(this)
+  var tag_val = $(this).contents()[0];
+  var send = 'filter_name='+tag_val.textContent; 
+
+    if ($(this).hasClass('filterON')) {
+    url = '/user/filter/remove/';
+        if (window.location.pathname.indexOf('lionface') >= 0) 
+          { 
+            url = '/lionface' +  url;
+          } 
+
+          $.ajax({
+                type: "POST",
+                data: send,
+                url: url,
+                success: function(html, textStatus) {
+                    if (html.status == 'OK') {
+                        
+                        self.removeClass('filterON');
+                        self.addClass('filter'); 
+                        loadNewsFeed($("#news_feed"));
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('Sorry! impossible to deactivate filter');
+                }
+
+        }); 
+    
+    }
+    else {
+    url = '/user/filter/add/';
+        if (window.location.pathname.indexOf('lionface') >= 0) 
+          { 
+            url = '/lionface' +  url;
+          }
+
+        $.ajax({
+                type: "POST",
+                data: send,
+                url: url,
+                success: function(html, textStatus) {
+                    if (html.status == 'OK') {
+                        
+                        self.removeClass('filter');
+                        self.addClass('filterON'); 
+                        loadNewsFeed($("#news_feed"));
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert('Sorry! impossible to deactivate filter');
+                }
+
+        });      
+        
+    }
+  });
+
   $('.tagged').live('click',function () {
         var self = $(this)
         var tag_val = $(this).contents()[0];
@@ -96,6 +155,8 @@ $(document).ready(function(){
                 url: url,
                 success: function(html, textStatus) {
                     self.removeClass('filterON');
+                    self.addClass('filter');
+                    loadNewsFeed($("#news_feed"));
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert('Sorry! impossible to deactivate tag');
@@ -115,7 +176,9 @@ $(document).ready(function(){
                 data: send,
                 url: url,
                 success: function(html, textStatus) {
+                    self.removeClass('filter');
                     self.addClass('filterON');
+                    loadNewsFeed($("#news_feed"));
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert('Sorry! impossible to activate tag');
@@ -156,7 +219,6 @@ $(document).ready(function(){
                 console.log(html.tags);
                     if (html.tags && html.tags.length < 2)
                     { 
-                        console.log(html.tags.length);
                         link.html(html.tags).addClass('tagged');
                         link.append('<span class="remove_tag" style="float:right; display:none">x</span>');
                         link.hover(function () {
@@ -165,6 +227,7 @@ $(document).ready(function(){
                             $(this).find('.remove_tag').hide();
                         });
                         link.removeClass('tags');
+                        link.removeClass('filter');
                         link.addClass('filterON');
                         link.after(link_add);
                         hide_add_link(); 
@@ -182,12 +245,13 @@ $(document).ready(function(){
                                 $(this).find('.remove_tag').hide();
                             });
                             link_tag.removeClass('tags');
+                            link_tag.removeClass('filter');
                             link_tag.addClass('filterON');
                             last_link.after(link_tag)
                             last_link = link_tag
 
                         }
-                        link.hide();
+                        link.remove();
                         last_link.after(link_add);
                         hide_add_link(); 
                     }
@@ -195,6 +259,9 @@ $(document).ready(function(){
                     {
                         link.html(link_add.html())
                     }
+                    if (html.tags) {
+                        loadNewsFeed($("#news_feed"));
+                        }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert('Sorry! impossible to save tag');
@@ -239,6 +306,7 @@ $(document).ready(function(){
                 link.remove();
                 hide_add_link();
                 }
+                loadNewsFeed($("#news_feed"));
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert('Impossible to delete tag');
