@@ -44,6 +44,7 @@ urlpatterns = patterns('',
             view_class=SearchView,
             form_class=search.forms.TagSearchForm,
         ))),
+    url(r'^auto/', 'search.views.auto_complete'),
 )
 
 
