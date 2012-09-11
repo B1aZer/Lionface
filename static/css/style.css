@@ -81,6 +81,15 @@ a.filterON:hover {
 	color: #900;
 }
 
+.no_posts {
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 100px 0;
+	font-size: 18pt;
+	color: #BBB;
+}
+
 /* Profile */
 
 a.post:link, a.post:active, a.post:visited, .submit_comment, .send { 
@@ -533,6 +542,7 @@ a.profile_btn:hover {
 	background: -ms-linear-gradient(top, rgba(68,153,221,1) 0%,rgba(34,119,187,1) 100%); /* IE10+ */
 	background: linear-gradient(to bottom, rgba(68,153,221,1) 0%,rgba(34,119,187,1) 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4499dd', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
+	cursor: pointer;
 }
 
 .blue_btn:hover, .blue_btn a:hover { 

@@ -15,7 +15,7 @@
 	<a href="#" class="profile_btn">+ Add</a>
 	<a href="#" class="profile_btn">- Unfollow</a>
 {% else %}
-	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }">+ Add</a>
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
 	<a href="#" class="profile_btn">+ Follow</a>
 {% endif %}
 {% endblock %}

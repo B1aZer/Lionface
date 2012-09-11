@@ -7,14 +7,14 @@
 {% block left_col %}
 
     <div style="position: relative; left: 0px; z-index: 100;">
-        <a href="#" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}" title=" Turn filter off. ">People</a>
-    <a href="#" class="feed_type {% if 'P' in request.user.get_filters %} filterON {% else %} filter {% endif %}" title=" Turn filter on. ">Pages</a>
+        <a href="javascript:;" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}">People</a>
+    <a href="javascript:;" class="feed_type {% if 'P' in request.user.get_filters %} filterON {% else %} filter {% endif %}">Pages</a>
 	</div><p />
 
 <hr style="position: relative; left: 10px; background-color: #EEE; layer-background-color: #EEE; border: 1px none #000000; height: 1;" width="200" align="left" noshade="noshade" /><p />
 		<span style="color: #555; position: relative; left: 10px; font-weight: bold;">Tags:</span><p />
         {% for tag in request.user.user_tag_set.all %}
-        <a href="#" onClick="return false;" class="tagged {% if tag.active %} filterON {%else%} filter {% endif %}" >{{ tag.name }}<span class="remove_tag" style="float:right; display:none;">x</span></a>
+        <a href="javascript:;" onClick="return false;" class="tagged {% if tag.active %} filterON {%else%} filter {% endif %}" >{{ tag.name }}<span class="remove_tag" style="float:right; display:none;">x</span></a>
         {% empty %}
         {% endfor %}
         <a href="javascript:;" class="filter tags" ><span class="add_tag" >Add +</span></a>
