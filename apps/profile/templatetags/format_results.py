@@ -23,7 +23,10 @@ def format_tag(object,request):
             for item in items:
                 news_item = item.newsitem_set.all()
                 if news_item:
-                    result.append(news_item[0])
+                    if request.user.has_friend(item.user) or request.user == item.user or news_item[0].get_privacy == 'P':
+                        result.append(news_item[0])
+        if result:
+            result = sorted(result,key=lambda post: post.date, reverse=True)
         return render_to_string('search/_feed.html', { 'items': result },RequestContext(request))
     return ""
 

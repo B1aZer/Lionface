@@ -42,7 +42,7 @@ urlpatterns = patterns('',
         #view_class=SearchView,
             template='search/search_tags.html',
             view_class=SearchView,
-            form_class=SearchForm,
+            form_class=search.forms.TagSearchForm,
         ))),
 )
 

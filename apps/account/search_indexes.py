@@ -6,5 +6,7 @@ from django.contrib.auth.models import User
 class UserIndex(SearchIndex):
     text = CharField(document=True, use_template=True)
     username = CharField(model_attr='username')
-    
+    email = CharField(model_attr='email')
+    username_auto = EdgeNgramField(model_attr='username')
+
 site.register(User, UserIndex)
