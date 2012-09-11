@@ -100,6 +100,7 @@ $(document).ready(function(){
                         
                         self.removeClass('filterON');
                         self.addClass('filter'); 
+                        self.attr('title','Turn filter on.');
                         loadNewsFeed($("#news_feed"));
                     }
                 },
@@ -126,6 +127,7 @@ $(document).ready(function(){
                         
                         self.removeClass('filter');
                         self.addClass('filterON'); 
+                        self.attr('title','Turn filter off.');
                         loadNewsFeed($("#news_feed"));
                     }
                 },
@@ -156,6 +158,7 @@ $(document).ready(function(){
                 success: function(html, textStatus) {
                     self.removeClass('filterON');
                     self.addClass('filter');
+                    self.attr('title','Turn filter on.');
                     loadNewsFeed($("#news_feed"));
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -178,6 +181,7 @@ $(document).ready(function(){
                 success: function(html, textStatus) {
                     self.removeClass('filter');
                     self.addClass('filterON');
+                    self.attr('title','Turn filter off.');
                     loadNewsFeed($("#news_feed"));
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -229,6 +233,7 @@ $(document).ready(function(){
                         link.removeClass('tags');
                         link.removeClass('filter');
                         link.addClass('filterON');
+                        link.attr('title','Turn filter off.');
                         link.after(link_add);
                         hide_add_link(); 
                     }   
@@ -247,6 +252,7 @@ $(document).ready(function(){
                             link_tag.removeClass('tags');
                             link_tag.removeClass('filter');
                             link_tag.addClass('filterON');
+                            link_tag.attr('title','Turn filter off.');
                             last_link.after(link_tag)
                             last_link = link_tag
 
