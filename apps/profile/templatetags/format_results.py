@@ -24,7 +24,7 @@ def format_tag(object,request):
                 news_item = item.newsitem_set.all()
                 if news_item:
                     result.append(news_item[0])
-        return render_to_string('post/_feed.html', { 'items': result },RequestContext(request))
+        return render_to_string('search/_feed.html', { 'items': result },RequestContext(request))
     return ""
 
 # Function to format a search result.

@@ -9,7 +9,7 @@ from account.models import UserProfile
 from tags.models import Tag
 from post.models import NewsItem
 from tasks import UpdateNewsFeeds
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
 from django.shortcuts import get_object_or_404
 from django.contrib import comments
@@ -87,6 +87,11 @@ def save(request):
                 post.tags.add(tag)
             except ObjectDoesNotExist:
                 post.tags.create(name=hashtag)
+            except MultipleObjectsReturned:
+                tags = Tag.objects.filter(name=hashtag)
+                tag = [p for p in tags if not hasattr(p, 'user_tag')]
+                if tag:
+                    post.tags.add(tag[0])
 
         #post.save()
 
