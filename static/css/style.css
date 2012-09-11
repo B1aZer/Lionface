@@ -70,6 +70,17 @@ a.filterON:hover {
 	color: #333;
 }
 
+.remove_tag {
+	padding: 7px;
+	position: relative; top: -7px; right: 7px;
+	border: 1px soild #EEE;
+	color: #777;
+}
+
+.remove_tag:hover {
+	color: #900;
+}
+
 /* Profile */
 
 a.post:link, a.post:active, a.post:visited, .submit_comment, .send { 
@@ -431,8 +442,8 @@ a.profile_btn:hover {
 	padding: 25px 50px;
 	background: #FFF;
 	width: 600px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 	-moz-box-shadow: 0 6px 12px -6px #333;
 	box-shadow: 0 6px 12px -6px #333;
 }
