@@ -130,6 +130,25 @@ class CustomQuerySet(QuerySet):
         if tagged_posts:
             self = list(chain(self, tagged_posts))
         return self
+    def remove_similar(self):
+        duplicates = []
+        ids = []
+        items = []
+        for item in self:
+            if item.post.id in items:
+                duplicates.append(item.post.id)
+                ids.append(item.id)
+            items.append(item.post.id)
+        if ids:
+            for id_item in ids:
+                self = self.exclude(id=id_item)
+        return self
+    def remove_to_other(self):
+        for item in self:
+            if isinstance(item.post.get_inherited(), ContentPost):
+                if item.post.user <> item.post.user_to:
+                    self = self.exclude(id=item.id)
+        return self
 
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)

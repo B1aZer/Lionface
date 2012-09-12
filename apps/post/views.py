@@ -32,7 +32,7 @@ def feed(request, user_id = None):
         user_id = request.user.id
         #items = request.user.get_messages().get_tagged_posts(tags)
         if 'F' in filters:
-            items = request.user.get_messages()
+            items = request.user.get_messages().remove_similar().remove_to_other()
         else:
             items = []
         tags = request.user.user_tag_set.all()
