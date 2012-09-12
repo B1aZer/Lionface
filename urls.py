@@ -32,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^posts/', include('post.urls')),
     url(r'^tags/', include('tags.urls')),
+    url(r'^messages/', include('messages.urls')),
     url(r'^pages/$', 'pages.views.main'),
     url(r'^search/', login_required(search_view_factory(
         #view_class=SearchView,

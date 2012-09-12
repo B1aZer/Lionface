@@ -141,6 +141,7 @@ INSTALLED_APPS = (
     'notification',
     'post',
     'tags',
+    'messages',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -213,6 +214,9 @@ MEDIA_BUNDLES = (
     ),
     ('notification.js',
         'js/notification.js',
+    ),
+    ('messages.js',
+        'js/messages.js',
     ),
     ('jstz.min.js',
         'js/jstz.min.js',

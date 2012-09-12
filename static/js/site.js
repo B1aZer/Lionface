@@ -261,20 +261,27 @@ function post_comment(form_id, url) {
 $(document).ready(function() {
     url = '/auto/';
     url_user = '/user/profile/'
-     if (window.location.pathname.indexOf('/lionface/') >= 0) 
-  { 
-    url = '/lionface' +  url;
-    url_user = '/lionface' +  url_user;
-  }     
+    if (window.location.pathname.indexOf('/lionface/') >= 0) 
+    { 
+        url = '/lionface' +  url;
+        url_user = '/lionface' +  url_user;
+    }     
     $( "#search_input" ).autocomplete({
-			source: url,
-		}).keydown(function(e){
-	if (e.keyCode === 13){
-	   console.log($(this).val());
-       window.location = url_user + $(this).val();
-	}
-});
-        
+        source: url,
+    }).keydown(function(e){
+        if (e.keyCode === 13){
+            console.log($(this).val());
+            window.location = url_user + $(this).val();  
+        }
+    }).data( "autocomplete" )._renderItem = function( ul, item ) {
+        return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( "<a>" + item.label + '<div class="subtext">' + item.value + '</div>' + "</a>" )
+        .appendTo( ul );
+    };
+
+
+
 
 });
 

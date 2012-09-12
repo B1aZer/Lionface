@@ -97,16 +97,6 @@ def settings(request):
     )
 
 @login_required
-def messages(request):
-
-    return render_to_response(
-        'profile/messages.html',
-        {
-        },
-        RequestContext(request)
-    )
-
-@login_required
 def filter_add(request):
     data = {'status': 'OK'}
     if request.method == 'POST' and 'filter_name' in request.POST:

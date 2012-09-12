@@ -8,5 +8,7 @@ class UserIndex(SearchIndex):
     username = CharField(model_attr='username')
     email = CharField(model_attr='email')
     username_auto = EdgeNgramField(model_attr='username')
+    first_auto = EdgeNgramField(model_attr='first_name')
+    last_auto = EdgeNgramField(model_attr='last_name')
 
 site.register(User, UserIndex)

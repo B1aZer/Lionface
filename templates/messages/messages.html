@@ -1,0 +1,105 @@
+{% extends "profile/base.html" %}
+{% load media format_messages format_results %}
+
+{% block content %}
+<div class="content_area notifications">
+    <div id="profile_top">
+        <div class="left">{% block content_title %}{{ user.first_name }} {{ user.last_name }} | Messages{% endblock %}</div>
+        <div class="right" style="color: #555;">{% block content_subtitle %}
+            <a href="#" class="profile_nav" style="margin: 0; position: relative; left: 2px;">+ Compose</a>{% endblock %}</div>
+    </div>
+    <div style="clear: both;"></div>
+    <div class="left_col">
+        {% block left_col %}
+        <div style="position: relative; top: -10px;">
+            {% for user in messages|format_list:request.user %}
+            <div style="border: 1px solid #EEE; border-width: 1px 0 0 0;">
+                <div class="message">
+                    <a href="{{ user.link }}">
+                        <div class="message_thumbnail" style="background-image: url('/{{ user.image|format_image:request.get_full_path }}'); background-size: 25px 25px;">
+                        </div>
+                    </a>
+                    <a href="{{ user.link }}" {% if user.mess_new %} style="color: #900;" {% endif %}>{{ user.name }}</a><br />
+                    <span style="font-size: 8pt; color: #999;">
+                        {% if user.mess_new %}<span style="color: #900; border: 1px solid #900; border-width: 0 0 1px 0; padding: 1px 0;">{{ user.mess_new }} new</span> <span style="color: transparent;">|</span>{% endif %} 
+                        <span title=" Total Messages " style="cursor: default;">{{ user.mess_all }}m</span> <span style="color: transparent;">|</span> 
+                        <span title=" Messages Sent " style="cursor: default;">{{ user.mess_sent }}s</span> <span style="color: transparent;">|</span> 
+                        <span title=" Messages Received " style="cursor: default;">{{ user.mess_recv }}r</span></span>
+
+                </div>
+            </div>
+            {% endfor %}
+            <!--
+            <div style="border: 1px solid #EEE; border-width: 1px 0 0 0;">
+                <div class="message">
+                    <a href="#"><div class="message_thumbnail"></div></a>
+                    <a href="#">First Last</a><br />
+                    <span style="font-size: 8pt; color: #999;">
+                        <span title=" Total Messages " style="cursor: default;">10m</span> <span style="color: transparent;">|</span> 
+                        <span title=" Messages Sent " style="cursor: default;">5s</span> <span style="color: transparent;">|</span> 
+                        <span title=" Messages Received " style="cursor: default;">5r</span></span>
+
+                </div>
+            </div>
+            -->
+
+            <div style="border: 1px solid #EEE; border-width: 1px 0 0 0; margin-top: 5px;">
+                <table width="100%" style="font-size: 8pt; margin-top: 10px;"><tr>
+                        <td align="left" width="75"><a href="#" class="profile_nav">< Newer</a></td>
+                        <td align="center" width="" style="color: #AAA; font-size: 7pt;">1 of 1</td>
+                        <td align="right" width="75"><a href="#" class="profile_nav">Older ></a></td>
+            </tr></table></div>
+
+        </div>
+        {% endblock %}
+    </div>
+    <div class="right_col">
+        {% block right_col %}
+        <form action="" id="message_form" method="post">{% csrf_token %}
+            <div align="center">
+                <table width="100%" id="compose_form"><tr>
+                        <td></td><td></td>
+                    </tr><tr>
+                        <td></td><td style="font-weight: bold; font-size: 10pt;">Compose a Message</td>
+                    </tr><tr>
+                        <td width="100" align="right">To</td>
+                        <td width="455" align="left">
+                            {% if form.non_field_errors %}
+                            <div>{{ form.non_field_errors }}</div>
+                            {% endif %}
+
+                            {% if form.user_to.errors %}
+                            <div>{{ form.user_to.errors }}</div>
+                            {% endif %}
+                            {{ form.user_to }}
+                            {{ form.user_id }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">Message</td>
+                        <td align="left">
+                            {% if form.content.errors %}
+                            <div>{{ form.content.errors }}</div>
+                            {% endif %}
+                            {{ form.content }}
+                        </td>
+                    </tr>
+                    <tr><td></td>
+                        <td align="left">
+                            <a href="javascript:;" id="send_button" class="send">Send</a>
+                        </td>
+                        {% if send %}
+                        <td>
+                            <p>Message was sent.</p>
+                        </td>
+                        {% endif %}
+                    </tr><tr>
+                        <td></td><td></td>
+                    </tr><tr></table>
+                </div>
+            </form>
+            {% endblock %}
+        </div>
+    </div>
+    {% include_media 'messages.js' %}
+    {% endblock %}

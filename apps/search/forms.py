@@ -7,7 +7,7 @@ class SearchForm(ModelSearchForm):
     def search(self):
         #res = super(SearchForm, self).search()
         #res = SearchQuerySet().filter(username_auto=self.cleaned_data['q'])
-        res = SearchQuerySet().filter(SQ(username_auto=self.cleaned_data['q']) | SQ(email=self.cleaned_data['q']))
+        res = SearchQuerySet().filter(SQ(username_auto=self.cleaned_data['q']) | SQ(email=self.cleaned_data['q']) | SQ(first_auto=self.cleaned_data['q']) | SQ(last_auto=self.cleaned_data['q']))
         if 'auth.user' in self.cleaned_data['models']:
             # Ensure the current user isn't in the results.
             user = get_current_user()

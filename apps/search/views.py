@@ -5,6 +5,7 @@ from notification.models import Notification
 from django.contrib.auth.decorators import login_required
 from haystack.query import SearchQuerySet
 from account.models import UserProfile
+from django.db.models import Q
 
 try:
     import json
@@ -27,14 +28,12 @@ def auto_complete(request):
     data = [ { 'label': "Choice1", 'value': "value1" }]
     term = request.GET.get('term',None)
     if term:
-        friends = request.user.friends.filter(username__icontains=term)
+        friends = request.user.friends.filter(Q(username__icontains=term) | Q(first_name__icontains=term) | Q(last_name__icontains=term))
     else:
         friends = request.user.friends.all()
-    data = [x.username for x in friends]
-    data = sorted(data)
     dics = []
-    for user in data:
-        dic = {'label':user,'value':user}
+    for user in friends:
+        dic = {'label':user._get_full_name(),'value':user.username,'id':user.id}
         dics.append(dic)
     return HttpResponse(json.dumps(dics), "application/json")
 
