@@ -5,14 +5,12 @@
 {% block right_col %}
     <form method="get" action=".">
         {% if query %}
-            <h3 style="color: #FFF;">Results</h3>
-
             {% for result in page.object_list %}
                 <div class="result">
                   {{ result.object|format_result:user }}
                 </div>
             {% empty %}
-                <p align="center">No results found.</p>
+                <p align="center" class="no_posts">No results found.</p>
             {% endfor %}
 
             {% if page.has_previous or page.has_next %}

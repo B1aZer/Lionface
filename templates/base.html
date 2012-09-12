@@ -74,20 +74,7 @@ var timezone = jstz.determine();
 <span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" onClick="ShowContent('terms'); return false;" target="_top">Terms</a>
 <span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top">Feedback</a>
 <span style="color: transparent;">--</span> World Peace
-<span style="color: transparent;">--</span> <a href="" onClick="ShowContent('hints'); return false;">Hints</a>
       </div></div>
-
-<div id="hints" style="display: none;">
-	<div style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: url({% media_url 'images/bgBlack.png' %}); z-index: 99997;"></div>
-	<div class="hints"><div align="center">
-		<div class="hints_container">
-			<div class="hints_close" onClick="HideContent('hints'); return false;">Close</div>
-			<h2>Hints</h2>
-			<p>When writing a post, you can use HTML to create a link.<br /> Try < a href="your url">your link< /a> without the space between < and a, and between < and /.</p>
-		</div>
-	</div></div>
-</div>
-
 
     {% endblock %}
 

@@ -81,7 +81,7 @@ a.filterON:hover {
 	color: #900;
 }
 
-.no_posts {
+.no_posts, .notif_land {
 	display: block;
 	width: 100%;
 	text-align: center;
@@ -439,61 +439,6 @@ a.profile_btn:hover {
 	clear: both; 
 }
 
-.hints {
-	position: fixed; left: 0px; top: 100px;
-	width: 100%;
-	z-index: 99999;
-	text-align: center;
-}
-
-.hints .hints_container {
-	position: relative;
-	padding: 25px 50px;
-	background: #FFF;
-	width: 600px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	-moz-box-shadow: 0 6px 12px -6px #333;
-	box-shadow: 0 6px 12px -6px #333;
-}
-
-.hints .hints_container p {
-	padding: 0px 10px;
-	margin: 10px 0;
-	text-align: left;
-	line-height: 14pt;
-	border: 1px solid #900;
-	border-width: 0 0 0 3px;
-}
-
-.hints .hints_container h2 {
-	font-weight: bold;
-	font-size: 12pt;
-}
-
-.hints_close { 
-	position: absolute; top: 0px; right: 0px;
-	padding: 5px 10px;
-	border: 1px solid #DDD;
-	background: #EEE;
-	-moz-border-radius: 0 3px 0 3px;
-	border-radius: 0 3px 0 3px;
-}
-
-.hints_close:hover {
-	cursor: pointer;
-	background: #555555; /* Old browsers */
-	background: -moz-linear-gradient(top, #555555 0%, #333333 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#555555), color-stop(100%,#333333)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #555555 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #555555 0%,#333333 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #555555 0%,#333333 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #555555 0%,#333333 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
-	border-color: #333;
-	color: #FFF;
-}
-
 .highlight {
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=55);
 	-moz-opacity: 0.55;
@@ -719,7 +664,7 @@ a.nav_notifications:hover {
 	border: 1px solid #EEE;
 }
 
-.result .subtext { font-size: 8pt; color: #999; }
+.result .subtext { font-size: 8pt; color: #999; line-height: 10pt; }
 
 .link_loader { width: 16px; height: 16px; float: left; background: url(../images/link_loader.gif) center no-repeat; }
 .large_loader { background: url(../images/loader.gif); background-size: 64px 64px; width: 600px; height: 64px; margin: auto; padding: 50px; background-position: center center; background-repeat: no-repeat; }
@@ -747,14 +692,6 @@ a.nav_notifications:hover {
 a.new_notification {
 	color: #900;
 } 
-
-.notif_land {
-	text-align: center;
-	width: 100%;
-	padding: 50px 0;
-	font-size: 18pt;
-	color: #DDD;
-}
 
 .right_content {
 	border: 1px solid #EEE;
