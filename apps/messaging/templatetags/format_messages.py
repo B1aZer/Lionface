@@ -1,6 +1,6 @@
 from django import template
 from django.template.loader import render_to_string
-from messages.models import *
+from messaging.models import *
 from account.models import UserProfile
 
 register = template.Library()

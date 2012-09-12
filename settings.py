@@ -141,7 +141,7 @@ INSTALLED_APPS = (
     'notification',
     'post',
     'tags',
-    'messages',
+    'messaging',
 )
 
 # A sample logging configuration. The only tangible logging
