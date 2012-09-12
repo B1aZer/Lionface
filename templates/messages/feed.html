@@ -1,0 +1,14 @@
+{% load format_results %}
+
+{% for message in messages %}
+
+
+<div class="mess" {% if request.user == message.user %} style="left: 300px; position: relative" {% endif %}>
+message from {{ message.user }} to {{ message.user_to }}
+<p>{{ message.content }}</p>
+</div>
+
+{% endfor %}
+
+
+

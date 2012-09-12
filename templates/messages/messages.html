@@ -12,9 +12,9 @@
     <div class="left_col">
         {% block left_col %}
         <div style="position: relative; top: -10px;">
-            {% for user in messages|format_list:request.user %}
+            {% for user in messages %}
             <div style="border: 1px solid #EEE; border-width: 1px 0 0 0;">
-                <div class="message">
+                <div class="message {user: '{{ user.id }}' }">
                     <a href="{{ user.link }}">
                         <div class="message_thumbnail" style="background-image: url('/{{ user.image|format_image:request.get_full_path }}'); background-size: 25px 25px;">
                         </div>
