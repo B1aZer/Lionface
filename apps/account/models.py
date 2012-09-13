@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.db.models.query import Q
 from post.tasks import AddFriendToFeed
+from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey('UserProfile', related_name='from_user')
@@ -73,6 +74,26 @@ class UserProfile(User):
             return tags
         else:
             return []
+    def get_options(self):
+        options = {}
+        for option in self.useroptions_set.all():
+            options[option.name] = option.value
+        return options
+    def check_option(self,name,value=None):
+        name = "option_%s" % name
+        try:
+            option = self.useroptions_set.get(name=name)
+            if value:
+                if option.value == value:
+                    return True
+                else:
+                    return False
+            else:
+                return option.value
+        except ObjectDoesNotExist:
+            return False
+
+
 
     @models.permalink
     def get_absolute_url(self):
@@ -82,6 +103,11 @@ class UserProfile(User):
         "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
     full_name = property(_get_full_name)
+
+class UserOptions(models.Model):
+    name = models.CharField(max_length='100')
+    value = models.CharField(max_length='100')
+    user = models.ForeignKey(UserProfile)
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

@@ -6,6 +6,11 @@ $(function() {
       $('.upload_form').show(); 
     });  
 
+    $("#send_message").click(function(event){
+      event.stopPropagation();
+      $('.send_message_form').show(); 
+    });
+
     $('.noPhoto').hover(
             function(){$('.upload').slideDown(500);},
             function(){$('.upload').slideUp(500);});

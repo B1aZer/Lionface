@@ -32,12 +32,34 @@
     {{ form.photo.errors }}
     <p><label for="id_photo">Upload</label></p>
     {{ form.photo }}
-    <p><input type="submit" class="blue_btn" value="Upload" /></p>
+    <p><input name="image" type="submit" class="blue_btn" value="Upload" /></p>
 </form>
 
 {% if request.user == profile_user %}
 {% else %}
-<div style="margin: 10px 0;"><a href="#" class="profile_nav" style="font-size: 9pt;">Send Message</a></div>
+<div style="margin: 10px 0;"><a href="#" id="send_message" class="profile_nav" style="font-size: 9pt;">Send Message</a></div>
+
+
+<form action="." method="post" class="send_message_form" style="display:none;">
+    {% csrf_token %}
+
+    {% if form_mess.non_field_errors %}
+    <div>{{ form_mess.non_field_errors }}</div>
+    {% endif %}
+    
+    <input id="id_user_to" style="width: 150px !important; padding: 7px; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #DDD;" type="text" name="user_to" maxlength="100" value="{{ profile_user.full_name }}" readonly>
+
+    <input type="hidden" name="user_id" id="id_user_id" value="{{ profile_user.id }}">
+
+    {% if form_mess.content.errors %}
+    <div>{{ form_mess.content.errors }}</div>
+    {% endif %}
+    <p>Your message:</p>
+    {{ form_mess.content }} 
+
+    <p><input name="message" type="submit" class="blue_btn" value="Send" /></p>
+</form> 
+
  {% endif %}
 {% endblock %}
 

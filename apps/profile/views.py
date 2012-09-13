@@ -4,9 +4,12 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from account.models import UserProfile
+from messaging.models import Messages
 from notification.models import Notification
 from .forms import *
+from messaging.forms import MessageForm
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
 try:
     import json
@@ -38,6 +41,8 @@ def profile(request, username=None):
     # TODO: Logic here needs to see what relation the current user is to the profile user
     # and compare this against their privacy settings to see what can be seen.
     form = ImageForm()
+    form_mess = MessageForm()
+
     if username != None:
         try:
             profile_user = UserProfile.objects.get(username=username)
@@ -47,21 +52,42 @@ def profile(request, username=None):
         profile_user = request.user
 
     if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            instance = UserProfile.objects.get(id=request.user.id)
-            instance.photo = request.FILES['photo']
-            instance.save()
-            from django.http import HttpResponseRedirect
+        if 'image' in request.POST:
+            form = ImageForm(request.POST, request.FILES)
+            if form.is_valid():
+                instance = UserProfile.objects.get(id=request.user.id)
+                instance.photo = request.FILES['photo']
+                instance.save()
+                return HttpResponseRedirect(request.path)
 
-            return HttpResponseRedirect(request.path)
+        if 'message' in request.POST:
+            form_mess = MessageForm(request.POST)
+            if form_mess.is_valid():
+                user_to = profile_user
+                content = form_mess.cleaned_data['content']
+                #this is so unefficient
+                #checking for options (in messaging clone)
+                if user_to.check_option('send_message','Public'):
+                    mess = Messages(user=request.user,user_to=user_to,content=content)
+                    mess.save()
+                elif user_to.check_option('send_message',"Friend's Friends") or user_to.check_option('send_message',"Friends"):
+                    if user_to.has_friend(request.user):
+                        mess = Messages(user=request.user,user_to=user_to,content=content)
+                        mess.save()
+                elif user_to.check_option('send_message',"Off"):
+                    pass
+                else:
+                    mess = Messages(user=request.user,user_to=user_to,content=content)
+                    mess.save()
+                return HttpResponseRedirect(request.path)
 
     return render_to_response(
         'profile/profile.html',
         {
             'profile_user': profile_user,
             'not_count': Notification.objects.filter(user=request.user,read=False).count(),
-            'form' : form
+            'form' : form,
+            'form_mess' : form_mess,
         },
         RequestContext(request)
     )
@@ -79,11 +105,19 @@ def settings(request):
         elif 'save' in request.POST:
             form = UserInfoForm(request.POST , instance=request.user)
             form_pass = PasswordChangeForm(user=request.user)
+            for name in request.POST:
+                if name.find('option') >= 0:
+                    try:
+                        option = request.user.useroptions_set.get(name=name)
+                        option.value = request.POST[name]
+                        option.save()
+                    except ObjectDoesNotExist:
+                        request.user.useroptions_set.create(name=name,value=request.POST[name])
             if form.is_valid():
                 form.save()
     else:
 
-        form = UserInfoForm(instance=request.user)
+        form = UserInfoForm(instance=request.user,initial = request.user.get_options())
         form_pass = PasswordChangeForm(user=request.user)
 
     return render_to_response(

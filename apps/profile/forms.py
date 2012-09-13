@@ -18,9 +18,31 @@ class ImageForm(forms.ModelForm):
          else:
              raise forms.ValidationError("Couldn't read uploaded image")
 
+POSTING_DEFAULT = [('Public','Public'), ('Friends Only','Friends Only'),]
+SHARE_DEFAULT = [('Enabled','Enabled'), ('Disabled','Disabled'),]
+FOLLOWER_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
+FOLLOW = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ("Off","Off"),]
+COMMENT_DEFAULT = [('Enabled','Enabled'), ('Disabled','Disabled'),]
+ADD_FRIEND = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ("Off","Off"),]
+SEARCH = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'),]
+SEND_MESSAGE = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Off","Off"),]
+FRIEND_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
+FOLLOWING_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
 
 class UserInfoForm(forms.ModelForm):
     full_name = forms.CharField(required=False, label="Full Name" , widget=forms.TextInput(attrs={'style': 'border: 1px solid #DDD; padding: 7px; width: 300px;'}))
+
+    option_posting_default = forms.ChoiceField(required=False, choices=( POSTING_DEFAULT ))
+    option_share_default = forms.ChoiceField(required=False, choices=( SHARE_DEFAULT ))
+    option_follower_list = forms.ChoiceField(required=False, choices=( FOLLOWER_LIST ))
+    option_follow = forms.ChoiceField(required=False, choices=( FOLLOW ))
+    option_comment_default = forms.ChoiceField(required=False, choices=( COMMENT_DEFAULT ))
+    option_add_friend = forms.ChoiceField(required=False, choices=( ADD_FRIEND ))
+    option_search = forms.ChoiceField(required=False, choices=( SEARCH ))
+    option_send_message = forms.ChoiceField(required=False, choices=( SEND_MESSAGE ))
+    option_friend_list = forms.ChoiceField(required=False, choices=( FRIEND_LIST ))
+    option_following_list = forms.ChoiceField(required=False, choices=( FOLLOWING_LIST ))
+
     class Meta:
         model = UserProfile
         fields = ('full_name', 'email', 'first_name', 'last_name', 'username')

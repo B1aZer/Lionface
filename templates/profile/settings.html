@@ -116,11 +116,9 @@
 </tr>
 <tr>
     <td>Posting Default<span style="font-size: 11px; color: #777;"></span></td>
-    <td><label for="select2"></label>
-        <select name="select6" id="select2">
-            <option selected>Public</option>
-            <option>Friends Only</option>
-    </select></td>
+    <td><label for="id_option_posting_default"></label>
+        {{ form.option_posting_default}}
+    </td>
 </tr>
 <tr>
     <td width="200">Posting To Friends<span style="font-size: 11px; color: #777;"></span></td>
@@ -131,18 +129,15 @@
 </tr>
 <tr>
     <td width="200">Comment Default<br></td>
-    <td><select name="select2" id="select2">
-            <option selected>Enabled</option>
-            <option>Disabled</option>
-        </select> 
+    <td> 
+        {{ form.option_comment_default }}
     </td>
 </tr>
 <tr>
     <td width="200">Share Default</td>
-    <td><select name="select4" id="select4">
-            <option selected>Enabled</option>
-            <option>Disabled</option>
-    </select></td>
+    <td>
+        {{ form.option_share_default }}
+    </td>
 </tr>
 <tr>
     <td>&nbsp;</td>
@@ -150,36 +145,27 @@
 </tr>
 <tr>
     <td>Search</td>
-    <td><select name="select5" id="select6">
-            <option selected>Public</option>
-            <option>Friend's Friends</option>
-            <option>Friends</option>
-    </select></td>
+    <td>
+        {{ form.option_search }}
+    </td>
 </tr>
 <tr>
     <td>Send Message</td>
-    <td><select name="select7" id="select7">
-            <option selected>Public</option>
-            <option>Friend's Friends</option>
-            <option>Friends</option>
-            <option>Off</option>
-    </select></td>
+    <td>
+        {{ form.option_send_message }}
+    </td>
 </tr>
 <tr>
     <td>Add Friend</td>
-    <td><select name="select5" id="select8">
-            <option selected>Public</option>
-            <option>Friend's Friends</option>
-            <option>Off</option>
-    </select></td>
+    <td>
+        {{ form.option_add_friend }}
+    </td>
 </tr>
 <tr>
     <td>Follow</td>
-    <td><select name="select9" id="select11">
-            <option selected>Public</option>
-            <option>Friend's Friends</option>
-            <option>Off</option>
-    </select></td>
+    <td>
+        {{ form.option_follow }}
+    </td>
 </tr>
 <tr>
     <td>&nbsp;</td>
@@ -187,30 +173,21 @@
 </tr>
 <tr>
     <td>Friend List</td>
-    <td><select name="select7" id="select10">
-            <option selected>Public</option>
-            <option>Friend's Friends</option>
-            <option>Friends</option>
-            <option>Just Me</option>
-    </select></td>
+    <td>
+        {{ form.option_friend_list }}
+    </td>
 </tr>
 <tr>
     <td>Follower List</td>
-    <td><select name="select8" id="select9">
-            <option selected>Public</option>
-            <option>Friend's Friends</option>
-            <option>Friends</option>
-            <option>Just Me</option>
-    </select></td>
+    <td>
+        {{ form.option_follower_list }}
+    </td>
 </tr>
 <tr>
     <td>Following List</td>
-    <td><select name="select10" id="select5">
-            <option selected>Public</option>
-            <option>Friend's Friends</option>
-            <option>Friends</option>
-            <option>Just Me</option>
-    </select></td>
+    <td>
+        {{ form.option_following_list }}
+    </td>
 </tr>
 <tr>
     <td>Loves List</td>

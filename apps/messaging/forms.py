@@ -12,3 +12,4 @@ class MessageForm(forms.Form):
             raise forms.ValidationError("Wrong recipient.")
         return data
 
+
