@@ -9,3 +9,7 @@ class Messages(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
     read = models.BooleanField(default=False)
+
+    def mark_read(self):
+        self.read = True
+        self.save()

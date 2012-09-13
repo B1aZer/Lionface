@@ -6,6 +6,7 @@
     <div id="profile_top">
         <div class="left">{% block content_title %}{{ user.first_name }} {{ user.last_name }} | Messages{% endblock %}</div>
         <div class="right" style="color: #555;">{% block content_subtitle %}
+            <a href="#" id="revert_btn" class="profile_nav" style="margin: 0; position: relative; left: 2px;">Revert</a>
             <a href="#" class="profile_nav" style="margin: 0; position: relative; left: 2px;">+ Compose</a>{% endblock %}</div>
     </div>
     <div style="clear: both;"></div>
@@ -19,9 +20,9 @@
                         <div class="message_thumbnail" style="background-image: url('/{{ user.image|format_image:request.get_full_path }}'); background-size: 25px 25px;">
                         </div>
                     </a>
-                    <a href="{{ user.link }}" {% if user.mess_new %} style="color: #900;" {% endif %}>{{ user.name }}</a><br />
+                    <a id="name_link_{{ user.id }}" href="{{ user.link }}" {% if user.mess_new %} style="color: #900;" {% endif %}>{{ user.name }}</a><br />
                     <span style="font-size: 8pt; color: #999;">
-                        {% if user.mess_new %}<span style="color: #900; border: 1px solid #900; border-width: 0 0 1px 0; padding: 1px 0;">{{ user.mess_new }} new</span> <span style="color: transparent;">|</span>{% endif %} 
+                        {% if user.mess_new %}<span id="new_mess_{{ user.id }}"><span style="color: #900; border: 1px solid #900; border-width: 0 0 1px 0; padding: 1px 0;">{{ user.mess_new }} new</span> <span style="color: transparent;">|</span></span>{% endif %} 
                         <span title=" Total Messages " style="cursor: default;">{{ user.mess_all }}m</span> <span style="color: transparent;">|</span> 
                         <span title=" Messages Sent " style="cursor: default;">{{ user.mess_sent }}s</span> <span style="color: transparent;">|</span> 
                         <span title=" Messages Received " style="cursor: default;">{{ user.mess_recv }}r</span></span>
@@ -92,7 +93,7 @@
                         </td>
                         {% if send %}
                         <td>
-                            <p>Message was sent.</p>
+                            <p class="success" >Message was sent.</p>
                         </td>
                         {% endif %}
                     </tr><tr>

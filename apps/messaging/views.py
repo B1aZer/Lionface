@@ -18,6 +18,18 @@ except ImportError:
 def messages(request):
     form = MessageForm()
     send = False
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            user_to_id = form.cleaned_data['user_id']
+            user_to = UserProfile.objects.get(id=int(user_to_id))
+            content = form.cleaned_data['content']
+            mess = Messages(user=request.user,user_to=user_to,content=content)
+            mess.save()
+            send = True
+            form = MessageForm()
+
     messages_in = Messages.objects.filter(user_to=request.user).order_by('date')
     messages_out = Messages.objects.filter(user=request.user).order_by('date')
     #adm = UserProfile.objects.filter(id=2).annotate(num_mess_to=Count('message_to'),last_date=Max('message_to__date'))
@@ -49,15 +61,6 @@ def messages(request):
             id_user = message.user_to.id
             names.append({ 'name':message.user_to.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user})
 
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            user_to_id = form.cleaned_data['user_id']
-            user_to = UserProfile.objects.get(id=int(user_to_id))
-            content = form.cleaned_data['content']
-            mess = Messages(user=request.user,user_to=user_to,content=content)
-            mess.save()
-            send = True
     return render_to_response(
         'messages/messages.html',
         {
@@ -73,10 +76,22 @@ def show(request):
     data = {'status': 'OK'}
     if request.method == 'POST' and 'user_id' in request.POST:
         user = UserProfile.objects.get(id=int(request.POST['user_id']))
+
         messages = Messages.objects.filter(Q(user_to=request.user, user = user) | Q(user=request.user, user_to = user)).order_by('date')
-        data['html'] = render_to_string('messages/feed.html', 
+        messages_to = Messages.objects.filter(user_to=request.user).order_by('date')
+        for mess in messages_to:
+            mess.mark_read()
+
+        if 'sort' in request.POST:
+            sort = request.POST['sort']
+            if sort == 'desc':
+                messages = messages.order_by('-date')
+            else:
+                messages = messages.order_by('date')
+
+        data['html'] = render_to_string('messages/feed.html',
                 {
                     'messages':messages,
                 }, context_instance=RequestContext(request))
-        
+
     return HttpResponse(json.dumps(data), "application/json")
