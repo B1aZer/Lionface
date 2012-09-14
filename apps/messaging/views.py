@@ -8,6 +8,7 @@ from .models import Messages
 from account.models import UserProfile
 from django.db.models import Count, Max
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 try:
     import json
@@ -64,8 +65,9 @@ def messages(request):
             link = message.user.get_absolute_url()
             image = message.user.photo
             id_user = message.user.id
+            last_mess = Messages.objects.filter(Q(user_to=message.user, user = user) | Q(user=message.user, user_to = user)).latest('date').date
             names.append({ 'name':message.user.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new,
-                'link':link, 'image':image, 'id': id_user})
+                'link':link, 'image':image, 'id': id_user, 'last_mess' : last_mess})
     for message in messages_out:
         if not message.user_to in users:
             users.append(message.user_to)
@@ -76,7 +78,32 @@ def messages(request):
             link = message.user_to.get_absolute_url()
             image = message.user_to.photo
             id_user = message.user_to.id
-            names.append({ 'name':message.user_to.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user})
+            last_mess = Messages.objects.filter(Q(user_to=message.user_to, user = user) | Q(user=message.user_to, user_to = user)).latest('date').date
+            names.append({ 'name':message.user_to.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user, 'last_mess' : last_mess})
+
+    #sorting by last message date
+    names = sorted(names, key=lambda(s): s['last_mess'], reverse=True)
+
+    paginator = Paginator(names, 7)
+    names = paginator.page(1)
+
+    if request.method == 'GET':
+        page = request.GET.get('page',None)
+        if page:
+            try:
+                names = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                names = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                names = paginator.page(paginator.num_pages)
+
+            data = render_to_string('messages/users.html',
+                {
+                    'messages':names,
+                }, context_instance=RequestContext(request))
+            return HttpResponse(json.dumps(data), "application/json")
 
     return render_to_response(
         'messages/messages.html',

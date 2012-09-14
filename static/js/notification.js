@@ -38,7 +38,11 @@ function load_post(post, type) {
 }     
 
 $(document).ready(function(){
-    $(".profile_post, .shared_post, .comment_submitted").click(function() {
+    $(document).on('click',".profile_post, .shared_post, .comment_submitted", function(e) {
+        var starter = document.elementFromPoint(e.clientX, e.clientY);  
+        if ($(starter).is('a')) {
+            return;
+            }
         var meta = $(this).metadata();
         if (meta.id) {
             load_post(meta.id, meta.type)
@@ -47,4 +51,22 @@ $(document).ready(function(){
             $('.right_content').html("");
             }
     });
+
+    $(document).on('click','.nav_link', function() { 
+        url = $(this).attr('href');
+
+        $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(data) {
+                    $('.left_col').replaceWith(data);
+                },
+                error: function() {
+                    console.log('fail');
+                } 
+            });
+
+        return false;
+
+    });           
 }); 

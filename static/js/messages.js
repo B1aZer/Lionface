@@ -177,7 +177,13 @@ $(document).ready(function() {
             });
     });
 
-    $('.message').click(function() {
+    $(document).on('click', '.message', function(e) {
+        //getting element under cursor
+        var starter = document.elementFromPoint(e.clientX, e.clientY);
+        //used for proper linking in div
+        if ($(starter).is('a')) {
+            return
+            }
         var meta = $(this).metadata();
         load_messages(meta.user);
     });
@@ -193,6 +199,24 @@ $(document).ready(function() {
                 $(this).addClass('desc');
                 }
             }
+    });
+
+    $('.nav_link').live('click', function() { 
+        url = $(this).attr('href');
+
+        $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(data) {
+                    $('.left_col').replaceWith(data);
+                },
+                error: function() {
+                    console.log('fail');
+                } 
+            });
+
+        return false;
+
     });
 
 })
