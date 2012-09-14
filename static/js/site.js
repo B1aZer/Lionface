@@ -23,9 +23,9 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
         var origin = protocol + sr_origin;
         // Allow absolute or scheme relative URLs to same origin
         return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-            // or any other URL that isn't scheme relative or absolute i.e relative.
-            !(/^(\/\/|http:|https:).*/.test(url));
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        // or any other URL that isn't scheme relative or absolute i.e relative.
+        !(/^(\/\/|http:|https:).*/.test(url));
     }
     function safeMethod(method) {
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -37,116 +37,116 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 });              
 
 function hookLinks() {
-  // Friend links.
-  $('.link-add-friend').unbind('click');
-  $('.link-add-friend').click(function() {
-    var data = $(this).metadata();
-    var $this = $(this);
-    if(data.user !== undefined) {
-      $this.unbind('click');
-      var $ohtml = $this.html();
-      $this.append('<div class="link_loader"></div>');
-      
-      $.ajax('/account/friend/add/',{
-        type: 'GET',
-        data: 'user=' + encodeURIComponent(data.user),
-        success: function(data) {
-          $this.html($ohtml);
-          if(data.status == 'OK') {
-            $this.html('Friend request sent.');
-          }
-        },
-        error: function() {
-          hookLinks();
-          $this.html($ohtml);
-        }
-      });
-    }
-    return false;
-  });
+    // Friend links.
+    $('.link-add-friend').unbind('click');
+    $('.link-add-friend').click(function() {
+        var data = $(this).metadata();
+        var $this = $(this);
+        if(data.user !== undefined) {
+            $this.unbind('click');
+            var $ohtml = $this.html();
+            $this.append('<div class="link_loader"></div>');
 
-  $('.link-remove-friend').unbind('click');
-  $('.link-remove-friend').click(function() {
-    var data = $(this).metadata();
-    var $this = $(this);
-    if(data.user !== undefined) {
-      $this.unbind('click');
-      var $ohtml = $this.html();
-      $this.append('<div class="link_loader"></div>');
-      
-      $.ajax('/account/friend/remove/',{
-        type: 'GET',
-        data: 'user=' + encodeURIComponent(data.user),
-        success: function(data) {
-          $this.html($ohtml);
-          if(data.status == 'OK') {
-            $this.html('Friend was removed.');
-          }
-        },
-        error: function() {
-          hookLinks();
-          $this.html($ohtml);
+            $.ajax('/account/friend/add/',{
+                type: 'GET',
+                data: 'user=' + encodeURIComponent(data.user),
+                success: function(data) {
+                    $this.html($ohtml);
+                    if(data.status == 'OK') {
+                        $this.html('Friend request sent.');
+                    }
+                },
+                error: function() {
+                    hookLinks();
+                    $this.html($ohtml);
+                }
+            });
         }
-      });
-    }
-    return false;
-  });   
-  
-  $('.link-accept-friend').unbind('click');
-  $('.link-accept-friend').click(function() {
-    var data = $(this).metadata();
-    var $this = $(this);
-    if(data.request !== undefined) {
-      $this.unbind('click');
-      var $outElem = $this.closest('.link-output');
-      var $ohtml = $outElem.html();
-      $outElem.html('<div class="link_loader"></div>');
-      $.ajax('/account/friend/accept/' + data.request + '/',{
-        type: 'GET',
-        success: function(data) {
-          $outElem.html($ohtml);
-          if(data.status == 'OK') {
-            $outElem.html('Friend request accepted.');
-          }
-        },
-        error: function() {
-          $outElem.html($ohtml);
-          hookLinks();
-        }
-      });
-    }
-    return false;
-  });
+        return false;
+    });
 
-  $('.link-decline-friend').unbind('click');
-  $('.link-decline-friend').click(function() {
-    var data = $(this).metadata();
-    var $this = $(this);
-    if(data.request !== undefined) {
-      $this.unbind('click');
-      var $outElem = $this.closest('.link-output');
-      var $ohtml = $outElem.html();
-      $outElem.html('<div class="link_loader"></div>');
-      $.ajax('/account/friend/decline/' + data.request + '/',{
-        type: 'GET',
-        success: function(data) {
-          $outElem.html($ohtml);
-          if(data.status == 'OK') {
-            $outElem.html('Friend request declined.');
-          }
-        },
-        error: function() {
-          $outElem.html($ohtml);
-          hookLinks();
+    $('.link-remove-friend').unbind('click');
+    $('.link-remove-friend').click(function() {
+        var data = $(this).metadata();
+        var $this = $(this);
+        if(data.user !== undefined) {
+            $this.unbind('click');
+            var $ohtml = $this.html();
+            $this.append('<div class="link_loader"></div>');
+
+            $.ajax('/account/friend/remove/',{
+                type: 'GET',
+                data: 'user=' + encodeURIComponent(data.user),
+                success: function(data) {
+                    $this.html($ohtml);
+                    if(data.status == 'OK') {
+                        $this.html('Friend was removed.');
+                    }
+                },
+                error: function() {
+                    hookLinks();
+                    $this.html($ohtml);
+                }
+            });
         }
-      });
-    }
-    return false;
-  });
+        return false;
+    });   
+
+    $('.link-accept-friend').unbind('click');
+    $('.link-accept-friend').click(function() {
+        var data = $(this).metadata();
+        var $this = $(this);
+        if(data.request !== undefined) {
+            $this.unbind('click');
+            var $outElem = $this.closest('.link-output');
+            var $ohtml = $outElem.html();
+            $outElem.html('<div class="link_loader"></div>');
+            $.ajax('/account/friend/accept/' + data.request + '/',{
+                type: 'GET',
+                success: function(data) {
+                    $outElem.html($ohtml);
+                    if(data.status == 'OK') {
+                        $outElem.html('Friend request accepted.');
+                    }
+                },
+                error: function() {
+                    $outElem.html($ohtml);
+                    hookLinks();
+                }
+            });
+        }
+        return false;
+    });
+
+    $('.link-decline-friend').unbind('click');
+    $('.link-decline-friend').click(function() {
+        var data = $(this).metadata();
+        var $this = $(this);
+        if(data.request !== undefined) {
+            $this.unbind('click');
+            var $outElem = $this.closest('.link-output');
+            var $ohtml = $outElem.html();
+            $outElem.html('<div class="link_loader"></div>');
+            $.ajax('/account/friend/decline/' + data.request + '/',{
+                type: 'GET',
+                success: function(data) {
+                    $outElem.html($ohtml);
+                    if(data.status == 'OK') {
+                        $outElem.html('Friend request declined.');
+                    }
+                },
+                error: function() {
+                    $outElem.html($ohtml);
+                    hookLinks();
+                }
+            });
+        }
+        return false;
+    });
 }
 
 $(function() {
-  hookLinks();
+    hookLinks();
 });
 
 function HideContent(d) {
@@ -166,20 +166,20 @@ function ReverseContentDisplay(d) {
 function share_post(elem) { 
     url = "/posts/share/" + elem + "/";
 
-     if (window.location.pathname.indexOf('lionface') >= 0) 
-  { 
-    url = '/lionface' +  url;
-  }       
+    if (window.location.pathname.indexOf('lionface') >= 0) 
+    { 
+        url = '/lionface' +  url;
+    }       
 
     $.ajax(url,
-    {
-      success: function(data) {
-        alert("shared");
-      },
-      error: function() {
-        alert('Unable to delete data.');
-      }
-    });    
+        {
+            success: function(data) {
+                alert("shared");
+            },
+            error: function() {
+                alert('Unable to delete data.');
+            }
+        });    
 
 }          
 
@@ -187,43 +187,43 @@ function del_post(elem) {
     var data = $('.post_'+elem).metadata();
     url = "/posts/del/" + elem + "?user="+data.user;
 
-     if (window.location.pathname.indexOf('lionface') >= 0) 
-  { 
-    url = '/lionface' +  url;
-  }       
+    if (window.location.pathname.indexOf('lionface') >= 0) 
+    { 
+        url = '/lionface' +  url;
+    }       
 
     $.ajax(url,
-    {
-      success: function(data) {
-        $('.post_'+elem).prev('hr').hide()
-        $('.post_'+elem).fadeOut()
-      },
-      error: function() {
-        alert('Unable to delete data.');
-      }
-    });    
+        {
+            success: function(data) {
+                $('.post_'+elem).prev('hr').hide()
+                $('.post_'+elem).fadeOut()
+            },
+            error: function() {
+                alert('Unable to delete data.');
+            }
+        });    
 
 }       
 
 function del_comm(elem) { 
     url = "/posts/dlcom/" + elem + "/";
 
-     if (window.location.pathname.indexOf('lionface') >= 0) 
-  { 
-    url = '/lionface' +  url;
-  }       
+    if (window.location.pathname.indexOf('lionface') >= 0) 
+    { 
+        url = '/lionface' +  url;
+    }       
 
     $.ajax(url,
-    {
-      success: function(data) {
-          if (data.status == 'removed') {
-            $('#comment_'+data.id).fadeOut();
+        {
+            success: function(data) {
+                if (data.status == 'removed') {
+                    $('#comment_'+data.id).fadeOut();
+                }
+            },
+            error: function() {
+                alert('Unable to delete data.');
             }
-      },
-      error: function() {
-        alert('Unable to delete data.');
-      }
-    });    
+        });    
 
 } 
 
@@ -231,11 +231,11 @@ function post_comment(form_id, url) {
     $('#comment_form_'+form_id+' form input.submit-preview').remove();
     url = '/posts/test/'
 
-    
-     if (window.location.pathname.indexOf('lionface') >= 0) 
-  { 
-    url = '/lionface' +  url;
-  }     
+
+    if (window.location.pathname.indexOf('lionface') >= 0) 
+    { 
+        url = '/lionface' +  url;
+    }     
 
     $.ajax({
         type: "POST",
@@ -258,6 +258,38 @@ function post_comment(form_id, url) {
     });
 }      
 
+function check_for_messages(){
+    url = '/check/messages/'
+
+    if (window.location.pathname.indexOf('/lionface/') >= 0) 
+    { 
+        url = '/lionface' +  url;
+    }     
+
+
+    $.ajax(url,
+            {
+            success: function(data) {
+                if (data.mess) {
+                    if (parseInt(data.mess) > 0) {
+                        if ($('#messages_id_notif').find('span').text() != data.mess) {
+                            if ($('#messages_id_notif span').length) {
+                                $('#messages_id_notif span').html(data.mess);
+                                }
+                            else {
+                                $('#messages_id_notif').append('<span class="count">'+data.mess+'</span>');
+                                }
+                            }
+                        }
+                }
+            },
+            error: function() {
+                console.log('fail');
+            }
+        });  
+
+}
+
 $(document).ready(function() {
     url = '/auto/';
     url_user = '/user/profile/'
@@ -279,6 +311,11 @@ $(document).ready(function() {
         .append( "<a>" + item.label + '<div class="auto_subtext">' + item.value + '</div>' + "</a>" )
         .appendTo( ul );
     };
+
+    //checking for new nofifications
+    setInterval(function() {
+        check_for_messages();
+    }, 5000);
 
 
 

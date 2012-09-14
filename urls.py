@@ -46,6 +46,7 @@ urlpatterns = patterns('',
             form_class=search.forms.TagSearchForm,
         ))),
     url(r'^auto/', 'search.views.auto_complete'),
+    url(r'^check/', include('comet.urls')),
 )
 
 

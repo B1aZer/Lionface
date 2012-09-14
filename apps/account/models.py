@@ -100,6 +100,8 @@ class UserProfile(User):
             option.save()
         except ObjectDoesNotExist:
             self.useroptions_set.create(name=name,value=value)
+    def new_messages(self):
+        return self.message_to.filter(read=False).count()
 
 
 

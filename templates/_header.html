@@ -36,9 +36,12 @@
 <div align="center"><div style="position: relative; width: 900px; height: 1px; text-align: right;">
 
 	<div style="position: relative; right: -908px; top: 50px; width: 35px; z-index: 100;">
-		<a href="{% url messaging.views.messages %}" class="nav_messages" title=" Messages "></a><br />
+        
+		<a href="{% url messaging.views.messages %}" id="messages_id_notif" class="nav_messages" title=" Messages ">
+            {% if request.user.new_messages > 0 %} <span class="count">{{request.user.new_messages}}</span> {% endif %}
+        </a><br />
         {% if not_count > 0 %}
-        <a href="{% url notification.views.notifications %}" class="nav_notifications" title=" Notifications " target="_top"><span class="count">{{not_count}}</a>
+        <a href="{% url notification.views.notifications %}" class="nav_notifications" title=" Notifications " target="_top"><span class="count">{{not_count}}</span></a>
         {% else %}
         <a href="{% url notification.views.notifications %}" class="nav_notifications" title=" Notifications " target="_top"></a>
         {% endif %}
