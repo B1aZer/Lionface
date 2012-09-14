@@ -3,8 +3,8 @@
 {% for message in messages %}
 
 
-<div class="mess" {% if request.user == message.user %} style="left: 300px; position: relative" {% endif %}>
-message from {{ message.user }} to {{ message.user_to }}
+<div class="mess" {% if request.user == message.user %} style="left: 246px; background: #FAFAFA;" {% endif %}>
+<span style="color: #AAA;">From</span> {{ message.user }} <span style="color: #DDD;">to {{ message.user_to }}</span>
 <p>{{ message.content }}</p>
 </div>
 

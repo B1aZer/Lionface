@@ -6,8 +6,8 @@
     <div id="profile_top">
         <div class="left">{% block content_title %}{{ user.first_name }} {{ user.last_name }} | Messages{% endblock %}</div>
         <div class="right" style="color: #555;">{% block content_subtitle %}
-            <a href="#" id="revert_btn" class="profile_nav" style="margin: 0; position: relative; left: 2px;">Revert</a>
-            <a href="#" class="profile_nav" style="margin: 0; position: relative; left: 2px;">+ Compose</a>{% endblock %}</div>
+            <a href="#" id="revert_btn" class="profile_nav" style="margin: 0; position: relative; left: 2px;">Reverse</a>
+            <a href="{% url messaging.views.messages %}" class="profile_nav" style="margin: 0; position: relative; left: 2px;">+ Compose</a>{% endblock %}</div>
     </div>
     <div style="clear: both;"></div>
     <div class="left_col">
@@ -63,8 +63,6 @@
                 <table width="100%" id="compose_form"><tr>
                         <td></td><td></td>
                     </tr><tr>
-                        <td></td><td style="font-weight: bold; font-size: 10pt;">Compose a Message</td>
-                    </tr><tr>
                         <td width="100" align="right">To</td>
                         <td width="455" align="left">
                             {% if form.non_field_errors %}
@@ -99,6 +97,16 @@
                     </tr><tr>
                         <td></td><td></td>
                     </tr><tr></table>
+
+             <table width="100%" id="compose_form_compact">
+                    <tr>
+                        <td align="right" width="125">Message</td>
+                        <td align="left" width="455">
+                            <textarea style="width: 100%; border: 1px solid #DDD;"></textarea>
+                        </td>
+						<td align="right" width="50"><a href="javascript:;" id="send_button" class="send">Send</a></td>
+                    </tr>
+                    </table>
                 </div>
             </form>
             {% endblock %}
