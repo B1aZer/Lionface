@@ -92,6 +92,14 @@ class UserProfile(User):
                 return option.value
         except ObjectDoesNotExist:
             return False
+    def set_option(self,name,value):
+        name = "option_%s" % name
+        try:
+            option = self.useroptions_set.get(name=name)
+            option.value = value
+            option.save()
+        except ObjectDoesNotExist:
+            self.useroptions_set.create(name=name,value=value)
 
 
 

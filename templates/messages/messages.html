@@ -60,9 +60,9 @@
         {% block right_col %}
         <form action="" id="message_form" method="post">{% csrf_token %}
             <div align="center">
-                <table width="100%" id="compose_form"><tr>
+                <table width="100%" id="compose_form"><tr class="big_form">
                         <td></td><td></td>
-                    </tr><tr>
+                    </tr><tr class="big_form">
                         <td width="100" align="right">To</td>
                         <td width="455" align="left">
                             {% if form.non_field_errors %}
@@ -76,7 +76,7 @@
                             {{ form.user_id }}
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="small_form">
                         <td align="right">Message</td>
                         <td align="left">
                             {% if form.content.errors %}
@@ -85,7 +85,7 @@
                             {{ form.content }}
                         </td>
                     </tr>
-                    <tr><td></td>
+                    <tr class="big_form"><td></td>
                         <td align="left">
                             <a href="javascript:;" id="send_button" class="send">Send</a>
                         </td>
@@ -94,19 +94,9 @@
                             <p class="success" >Message was sent.</p>
                         </td>
                         {% endif %}
-                    </tr><tr>
+                    </tr><tr class="big_form">
                         <td></td><td></td>
-                    </tr><tr></table>
-
-             <table width="100%" id="compose_form_compact">
-                    <tr>
-                        <td align="right" width="125">Message</td>
-                        <td align="left" width="455">
-                            <textarea style="width: 100%; border: 1px solid #DDD;"></textarea>
-                        </td>
-						<td align="right" width="50"><a href="javascript:;" id="send_button" class="send">Send</a></td>
-                    </tr>
-                    </table>
+                    </tr></table>
                 </div>
             </form>
             {% endblock %}

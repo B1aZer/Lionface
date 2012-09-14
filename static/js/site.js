@@ -276,7 +276,7 @@ $(document).ready(function() {
     }).data( "autocomplete" )._renderItem = function( ul, item ) {
         return $( "<li></li>" )
         .data( "item.autocomplete", item )
-        .append( "<a>" + item.label + '<div class="subtext">' + item.value + '</div>' + "</a>" )
+        .append( "<a>" + item.label + '<div class="auto_subtext">' + item.value + '</div>' + "</a>" )
         .appendTo( ul );
     };
 

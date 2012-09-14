@@ -24,6 +24,27 @@ $( "#id_user_to" ).autocomplete({
 
 }
 
+function change_form() {
+    $('.big_form').hide()
+    var new_form = '<tr> \
+                        <td align="right" width="125">Message</td> \
+                        <td align="left" width="455"> \
+                            <textarea id="id_content" style="width: 100%; border: 1px solid #DDD;line-height: 1;" name="content"></textarea> \
+                        </td> \
+						<td align="right" width="50"><a href="javascript:;" id="send_button" class="send">Send</a></td> \
+                    </tr>'
+
+    $('.small_form').find('td :first').attr('width','125');
+    $('.small_form').find('td :first').next().attr('width','455');
+    $('.small_form').find('textarea').attr('style','width: 100%; border: 1px solid #DDD;line-height: 1;').removeAttr('rows').removeAttr('cols'); 
+    if ($('.small_form').find('#send_button').length) {
+    }
+    else {
+        $('.small_form').append('<td align="right" width="50"><a href="javascript:;" id="send_button" class="send">Send</a></td>');
+    }
+    $('.small_form').addClass('form_changed');
+}
+
 function load_messages(user_id, sort) {
 
         if (!(user_id)) {
@@ -31,7 +52,7 @@ function load_messages(user_id, sort) {
             }
 
          if (!(sort)) {
-            sort = 'asc';
+            sort = '';
             } 
 
         url = "/messages/show/";
@@ -69,7 +90,7 @@ function load_messages(user_id, sort) {
                     //input user id
                     $( "#id_user_id" ).val( user_id );
                     //populate feed
-                    if (sort == 'desc') {
+                    if (sort == 'desc' || data.sort == 'desc') {
                         if ($('.message_feed').length) {
                             $('.message_feed').remove();
                         }
@@ -83,14 +104,19 @@ function load_messages(user_id, sort) {
                         var new_elem = $('<div class="message_feed"></div>').html(data.html);
                         $('.right_col').prepend(new_elem);
                     }
-                    //autosize
-                    $('#id_content').autosize(); 
+                    //revert btn
+                    $('#revert_btn').show();
+                    //adding class if we have desc in db
+                    if (data.sort == 'desc' && (!($('#revert_btn').hasClass('desc')))) {
+                        $('#revert_btn').addClass('desc');
+                    }
+                    //change form
+                    change_form();
                     //remove new color
                     $('#name_link_'+user_id).attr('style',''); 
                     $('#new_mess_'+user_id).hide(); 
-                    //revert btn
-                    $('#revert_btn').show();
-
+                    //autosize
+                    $('#id_content').autosize(); 
                 },
                 error: function() {
                     alert('Unable to retrieve data.');
@@ -123,15 +149,18 @@ $(document).ready(function() {
                 url: url,
                 data: $('#message_form').serialize(), 
                 success: function(data) {
-                    console.log('ok');
                     var out = ($("#message_form", data).html());
                     var user_id = $('#id_user_id').val();
+                    var check = $('.form_changed').length;
                     $("#message_form").html(out);
                     if ($('.success').length) {
                         $('.success').parent().remove();
                         load_messages(user_id);
                     }
                     else {
+                        if (check) {
+                            change_form();
+                        }
                         auto_complete();
                         $('#id_content').autosize(); 
                         if ($('.message_feed').length) {
@@ -156,7 +185,7 @@ $(document).ready(function() {
     $('#revert_btn').live('click',function() {
         if ($('.message_feed').length) {
             if ($(this).hasClass('desc')) {
-                load_messages($('#id_user_id').val());
+                load_messages($('#id_user_id').val(),'asc');
                 $(this).removeClass('desc');
                 }
             else {

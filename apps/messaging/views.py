@@ -103,12 +103,22 @@ def show(request):
             sort = request.POST['sort']
             if sort == 'desc':
                 messages = messages.order_by('-date')
-            else:
+                request.user.set_option('reverse','desc')
+            elif sort == 'asc':
                 messages = messages.order_by('date')
+                request.user.set_option('reverse','asc')
+            else:
+                if request.user.check_option('reverse','asc'):
+                    messages = messages.order_by('date')
+                elif request.user.check_option('reverse','desc'):
+                    messages = messages.order_by('-date')
+
+
 
         data['html'] = render_to_string('messages/feed.html',
                 {
                     'messages':messages,
                 }, context_instance=RequestContext(request))
+        data['sort'] = request.user.check_option('reverse') or 'asc'
 
     return HttpResponse(json.dumps(data), "application/json")
