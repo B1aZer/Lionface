@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'post',
     'tags',
     'messaging',
+    'smileys',
 )
 
 # A sample logging configuration. The only tangible logging

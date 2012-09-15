@@ -1,0 +1,12 @@
+{% extends "profile/base.html" %}
+{% block content %}
+    <form action="." method="post" enctype="multipart/form-data">{% csrf_token %} 
+    <div >
+            {{form}}
+    </div>
+    <div >
+        <input type="submit" value="Submit" class="sub btn btn-inverse" />
+    </div>
+    </form>  
+{% endblock %}
+

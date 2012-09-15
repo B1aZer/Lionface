@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from tags.models import *
+from smileys.models import Smiley
 import re
 
 register = template.Library()
@@ -58,4 +59,24 @@ def strip_comment(comment):
 def color_tags(text):
     text = re.sub(r'(#([\w]+))',r'<a href="/tag/?models=tags_tag&q=\2" style="color: #A70; text-decoration: underline;">\1</a>',text)
     return text
+
+@register.filter(name='smileys',is_safe=True)
+def smileys(value):
+    """
+    Replaces all occurrences of the active smiley patterns in `value` with a
+    tag that points to the image associated with the respective pattern.
+
+    """
+    for smiley in Smiley.objects.all():
+        # come up with the <img> tag
+        img = '<img class="smiley" src="/%s" alt="%s" height="%i" width="%i" />' % (smiley.image.url, smiley.description, smiley.image.height, smiley.image.width)
+        if False:
+            # regex patterns allow you to use the same Smiley for multiple
+            # ways to type a smiley
+            value = re.sub(smiley.pattern, img, value)
+        else:
+            # this is the stupid (strict) way
+            value = value.replace(smiley.pattern, img)
+
+    return value
 

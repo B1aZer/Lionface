@@ -47,6 +47,7 @@ urlpatterns = patterns('',
         ))),
     url(r'^auto/', 'search.views.auto_complete'),
     url(r'^check/', include('comet.urls')),
+    url(r'^import/', include('smileys.urls')),
 )
 
 
