@@ -139,16 +139,8 @@ $(document).ready(function() {
 
         url = "/messages/";
 
-        if (window.location.pathname.indexOf('/lionface/') >= 0) 
-        { 
-            url = '/lionface' +  url;
-        }
+        make_request(url, $('#message_form').serialize(), function(data) {
 
-        $.ajax({
-                type: 'POST',
-                url: url,
-                data: $('#message_form').serialize(), 
-                success: function(data) {
                     var out = ($("#message_form", data).html());
                     var user_id = $('#id_user_id').val();
                     var check = $('.form_changed').length;
@@ -166,15 +158,12 @@ $(document).ready(function() {
                         if ($('.message_feed').length) {
                             $('#id_user_to').parent().parent().hide();
                         }
+                        alert("Message was not sent.");
                     }
 
 
                     
-                },
-                error: function() {
-                    console.log('fail');
-                } 
-            });
+        });
     });
 
     $(document).on('click', '.message', function(e) {

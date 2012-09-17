@@ -1,38 +1,8 @@
 {% load format_results %}
 <dl id="comments">
     {% for comment in comment_list %}
-    <div class="comment_list" id="comment_{{ comment.id }}">
-        <div  onMouseOver="ShowContent('z{{ comment.id }}');ShowContent('p{{ comment.id }}'); return false;" onMouseOut="HideContent('z{{ comment.id }}');HideContent('p{{ comment.id }}'); return false;">
-            <dt id="c{{ comment.id }}">
-            <table width="100%">
-                <tr>
-                    <td align="left">
-					<div style="font-size: 9pt !important; position: relative;">
 
-                        <div id="p{{ comment.id }}" class="comment_thumbnail" style="background-image: url('/{{ comment.user.userprofile.photo|format_image:request.get_full_path }}'); background-size: 40px 40px;"></div>
+    {% include "comments/single.html" %}
 
-                        <a href='{{ comment.user.get_absolute_url }}'>{{comment.name}}</a>
-                        <div style="display: inline-block; color: #CCC; font-size: 8pt !important; margin-left: 10px;">
-                            <span title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00">{{ comment.submit_date }}</span>
-                        </div>
-					</div>
-                    </td>
-                    <td align="right">
-                        <div id="z{{ comment.id }}" style="display: none; color: #AAA; font-size: 8pt !important;">
-                            {% if comment.user.userprofile == request.user %}
-                                <a href="javascript:del_comm({{ comment.id }})" style="margin-left: 15px; color: #AAA;">Delete</a>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            </dt>
-            <dd>
-            <div class="comment">{{ comment.comment|strip_comment|safe|linebreaks }}</div>
-            </dd>
-        </div>
-        <hr noshade="noshade" style="border: 0px; height: 1px; background: #FFF;" size="1" />
-        <div style="height: 7px;"></div>
-    </div>
     {% endfor %}
 </dl>

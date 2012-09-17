@@ -36,6 +36,38 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
     }
 });              
 
+function make_request(url, data, callback, error_callback, options) {
+
+    if (window.location.pathname.indexOf('/lionface/') >= 0) 
+    { 
+        url = '/lionface' +  url;
+    }   
+
+    if (data) {
+        request_type = 'POST';
+        }
+    else {
+        request_type = 'GET';
+    }
+
+    $.ajax(url,
+        {
+            type: request_type, 
+            data: data,
+            success: function(data_success) {
+
+                if ($.isFunction(callback)) {
+                    callback(data_success);
+                }
+            
+            },
+            error: function() {
+                console.log("error during request");
+            }
+        });
+
+}
+
 function hookLinks() {
     // Friend links.
     $('.link-add-friend').unbind('click');
@@ -144,10 +176,6 @@ function hookLinks() {
         return false;
     });
 }
-
-$(function() {
-    hookLinks();
-});
 
 function HideContent(d) {
     if(d.length < 1) { return; }
@@ -275,12 +303,12 @@ function check_for_messages(){
                         if ($('#messages_id_notif').find('span').text() != data.mess) {
                             if ($('#messages_id_notif span').length) {
                                 $('#messages_id_notif span').html(data.mess);
-                                }
+                            }
                             else {
                                 $('#messages_id_notif').append('<span class="count">'+data.mess+'</span>');
-                                }
                             }
                         }
+                    }
                 }
             },
             error: function() {
@@ -290,7 +318,34 @@ function check_for_messages(){
 
 }
 
+function check_for_notifications(){
+    url = '/check/notifications/'
+
+    make_request(
+        {url:url, callback:function (data) {
+
+            if (parseInt(data.notfs) > 0) {
+                if ($('#notifications_id_notif').find('span').text() != data.notfs) {
+                    if ($('#notifications_id_notif span').length) {
+                        $('#notifications_id_notif span').html(data.notfs);
+                    }
+                    else {
+                        $('#notifications_id_notif').append('<span class="count">'+data.notfs+'</span>');
+                    }
+                }
+            }
+    
+        }
+    });
+
+    
+
+
+} 
+
 $(document).ready(function() {
+    hookLinks();
+
     url = '/auto/';
     url_user = '/user/profile/'
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
@@ -315,7 +370,8 @@ $(document).ready(function() {
     //checking for new nofifications
     setInterval(function() {
         check_for_messages();
-    }, 5000);
+        check_for_notifications();
+    }, 10000);
 
 
 

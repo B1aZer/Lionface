@@ -27,26 +27,9 @@ def messages(request):
             user_to = UserProfile.objects.get(id=int(user_to_id))
             content = form.cleaned_data['content']
             #checking for options (in profile clone)
-            if user_to.check_option('send_message','Public'):
-                    mess = Messages(user=request.user,user_to=user_to,content=content)
-                    mess.save()
-                    send = True
-                    form = MessageForm()
-            elif user_to.check_option('send_message',"Friend's Friends") or user_to.check_option('send_message',"Friends"):
-                if user_to.has_friend(request.user):
-                    mess = Messages(user=request.user,user_to=user_to,content=content)
-                    mess.save()
-                    send = True
-                    form = MessageForm()
-            elif user_to.check_option('send_message',"Off"):
-                pass
-            else:
-                mess = Messages(user=request.user,user_to=user_to,content=content)
-                mess.save()
-                send = True
-                form = MessageForm()
-
-
+            mess = Messages(user=request.user,user_to=user_to,content=content)
+            send = mess.save()
+            form = MessageForm()
 
     messages_in = Messages.objects.filter(user_to=request.user).order_by('date')
     messages_out = Messages.objects.filter(user=request.user).order_by('date')

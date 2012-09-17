@@ -47,6 +47,12 @@ class UserProfile(User):
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0
 
+    def has_friends_friend(self, user):
+        for friend in self.friends.all():
+            if self.friends.filter(id=friend.id).count() > 0 or friend == user:
+                return True
+        return False
+
     def has_friend_request(self, user):
         return FriendRequest.objects.filter(Q(from_user=self, to_user=user) | Q(to_user=self, from_user=user)).count() > 0
 
