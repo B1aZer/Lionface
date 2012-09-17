@@ -7,7 +7,7 @@
 {% endif %}
 <div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {type: '{{item.get_type}}', user: {{ item.user.id }}}" onMouseOver="ShowContent('{{item.id}}'); return false;" onMouseOut="HideContent('{{item.id}}'); return false;" style="padding: 15px 8px 5px 8px; width: 535px;">
     <a href="{{item.post.user.get_absolute_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.post.user.photo|format_image:request.get_full_path }}'); background-size: 50px 50px;"></div></a>
-    {{ item.render|smileys|linebreaks|color_tags }}
+    {{ item.render|safe|smileys|linebreaks|color_tags }}
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>
