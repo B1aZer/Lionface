@@ -96,13 +96,25 @@
                                             <label for="checkbox" style="cursor: pointer;"> Friends</label>
 												</div>>
                                         {% else %}
-                                        <div class="post_option">
-                                                <input name="type" type="radio" value="P" checked id="checkbox1" name="public" style="cursor: pointer;">
-                                            <label for="checkbox1" style="cursor: pointer;"> Public</label></div>
-                                            <div class="post_option">
-                                                <input name="type" type="radio" value="F" id="checkbox" style="cursor: pointer;"> 
-                                            <label for="checkbox" style="cursor: pointer;"> Friends</label>
-												</div>
+                                            {% if request.user|check_option:"posting_default" == "Friends Only" %}
+                                                <div class="post_option">
+                                                    <input name="type" type="radio" value="P" id="checkbox1" name="public" style="cursor: pointer;">
+                                                    <label for="checkbox1" style="cursor: pointer;"> Public</label>
+                                                </div>
+                                                <div class="post_option">
+                                                    <input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;"> 
+                                                    <label for="checkbox" style="cursor: pointer;"> Friends</label>
+                                                </div>
+                                            {% else %}
+                                                <div class="post_option">
+                                                    <input name="type" type="radio" value="P" checked id="checkbox1" name="public" style="cursor: pointer;">
+                                                    <label for="checkbox1" style="cursor: pointer;"> Public</label>
+                                                </div>
+                                                <div class="post_option">
+                                                    <input name="type" type="radio" value="F" id="checkbox" style="cursor: pointer;"> 
+                                                    <label for="checkbox" style="cursor: pointer;"> Friends</label>
+                                                </div>
+                                            {% endif %}
                                         {% endif %}
                                             </div>
                                         </div>

@@ -65,20 +65,8 @@ def profile(request, username=None):
             if form_mess.is_valid():
                 user_to = profile_user
                 content = form_mess.cleaned_data['content']
-                #this is so unefficient
-                #checking for options (in messaging clone)
-                if user_to.check_option('send_message','Public'):
-                    mess = Messages(user=request.user,user_to=user_to,content=content)
-                    mess.save()
-                elif user_to.check_option('send_message',"Friend's Friends") or user_to.check_option('send_message',"Friends"):
-                    if user_to.has_friend(request.user):
-                        mess = Messages(user=request.user,user_to=user_to,content=content)
-                        mess.save()
-                elif user_to.check_option('send_message',"Off"):
-                    pass
-                else:
-                    mess = Messages(user=request.user,user_to=user_to,content=content)
-                    mess.save()
+                mess = Messages(user=request.user,user_to=user_to,content=content)
+                mess.save()
                 return HttpResponseRedirect(request.path)
 
     return render_to_response(

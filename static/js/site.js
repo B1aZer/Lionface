@@ -371,7 +371,7 @@ $(document).ready(function() {
     setInterval(function() {
         check_for_messages();
         check_for_notifications();
-    }, 10000);
+    }, 30000);
 
 
 

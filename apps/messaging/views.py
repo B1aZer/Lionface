@@ -26,7 +26,6 @@ def messages(request):
             user_to_id = form.cleaned_data['user_id']
             user_to = UserProfile.objects.get(id=int(user_to_id))
             content = form.cleaned_data['content']
-            #checking for options (in profile clone)
             mess = Messages(user=request.user,user_to=user_to,content=content)
             send = mess.save()
             form = MessageForm()

@@ -80,3 +80,7 @@ def smileys(value):
 
     return value
 
+@register.filter(name='check_option')
+def check_option(user,name):
+    return user.check_option(name)
+
