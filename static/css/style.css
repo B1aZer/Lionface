@@ -423,6 +423,14 @@ a.profile_btn:hover {
     line-height: 1;
 }
 
+.send_message_form {
+	font-size: 8pt;
+}
+
+.send_message_form textarea {
+	width: 190px;
+}
+
 /* Base */
 
 .content_area { 

@@ -47,17 +47,16 @@
     <div>{{ form_mess.non_field_errors }}</div>
     {% endif %}
     
-    <input id="id_user_to" style="width: 150px !important; padding: 7px; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #DDD;" type="text" name="user_to" maxlength="100" value="{{ profile_user.full_name }}" readonly>
+    To: <input id="id_user_to" style="width: 150px !important; padding: 7px; border: 0px;" type="text" name="user_to" maxlength="100" value="{{ profile_user.full_name }}" readonly>
 
     <input type="hidden" name="user_id" id="id_user_id" value="{{ profile_user.id }}">
 
     {% if form_mess.content.errors %}
     <div>{{ form_mess.content.errors }}</div>
     {% endif %}
-    <p>Your message:</p>
     {{ form_mess.content }} 
 
-    <p><input name="message" type="submit" class="blue_btn" value="Send" /></p>
+    <p><input name="message" type="submit" class="blue_btn" style="font-size: 8pt;" value="Send" /></p>
 </form> 
 
  {% endif %}
