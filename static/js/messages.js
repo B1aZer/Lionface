@@ -139,7 +139,7 @@ $(document).ready(function() {
 
         url = "/messages/";
 
-        make_request(url, $('#message_form').serialize(), function(data) {
+        make_request({url:url, data:$('#message_form').serialize(), callback:function(data) {
 
                     var out = ($("#message_form", data).html());
                     var user_id = $('#id_user_id').val();
@@ -163,6 +163,7 @@ $(document).ready(function() {
 
 
                     
+                }
         });
     });
 

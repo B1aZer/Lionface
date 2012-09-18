@@ -111,6 +111,28 @@ class UserProfile(User):
                 return option.value
         except ObjectDoesNotExist:
             return False
+    def check_visiblity(self,option,user):
+        if not option:
+            return
+        else:
+            visible = False
+
+            if self.check_option(option,"Public"):
+                visible = True
+            elif self.check_option(option,"Friend's Friends"):
+                if self.has_friends_friend(user):
+                    visible = True
+            elif self.check_option(option,"Friends"):
+                if self.has_friend(user):
+                    visible = True
+            elif self.check_option(option,"Just Me"):
+                visible = False
+            elif self.check_option(option,"Off"):
+                visible = False
+            else:
+                visible = True
+
+        return visible
     def set_option(self,name,value):
         name = "option_%s" % name
         try:
@@ -156,6 +178,21 @@ class Relationship(models.Model):
     from_user = models.ForeignKey(UserProfile, related_name='from_people')
     to_user = models.ForeignKey(UserProfile, related_name='to_people')
     date = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        follow = False
+        if self.from_user.check_option('follow',"Public"):
+            follow = True
+        elif self.from_user.check_option('follow',"Friend's Friends"):
+            if self.from_user.has_friends_friend(self.to_user):
+                follow = True
+        elif self.from_user.check_option('follow',"Off"):
+            pass
+        else:
+            follow = True
+        if (follow):
+            super(Relationship, self).save(*args, **kwargs)
+        return follow
 
 
 class UserOptions(models.Model):

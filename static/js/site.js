@@ -36,7 +36,10 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
     }
 });              
 
-function make_request(url, data, callback, error_callback, options) {
+function make_request(input) {
+    var url = input.url;
+    var data = input.data;
+    var callback = input.callback;
 
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
     { 

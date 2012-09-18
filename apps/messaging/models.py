@@ -32,4 +32,4 @@ class Messages(models.Model):
             send = True
         if (send):
             super(Messages, self).save(*args, **kwargs)
-            return send
+        return send

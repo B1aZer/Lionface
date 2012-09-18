@@ -3,7 +3,11 @@
 
 {% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
 {% block content_middle %}
-{% if profile_user == user %}{{ user|show_friend_count }}{% endif %}
+{% if profile_user == user %}
+{{ user|show_friend_count }}
+| {{ user.followers.count }} follower{{ user.followers.count|pluralize }}
+| {{ user.following.count }} following
+{% endif %}
 {% endblock %}
 {% block content_subtitle %}
 {% if request.user == profile_user %}
@@ -16,7 +20,9 @@
 	<a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
 {% else %}
 	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+    {% if profile_user|check_following:request.user %} 
 	<a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >+ Follow</a>
+    {% endif %}
 {% endif %}
 {% endblock %}
 
