@@ -14,6 +14,9 @@ class SearchForm(ModelSearchForm):
             if user != None:
                 res = res.exclude(username=user.username)
             # TODO: Privacy settings will come in here too at some point.
+            for one_user in res:
+                if not one_user.object.userprofile.check_visiblity("search",user):
+                    res = res.exclude(username=one_user.username)
         return res
 
 
@@ -26,5 +29,5 @@ class TagSearchForm(SF):
             if hasattr(sq.object,'user_tag'):
                 sqs = sqs.exclude(id = sq.id)
         return sqs
-    
+
 

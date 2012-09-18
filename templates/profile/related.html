@@ -1,0 +1,54 @@
+{% extends 'profile/base.html' %}
+{% load media friends format_results %}
+
+{% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
+{% block content_middle %}
+{% if profile_user == user %}
+{{ user|show_friend_count }}
+| {{ user.followers.count }} follower{{ user.followers.count|pluralize }}
+| {{ user.following.count }} following
+{% endif %}
+{% endblock %}
+{% block content_subtitle %}
+{% if request.user == profile_user %}
+{% elif profile_user|has_friend:request.user %}
+	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px;">- Remove</a>
+{% elif profile_user|has_friend_request:request.user %}
+	<span style="color: #999; margin: 0px;" >Friend request pending.</span>
+{% elif profile_user|in_followers:request.user %}
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+	<a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
+{% else %}
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+    {% if profile_user|check_following:request.user %} 
+	<a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >+ Follow</a>
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+{% block left_col %}
+<div  onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
+    class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;"></div>
+
+    <div style="position: relative; left: 0px; z-index: 100;">
+    <a href="javascript:;" class="feed_type filter related" >Friend</a>
+    <a href="javascript:;" class="feed_type filter related" >Following</a>
+    <a href="javascript:;" class="feed_type filter related" >Followers</a>
+	</div>   
+
+{% endblock %}
+
+{% block right_col %}
+<div id="related_users" style="padding: 10px; position: relative; left: 40px;">
+
+    {% for user in following %}
+
+    {{ user|format_result:request.user }}
+
+    {% endfor %}
+
+</div>
+
+  {% include_media 'profile.js' %}
+  {% include_media 'related.js' %}
+{% endblock %}

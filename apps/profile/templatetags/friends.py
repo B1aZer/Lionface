@@ -28,3 +28,17 @@ def show_friend_count(user):
     elif( num > 0 and num < 10): count = "%s Friends" % (wordarray[num-2])
     elif( num > 0): count = "%d Friends" % (num)
     return "%s" % (count)
+
+@register.filter(name='check_following')
+def check_following(profile, user):
+    show = False
+    if profile.check_option('follow',"Public"):
+        show = True
+    elif profile.check_option('follow',"Friend's Friends"):
+        if profile.has_friends_friend(user):
+            show = True
+    elif profile.check_option('follow',"Off"):
+        show = False
+    else:
+        show = True
+    return show

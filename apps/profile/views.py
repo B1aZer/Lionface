@@ -119,6 +119,42 @@ def settings(request):
     )
 
 @login_required
+def related_users(request,username=None):
+    if not username:
+        profile_user = request.user
+    else:
+        try:
+            profile_user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            return Http404()
+
+    if request.method == 'GET':
+        data = {}
+        if 'friends' in request.GET:
+            friends = profile_user.friends.all()
+            data['html'] = [x.username for x in friends]
+            return HttpResponse(json.dumps(data), "application/json")
+        if 'following' in request.GET:
+            following = profile_user.following.all()
+            data['html'] = [x.username for x in following]
+            return HttpResponse(json.dumps(data), "application/json")
+        if 'followers' in request.GET:
+            followers = profile_user.followers.all()
+            data['html'] = [x.username for x in followers]
+            return HttpResponse(json.dumps(data), "application/json")
+
+    following = profile_user.following.all()
+
+    return render_to_response(
+        'profile/related.html',
+        {
+            'profile_user' : profile_user,
+            'following' : following,
+        },
+        RequestContext(request)
+    )
+
+@login_required
 def filter_add(request):
     data = {'status': 'OK'}
     if request.method == 'POST' and 'filter_name' in request.POST:
