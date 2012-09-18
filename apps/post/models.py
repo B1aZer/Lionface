@@ -74,8 +74,8 @@ class ContentPost(Post):
         import bleach
         #import pdb;pdb.set_trace()
 
-        #self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
-        #self.content = bleach.linkify(self.content,target='_top',title=True, tokenizer=False)
+        self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
+        self.content = bleach.linkify(self.content,target='_top',title=True)
 
         return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
@@ -123,8 +123,11 @@ class SharePost(Post):
 
 
 class CustomQuerySet(QuerySet):
-    def get_public_posts(self):
-        return [x for x in self if x.get_privacy == 'P']
+    def get_public_posts(self, user=None):
+        if not user:
+            return [x for x in self if x.get_privacy == 'P']
+        else:
+            return [x for x in self if x.get_privacy == 'P' or (x.get_privacy == 'F' and x.post.user.has_friend(user))]
     def get_tagged_posts(self,tags):
         #import pdb;pdb.set_trace()
         tagged_posts = [x for x in self if x.post.tags.filter(name__in=tags)]

@@ -67,6 +67,8 @@ def smileys(value):
     tag that points to the image associated with the respective pattern.
 
     """
+    value = value.replace("&lt;3","<3")
+
     for smiley in Smiley.objects.all():
         # come up with the <img> tag
         img = '<img class="smiley" src="/%s" alt="%s" height="%i" width="%i" />' % (smiley.image.url, smiley.description, smiley.image.height, smiley.image.width)
@@ -77,6 +79,8 @@ def smileys(value):
         else:
             # this is the stupid (strict) way
             value = value.replace(smiley.pattern, img)
+
+    #value = value.replace("<", "&lt;").replace(">","&gt;")
 
     return value
 

@@ -62,6 +62,26 @@ def home(request):
     return redirect(profile.views.feed)
 
 @login_required
+def follow(request):
+    if 'user' in request.GET:
+        try:
+            following = UserProfile.objects.get(id=request.GET['user'])
+        except User.DoesNotExist:
+            raise Http404()
+        request.user.add_following(following)
+    return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
+
+@login_required
+def unfollow(request):
+    if 'user' in request.GET:
+        try:
+            following = UserProfile.objects.get(id=request.GET['user'])
+        except User.DoesNotExist:
+            raise Http404()
+        request.user.remove_following(following)
+    return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
+
+@login_required
 def friend_add(request):
     if 'user' in request.GET:
         try:

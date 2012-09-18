@@ -11,12 +11,12 @@
 	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px;">- Remove</a>
 {% elif profile_user|has_friend_request:request.user %}
 	<span style="color: #999; margin: 0px;" >Friend request pending.</span>
-{% elif profile_user == following %}
-	<a href="#" class="profile_btn">+ Add</a>
-	<a href="#" class="profile_btn">- Unfollow</a>
+{% elif profile_user|in_followers:request.user %}
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+	<a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
 {% else %}
 	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
-	<a href="#" class="profile_btn">+ Follow</a>
+	<a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >+ Follow</a>
 {% endif %}
 {% endblock %}
 

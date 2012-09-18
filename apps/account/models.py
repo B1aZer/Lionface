@@ -4,6 +4,21 @@ from django.db.models.signals import post_save
 from django.db.models.query import Q
 from post.tasks import AddFriendToFeed
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
+from itertools import chain
+
+FILTER_TYPE = (
+    ('F', 'Friend Feed'),
+    ('T', 'Tag Feed'),
+    ('P', 'Pages Feed'),
+    ('A', 'Public Feed'),
+)
+
+RELATIONSHIP_FOLLOWING = 1
+RELATIONSHIP_BLOCKED = 2
+RELATIONSHIP_STATUSES = (
+    (RELATIONSHIP_FOLLOWING, 'Following'),
+    (RELATIONSHIP_BLOCKED, 'Blocked'),
+)
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey('UserProfile', related_name='from_user')
@@ -30,19 +45,13 @@ class FriendRequest(models.Model):
     def decline(self):
         self.delete()
 
-FILTER_TYPE = (
-    ('F', 'Friend Feed'),
-    ('T', 'Tag Feed'),
-    ('P', 'Pages Feed'),
-    ('A', 'Public Feed'),
-)
-
 class UserProfile(User):
     # Logic is if a friend is in the 'friends' collection then they are verified.
     # If there is an active FriendRequest then it's still pending.
     friends = models.ManyToManyField('self', related_name='friends')
     photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
     filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
+    followers =  models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
 
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0
@@ -66,7 +75,11 @@ class UserProfile(User):
     def get_messages(self):
         from post.models import NewsItem
         #return NewsItem.objects.filter(post__user_to__in=self.friends.all()).exclude(post__user=self).order_by('date').reverse()
-        return NewsItem.objects.filter(user__in=self.friends.all()).exclude(post__user=self).order_by('date').reverse()
+        user_list = self.friends.all()
+        following = self.following.all()
+        user_list = list(set(list(chain(user_list,following))))
+        return NewsItem.objects.filter(user__in=user_list).exclude(post__user=self).order_by('date').reverse()
+
     def get_filters(self):
         filters = self.filters.split(',')
         if self.filters:
@@ -108,7 +121,26 @@ class UserProfile(User):
             self.useroptions_set.create(name=name,value=value)
     def new_messages(self):
         return self.message_to.filter(read=False).count()
-
+    def add_follower(self, person):
+        relationship, created = Relationship.objects.get_or_create(
+            from_user=self,
+            to_user=person)
+        return relationship
+    def add_following(self, person):
+        relationship, created = Relationship.objects.get_or_create(
+            from_user=person,
+            to_user=self)
+        return relationship
+    def in_followers(self,user):
+        if user in self.followers.all():
+            return True
+        else:
+            return False
+    def remove_following(self, user):
+        Relationship.objects.filter(
+                from_user=user,
+                to_user=self).delete()
+        return
 
 
     @models.permalink
@@ -119,6 +151,12 @@ class UserProfile(User):
         "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
     full_name = property(_get_full_name)
+
+class Relationship(models.Model):
+    from_user = models.ForeignKey(UserProfile, related_name='from_people')
+    to_user = models.ForeignKey(UserProfile, related_name='to_people')
+    date = models.DateTimeField(auto_now_add=True)
+
 
 class UserOptions(models.Model):
     name = models.CharField(max_length='100')

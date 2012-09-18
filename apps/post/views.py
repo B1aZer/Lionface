@@ -24,7 +24,6 @@ except ImportError:
 
 @login_required
 def feed(request, user_id = None):
-    #import pdb;pdb.set_trace()
     filters = request.user.filters.split(',')
     items = request.user.get_news()
     #news feed
@@ -32,7 +31,7 @@ def feed(request, user_id = None):
         user_id = request.user.id
         #items = request.user.get_messages().get_tagged_posts(tags)
         if 'F' in filters:
-            items = request.user.get_messages().remove_similar().remove_to_other()
+            items = request.user.get_messages().remove_similar().remove_to_other().get_public_posts(request.user)
         else:
             items = []
         tags = request.user.user_tag_set.all()
@@ -45,6 +44,7 @@ def feed(request, user_id = None):
     else:
         #show messages adressed to user
         items = items.filter(user=user_id)
+    #import pdb;pdb.set_trace()
     if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
         items = items.get_public_posts()
     return render_to_response(

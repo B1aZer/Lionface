@@ -175,6 +175,66 @@ function hookLinks() {
         }
         return false;
     });
+
+    $('.link-follow').unbind('click');
+    $('.link-follow').click(function() {
+        var data = $(this).metadata();
+        var $this = $(this);
+        if(data.user !== undefined) {
+            $this.unbind('click');
+            var $ohtml = $this.html();
+            $this.append('<div class="link_loader"></div>');
+
+            $.ajax('/account/follow/',{
+                type: 'GET',
+                data: 'user=' + encodeURIComponent(data.user),
+                success: function(data) {
+                    $this.html($ohtml);
+                    if(data.status == 'OK') {
+                        $this.html('- Unfollow');
+                        $this.removeClass('link-follow');
+                        $this.addClass('link-unfollow');
+                        hookLinks();
+                    }
+                },
+                error: function() {
+                    hookLinks();
+                    $this.html($ohtml);
+                }
+            });
+        }
+        return false;
+    });   
+
+    $('.link-unfollow').unbind('click');
+    $('.link-unfollow').click(function() {
+        var data = $(this).metadata();
+        var $this = $(this);
+        if(data.user !== undefined) {
+            $this.unbind('click');
+            var $ohtml = $this.html();
+            $this.append('<div class="link_loader"></div>');
+
+            $.ajax('/account/unfollow/',{
+                type: 'GET',
+                data: 'user=' + encodeURIComponent(data.user),
+                success: function(data) {
+                    $this.html($ohtml);
+                    if(data.status == 'OK') {
+                        $this.html('+ Follow');
+                        $this.removeClass('link-unfollow');
+                        $this.addClass('link-follow');
+                        hookLinks();
+                    }
+                },
+                error: function() {
+                    hookLinks();
+                    $this.html($ohtml);
+                }
+            });
+        }
+        return false;
+    });                
 }
 
 function HideContent(d) {
@@ -371,7 +431,7 @@ $(document).ready(function() {
     setInterval(function() {
         check_for_messages();
         check_for_notifications();
-    }, 30000);
+    }, 20000);
 
 
 
