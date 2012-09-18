@@ -37,7 +37,7 @@
 
 {% if request.user == profile_user %}
 {% else %}
-<div style="margin: 10px 0;"><a href="#" id="send_message" class="profile_nav" style="font-size: 9pt;">Send Message</a></div>
+<div style="margin: 10px 0;"><a href="#" id="send_message" class="profile_nav" style="font-size: 9pt;" onClick="HideContent('send_message'); return false;">Send Message</a></div>
 
 
 <form action="." method="post" class="send_message_form" style="display:none;">

@@ -17,13 +17,13 @@
             {% if notifications.has_previous %}
 			<td align="left" width="75"><a href="?page={{ notifications.previous_page_number }}" class="profile_nav nav_link">< Newer</a></td>
             {% else %}
-			<td align="left" width="75"><a href="javascript:;" class="" style="color:#999;">< Newer</a></td>
+			<td align="left" width="75"><a href="javascript:;" class="" style="color:#BBB; padding: 7px; cursor: default; text-decoration: none;">< Newer</a></td>
             {% endif %}
 			<td align="center" width="" style="color: #AAA; font-size: 7pt;">{{ notifications.number }} of {{ notifications.paginator.num_pages }}</td>
             {% if notifications.has_next %}
 			<td align="right" width="75"><a href="?page={{ notifications.next_page_number }}" class="profile_nav nav_link">Older ></a></td>
             {% else %}
-			<td align="right" width="75"><a href="javascript:;" class="" style="color:#999;">Older ></a></td>
+			<td align="right" width="75"><a href="javascript:;" class="" style="color:#BBB; padding: 7px; cursor: default; text-decoration: none;">Older ></a></td>
             {% endif %}
 		</tr></table></div>
 </div>
