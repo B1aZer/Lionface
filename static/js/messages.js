@@ -160,9 +160,6 @@ $(document).ready(function() {
                         }
                         alert("Message was not sent.");
                     }
-
-
-                    
                 }
         });
     });

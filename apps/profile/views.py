@@ -2,6 +2,7 @@ from django.http import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.template.loader import render_to_string
 
 from account.models import UserProfile
 from messaging.models import Messages
@@ -130,26 +131,37 @@ def related_users(request,username=None):
 
     if request.method == 'GET':
         data = {}
-        if 'friends' in request.GET:
+        users = []
+
+        if 'Friends' in request.GET and profile_user.check_visiblity('friend_list',request.user):
             friends = profile_user.friends.all()
+            users.extend(friends)
             data['html'] = [x.username for x in friends]
-            return HttpResponse(json.dumps(data), "application/json")
-        if 'following' in request.GET:
+        if 'Following' in request.GET and profile_user.check_visiblity('following_list',request.user):
             following = profile_user.following.all()
+            users.extend(following)
             data['html'] = [x.username for x in following]
-            return HttpResponse(json.dumps(data), "application/json")
-        if 'followers' in request.GET:
+        if 'Followers' in request.GET and profile_user.check_visiblity('follower_list',request.user):
             followers = profile_user.followers.all()
+            users.extend(followers)
             data['html'] = [x.username for x in followers]
+
+        if len(data) > 0 and 'ajax' in request.GET:
+            data['html'] = render_to_string('profile/related_users.html',
+                {
+                    'current_user' : profile_user,
+                    'users' : list(set(users)),
+                }, context_instance=RequestContext(request))
             return HttpResponse(json.dumps(data), "application/json")
 
-    following = profile_user.following.all()
+
 
     return render_to_response(
         'profile/related.html',
         {
             'profile_user' : profile_user,
-            'following' : following,
+            'current_user' : profile_user,
+            'users' : users,
         },
         RequestContext(request)
     )

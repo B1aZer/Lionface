@@ -3,10 +3,14 @@
 
 {% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
 {% block content_middle %}
-{% if profile_user == user %}
-{{ user|show_friend_count }}
-<span style="color: transparent;">| |</span> {{ user.followers.count }} Follower{{ user.followers.count|pluralize }}
-<span style="color: transparent;">| |</span> {{ user.following.count }} Following
+{% if profile_user|check_friends_visibility:request.user %}
+<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" >{{ profile_user|show_friend_count }}</a>
+{% endif %}
+{% if profile_user|check_follower_visibility:request.user %}
+<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Followers" >{{ profile_user.followers.count }} Follower{{ profile_user.followers.count|pluralize }}</a>
+{% endif %}
+{% if profile_user|check_following_visibility:request.user %}
+<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Following" >{{ profile_user.following.count }} Following</a>
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}

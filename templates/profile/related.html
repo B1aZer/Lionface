@@ -31,9 +31,15 @@
     class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;"></div>
 
     <div style="position: relative; left: 0px; z-index: 100;">
-    <a href="javascript:;" class="feed_type filter related" >Friend</a>
+    {% if profile_user|check_friends_visibility:request.user %}
+    <a href="javascript:;" class="feed_type filter related" >Friends</a>
+    {% endif %}
+    {% if profile_user|check_following_visibility:request.user %}
     <a href="javascript:;" class="feed_type filter related" >Following</a>
+    {% endif %}
+    {% if profile_user|check_follower_visibility:request.user %}
     <a href="javascript:;" class="feed_type filter related" >Followers</a>
+    {% endif %}
 	</div>   
 
 {% endblock %}
@@ -41,11 +47,7 @@
 {% block right_col %}
 <div id="related_users" style="padding: 10px; position: relative; left: 40px;">
 
-    {% for user in following %}
-
-    {{ user|format_result:request.user }}
-
-    {% endfor %}
+    {% include "profile/related_users.html" %}
 
 </div>
 

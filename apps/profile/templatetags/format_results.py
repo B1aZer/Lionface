@@ -88,3 +88,15 @@ def smileys(value):
 def check_option(user,name):
     return user.check_option(name)
 
+@register.filter(name='check_friends_visibility')
+def check_friends_visibility(user,current):
+    return user.check_visiblity('friend_list',current)
+
+@register.filter(name='check_follower_visibility')
+def check_follower_visibility(user,current):
+    return user.check_visiblity('follower_list',current)
+
+@register.filter(name='check_following_visibility')
+def check_following_visibility(user,current):
+    return user.check_visiblity('following_list',current)
+

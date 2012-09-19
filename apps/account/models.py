@@ -132,6 +132,9 @@ class UserProfile(User):
             else:
                 visible = True
 
+        if self == user:
+            visible = True
+
         return visible
     def set_option(self,name,value):
         name = "option_%s" % name

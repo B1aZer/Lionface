@@ -9,3 +9,6 @@ tags
 wrong image in template )found)
 ###
 remove messages (privacy)
+###temp
+visiblity for mess(?) is wrong for user = self
+
