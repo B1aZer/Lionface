@@ -5,8 +5,8 @@
 {% block content_middle %}
 {% if profile_user == user %}
 {{ user|show_friend_count }}
-| {{ user.followers.count }} follower{{ user.followers.count|pluralize }}
-| {{ user.following.count }} following
+<span style="color: transparent;">| |</span> {{ user.followers.count }} Follower{{ user.followers.count|pluralize }}
+<span style="color: transparent;">| |</span> {{ user.following.count }} Following
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}
