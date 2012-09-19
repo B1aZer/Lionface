@@ -1,5 +1,5 @@
 from django.http import *
-from messaging.models import Messages
+from messaging.models import Messaging
 from notification.models import Notification
 
 try:
@@ -10,7 +10,7 @@ except ImportError:
 
 def messages_check(request):
     data = {'status':'ok'}
-    new_messages = Messages.objects.filter(user_to = request.user, read=False).count()
+    new_messages = Messaging.objects.filter(user_to = request.user, read=False).count()
 
     data['mess'] = new_messages
 

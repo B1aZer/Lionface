@@ -8,8 +8,8 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Messages'
-        db.create_table('messaging_messages', (
+        # Adding model 'Messaging'
+        db.create_table('messaging_messaging', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['account.UserProfile'])),
             ('user_to', self.gf('django.db.models.fields.related.ForeignKey')(related_name='message_to', to=orm['account.UserProfile'])),
@@ -17,18 +17,26 @@ class Migration(SchemaMigration):
             ('content', self.gf('django.db.models.fields.TextField')()),
             ('read', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal('messaging', ['Messages'])
+        db.send_create_signal('messaging', ['Messaging'])
 
 
     def backwards(self, orm):
-        # Deleting model 'Messages'
-        db.delete_table('messaging_messages')
+        # Deleting model 'Messaging'
+        db.delete_table('messaging_messaging')
 
 
     models = {
+        'account.relationship': {
+            'Meta': {'object_name': 'Relationship'},
+            'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'from_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'from_people'", 'to': "orm['account.UserProfile']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'to_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'to_people'", 'to': "orm['account.UserProfile']"})
+        },
         'account.userprofile': {
             'Meta': {'object_name': 'UserProfile', '_ormbases': ['auth.User']},
             'filters': ('django.db.models.fields.CharField', [], {'default': "'F'", 'max_length': "'10'"}),
+            'followers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'following'", 'symmetrical': 'False', 'through': "orm['account.Relationship']", 'to': "orm['account.UserProfile']"}),
             'friends': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'friends_rel_+'", 'to': "orm['account.UserProfile']"}),
             'photo': ('django.db.models.fields.files.ImageField', [], {'default': "'images/noProfilePhoto.png'", 'max_length': '100'}),
             'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
@@ -69,8 +77,8 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'messaging.messages': {
-            'Meta': {'object_name': 'Messages'},
+        'messaging.messaging': {
+            'Meta': {'object_name': 'Messaging'},
             'content': ('django.db.models.fields.TextField', [], {}),
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

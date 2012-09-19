@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from .forms import MessageForm
-from .models import Messages
+from .models import Messaging
 from account.models import UserProfile
 from django.db.models import Count, Max
 from django.db.models import Q
@@ -26,12 +26,12 @@ def messages(request):
             user_to_id = form.cleaned_data['user_id']
             user_to = UserProfile.objects.get(id=int(user_to_id))
             content = form.cleaned_data['content']
-            mess = Messages(user=request.user,user_to=user_to,content=content)
+            mess = Messaging(user=request.user,user_to=user_to,content=content)
             send = mess.save()
             form = MessageForm()
 
-    messages_in = Messages.objects.filter(user_to=request.user).order_by('date')
-    messages_out = Messages.objects.filter(user=request.user).order_by('date')
+    messages_in = Messaging.objects.filter(user_to=request.user).order_by('date')
+    messages_out = Messaging.objects.filter(user=request.user).order_by('date')
     #adm = UserProfile.objects.filter(id=2).annotate(num_mess_to=Count('message_to'),last_date=Max('message_to__date'))
     #import pdb;pdb.set_trace()
     users = []
@@ -40,27 +40,27 @@ def messages(request):
     for message in messages_in:
         if not message.user in users:
             users.append(message.user)
-            mess_sent = Messages.objects.filter(user_to=message.user, user = user).count()
-            mess_recv = Messages.objects.filter(user=message.user, user_to = user).count()
-            mess_new  = Messages.objects.filter(user=message.user, user_to = user, read=False).count()
+            mess_sent = Messaging.objects.filter(user_to=message.user, user = user).count()
+            mess_recv = Messaging.objects.filter(user=message.user, user_to = user).count()
+            mess_new  = Messaging.objects.filter(user=message.user, user_to = user, read=False).count()
             mess_all = int(mess_sent) + int(mess_recv)
             link = message.user.get_absolute_url()
             image = message.user.photo
             id_user = message.user.id
-            last_mess = Messages.objects.filter(Q(user_to=message.user, user = user) | Q(user=message.user, user_to = user)).latest('date').date
+            last_mess = Messaging.objects.filter(Q(user_to=message.user, user = user) | Q(user=message.user, user_to = user)).latest('date').date
             names.append({ 'name':message.user.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new,
                 'link':link, 'image':image, 'id': id_user, 'last_mess' : last_mess})
     for message in messages_out:
         if not message.user_to in users:
             users.append(message.user_to)
-            mess_sent = Messages.objects.filter(user_to=message.user_to, user = user).count()
-            mess_recv = Messages.objects.filter(user=message.user_to, user_to = user).count()
-            mess_new  = Messages.objects.filter(user=message.user_to, user_to = user, read=False).count()
+            mess_sent = Messaging.objects.filter(user_to=message.user_to, user = user).count()
+            mess_recv = Messaging.objects.filter(user=message.user_to, user_to = user).count()
+            mess_new  = Messaging.objects.filter(user=message.user_to, user_to = user, read=False).count()
             mess_all = int(mess_sent) + int(mess_recv)
             link = message.user_to.get_absolute_url()
             image = message.user_to.photo
             id_user = message.user_to.id
-            last_mess = Messages.objects.filter(Q(user_to=message.user_to, user = user) | Q(user=message.user_to, user_to = user)).latest('date').date
+            last_mess = Messaging.objects.filter(Q(user_to=message.user_to, user = user) | Q(user=message.user_to, user_to = user)).latest('date').date
             names.append({ 'name':message.user_to.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user, 'last_mess' : last_mess})
 
     #sorting by last message date
@@ -103,8 +103,8 @@ def show(request):
     if request.method == 'POST' and 'user_id' in request.POST:
         user = UserProfile.objects.get(id=int(request.POST['user_id']))
 
-        messages = Messages.objects.filter(Q(user_to=request.user, user = user) | Q(user=request.user, user_to = user)).order_by('date')
-        messages_to = Messages.objects.filter(user_to=request.user).order_by('date')
+        messages = Messaging.objects.filter(Q(user_to=request.user, user = user) | Q(user=request.user, user_to = user)).order_by('date')
+        messages_to = Messaging.objects.filter(user_to=request.user).order_by('date')
         for mess in messages_to:
             mess.mark_read()
 

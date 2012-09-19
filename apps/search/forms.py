@@ -15,8 +15,9 @@ class SearchForm(ModelSearchForm):
                 res = res.exclude(username=user.username)
             # TODO: Privacy settings will come in here too at some point.
             for one_user in res:
-                if not one_user.object.userprofile.check_visiblity("search",user):
-                    res = res.exclude(username=one_user.username)
+                if hasattr(one_user.object, 'userprofile'):
+                    if not one_user.object.userprofile.check_visiblity("search",user):
+                        res = res.exclude(username=one_user.username)
         return res
 
 

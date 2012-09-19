@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from account.models import UserProfile
-from messaging.models import Messages
+from messaging.models import Messaging
 from notification.models import Notification
 from .forms import *
 from messaging.forms import MessageForm
@@ -66,7 +66,7 @@ def profile(request, username=None):
             if form_mess.is_valid():
                 user_to = profile_user
                 content = form_mess.cleaned_data['content']
-                mess = Messages(user=request.user,user_to=user_to,content=content)
+                mess = Messaging(user=request.user,user_to=user_to,content=content)
                 mess.save()
                 return HttpResponseRedirect(request.path)
 

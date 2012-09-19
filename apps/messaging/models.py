@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 
-class Messages(models.Model):
+class Messaging(models.Model):
     user = models.ForeignKey(UserProfile)
     user_to = models.ForeignKey(UserProfile, related_name='message_to')
     date = models.DateTimeField(auto_now_add=True)
@@ -31,5 +31,5 @@ class Messages(models.Model):
         else:
             send = True
         if (send):
-            super(Messages, self).save(*args, **kwargs)
+            super(Messaging, self).save(*args, **kwargs)
         return send

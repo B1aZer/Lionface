@@ -13,9 +13,9 @@ def format_list(messages,user):
     for message in messages:
         if not message.user in users:
             users.append(message.user)
-            mess_sent = Messages.objects.filter(user_to=message.user, user = user).count()
-            mess_recv = Messages.objects.filter(user=message.user, user_to = user).count()
-            mess_new  = Messages.objects.filter(user=message.user, user_to = user, read=False).count() 
+            mess_sent = Messaging.objects.filter(user_to=message.user, user = user).count()
+            mess_recv = Messaging.objects.filter(user=message.user, user_to = user).count()
+            mess_new  = Messaging.objects.filter(user=message.user, user_to = user, read=False).count() 
             mess_all = int(mess_sent) + int(mess_recv)
             link = message.user.get_absolute_url()
             image = message.user.photo
