@@ -47,8 +47,8 @@ def feed(request, user_id = None):
         if int(request.user.id) <> int(user_id):
             items = items.get_public_posts(request.user)
     #import pdb;pdb.set_trace()
-    if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
-        items = items.get_public_posts()
+    #if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
+        #items = items.get_public_posts()
 
     return render_to_response(
         'post/_feed.html',
