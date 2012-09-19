@@ -100,3 +100,7 @@ def check_follower_visibility(user,current):
 def check_following_visibility(user,current):
     return user.check_visiblity('following_list',current)
 
+@register.filter(name='check_message_sending')
+def check_message_sending(user,current):
+    return user.check_visiblity('send_message',current)
+

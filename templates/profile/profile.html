@@ -34,8 +34,13 @@
 <div  onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
 	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;">
 		{% if request.user == profile_user %}
-	<div style="position: relative; top: 170px; display: block; width: 200px;" align="center">
-		<a id="upload_picture" class="upload" style="display:none;">Upload</a></div>{% endif %}</div>
+        <div style="position: relative; top: 150px; display: block; width: 200px;" align="center">
+            <a id="upload_picture" class="upload" style="display:none;">Upload</a>
+            <a href="{% url profile.views.reset_picture %}" id="reset_picture" class="upload" style="display:none; color:#555;">Reset</a>
+        </div>
+        {% endif %}
+    
+</div>
 
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
     {% csrf_token %}
@@ -47,7 +52,9 @@
 
 {% if request.user == profile_user %}
 {% else %}
+{% if profile_user|check_message_sending:request.user %}
 <div style="margin: 10px 0;"><a href="#" id="send_message" class="profile_nav" style="font-size: 9pt;" onClick="HideContent('send_message'); return false;">Send Message</a></div>
+{% endif %}
 
 
 <form action="." method="post" class="send_message_form" style="display:none;">

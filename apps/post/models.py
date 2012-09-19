@@ -127,7 +127,7 @@ class CustomQuerySet(QuerySet):
         if not user:
             return [x for x in self if x.get_privacy == 'P']
         else:
-            return [x for x in self if x.get_privacy == 'P' or (x.get_privacy == 'F' and x.post.user.has_friend(user))]
+            return [x for x in self if x.get_privacy == 'P' or (x.get_privacy == 'F' and x.post.user.has_friend(user)) or x.get_privacy == '']
     def get_tagged_posts(self,tags):
         #import pdb;pdb.set_trace()
         tagged_posts = [x for x in self if x.post.tags.filter(name__in=tags)]

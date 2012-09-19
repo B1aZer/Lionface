@@ -6,14 +6,18 @@ $(function() {
       $('.upload_form').show(); 
     });  
 
+    $("#reset_picture").click(function(event){
+      event.stopPropagation();
+    });
+
     $("#send_message").click(function(event){
       event.stopPropagation();
       $('.send_message_form').show(); 
     });
 
     $('.noPhoto').hover(
-            function(){$('.upload').slideDown(500);},
-            function(){$('.upload').slideUp(500);});
+            function(){$('.upload').show();},
+            function(){$('.upload').hide();});
 
     $("#postbox .postcontent").focus(function() {
         //$("#postbox .postoptions").slideDown();

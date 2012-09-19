@@ -1,6 +1,6 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
@@ -206,3 +206,8 @@ def filter_remove(request):
                     request.user.save()
     return HttpResponse(json.dumps(data), "application/json")
 
+@login_required
+def reset_picture(request):
+    request.user.photo = 'images/noProfilePhoto.png'
+    request.user.save()
+    return redirect('profile.views.profile')

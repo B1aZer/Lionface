@@ -44,9 +44,12 @@ def feed(request, user_id = None):
     else:
         #show messages adressed to user
         items = items.filter(user=user_id)
+        if int(request.user.id) <> int(user_id):
+            items = items.get_public_posts(request.user)
     #import pdb;pdb.set_trace()
     if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
         items = items.get_public_posts()
+
     return render_to_response(
         'post/_feed.html',
         {
@@ -176,7 +179,7 @@ def delete_own_comment(request, message_id):
     data = {'status': 'OK'}
     comment = get_object_or_404(comments.get_model(), pk=message_id,
             site__pk=settings.SITE_ID)
-    if comment.user.userprofile == request.user:
+    if comment.user.userprofile == request.user or comment.content_object.user == request.user:
         comment.is_removed = True
         comment.save()
         data['status'] = 'removed'

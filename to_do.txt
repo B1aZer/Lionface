@@ -1,14 +1,10 @@
 friends did not see own posts after unfrending.
 ##########notf##########
 nullify  notification count
-strabge notif on server
-###
-celery messages (admin)
 ###search###
 tags
 wrong image in template )found)
-###
-remove messages (privacy)
+none in template (exclude)
 ###temp
 visiblity for mess(?) is wrong for user = self
 
