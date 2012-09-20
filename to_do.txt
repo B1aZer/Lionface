@@ -1,3 +1,8 @@
+##next###
+privacy add friend
+notif on following
+prevent new posts
+###
 friends did not see own posts after unfrending.
 ##########notf##########
 nullify  notification count
@@ -9,3 +14,4 @@ none in template (exclude)
 visiblity for mess(?) is wrong for user = self
 ###notf
 remove dated notif's
+

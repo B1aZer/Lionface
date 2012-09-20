@@ -106,6 +106,10 @@ function load_messages(user_id, sort) {
                     }
                     //revert btn
                     $('#revert_btn').show();
+                    //updating messages
+                    $('.user_id_'+user_id).find('.ms').html(data.ms+"s");
+                    $('.user_id_'+user_id).find('.mr').html(data.mr+"r");
+                    $('.user_id_'+user_id).find('.tm').html(parseInt(data.mr)+parseInt(data.ms)+"m");
                     //adding class if we have desc in db
                     if (data.sort == 'desc' && (!($('#revert_btn').hasClass('desc')))) {
                         $('#revert_btn').addClass('desc');

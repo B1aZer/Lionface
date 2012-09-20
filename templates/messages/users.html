@@ -5,7 +5,7 @@
         <div style="position: relative; top: -10px;">
             {% for user in messages %}
             <div style="border: 1px solid #EEE; border-width: 1px 0 0 0;">
-                <div class="message {user: '{{ user.id }}' }">
+                <div class="message user_id_{{ user.id }} {user: '{{ user.id }}' }">
                     <a href="{{ user.link }}">
                         <div class="message_thumbnail" style="background-image: url('/{{ user.image|format_image:request.get_full_path }}'); background-size: 25px 25px;">
                         </div>
@@ -13,9 +13,9 @@
                     <a id="name_link_{{ user.id }}" href="{{ user.link }}" {% if user.mess_new %} style="color: #900;" {% endif %}>{{ user.name }}</a><br />
                     <span style="font-size: 8pt; color: #999;">
                         {% if user.mess_new %}<span id="new_mess_{{ user.id }}"><span style="color: #900; border: 1px solid #900; border-width: 0 0 1px 0; padding: 1px 0;">{{ user.mess_new }} new</span> <span style="color: transparent;">|</span></span>{% endif %} 
-                        <span title=" Total Messages " style="cursor: default;">{{ user.mess_all }}m</span> <span style="color: transparent;">|</span> 
-                        <span title=" Messages Sent " style="cursor: default;">{{ user.mess_sent }}s</span> <span style="color: transparent;">|</span> 
-                        <span title=" Messages Received " style="cursor: default;">{{ user.mess_recv }}r</span></span>
+                        <span class="tm" title=" Total Messages " style="cursor: default;">{{ user.mess_all }}m</span> <span style="color: transparent;">|</span> 
+                        <span class="ms" title=" Messages Sent " style="cursor: default;">{{ user.mess_sent }}s</span> <span style="color: transparent;">|</span> 
+                        <span class="mr" title=" Messages Received " style="cursor: default;">{{ user.mess_recv }}r</span></span>
 
                 </div>
             </div>

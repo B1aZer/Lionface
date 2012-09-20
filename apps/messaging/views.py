@@ -130,4 +130,7 @@ def show(request):
                 }, context_instance=RequestContext(request))
         data['sort'] = request.user.check_option('reverse') or 'asc'
 
+        data['mr'] = Messaging.objects.filter(user_to=request.user, user = user).count()
+        data['ms'] = Messaging.objects.filter(user=request.user, user_to = user).count() 
+
     return HttpResponse(json.dumps(data), "application/json")
