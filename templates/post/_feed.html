@@ -36,9 +36,9 @@
 				<a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
                 {% if item.get_privacy == "P" %}
-                <span title="Privacy Settings: Public">Public</span>
+                <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>
                 {% elif item.get_privacy == "F" %}
-                <span title="Privacy Settings: Friends Only">Friends</span>
+                <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Friends Only">Friends</span></a>
                 {% else %}
                 {% endif %}
             {% else %}
@@ -46,9 +46,9 @@
                 <a href="javascript:del_post_single({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
                 {% if item.type == "P" %}
-                <span title="Privacy Settings: Public">Public</span>
+                <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>
                 {% elif item.type == "F" %}
-                <span title="Privacy Settings: Friends Only">Friends</span>
+                <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Friends Only">Friends</span></a>
                 {% else %}
                 {% endif %}   
             {% endif %}

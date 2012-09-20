@@ -198,7 +198,8 @@ class NewsItem(models.Model):
         return self.date
 
 def update_news_feeds(sender, instance, created, **kwargs):
-    UpdateNewsFeeds.delay(instance.get_inherited())
+    if created:
+        UpdateNewsFeeds.delay(instance.get_inherited())
 post_save.connect(update_news_feeds, sender=Post)
 post_save.connect(update_news_feeds, sender=FriendPost)
 post_save.connect(update_news_feeds, sender=ContentPost)

@@ -20,11 +20,13 @@ def notifications(request):
     result_list = list(chain(list1, list2))
 
     #remove deleted content posts:
+    """
     for item in result_list:
         if item.type == "PP":
             news_item_in = item.content_object.newsitem_set.all()
             if not news_item_in:
                 result_list.remove(item)
+    """
 
     paginator = Paginator(result_list, 7)
     result_list = paginator.page(1)

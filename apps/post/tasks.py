@@ -6,9 +6,6 @@ class UpdateNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
         from models import NewsItem, FriendPost, SharePost, ContentPost
         #rdb.set_trace()
-        #if user: users = [user]
-        #else: users = post.get_involved()
-        #this should be checked
         if isinstance(post, FriendPost):
             ni, created = NewsItem.objects.get_or_create(user=post.user, post=post)
             ni, created = NewsItem.objects.get_or_create(user=post.friend, post=post)
@@ -18,7 +15,6 @@ class UpdateNewsFeeds(Task):
             ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
         else:
             ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
-
 
 tasks.register(UpdateNewsFeeds)
 
@@ -37,9 +33,6 @@ class DeleteNewsFeeds(Task):
                 else:
                     if post_news[0].user == user:
                         post_news.delete()
-        #post_obj = Post.objects.filter(id=post_wrapper.post.id)
-        #if post_obj:
-        #    post_obj.delete()
 
 tasks.register(DeleteNewsFeeds)
 

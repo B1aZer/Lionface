@@ -2,6 +2,7 @@ from django import template
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib.auth.models import User
+from django.utils.html import escape
 from tags.models import *
 from smileys.models import Smiley
 import re
@@ -103,4 +104,10 @@ def check_following_visibility(user,current):
 @register.filter(name='check_message_sending')
 def check_message_sending(user,current):
     return user.check_visiblity('send_message',current)
+
+@register.filter(name='escaping')
+def escaping(value):
+    return escape(value)
+
+
 

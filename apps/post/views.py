@@ -186,8 +186,6 @@ def delete_own_comment(request, message_id):
         data['id'] = message_id
     return HttpResponse(json.dumps(data), "application/json")
 
-
-
 @login_required
 def delete(request, post_id = None):
     data = {'status': 'OK'}
@@ -226,6 +224,21 @@ def share(request, post_id = None):
             post_type.save()
             post.save()
     return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def toggle_privacy(request):
+    data = {'status': 'FAIL'}
+    if request.method == 'POST' and 'post_id' in request.POST and 'type' in request.POST:
+        post_type = request.POST['type']
+        post = get_object_or_404(ContentPost, id=int(request.POST['post_id']))
+        if post_type == 'F':
+            post.type = 'P'
+        else:
+            post.type = 'F'
+        if post.user == request.user:
+            post.save()
+            data['status'] = 'OK'
+    return  HttpResponse(json.dumps(data), "application/json")
 
 @login_required
 def test(request):

@@ -400,11 +400,8 @@ function check_for_notifications(){
     
         }
     });
-
-    
-
-
 } 
+
 
 $(document).ready(function() {
     hookLinks();
@@ -436,6 +433,37 @@ $(document).ready(function() {
         check_for_notifications();
     }, 20000);
 
+    $(document).on('click','.toggle_privacy', function() {
+        var self = $(this);
+        var post = $(this).parents('.result');
+        var data = $(this).parents('.result').metadata();
+        var post_type = 'F';
+        if ($(this).html() == 'Public') {
+            post_type = 'P';
+        }
+
+        if (data.type == "content post") {
+            var post_id = post.attr("id").replace( /^\D+/g, '');
+            var send_data = {'post_id':post_id,'type':post_type};
+            url = '/posts/toggle_privacy/';
+            make_request({
+                url:url,
+                data:send_data,
+                callback:function (data_back) {
+                    if (data_back.status == 'OK') {
+                        if (post_type == 'F') {
+                            self.html('Public');
+                            self.attr('title','Privacy Settings: Public');
+                        }
+                        else {
+                            self.html('Friends');
+                            self.attr('title','Privacy Settings: Friends Only');
+                        }
+                    }
+                }
+            });
+        }
+    });
 
 
 
