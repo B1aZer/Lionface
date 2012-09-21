@@ -1,10 +1,7 @@
 ##next###
-notif on following
-prevent new posts
+prevent new posts (not right ly)
 ###
 friends did not see own posts after unfrending.
-##########notf##########
-nullify  notification count
 ###search###
 tags
 wrong image in template )found)

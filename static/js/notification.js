@@ -69,4 +69,10 @@ $(document).ready(function(){
         return false;
 
     });           
+
+    $(document).on('click',".notification", function(e) {
+        if ($(this).find('.new_notification').length) {
+            $(this).find('.new_notification').removeClass('new_notification');
+        }
+    });
 }); 

@@ -108,7 +108,7 @@ def clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
     return _render(parser.parseFragment(text)).strip()
 
 
-def linkify(text, nofollow=True, target=None, title=False, filter_url=identity,
+def linkify(text, nofollow=True, target=None, title=True, filter_url=identity,
             filter_text=identity, skip_pre=False, parse_email=False,
             tokenizer=HTMLSanitizer):
     """Convert URL-like strings in an HTML fragment to links.
@@ -213,7 +213,7 @@ def linkify(text, nofollow=True, target=None, title=False, filter_url=identity,
                     if target is not None:
                         node.attributes['target'] = target
                     if title is not None:
-                        node.attributes['title'] = node.attributes['href']
+                        node.attributes['title'] = title
                     href = node.attributes['href']
                     node.attributes['href'] = filter_url(href)
             elif skip_pre and node.name == 'pre':
@@ -249,7 +249,7 @@ def linkify(text, nofollow=True, target=None, title=False, filter_url=identity,
             attribs.append('target="%s"' % target)
 
         if title is not None:
-            attribs.append('title="%s"' % title)
+            attribs.append('title="%s"' % urlparse.urlparse(href).netloc)
 
         return repl % ('(' * open_brackets,
                        filter_url(href), ' '.join(attribs), filter_text(url),

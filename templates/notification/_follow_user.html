@@ -1,4 +1,4 @@
-<li class="follow_user">
+<li class="follow_user notification">
   <div style="padding: 15px; background: transparent; cursor: default;" class="link-output">
       <a {% if notification.new_one %} class="new_notification" {% else %} {% endif %} href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a><br /><span style="color: #395;">started following you.</span>
   </div>

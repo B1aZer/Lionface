@@ -90,6 +90,11 @@ a.filterON:hover {
 	color: #BBB;
 }
 
+.add_tag {
+    display:inline-block;
+    width:100%;
+}
+
 /* Profile */
 
 a.post:link, a.post:active, a.post:visited, .submit_comment, .send { 

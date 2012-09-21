@@ -58,8 +58,6 @@ class FriendPost(Post):
         return ""
 
 
-
-
 class ContentPost(Post):
     content = models.TextField()
     type = models.CharField(max_length=1)
@@ -75,7 +73,7 @@ class ContentPost(Post):
         #import pdb;pdb.set_trace()
 
         self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
-        self.content = bleach.linkify(self.content,target='_top',title=True)
+        self.content = bleach.linkify(self.content,target='_blank')
 
         return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
@@ -99,6 +97,7 @@ class ContentPost(Post):
     def privacy(self):
         return self.type
 
+
 class SharePost(Post):
     content = models.TextField(null=True)
     id_news = models.IntegerField(default=0)
@@ -119,7 +118,6 @@ class SharePost(Post):
         #import pdb;pdb.set_trace()
         return mark_safe("""<a href='%s'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
                             <div class='share_content'>%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
-
 
 
 class CustomQuerySet(QuerySet):
