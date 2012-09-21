@@ -20,10 +20,14 @@
 {% elif profile_user|has_friend_request:request.user %}
 	<span style="color: #999; margin: 0px;" >Friend request pending.</span>
 {% elif profile_user|in_followers:request.user %}
+    {% if profile_user|check_friend_request:request.user %} 
 	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+    {% endif %}
 	<a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
 {% else %}
+    {% if profile_user|check_friend_request:request.user %} 
 	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+    {% endif %}
     {% if profile_user|check_following:request.user %} 
 	<a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >+ Follow</a>
     {% endif %}

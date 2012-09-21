@@ -6,6 +6,7 @@
     <div id="profile_top">
         <div class="left">{% block content_title %}{{ user.first_name }} {{ user.last_name }} | Messages{% endblock %}</div>
         <div class="right" style="color: #555;">{% block content_subtitle %}
+            <a href="#" id="show_older" class="profile_nav" style="margin: 0; position: relative; left: 2px;">Show Older Messages</a>
             <a href="#" id="revert_btn" class="profile_nav" style="margin: 0; position: relative; left: 2px;">Reverse</a>
             <a href="{% url messaging.views.messages %}" class="profile_nav" style="margin: 0; position: relative; left: 2px;">+ Compose</a>{% endblock %}</div>
     </div>

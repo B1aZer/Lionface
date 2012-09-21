@@ -268,7 +268,7 @@ function share_post(elem) {
                 alert("shared");
             },
             error: function() {
-                alert('Unable to delete data.');
+                alert('Unable to share post.');
             }
         });    
 

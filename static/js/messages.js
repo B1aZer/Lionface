@@ -45,15 +45,28 @@ function change_form() {
     $('.small_form').addClass('form_changed');
 }
 
-function load_messages(user_id, sort) {
+function load_messages(user_id, sort, page) {
 
         if (!(user_id)) {
             return;
+        }
+
+        if (!(page)) {
+            if ($('body').data('messages')) {
+                page = $('body').data('messages').page;
+            }
+            else {
+                page = 1;
             }
 
-         if (!(sort)) {
+        }
+
+        if (!(sort)) {
             sort = '';
-            } 
+        } 
+
+        //saving some values
+        $('body').data('messages', { user_id: user_id, sort: sort, page: page });
 
         url = "/messages/show/";
 
@@ -61,12 +74,6 @@ function load_messages(user_id, sort) {
         { 
             url = '/lionface' +  url;
         }  
-        /*
-        if (!($('.message_feed').length)) {
-            var elem = $('<div class="message_feed"></div>');
-            $('.right_col').prepend(elem);
-        }
-        */
         
         //loading
         var old_data = $('.right_col').html();
@@ -79,6 +86,7 @@ function load_messages(user_id, sort) {
                 data: {
                     user_id : user_id,
                     sort : sort,
+                    page : page
                 },
                 success: function(data) {
                     //remove loading
@@ -96,6 +104,12 @@ function load_messages(user_id, sort) {
                         }
                         var new_elem = $('<div class="message_feed"></div>').html(data.html);
                         $('.right_col').append(new_elem);
+                        if ($('#show_older').length) {
+                            var old_btn = $('#show_older').clone();
+                            $('#show_older').remove();
+                            $('.right').prepend(old_btn);
+                            old_btn.removeClass('bottom'); 
+                        }
                     }
                     else {
                         if ($('.message_feed').length) {
@@ -103,10 +117,15 @@ function load_messages(user_id, sort) {
                         }
                         var new_elem = $('<div class="message_feed"></div>').html(data.html);
                         $('.right_col').prepend(new_elem);
+                        //older btn
+                        var old_btn = $('#show_older').clone();
+                        $('#show_older').remove();
+                        $('.message_feed').after(old_btn);
+                        old_btn.addClass('bottom');
                     }
                     //revert btn
                     $('#revert_btn').show();
-                    //updating messages
+                    //updating messages count
                     $('.user_id_'+user_id).find('.ms').html(data.ms+"s");
                     $('.user_id_'+user_id).find('.mr').html(data.mr+"r");
                     $('.user_id_'+user_id).find('.tm').html(parseInt(data.mr)+parseInt(data.ms)+"m");
@@ -118,9 +137,34 @@ function load_messages(user_id, sort) {
                     change_form();
                     //remove new color
                     $('#name_link_'+user_id).attr('style',''); 
-                    $('#new_mess_'+user_id).hide(); 
+                    $('#new_mess_'+user_id).remove(); 
+                    //nullify new mess count
+                    if ((!($('.new_flag').length)) && $('#messages_id_notif span').length) {
+                        $('#messages_id_notif').find('span').remove();
+                    }
                     //autosize
                     $('#id_content').autosize(); 
+                    //scroll to last message
+                    if (sort == 'desc' || data.sort == 'desc') {}
+                    else {
+                        if ($('.mess :last').length) {
+                            if (window.innerHeight <= $('.mess :last').offset().top) {
+                                $('html, body').animate({
+                                         scrollTop: $('.mess :last').offset().top,
+                                     }, 500);
+                            }
+                        }
+                    }
+                    //overwriting some values
+                    $('body').data('messages').page = data.page;
+                    $('body').data('messages').nextpage = data.nextpage;
+                    //older btn
+                    if ($('body').data('messages').nextpage != $('body').data('messages').page) {
+                        $('#show_older').show();
+                    }
+                    else {
+                        $('#show_older').hide();
+                    }
                 },
                 error: function() {
                     alert('Unable to retrieve data.');
@@ -136,6 +180,7 @@ $(document).ready(function() {
     $('#id_content').autosize(); 
 
     $('#revert_btn').hide();
+    $('#show_older').hide();
 
     $('#send_button').live('click',function() {
         /*$('#message_form').submit();*/
@@ -151,7 +196,7 @@ $(document).ready(function() {
                     $("#message_form").html(out);
                     if ($('.success').length) {
                         $('.success').parent().remove();
-                        load_messages(user_id);
+                        load_messages(user_id,false,1);
                     }
                     else {
                         if (check) {
@@ -176,11 +221,16 @@ $(document).ready(function() {
             return
             }
         var meta = $(this).metadata();
-        load_messages(meta.user);
+        load_messages(meta.user,false,1);
     });
 
     $('#revert_btn').live('click',function() {
         if ($('.message_feed').length) {
+            if ($('body').data('messages').page) {
+                var page_num = $('body').data('messages').page;
+            }else{
+                page_num = false;
+            }
             if ($(this).hasClass('desc')) {
                 load_messages($('#id_user_id').val(),'asc');
                 $(this).removeClass('desc');
@@ -208,6 +258,13 @@ $(document).ready(function() {
 
         return false;
 
+    });
+
+    $(document).on('click', '#show_older', function(e) { 
+        e.preventDefault();
+        if ($('body').data('messages').nextpage != $('body').data('messages').page) {
+            load_messages($('body').data('messages').user_id,false,$('body').data('messages').nextpage);
+        }
     });
 
 })

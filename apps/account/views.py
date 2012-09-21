@@ -53,7 +53,6 @@ def login(request, template_name='public/home.html'):
         RequestContext(request)
     )
 
-
 def home(request):
     # If the user isn't signed in, forward to the public view.
     if not request.user.is_authenticated(): return public.views.home(request)

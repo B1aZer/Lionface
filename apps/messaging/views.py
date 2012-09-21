@@ -100,37 +100,59 @@ def messages(request):
 @login_required
 def show(request):
     data = {'status': 'OK'}
+    max_mess = 7
     if request.method == 'POST' and 'user_id' in request.POST:
         user = UserProfile.objects.get(id=int(request.POST['user_id']))
 
-        messages = Messaging.objects.filter(Q(user_to=request.user, user = user) | Q(user=request.user, user_to = user)).order_by('date')
+        messages = Messaging.objects.filter(Q(user_to=request.user, user = user) | Q(user=request.user, user_to = user)).order_by('-date')
         messages_to = Messaging.objects.filter(user_to=request.user).order_by('date')
         for mess in messages_to:
             mess.mark_read()
 
+        #import pdb;pdb.set_trace()
+        page = int(request.POST.get('page', 1))
+        all_mess = messages.count()
+
+        if page == 1:
+            messages = messages[:max_mess]
+            last_mess = max_mess
+        else:
+            offset = (page - 1) * max_mess
+            last_mess = offset + max_mess
+            messages = messages[offset:last_mess]
+
+        if all_mess - last_mess > 0:
+            next_page = page + 1
+        else:
+            next_page = page
+
+
         if 'sort' in request.POST:
             sort = request.POST['sort']
             if sort == 'desc':
-                messages = messages.order_by('-date')
+                #messages = messages.order_by('-date')
                 request.user.set_option('reverse','desc')
             elif sort == 'asc':
-                messages = messages.order_by('date')
+                messages = list(reversed(messages))
+                #messages = messages.order_by('date')
                 request.user.set_option('reverse','asc')
             else:
                 if request.user.check_option('reverse','asc'):
-                    messages = messages.order_by('date')
+                    #messages = messages.order_by('date')
+                    messages = list(reversed(messages))
                 elif request.user.check_option('reverse','desc'):
-                    messages = messages.order_by('-date')
-
-
+                    #messages = messages.order_by('-date')
+                    pass
 
         data['html'] = render_to_string('messages/feed.html',
                 {
                     'messages':messages,
                 }, context_instance=RequestContext(request))
         data['sort'] = request.user.check_option('reverse') or 'asc'
+        data['page'] = page
+        data['nextpage'] = next_page
 
         data['mr'] = Messaging.objects.filter(user_to=request.user, user = user).count()
-        data['ms'] = Messaging.objects.filter(user=request.user, user_to = user).count() 
+        data['ms'] = Messaging.objects.filter(user=request.user, user_to = user).count()
 
     return HttpResponse(json.dumps(data), "application/json")

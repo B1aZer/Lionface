@@ -14,11 +14,12 @@ FILTER_TYPE = (
 )
 
 RELATIONSHIP_FOLLOWING = 1
-RELATIONSHIP_BLOCKED = 2
+RELATIONSHIP_BLOCKED = 0
 RELATIONSHIP_STATUSES = (
     (RELATIONSHIP_FOLLOWING, 'Following'),
     (RELATIONSHIP_BLOCKED, 'Blocked'),
 )
+
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey('UserProfile', related_name='from_user')
@@ -44,6 +45,15 @@ class FriendRequest(models.Model):
     # Decline the friend request
     def decline(self):
         self.delete()
+
+    def save(self, *args, **kwargs):
+        send = False
+        if self.to_user.check_visiblity('add_friend', self.from_user):
+            send = True
+        if send:
+            super(FriendRequest, self).save(*args, **kwargs)
+        return send
+
 
 class UserProfile(User):
     # Logic is if a friend is in the 'friends' collection then they are verified.
@@ -72,11 +82,14 @@ class UserProfile(User):
         #User can see all public messages,
         #not only his
         return NewsItem.objects.filter(hidden=False).order_by('date').reverse()
+
     def get_messages(self):
         from post.models import NewsItem
         #return NewsItem.objects.filter(post__user_to__in=self.friends.all()).exclude(post__user=self).order_by('date').reverse()
         user_list = self.friends.all()
         following = self.following.all()
+        following = [x for x in following if x.check_visiblity('follow',self)]
+        #following = self.get_following_active()
         user_list = list(set(list(chain(user_list,following))))
         return NewsItem.objects.filter(user__in=user_list).exclude(post__user=self).order_by('date').reverse()
 
@@ -86,6 +99,7 @@ class UserProfile(User):
             return filters
         else:
             return []
+
     def get_active_tags(self):
         tags = self.user_tag_set.all()
         tags = [x for x in tags if x.active]
@@ -93,11 +107,13 @@ class UserProfile(User):
             return tags
         else:
             return []
+
     def get_options(self):
         options = {}
         for option in self.useroptions_set.all():
             options[option.name] = option.value
         return options
+
     def check_option(self,name,value=None):
         name = "option_%s" % name
         try:
@@ -111,6 +127,7 @@ class UserProfile(User):
                 return option.value
         except ObjectDoesNotExist:
             return False
+
     def check_visiblity(self,option,user):
         if not option:
             return
@@ -136,6 +153,7 @@ class UserProfile(User):
             visible = True
 
         return visible
+
     def set_option(self,name,value):
         name = "option_%s" % name
         try:
@@ -144,29 +162,38 @@ class UserProfile(User):
             option.save()
         except ObjectDoesNotExist:
             self.useroptions_set.create(name=name,value=value)
+
     def new_messages(self):
         return self.message_to.filter(read=False).count()
+
     def add_follower(self, person):
         relationship, created = Relationship.objects.get_or_create(
             from_user=self,
             to_user=person)
         return relationship
+
     def add_following(self, person):
         relationship, created = Relationship.objects.get_or_create(
             from_user=person,
             to_user=self)
         return relationship
+
+    def get_following_active(self):
+        following = Relationship.objects.filter(to_user=self, status=1)
+        following = [x.from_user for x in following]
+        return following
+
     def in_followers(self,user):
         if user in self.followers.all():
             return True
         else:
             return False
+
     def remove_following(self, user):
         Relationship.objects.filter(
                 from_user=user,
                 to_user=self).delete()
         return
-
 
     @models.permalink
     def get_absolute_url(self):
@@ -177,10 +204,12 @@ class UserProfile(User):
         return '%s %s' % (self.first_name, self.last_name)
     full_name = property(_get_full_name)
 
+
 class Relationship(models.Model):
     from_user = models.ForeignKey(UserProfile, related_name='from_people')
     to_user = models.ForeignKey(UserProfile, related_name='to_people')
     date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length='1', choices=RELATIONSHIP_STATUSES, default=1)
 
     def save(self, *args, **kwargs):
         follow = False

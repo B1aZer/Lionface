@@ -13,6 +13,7 @@ NOTIFICATION_TYPES = (
     ('CS', 'Comment Submitted'),
     ('PS', 'Post Shared'),
     ('PP', 'Profile Post'),
+    ('FF', 'Following Acquired'),
 )
 
 class Notification(models.Model):
@@ -56,3 +57,10 @@ def create_share_notifiaction(sender, instance, created, **kwargs):
     if created and instance.user <> instance.user_to:
         Notification(user=instance.user, type='PS', other_user=instance.user_to, content_object=instance).save()
 post_save.connect(create_share_notifiaction, sender=SharePost)
+
+def create_follow_notification(sender, instance, created, **kwargs):
+    if created:
+        if instance.from_user <> instance.to_user:
+            Notification(user=instance.from_user, type='FF', other_user=instance.to_user, content_object=instance).save()
+post_save.connect(create_follow_notification, sender=Relationship)
+

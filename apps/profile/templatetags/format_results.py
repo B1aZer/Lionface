@@ -105,6 +105,10 @@ def check_following_visibility(user,current):
 def check_message_sending(user,current):
     return user.check_visiblity('send_message',current)
 
+@register.filter(name='check_friend_request')
+def check_friend_request(user,current):
+    return user.check_visiblity('add_friend',current)
+
 @register.filter(name='escaping')
 def escaping(value):
     return escape(value)

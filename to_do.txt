@@ -1,5 +1,4 @@
 ##next###
-privacy add friend
 notif on following
 prevent new posts
 ###
