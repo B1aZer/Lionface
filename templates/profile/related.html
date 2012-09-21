@@ -5,8 +5,8 @@
 {% block content_middle %}
 {% if profile_user == user %}
 {{ user|show_friend_count }}
-| {{ user.followers.count }} follower{{ user.followers.count|pluralize }}
-| {{ user.following.count }} following
+<span style="color: transparent;">| |</span> {{ user.followers.count }} follower{{ user.followers.count|pluralize }}
+<span style="color: transparent;">| |</span> {{ user.following.count }} following
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}
@@ -34,11 +34,11 @@
     {% if profile_user|check_friends_visibility:request.user %}
     <a href="javascript:;" class="feed_type filter related" >Friends</a>
     {% endif %}
-    {% if profile_user|check_following_visibility:request.user %}
-    <a href="javascript:;" class="feed_type filter related" >Following</a>
-    {% endif %}
     {% if profile_user|check_follower_visibility:request.user %}
     <a href="javascript:;" class="feed_type filter related" >Followers</a>
+    {% endif %}
+    {% if profile_user|check_following_visibility:request.user %}
+    <a href="javascript:;" class="feed_type filter related" >Following</a>
     {% endif %}
 	</div>   
 
