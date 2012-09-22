@@ -1,5 +1,7 @@
 ##next###
 USERS
+POSTS DELETE
+
 users case insensative ?
 prevent new posts (not right ly)
 notf nullify (wrong on messages)

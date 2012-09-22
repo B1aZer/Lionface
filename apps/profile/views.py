@@ -53,6 +53,7 @@ def profile(request, username=None):
         profile_user = request.user
 
     if request.method == 'POST':
+
         if 'image' in request.POST:
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():

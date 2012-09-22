@@ -36,7 +36,7 @@ function del_post_single(elem) {
 
     if(data.type !== undefined) {
 
-    url = "/posts/del/" + elem + "?type="+data.type;
+    url = "/posts/del/" + elem + "?type="+data.type+"&ajax=true";
 
   if (window.location.pathname.indexOf('lionface') >= 0) 
   { 

@@ -276,24 +276,15 @@ function share_post(elem) {
 
 function del_post(elem) { 
     var data = $('.post_'+elem).metadata();
-    url = "/posts/del/" + elem + "?user="+data.user;
-
-    if (window.location.pathname.indexOf('lionface') >= 0) 
-    { 
-        url = '/lionface' +  url;
-    }       
-
-    $.ajax(url,
+    url = "/posts/del/" + elem + "?user="+data.user+"&type="+data.type;
+    make_request({
+        url:url,
+        callback:function(post_data) 
         {
-            success: function(data) {
-                $('.post_'+elem).prev('hr').hide()
-                $('.post_'+elem).fadeOut()
-            },
-            error: function() {
-                alert('Unable to delete data.');
-            }
-        });    
-
+            $('.post_'+elem).prev('hr').hide();
+            $('.post_'+elem).fadeOut();
+        }
+    });    
 }       
 
 function del_comm(elem) { 
@@ -416,6 +407,22 @@ $(document).ready(function() {
             return false;
         }
     })
+
+    //Toggle comments
+    $(document).on('click','.toggle_comments', function(e) {
+        e.preventDefault();
+        var post_id = $(this).parents('.result').metadata().postid;
+        var toggled = $(this).data('toggled');
+        $(this).data('toggled', !toggled);
+        if (!toggled) {
+            $('.comment_'+post_id).fadeIn(function() {
+                $('.text_comment').autosize();
+            });
+        }
+        else {
+            $('.comment_'+post_id).fadeOut(); 
+        }
+    });
 
     url = '/auto/';
     url_user = '/user/profile/'

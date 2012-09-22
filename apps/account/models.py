@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.db.models.query import Q
 from post.tasks import AddFriendToFeed
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
@@ -218,6 +218,13 @@ class UserProfile(User):
         "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
     full_name = property(_get_full_name)
+
+
+def update_user_profile(sender, instance, raw, using, **kwargs):
+    current = sender.objects.get(id=instance.id)
+    if current.photo != instance.photo and current.photo.name != 'images/noProfilePhoto.png':
+        current.photo.delete(save=False)
+pre_save.connect(update_user_profile, sender=UserProfile)
 
 
 class Relationship(models.Model):

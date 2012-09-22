@@ -185,11 +185,10 @@ def delete_own_comment(request, message_id):
 @login_required
 def delete(request, post_id = None):
     data = {'status': 'OK'}
-    if request.method == 'GET' and 'type' in request.GET:
+    if request.method == 'GET' and 'type' in request.GET and 'ajax' in request.GET:
         post_type = request.GET['type']
         if post_type == 'content post':
             post_news = ContentPost.objects.get(id=post_id)
-            #post_news.delete()
             DeleteNewsFeeds.delay(post_news)
             return HttpResponse(json.dumps(data), "application/json")
     if post_id:
@@ -198,8 +197,14 @@ def delete(request, post_id = None):
         else:
             owner = request.user
         post = NewsItem.objects.get(id=post_id)
+        #restore original count of shares
+        post_type = request.GET.get('type')
+        if post_type == 'share post':
+            original = post.post.get_inherited()
+            if original.content_object.shared != 0:
+                original.content_object.shared -= 1
+                original.content_object.save()
         DeleteNewsFeeds.delay(post,user=owner)
-        #post.delete()
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
