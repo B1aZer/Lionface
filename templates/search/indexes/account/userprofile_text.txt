@@ -1,2 +1,3 @@
 {{ object.username }}
+{{ object.photo }}
 {{ object.get_full_name }}

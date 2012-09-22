@@ -42,3 +42,8 @@ def check_following(profile, user):
     else:
         show = True
     return show
+
+@register.filter(name='mutual_friends')
+def mutual_friends(current, user):
+    return current.get_mutual_friends(user)
+

@@ -1,5 +1,8 @@
 ##next###
+USERS
+users case insensative ?
 prevent new posts (not right ly)
+notf nullify (wrong on messages)
 ###
 friends did not see own posts after unfrending.
 ###search###

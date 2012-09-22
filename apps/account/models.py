@@ -72,6 +72,21 @@ class UserProfile(User):
                 return True
         return False
 
+    def get_mutual_friends(self, user):
+        if not user:
+            return
+
+        mutual_friends = 0
+        my_freinds = self.friends.all()
+        his_friends = user.friends.all()
+
+        for friend in my_freinds:
+            if friend in his_friends:
+                mutual_friends += 1
+
+        return mutual_friends
+
+
     def has_friend_request(self, user):
         return FriendRequest.objects.filter(Q(from_user=self, to_user=user) | Q(to_user=self, from_user=user)).count() > 0
 

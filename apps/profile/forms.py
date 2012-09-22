@@ -4,16 +4,19 @@ from django.forms import TextInput
 import re
 
 class ImageForm(forms.ModelForm):
+
     class Meta:
         model = UserProfile
         fields = ('photo',)
 
-     # Add some custom validation to our image field
+    # Add some custom validation to our image field
     def clean_photo(self):
          image = self.cleaned_data.get('photo',False)
          if image:
              if image._size > 1*1024*1024:
                    raise forms.ValidationError("Image file too large ( > 1mb )")
+             if image.content_type == 'image/gif':
+                   raise forms.ValidationError("Sorry! Gif is prohibited.")
              return image
          else:
              raise forms.ValidationError("Couldn't read uploaded image")

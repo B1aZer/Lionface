@@ -1,5 +1,5 @@
 {% extends 'profile/base.html' %}
-{% load i18n static %}
+{% load i18n static media %}
 
 {% block content_title %}
 {{ user.first_name }} {{ user.last_name }} | Account
@@ -16,8 +16,8 @@
     {% block left_col %}
     <div class="settings_nav">
         <ul>
-            <li onClick="ShowContent('basics');ShowContent('basics_header'); HideContent('privacy'); HideContent('privacy_header'); return false;">Basics</li>
-            <li onClick="ShowContent('privacy');ShowContent('privacy_header'); HideContent('basics'); HideContent('basics_header'); return false;">Privacy</li>
+            <li id="basics_settings" {% if active == 'basics' %} class="active" {% endif %} onClick="show_basics()">Basics</li>
+            <li id="privacy_settings" {% if active == 'privacy' %} class="active" {% endif %} onClick="show_privacy()">Privacy</li>
         </ul>
     </div>
     {% endblock %}
@@ -215,9 +215,11 @@
 </div>
 
 <div style="position: absolute; left: 0px; bottom: 0px; padding: 15px 10px; background: #EEE; width: 680px;">
-<input type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> <a href="#" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Account</a>
+<input type="hidden" name="form_name" id="form_name">
+<input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> <a href="#" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Account</a>
 </div>
 </form>
 
+{% include_media 'settings.js' %}
 {% endblock %}
 </div>

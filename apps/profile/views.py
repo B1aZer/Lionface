@@ -84,6 +84,7 @@ def profile(request, username=None):
 @login_required
 def settings(request):
     changed = False
+    active = 'basics'
     if request.method == 'POST':
         if 'change_pass' in request.POST:
             form_pass = PasswordChangeForm(user=request.user, data=request.POST)
@@ -104,6 +105,11 @@ def settings(request):
                         request.user.useroptions_set.create(name=name,value=request.POST[name])
             if form.is_valid():
                 form.save()
+            #Pop-up right window
+            if request.POST.get('form_name') == 'privacy':
+                active = 'privacy'
+            else:
+                active = 'basics'
     else:
 
         form = UserInfoForm(instance=request.user,initial = request.user.get_options())
@@ -112,9 +118,10 @@ def settings(request):
     return render_to_response(
         'profile/settings.html',
         {
-            'form':form,
-            'form_pass':form_pass,
+            'form' : form,
+            'form_pass' : form_pass,
             'changed' : changed,
+            'active' : active,
         },
         RequestContext(request)
     )

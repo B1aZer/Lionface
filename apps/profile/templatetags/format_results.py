@@ -34,7 +34,7 @@ def format_tag(object,request):
 
 # Function to format a search result.
 @register.filter(name='format_image')
-def format_image(photo, path):
+def format_image(photo, path=""):
     #import pdb;pdb.set_trace()
     photo_name = getattr(photo, "name", None)
     if photo_name:

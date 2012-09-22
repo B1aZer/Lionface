@@ -1,8 +1,12 @@
-{% load media friends %}
+{% load media friends format_results %}
 
-<div class="user_thumbnail"></div>
+<a href="{{ user.get_absolute_url }}"><div class="user_thumbnail" style="background-image: url('/{{ user.photo|format_image }}'); background-size: 50px 50px;"></div></a>
 <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a><br/>
 <span class="subtext">
+    <div class="username"> {{ user.username }}  </div>
+    {% if current_user|mutual_friends:user %} 
+        <div class="mutual_friends"> mutual: {{ current_user|mutual_friends:user }}</div>
+    {% endif %}
 {% if current_user|has_friend:user %}
   <!-- Mutual friends -->
 {% else %}

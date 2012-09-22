@@ -36,8 +36,10 @@ def feed(request, user_id = None):
             items = []
         tags = request.user.user_tag_set.all()
         if tags:
-            tags = [x.name for x in tags if x.active]
-            tagged_posts = NewsItem.objects.filter(post__tags__name__in=tags).order_by('-date')
+            tags = [x.name.upper() for x in tags if x.active]
+            tagged_posts = NewsItem.objects.all()
+            tagged_posts = [x for x in tagged_posts for y in x.post.tags.all() if y.name.upper() in tags ]
+            #tagged_posts = NewsItem.objects.filter(post__tags__name__in=tags).order_by('-date')
             items = list(chain(items, tagged_posts))
             items = list(set(items))
             items = sorted(items,key=lambda post: post.date, reverse=True)
@@ -82,31 +84,25 @@ def save(request):
         else: post.type = 'P'
         post.save()
 
+        #Tags
         hashtags = [word[1:] for word in request.POST['content'].split() if word.startswith('#')]
 
         for hashtag in hashtags:
             try:
-                tag = Tag.objects.get(name=hashtag)
+                tag = Tag.objects.get(name__iexact=hashtag)
                 post.tags.add(tag)
             except ObjectDoesNotExist:
                 post.tags.create(name=hashtag)
             except MultipleObjectsReturned:
-                tags = Tag.objects.filter(name=hashtag)
+                tags = Tag.objects.filter(name__iexact=hashtag)
                 tag = [p for p in tags if not hasattr(p, 'user_tag')]
                 if tag:
                     post.tags.add(tag[0])
 
-        #post.save()
-
         data['post_id'] = post.id
-        #import pdb;pdb.set_trace()
-
 
         t = loader.get_template('post/_feed.html')
-        #c = RequestContext(request, {'items': NewsItem.objects.filter(post_id=data['post_id']) })
-        # this is not working because celery is not so fast
         new_post = post
-        #new_post.id = post.newsitem_set.all()[0].id
         c = RequestContext(request, {'items': [new_post],
                                     'del_false' : True})
         data['html'] = t.render(c)

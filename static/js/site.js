@@ -406,6 +406,17 @@ function check_for_notifications(){
 $(document).ready(function() {
     hookLinks();
 
+    //Swith search queries
+    $('#quick_search').submit(function() {
+        if ( $(this).find('#search_input').val().indexOf( "#" ) !== -1 ) {
+            var tag=$(this).find('#search_input').val().split(' ');
+            tag = tag[0].replace('#','');
+            url = '/tag/?models=tags_tag&q='+tag;
+            window.location = url;
+            return false;
+        }
+    })
+
     url = '/auto/';
     url_user = '/user/profile/'
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
