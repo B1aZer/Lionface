@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block left_col %}
-<div  onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
+<div  onclick="window.location.href = '{% url profile.views.profile profile_user.username %}';return false;" 
     class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;"></div>
 
     <div style="position: relative; left: 0px; z-index: 100;">

@@ -1,0 +1,26 @@
+{% extends "profile/base.html" %}
+
+
+
+{% block content %}
+
+  <div class="content_area">
+    <div id="profile_top">
+      <div class="left"></div>
+      <div class="right" style="position: relative;">
+		<div class="create_options" style="display: none;" id="create">
+			<a href="#" class="business_btn" onClick="ShowContent('create_business'); HideContent('create_nonprofit'); return false;">Create Business</a> 
+			<a href="#" class="nonprofit_btn" onClick="ShowContent('create_nonprofit'); HideContent('create_business'); return false;">Create Nonprofit</a></div>
+		<a href="#" class="profile_nav" style="margin: 0px; font-size: 8pt; color: #555;" onClick="ShowContent('create'); return false;">+ Create Page</a></div>
+    </div>
+	<div style="clear: both;"></div>
+	<div class="content_area_pages">
+	</div>
+	
+
+<div class="content_pages" id="business">
+</div>
+
+
+  </div>
+{% endblock %}

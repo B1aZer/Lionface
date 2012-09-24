@@ -172,6 +172,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/account/logout/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+COMMENT_MAX_LENGTH = '1000'
 
 MEDIA_DEV_MODE = False
 DEV_MEDIA_URL = '/devmedia/'

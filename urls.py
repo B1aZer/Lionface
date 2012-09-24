@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     url(r'^posts/', include('post.urls')),
     url(r'^tags/', include('tags.urls')),
     url(r'^messages/', include('messaging.urls')),
-    url(r'^pages/$', 'pages.views.main'),
+    url(r'^pages/', include('pages.urls')),
     url(r'^search/', login_required(search_view_factory(
         #view_class=SearchView,
             view_class=search.views.CustumSearchView,

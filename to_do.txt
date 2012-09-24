@@ -1,7 +1,8 @@
 ##next###
 USERS
 POSTS DELETE
-
+###later###
+# the album page (and in the future the loves page) direct back to the profile
 users case insensative ?
 prevent new posts (not right ly)
 notf nullify (wrong on messages)

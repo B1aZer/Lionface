@@ -74,7 +74,6 @@ def timeline(request,post_num=5):
 @login_required
 def save(request):
     data = {'status': 'OK'}
-    #import pdb;pdb.set_trace()
     if request.method == 'POST' and 'content' in request.POST:
         if 'profile_id' in  request.POST:
             user_to = UserProfile.objects.get(id=request.POST['profile_id'])

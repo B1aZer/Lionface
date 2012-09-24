@@ -11,3 +11,13 @@ def main(request):
         },
         RequestContext(request)
     )
+
+@login_required
+def page(request):
+
+    return render_to_response(
+        'pages/page.html',
+        {
+        },
+        RequestContext(request)
+    )

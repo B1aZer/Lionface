@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'profile/reset_picture/$', views.reset_picture),
     url(r'profile/(?P<username>\w+)/$', views.profile),
     url(r'profile/(?P<username>\w+)/related/$', views.related_users),
+    url(r'profile/(?P<username>\w+)/image/$', views.profile_image),
 )
