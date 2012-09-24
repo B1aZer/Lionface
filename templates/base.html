@@ -71,9 +71,9 @@ var timezone = jstz.determine();
     document.write(y0);
   // end hiding --->
 </SCRIPT> 
-<span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" onClick="ShowContent('terms'); return false;" target="_top">Terms</a>
+<span style="color: transparent;">--</span> <a href="{% url public.views.about %}" target="_top">About</a>
+<span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" target="_top">Terms</a>
 <span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top">Feedback</a>
-<span style="color: transparent;">--</span> World Peace
       </div></div>
 
     {% endblock %}
