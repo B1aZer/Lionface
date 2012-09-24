@@ -62,6 +62,7 @@ class UserProfile(User):
     photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
     filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
     followers =  models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
+    optional_name = models.CharField(max_length='200', default="")
 
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0
@@ -216,12 +217,15 @@ class UserProfile(User):
 
     def _get_full_name(self):
         "Returns the person's full name."
-        return '%s %s' % (self.first_name, self.last_name)
+        return self.optional_name or '%s %s' % (self.first_name, self.last_name)
     full_name = property(_get_full_name)
 
 
 def update_user_profile(sender, instance, raw, using, **kwargs):
-    current = sender.objects.get(id=instance.id)
+    try:
+        current = sender.objects.get(id=instance.id)
+    except sender.DoesNotExist:
+        return
     if current.photo != instance.photo and current.photo.name != 'images/noProfilePhoto.png':
         current.photo.delete(save=False)
 pre_save.connect(update_user_profile, sender=UserProfile)
@@ -256,7 +260,7 @@ class UserOptions(models.Model):
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        up = UserProfile(user_ptr_id=instance.pk)
-        up.__dict__.update(instance.__dict__)
-        up.save()
+        uprofile = UserProfile(user_ptr_id=instance.pk)
+        uprofile.__dict__.update(instance.__dict__)
+        uprofile.save()
 post_save.connect(create_user_profile, sender=User)

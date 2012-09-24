@@ -17,6 +17,11 @@ def signup(request):
         form = SignupForm(prefix='signup', data=request.POST)
         if form.is_valid():
             new_user = form.save()
+            new_user_profile = getattr(new_user,'userprofile', None)
+            #saving full name
+            if new_user_profile:
+                new_user_profile.optional_name = form.cleaned_data['full_name']
+                new_user_profile.save()
             new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if new_user is not None:
                 auth_login(request, new_user)

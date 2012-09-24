@@ -68,7 +68,7 @@ class UserInfoForm(forms.ModelForm):
                               s)
         if not re.search("[a-zA-Z]{2,} [a-zA-Z]{2,}", self.cleaned_data['full_name']):
             raise forms.ValidationError("Please enter your full name.")
-        if self.cleaned_data['full_name'].isupper():
+        if self.cleaned_data['full_name'].split(' ', 2)[0].isupper() or self.cleaned_data['full_name'].split(' ', 2)[1].isupper():
             raise forms.ValidationError("Please enter your full name without caps.")
         self.cleaned_data['full_name'] = titlecase(self.cleaned_data['full_name'].strip())
 
@@ -83,6 +83,7 @@ class UserInfoForm(forms.ModelForm):
         user = super(UserInfoForm, self).save(commit=False)
         user.first_name = data['full_name'].split(' ', 2)[0]
         user.last_name = data['full_name'].split(' ', 2)[1]
+        user.optional_name = data['full_name']
 
         if commit:
             user.save()

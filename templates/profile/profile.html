@@ -1,7 +1,7 @@
 {% extends 'profile/base.html' %}
 {% load media friends format_results %}
 
-{% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
+{% block content_title %} {{ profile_user.full_name }} | Profile {% endblock %}
 {% block content_middle %}
 {% if profile_user|check_friends_visibility:request.user %}
 <a href="{% url profile.views.related_users username=profile_user.username %}?Friends" >{{ profile_user|show_friend_count }}</a>
