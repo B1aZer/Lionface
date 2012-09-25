@@ -195,6 +195,7 @@ def linkify(text, nofollow=True, target=None, title=True, filter_url=identity,
         return fragment, opening_parentheses, closing_parentheses
 
     def linkify_nodes(tree, parse_text=True):
+        #function for links found earlier
         for node in tree.childNodes:
             if node.type == NODE_TEXT and parse_text:
                 new_frag = node.toxml()
@@ -216,6 +217,8 @@ def linkify(text, nofollow=True, target=None, title=True, filter_url=identity,
                         node.attributes['title'] = node.attributes['href']
                     href = node.attributes['href']
                     node.attributes['href'] = filter_url(href)
+                    #adding custom css class
+                    node.attributes['class'] = u'content_link'
             elif skip_pre and node.name == 'pre':
                 linkify_nodes(node, False)
             else:
@@ -226,6 +229,7 @@ def linkify(text, nofollow=True, target=None, title=True, filter_url=identity,
         return repl % {'mail': match.group(0).replace('"', '&quot;')}
 
     def link_repl(match):
+        #function for dynamic links
         url = match.group(0)
         open_brackets = close_brackets = 0
         if url.startswith('('):
@@ -250,6 +254,9 @@ def linkify(text, nofollow=True, target=None, title=True, filter_url=identity,
 
         if title is not None:
             attribs.append('title="%s"' % urlparse.urlparse(href).netloc)
+
+        #adding custom css class
+        attribs.append('class="%s"' % "content_link")
 
         return repl % ('(' * open_brackets,
                        filter_url(href), ' '.join(attribs), filter_text(url),
