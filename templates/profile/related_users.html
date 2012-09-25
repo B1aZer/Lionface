@@ -2,8 +2,11 @@
 {% for user in users %}
     <div class="result">
         <div class="user_thumbnail"></div>
-        <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a><br/>
-        <span class="subtext">
+        <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a> <div class="username"> {{ user.username }}  </div><br/>
+        <span class="subtext" style="margin: 7px 0;">
+    {% if current_user|mutual_friends:user %} 
+        <div class="mutual_friends">Mutual Friends: {{ current_user|mutual_friends:user }}</div>
+    {% endif %}
         {% if current_user|has_friend:user %}
           <!-- Mutual friends -->
         {% else %}
