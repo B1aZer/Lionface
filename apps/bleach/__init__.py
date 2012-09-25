@@ -213,7 +213,7 @@ def linkify(text, nofollow=True, target=None, title=True, filter_url=identity,
                     if target is not None:
                         node.attributes['target'] = target
                     if title is not None:
-                        node.attributes['title'] = title
+                        node.attributes['title'] = node.attributes['href']
                     href = node.attributes['href']
                     node.attributes['href'] = filter_url(href)
             elif skip_pre and node.name == 'pre':
