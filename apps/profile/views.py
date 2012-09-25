@@ -65,6 +65,7 @@ def profile(request, username=None):
     # and compare this against their privacy settings to see what can be seen.
     form = ImageForm()
     form_mess = MessageForm()
+    form_mess.fields['content'].widget.attrs['rows'] = 7
 
     if username != None:
         try:

@@ -8,6 +8,7 @@ from django.contrib.contenttypes import generic
 from .utils import QuerySetManager
 from tags.models import Tag
 from itertools import chain
+import re
 
 class QuerySet(models.query.QuerySet):
     """Base QuerySet class for adding custom methods that are made
@@ -71,9 +72,15 @@ class ContentPost(Post):
         #from django.utils.html import escape
         import bleach
         #import pdb;pdb.set_trace()
+        def add_http(url):
+            if re.search('http://',url):
+                pass
+            else:
+                url = u"".join([u'http://', url])
+            return url
 
         self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
-        self.content = bleach.linkify(self.content,target='_blank')
+        self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
 
         return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
