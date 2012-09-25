@@ -3,8 +3,8 @@
 {% for message in messages %}
 
 
-<div class="mess" {% if request.user == message.user %} style="left: 246px; background: #FAFAFA;" {% endif %}>
-{{ message.user }} <span style="display: none;">to {{ message.user_to }}</span> <span style="color: #DDD; font-size: 8pt;">  {{ message.date }}</span>
+<div class="mess" {% if request.user == message.user %} style="left: 146px; background: #FAFAFA;" {% endif %}>
+{{ message.user }} <span style="display: none;">to {{ message.user_to }}</span> <span style="color: #AAA; font-size: 8pt;">  {{ message.date }}</span>
 <p>{{ message.content|escaping|smileys}}</p>
 </div>
 

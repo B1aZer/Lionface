@@ -46,7 +46,7 @@
 
     
 </div>
-
+<div style="position: relative;">
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
     {% csrf_token %}
     {{ form.photo.errors }}
@@ -54,6 +54,7 @@
     {{ form.photo }}
     <p><input id="submit_img_btn" name="image" type="submit" class="blue_btn" value="Upload" /></p>
 </form>
+</div>
 
 {% if request.user == profile_user %}
 {% else %}
@@ -61,7 +62,7 @@
 <div style="margin: 10px 0;"><a href="#" id="send_message" class="profile_nav" style="font-size: 9pt;" onClick="HideContent('send_message'); return false;">Send Message</a></div>
 {% endif %}
 
-
+<div style="position: relative;">
 <form action="." method="post" class="send_message_form" style="display:none;">
     {% csrf_token %}
 
@@ -69,7 +70,7 @@
     <div>{{ form_mess.non_field_errors }}</div>
     {% endif %}
     
-    To: <input id="id_user_to" style="width: 150px !important; padding: 7px; border: 0px;" type="text" name="user_to" maxlength="100" value="{{ profile_user.full_name }}" readonly>
+    To: <input id="id_user_to" style="width: 150px !important; padding: 7px; border: 0px; background: transparent;" type="text" name="user_to" maxlength="100" value="{{ profile_user.full_name }}" readonly>
 
     <input type="hidden" name="user_id" id="id_user_id" value="{{ profile_user.id }}">
 
@@ -80,6 +81,7 @@
 
     <p><input name="message" type="submit" class="blue_btn" style="font-size: 8pt;" value="Send" /></p>
 </form> 
+</div>
 
  {% endif %}
 {% endblock %}

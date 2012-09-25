@@ -29,7 +29,7 @@
 <div  onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
 	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 69px 69px; height: 69px; background-position: center left;">
 		{% if request.user == profile_user %}
-        <div style="position: relative; top: 5px; left: 70px; display: block; width: 129px; background: #FFF; z-index: 999;" align="center">
+        <div style="position: relative; top: 5px; left: 70px; display: block; width: 129px; background: #FFF; z-index: 997;" align="center">
             <a id="upload_picture" class="upload" style="display:none;">Upload</a><br /><a href="{% url profile.views.reset_picture %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
         </div>
         {% endif %}
@@ -39,14 +39,15 @@
         <div style="position: relative; top: -55px; left: 70px; display: block; width: 130px; font-size: 8pt; color: #999;" align="center">
 		# Photos
 		</div>
-
-<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
+<div style="position: relative;">
+<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -94px;">
     {% csrf_token %}
     {{ form.photo.errors }}
     <p><label for="id_photo">Upload</label></p>
     {{ form.photo }}
     <p><input name="image" type="submit" class="blue_btn" value="Upload" /></p>
 </form>
+</div>
 
 {% endblock %}
 
