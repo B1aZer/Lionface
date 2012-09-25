@@ -216,9 +216,17 @@
 
 <div style="position: absolute; left: 0px; bottom: 0px; padding: 15px 10px; background: #EEE; width: 680px;">
 <input type="hidden" name="form_name" id="form_name">
-<input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> <a href="#" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Account</a>
-</div>
+<input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> 
 </form>
+<a href="#" id="delete_account" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Account</a>
+<form id="delete_account_form" action="{% url profile.views.delete_profile %}" method="post" style="display:none">{% csrf_token %}
+<input id="submit_delete" type="submit" class="blue_btn" name="delete_account" value="Delete">
+<label for="id_confirm_pass">Confirm Password:</label>
+<input type="password" name="confirm_password" id="id_confirm_pass">
+<span class="confirm_errors"></span>
+</form>
+</div>
+
 
 {% include_media 'settings.js' %}
 {% endblock %}

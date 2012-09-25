@@ -1,5 +1,41 @@
 $(function() {
 
+    //restrict image size and format before upload
+    $('#id_photo').bind('change', function() {
+            console.log(this.files[0].type);
+            console.log(this.files[0].size);
+            if(this.files[0].size > 1000141) {
+                $('#submit_img_btn').hide();
+                if ($('.errorlist').length) {
+                    $('.errorlist').html('<li>Image file too large ( &gt; 1mb )</li>');
+                }
+                else {
+                    $('.upload_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 1mb )</li></ul>');
+                }
+            } 
+            else if(this.files[0].type == 'image/gif') {
+                $('#submit_img_btn').hide();
+                if ($('.errorlist').length) {
+                    $('.errorlist').html('<li>Gif images are not allowed</li>');
+                }
+                else {
+                    $('.upload_form').prepend('<ul class="errorlist"><li>Gif images are not allowed</li></ul>');
+                }      
+            }
+            else if(this.files[0].type.indexOf("image") == -1) {
+                $('#submit_img_btn').hide();
+                if ($('.errorlist').length) {
+                    $('.errorlist').html('<li>Please upload a valid image</li>');
+                }
+                else {
+                    $('.upload_form').prepend('<ul class="errorlist"><li>Please upload a valid image</li></ul>');
+                }      
+            }       
+            else{
+                $('#submit_img_btn').show();
+                $('.errorlist').html(''); 
+            }
+        });
 
     $("#upload_picture").click(function(event){
       event.stopPropagation();

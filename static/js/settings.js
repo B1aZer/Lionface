@@ -21,5 +21,39 @@ function show_privacy() {
 }
 
 $(document).ready(function() {
-$('.active').click();
+    $('.active').click();
+    $(document).on('click','#delete_account', function (e) {
+        e.preventDefault();
+        $('#delete_account_form').show().attr('style','display:inline');
+        $('#submit_button').hide();
+        $(this).hide();
+        $('#id_confirm_pass').focus();
+    });
+    $('#id_confirm_pass').blur(function(e) { 
+        if ($('#submit_delete').is(':hover') === false) {
+            $('#delete_account').show()
+            $('#submit_button').show();
+            $('#delete_account_form').hide();
+        }
+    });
+    $('#delete_account_form').submit( function() {
+        data_send = $(this).serialize()
+        url = $(this).attr('action');
+        make_request({
+            url:url,
+            data:data_send,
+            callback: function (data) {
+                if (data.status == 'OK') {
+                    window.location.href = data.redirect;
+                }
+                else {
+                    $('.confirm_errors').html(data.message);
+                    $('#id_confirm_pass').focus();
+                }
+            }
+        });
+        return false;
+    });
+    
+
 })

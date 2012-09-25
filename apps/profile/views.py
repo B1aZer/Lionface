@@ -1,15 +1,18 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, redirect
+from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from account.models import UserProfile
 from messaging.models import Messaging
 from notification.models import Notification
-from .forms import *
 from messaging.forms import MessageForm
+from .forms import *
+
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
 try:
@@ -145,6 +148,22 @@ def settings(request):
         },
         RequestContext(request)
     )
+
+@login_required
+def delete_profile(request):
+    data = {'status':'FAIL'}
+    if request.method == 'POST':
+        if 'confirm_password' in request.POST:
+            password = request.POST['confirm_password']
+            if check_password(password, request.user.password):
+                request.user.user_ptr.delete()
+                data['status'] = 'OK'
+                data['redirect'] = reverse('account.views.home')
+            else:
+                data['message'] = 'Wrong password'
+        else:
+            data['message'] = 'Enter password'
+    return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
 def related_users(request,username=None):

@@ -14,6 +14,7 @@
             <a class="toggle_comments" href="">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
 			Follow
+            <span style="color: transparent;"> -- </span> <a href="#" class="post_settings" >Settings</a>
         </div><br />
         <div class="comments comment_{{ item.id }}" style="display: none;">
 			<div class="comment_container">

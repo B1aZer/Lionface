@@ -52,7 +52,7 @@
     {{ form.photo.errors }}
     <p><label for="id_photo">Upload</label></p>
     {{ form.photo }}
-    <p><input name="image" type="submit" class="blue_btn" value="Upload" /></p>
+    <p><input id="submit_img_btn" name="image" type="submit" class="blue_btn" value="Upload" /></p>
 </form>
 
 {% if request.user == profile_user %}

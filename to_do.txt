@@ -1,11 +1,11 @@
 ##next###
-USERS
-POSTS DELETE
+POSTS DELETE on delete remove notf
 ###later###
 the album page (and in the future the loves page) direct back to the profile
 ###
 users case insensative ?
 prevent new posts (not right ly)
+prevent new messages on error (duplicates)
 notf nullify (wrong on messages)
 ###
 friends did not see own posts after unfrending.

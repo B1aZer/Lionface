@@ -41,8 +41,9 @@ class SignupForm(forms.Form):
                               s)
         if not re.search("[a-zA-Z]{2,} [a-zA-Z]{2,}", self.cleaned_data['full_name']):
             raise forms.ValidationError("Please enter your full name.")
-        if self.cleaned_data['full_name'].split(' ', 2)[0].isupper() or self.cleaned_data['full_name'].split(' ', 2)[1].isupper():
-            raise forms.ValidationError("Please enter your full name without caps.")
+        for name in self.cleaned_data['full_name'].split(' '):
+            if name.isupper():
+                raise forms.ValidationError("Please enter your full name without caps.")
         self.cleaned_data['full_name'] = titlecase(self.cleaned_data['full_name'].strip())
 
         return self.cleaned_data['full_name']

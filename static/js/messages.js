@@ -45,7 +45,7 @@ function change_form() {
     $('.small_form').addClass('form_changed');
 }
 
-function load_messages(user_id, sort, page) {
+function load_messages(user_id, sort, page, incolumn) {
 
         if (!(user_id)) {
             return;
@@ -65,6 +65,11 @@ function load_messages(user_id, sort, page) {
             sort = '';
         } 
 
+        if (!(incolumn)) {
+            //Appending to current feed
+            incolumn = false;
+        }   
+
         //saving some values
         $('body').data('messages', { user_id: user_id, sort: sort, page: page });
 
@@ -76,9 +81,11 @@ function load_messages(user_id, sort, page) {
         }  
         
         //loading
-        var old_data = $('.right_col').html();
-        $('.right_col').html('');
-        $('.right_col').addClass("large_loader");
+        if (!(incolumn)) {
+            var old_data = $('.right_col').html();
+            $('.right_col').html('');
+            $('.right_col').addClass("large_loader");
+        }
 
         $.ajax({
                 type: 'POST',
@@ -89,39 +96,55 @@ function load_messages(user_id, sort, page) {
                     page : page
                 },
                 success: function(data) {
-                    //remove loading
-                    $('.right_col').removeClass("large_loader");
-                    //old html
-                    $('.right_col').html(old_data);
+                    if (!(incolumn)) {  
+                        //remove loading
+                        $('.right_col').removeClass("large_loader");
+                        //old html
+                        $('.right_col').html(old_data);
+                    }
+                    //saving old messages button
+                    var old_btn = $('#show_older').clone();
                     //remove To input
                     $('#id_user_to').parent().parent().hide();
                     //input user id
                     $( "#id_user_id" ).val( user_id );
                     //populate feed
                     if (sort == 'desc' || data.sort == 'desc') {
-                        if ($('.message_feed').length) {
+                        //postbox on top
+                        if ($('.message_feed').length && !incolumn) {
                             $('.message_feed').remove();
                         }
-                        var new_elem = $('<div class="message_feed"></div>').html(data.html);
-                        $('.right_col').append(new_elem);
-                        if ($('#show_older').length) {
-                            var old_btn = $('#show_older').clone();
-                            $('#show_older').remove();
-                            $('.right').prepend(old_btn);
-                            old_btn.removeClass('bottom'); 
+                        if (!incolumn) {
+                            var new_elem = $('<div class="message_feed"></div>').html(data.html);
+                            $('.right_col').append(new_elem);
                         }
+                        else {
+                            if ($('.message_feed').length) {
+                                $('.message_feed').append(data.html);
+                            }
+                        }
+                        //show older
+                        $('#show_older').remove();
+                        $('.mess :last').after(old_btn);
+                        old_btn.addClass('bottom');
                     }
                     else {
-                        if ($('.message_feed').length) {
+                        if ($('.message_feed').length && !incolumn) {
                             $('.message_feed').remove();
                         }
-                        var new_elem = $('<div class="message_feed"></div>').html(data.html);
-                        $('.right_col').prepend(new_elem);
+                        if (!incolumn) {
+                            var new_elem = $('<div class="message_feed"></div>').html(data.html);
+                            $('.right_col').prepend(new_elem);
+                        }
+                        else {
+                            if ($('.message_feed').length) {
+                                $('.message_feed').prepend(data.html);
+                            }
+                        } 
                         //older btn
-                        var old_btn = $('#show_older').clone();
                         $('#show_older').remove();
-                        $('.message_feed').after(old_btn);
-                        old_btn.addClass('bottom');
+                        $('.mess :first').before(old_btn);
+                        old_btn.removeClass('bottom'); 
                     }
                     //revert btn
                     $('#revert_btn').show();
@@ -145,13 +168,15 @@ function load_messages(user_id, sort, page) {
                     //autosize
                     $('#id_content').autosize(); 
                     //scroll to last message
-                    if (sort == 'desc' || data.sort == 'desc') {}
-                    else {
-                        if ($('.mess :last').length) {
-                            if (window.innerHeight <= $('.mess :last').offset().top) {
-                                $('html, body').animate({
-                                         scrollTop: $('.mess :last').offset().top,
-                                     }, 500);
+                    if (!(incolumn)) {  
+                        if (sort == 'desc' || data.sort == 'desc') {}
+                        else {
+                            if ($('.mess :last').length) {
+                                if (window.innerHeight <= $('.mess :last').offset().top) {
+                                    $('html, body').animate({
+                                             scrollTop: $('.mess :last').offset().top,
+                                         }, 500);
+                                }
                             }
                         }
                     }
@@ -168,8 +193,10 @@ function load_messages(user_id, sort, page) {
                 },
                 error: function() {
                     alert('Unable to retrieve data.');
-                    $('.right_col').removeClass("large_loader");
-                    $('.right_col').html(old_data);
+                    if (!(incolumn)) { 
+                        $('.right_col').removeClass("large_loader");
+                        $('.right_col').html(old_data);
+                    }
                 }
             });  
 }
@@ -263,7 +290,7 @@ $(document).ready(function() {
     $(document).on('click', '#show_older', function(e) { 
         e.preventDefault();
         if ($('body').data('messages').nextpage != $('body').data('messages').page) {
-            load_messages($('body').data('messages').user_id,false,$('body').data('messages').nextpage);
+            load_messages($('body').data('messages').user_id,false,$('body').data('messages').nextpage,true);
         }
     });
 
