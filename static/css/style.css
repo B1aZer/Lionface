@@ -952,6 +952,7 @@ a.love:link, a.love:active, a.love:visited {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
+
 a.love:hover { 
 	border-color: #DADADA; 
 	color: #F5B;
@@ -963,6 +964,8 @@ a.love:hover {
 	background: -ms-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #ffffff 0%,#f7f7f7 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
+	-moz-box-shadow: 0 4px 8px -4px #333;
+	box-shadow: 0 4px 8px -4px #333;
  }
 
 .love_container {
