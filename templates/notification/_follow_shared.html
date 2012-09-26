@@ -1,0 +1,8 @@
+<li class="follow_shared notification {type: '{{ notification.content_object.name }}', id: '{{ notification.content_object.id }}'}">
+  <div style="padding: 15px;" class="link-output">
+      <a {% if notification.new_one %} class="new_notification" {% else %} {% endif %} href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a><br /><span style="color: #A70;"><i>shared</i></span> post you are following.
+  </div>
+  <div class="separator"></div>
+</li>
+
+

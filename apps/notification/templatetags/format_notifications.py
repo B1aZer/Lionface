@@ -23,5 +23,9 @@ def format_notification(notification):
         return render_to_string('notification/_profile_post.html', data)
     if notification.type == 'FF':
         return render_to_string('notification/_follow_user.html', data)
+    if notification.type == 'FC':
+        return render_to_string('notification/_follow_comment.html', data)
+    if notification.type == 'FS':
+        return render_to_string('notification/_follow_shared.html', data)
     return ""
 

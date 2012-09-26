@@ -68,31 +68,23 @@ $(function() {
         }
     });
 
-    var url = '/posts/save/'
 
-     if (window.location.pathname.indexOf('lionface') >= 0) 
-  { 
-    url = '/lionface' +  url;
-  }       
-    
     $("#postboxbutton").click(function() {
-        $.ajax({
-            url: url,
-            data: $('#postform').serialize(),
-            type: 'POST',
-            dataType: 'json',
-            success: function(data) {
-                //$("#postbox .postcontent").val("");
-                $("#news_feed").prepend(data.html);
-                $('.postbox_textarea').val('');
+        var url = '/posts/save/'
+        make_request({
+            url:url,
+            data: $('#postform').serialize(), 
+            callback: function(data) {
+                    $("#news_feed").prepend(data.html);
+                    $('.postbox_textarea').val('');
             },
-            error: function() {
-                alert("Failed to save new post.  Please try again later.");
-            }
         });
-
         return false;
-    })
+    });
+
+/*
+//Submit on enter
+
     $('.postcontent').keypress(function(e){
         if(e.which == 13){
             $.ajax({
@@ -113,6 +105,7 @@ $(function() {
             return false;   
         }
     });
+*/
     
 
     $('.postbox_textarea').autosize();

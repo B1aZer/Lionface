@@ -1,0 +1,8 @@
+<li class="follow_comment notification {type: 'comment post', id: '{{ notification.content_object.id }}'}">
+<div style="padding: 15px;" class="link-output">
+      <a {% if notification.new_one %} class="new_notification" {% else %} {% endif %} href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a><br /><span style="font-weight: bold; color: #A70;">commented</span> on post you are following.
+  </div>
+  <div class="separator"></div>
+</li>
+
+

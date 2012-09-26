@@ -113,5 +113,11 @@ def check_friend_request(user,current):
 def escaping(value):
     return escape(value)
 
+@register.filter(name='follows')
+def follows(item,user):
+    if item.get_type() in ['content post','share post']:
+        return item.post in user.follows.all()
+    return False
+
 
 

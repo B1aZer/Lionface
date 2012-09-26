@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 from django.db.models.signals import post_save, pre_save
 from django.db.models.query import Q
-from post.tasks import AddFriendToFeed
-from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+
 from itertools import chain
 
 FILTER_TYPE = (

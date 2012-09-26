@@ -1,6 +1,9 @@
 ##next###
-POSTS DELETE on delete remove notf
+#maybe change shared shared object a bit
+#do not send notf to self
+#follo already followed
 ###later###
+mass maubmit on ajax
 the album page (and in the future the loves page) direct back to the profile
 ###
 users case insensative ?
@@ -13,4 +16,6 @@ friends did not see own posts after unfrending.
 visiblity for mess(?) is wrong for user = self
 ###notf
 remove dated notif's
+###!!!###
+removing Post from signals
 

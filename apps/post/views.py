@@ -8,7 +8,7 @@ from models import *
 from account.models import UserProfile
 from tags.models import Tag
 from post.models import NewsItem
-from tasks import UpdateNewsFeeds
+from tasks import DeleteNewsFeeds
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
 from django.shortcuts import get_object_or_404
@@ -108,6 +108,33 @@ def save(request):
 
     return HttpResponse(json.dumps(data), "application/json")
 
+def follow(request):
+    data = {'status': 'OK'}
+    if request.method == 'POST' and 'post_id' in request.POST:
+        post_type = request.POST['post_type']
+        post_id = request.POST['post_id']
+        if post_type == 'content post':
+            try:
+                cont_post = ContentPost.objects.get(id=int(post_id))
+                if request.POST['value'] == 'Follow':
+                    request.user.follows.add(cont_post)
+                else:
+                    request.user.follows.remove(cont_post)
+            except ObjectDoesNotExist:
+                data['status'] = "FAIL"
+                data['html'] = "Sorry no such post"
+        if post_type == 'share post':
+            try:
+                share_post = SharePost.objects.get(id=int(post_id))
+                if request.POST['value'] == 'Follow':
+                    request.user.follows.add(share_post)
+                else:
+                    request.user.follows.remove(share_post)
+            except ObjectDoesNotExist:
+                data['status'] = "FAIL"
+                data['html'] = "Sorry no such post"
+    return HttpResponse(json.dumps(data), "application/json")
+
 def show(request):
     data = {'status': 'OK'}
     if request.method == 'POST' and 'post_id' in request.POST:
@@ -200,9 +227,10 @@ def delete(request, post_id = None):
         post_type = request.GET.get('type')
         if post_type == 'share post':
             original = post.post.get_inherited()
-            if original.content_object.shared != 0:
-                original.content_object.shared -= 1
-                original.content_object.save()
+            if original.content_object:
+                if original.content_object.shared != 0:
+                    original.content_object.shared -= 1
+                    original.content_object.save()
         DeleteNewsFeeds.delay(post,user=owner)
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -212,13 +240,24 @@ def share(request, post_id = None):
     if post_id:
         post = NewsItem.objects.get(id=post_id)
         post_type = post.post.get_inherited()
+        #if post already shared before
         if isinstance(post_type, SharePost):
-            post = post_type.get_original_post().post.get_inherited()
-            shared = SharePost(user = post_type.content_object.user , user_to=request.user , content = post_type.content, id_news = post_type.id_news, content_object = post )
-            post.shared += 1
-            post.save()
-            shared.save()
+            #post = post_type.get_original_post().post.get_inherited()
+            post = post_type.content_object
+            if post:
+                #if origanl post was not deleted
+                shared = SharePost(user = post_type.content_object.user , user_to=request.user , content = post_type.content, id_news = post_id, content_object = post )
+                post.shared += 1
+                post.save()
+                shared.save()
+            else:
+                #if was
+                shared = SharePost(user = post_type.user , user_to=request.user , content = post_type.content, id_news = post_type.id_news, content_object = post_type )
+                post_type.shared +=1
+                post_type.save()
+                shared.save()
         else:
+            #normal post
             post = SharePost(user = post_type.user , user_to=request.user , content = post.render(), id_news = post.id, content_object = post_type)
             post_type.shared +=1
             post_type.save()

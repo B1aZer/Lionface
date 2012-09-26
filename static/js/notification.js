@@ -38,7 +38,7 @@ function load_post(post, type) {
 }     
 
 $(document).ready(function(){
-    $(document).on('click',".profile_post, .shared_post, .comment_submitted", function(e) {
+    $(document).on('click',".profile_post, .shared_post, .comment_submitted, .follow_comment, .follow_shared", function(e) {
         var starter = document.elementFromPoint(e.clientX, e.clientY);  
         if ($(starter).is('a')) {
             return;

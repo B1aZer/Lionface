@@ -38,8 +38,9 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
 
 function make_request(input) {
     var url = input.url;
-    var data = input.data;
+    var data = input.data || false;
     var callback = input.callback;
+    var error_call = input.errorback || false;
 
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
     { 
@@ -66,6 +67,9 @@ function make_request(input) {
             },
             error: function() {
                 console.log("error during request");
+                if ($.isFunction(error_call)) {
+                    error_call();
+                }  
             }
         });
 
@@ -483,7 +487,35 @@ $(document).ready(function() {
         }
     });
 
-
+    /** Follow post. */
+    $(document).on('click','.follow_post', function(e) {
+        
+        e.preventDefault();
+        var self = $(this);
+        var value = self.html();
+        var post = $(this).parents('.result');
+        var data = $(this).parents('.result').metadata();
+        var post_id = post.attr("id").replace( /^\D+/g, '');
+        var send_data = {'post_id':post_id,'post_type':data.type,'value':value};
+        url = '/posts/follow/';
+        make_request({
+            url:url,
+            data:send_data,
+            callback:function (data_back) {
+                if (data_back.status == 'OK') {
+                    if (value == 'Unfollow') {
+                        self.html('Follow');
+                    }
+                    else {
+                        self.html('Unfollow');
+                    }
+                }
+                else {
+                    alert(data_back.html);
+                }
+            }
+        });   
+    });
 
 });
 

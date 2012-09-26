@@ -20,7 +20,7 @@ tasks.register(UpdateNewsFeeds)
 
 class DeleteNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
-        from models import Post, NewsItem, FriendPost
+        from models import NewsItem, FriendPost
         #rdb.set_trace()
         post_wrapper = post
         if user: users = [user]
@@ -39,7 +39,7 @@ tasks.register(DeleteNewsFeeds)
 # Churns through the list of posts for the new friend and adds them to the news feed for this user.
 class AddFriendToFeed(Task):
     def run(self, user, friend, **kwargs):
-        from models import Post, NewsItem
+        from models import NewsItem
         #for post in Post.objects.filter(user=friend):
             #UpdateNewsFeeds.delay(post, user)
         for post in NewsItem.objects.filter(user=friend):

@@ -1,14 +1,19 @@
 from django.db import models
 from account.models import UserProfile
-from django.db.models.signals import post_save, post_delete
-from django.utils.safestring import mark_safe
-from tasks import UpdateNewsFeeds,DeleteNewsFeeds
+from tags.models import Tag
+
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from .utils import QuerySetManager
-from tags.models import Tag
-from itertools import chain
+
+from django.db.models.signals import post_save, post_delete
+from django.core.exceptions import ObjectDoesNotExist
+
 import re
+from .utils import QuerySetManager
+from django.utils.safestring import mark_safe
+from itertools import chain
+
+from tasks import UpdateNewsFeeds
 
 class QuerySet(models.query.QuerySet):
     """Base QuerySet class for adding custom methods that are made
@@ -21,6 +26,7 @@ class QuerySet(models.query.QuerySet):
 class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
     user_to = models.ForeignKey(UserProfile,  related_name='user_to')
+    following = models.ForeignKey(UserProfile,  related_name='follows', null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
@@ -41,6 +47,14 @@ class Post(models.Model):
 
     def render(self):
         return ""
+
+    def delete(self, *args, **kwargs):
+        """We are checkig if post exist in any newsfeed,
+        delete otherwise"""
+        if self.newsitem_set.all():
+            return
+        else:
+            super(Post, self).delete(*args, **kwargs)
 
 
 class FriendPost(Post):
@@ -101,6 +115,9 @@ class ContentPost(Post):
     def get_type(self):
         return self._meta.verbose_name
 
+    def get_owner(self):
+        return self.user
+
     def privacy(self):
         return self.type
 
@@ -119,7 +136,18 @@ class SharePost(Post):
         return getattr(self.content_object,'type',"")
 
     def get_original_post(self):
-        return NewsItem.objects.get(id=self.id_news)
+        """Return last shared object(child)"""
+        try:
+            original = NewsItem.objects.get(id=self.id_news)
+            original = original.post.get_inherited()
+        except NewsItem.DoesNotExist:
+            original = False
+        except:
+            original = False
+        return original
+
+    def get_owner(self):
+        return self.user
 
     def render(self):
         #import pdb;pdb.set_trace()
@@ -189,13 +217,23 @@ class NewsItem(models.Model):
          return original.id
 
     def get_type(self):
-         original = self.post.get_inherited()
-         return original._meta.verbose_name
+        try:
+            original = self.post.get_inherited()
+        except:
+            return False
+        return original._meta.verbose_name
+
+    def get_owner(self):
+        try:
+            original = self.post.get_inherited()
+        except:
+            return False
+        return original.user
 
     @property
     def get_privacy(self):
-         original = self.post.get_inherited()
-         return original.privacy()
+        original = self.post.get_inherited()
+        return original.privacy()
 
     @property
     def timestamp(self):
@@ -204,13 +242,18 @@ class NewsItem(models.Model):
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
         UpdateNewsFeeds.delay(instance.get_inherited())
-post_save.connect(update_news_feeds, sender=Post)
+#post_save.connect(update_news_feeds, sender=Post)
 post_save.connect(update_news_feeds, sender=FriendPost)
 post_save.connect(update_news_feeds, sender=ContentPost)
 post_save.connect(update_news_feeds, sender=SharePost)
 def delete_news_feeds(sender, instance, **kwargs):
-    DeleteNewsFeeds.delay(instance)
-#post_delete.connect(delete_news_feeds, sender=NewsItem)
+    """Deletes original post"""
+    try:
+        post = instance.post
+        post.delete()
+    except ObjectDoesNotExist:
+        pass
+post_delete.connect(delete_news_feeds, sender=NewsItem)
 #post_delete.connect(delete_news_feeds, sender=ContentPost)
 
 # Logic is that as each post is saved, the news feed for each related user
