@@ -49,6 +49,12 @@ def create_profile_post_notification(sender, instance, created, **kwargs):
             Notification(user=instance.user_to, type='PP', other_user=instance.user, content_object=instance).save()
 post_save.connect(create_profile_post_notification, sender=ContentPost)
 
+def add_post_to_followings(sender, instance, created, **kwargs):
+    """Follow own posts"""
+    if created:
+        instance.user.follows.add(instance)
+post_save.connect(add_post_to_followings, sender=ContentPost)
+
 def create_share_notifiaction(sender, instance, created, **kwargs):
     if created and instance.user <> instance.user_to:
         Notification(user=instance.user, type='PS', other_user=instance.user_to, content_object=instance).save()
@@ -70,8 +76,8 @@ def create_share_notifiaction(sender, instance, created, **kwargs):
 post_save.connect(create_share_notifiaction, sender=SharePost)
 
 def create_comment_notifiaction(sender, comment, request, **kwargs):
-    if comment.content_object.post.user <> comment.user:
-        Notification(user=comment.content_object.post.user, type='CS', other_user=comment.user, content_object=comment.content_object).save()
+    #if comment.content_object.post.user <> comment.user:
+        #Notification(user=comment.content_object.post.user, type='CS', other_user=comment.user, content_object=comment.content_object).save()
     #create notifiactions for all followers of this post
     news_post = comment.content_object
     try:

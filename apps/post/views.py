@@ -280,6 +280,35 @@ def toggle_privacy(request):
     return  HttpResponse(json.dumps(data), "application/json")
 
 @login_required
+def change_settings(request):
+    data = {'status': 'FAIL'}
+    if request.method == 'POST' and 'post_id' in request.POST and 'post_type' in request.POST:
+        post_type = request.POST['post_type']
+        if post_type == 'content post':
+            post = get_object_or_404(ContentPost, id=int(request.POST['post_id']))
+            data = {'status': 'OK'}
+            if 'privacy_settings' in request.POST:
+                privacy = request.POST['privacy_settings']
+                if post.privacy() <> privacy[0].upper():
+                    post.type = privacy[0].upper()
+                    post.save()
+                    data['privacy'] = request.POST['privacy_settings']
+            if 'comment_settings' in request.POST:
+                post.allow_commenting = True
+                post.save()
+            else:
+                post.allow_commenting = False
+                post.save()
+                data['commenting'] = 'turned off'
+            if 'sharing_settings' in request.POST:
+                post.allow_sharing = True
+                post.save()
+            else:
+                post.allow_sharing = False
+                post.save()
+    return  HttpResponse(json.dumps(data), "application/json") 
+
+@login_required
 def test(request):
     #import pdb;pdb.set_trace()
     data = {'status': 'OK'}

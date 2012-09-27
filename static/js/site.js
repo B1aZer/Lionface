@@ -397,6 +397,20 @@ function check_for_notifications(){
     });
 } 
 
+function toggle_privacy(post_id, privacy) {
+    var post = $('#post_'+post_id)
+    if (post.length) {
+        var settings_privacy = post.find('.post_settings select[name=privacy_settings]').val();
+        var post_privacy = post.find('.toggle_privacy').html();
+        if (post_privacy != privacy) {
+            post.find('.toggle_privacy').html(privacy);
+        }
+        if (settings_privacy != privacy) {
+            post.find('.post_settings select[name=privacy_settings]').val(privacy)
+        }
+    }
+}
+
 
 $(document).ready(function() {
     hookLinks();
@@ -476,10 +490,12 @@ $(document).ready(function() {
                         if (post_type == 'F') {
                             self.html('Public');
                             self.attr('title','Privacy Settings: Public');
+                            toggle_privacy(post_id,'Public')
                         }
                         else {
                             self.html('Friends');
                             self.attr('title','Privacy Settings: Friends Only');
+                            toggle_privacy(post_id,'Friends')
                         }
                     }
                 }
@@ -515,6 +531,47 @@ $(document).ready(function() {
                 }
             }
         });   
+    });
+
+    /** Displaying post settings */
+    $(document).on('click','.toggle_settings', function(e) {
+        e.preventDefault();
+        if (!($(this).data('toggled'))) {
+            $(this).closest('.subtext').find('.post_settings').show();
+            $(this).data('toggled',true);
+        }
+        else {
+            $(this).closest('.subtext').find('.post_settings').hide();
+            $(this).data('toggled',false);
+        }
+    });
+
+    /** Post settings. */
+    $(document).on('change','.post_settings form :input', function(e) {
+        var form_data = $(this).closest('form').serialize();
+        var url = '/posts/change_settings/'
+        var post = $(this).closest('.result');
+        var meta = $(this).parents('.result').metadata();
+        var post_id = post.attr("id").replace( /^\D+/g, '');
+        data = "post_id="+post_id+"&post_type="+meta.type
+        if (form_data) { data = data + "&" + form_data; } 
+        make_request({
+            url:url,
+            data:data,
+            callback:function(data_back) {
+                if (data_back.status == 'OK') {
+                    if (data_back.privacy) {
+                        toggle_privacy(post_id, data_back.privacy);
+                    }
+                    if (data_back.commenting) {
+                        $('#hide_comment_'+post_id).hide();
+                    }
+                    else {
+                        $('#hide_comment_'+post_id).show();
+                    }
+                }
+            }
+        });
     });
 
 });

@@ -30,6 +30,8 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
+    allow_commenting = models.BooleanField(default=True)
+    allow_sharing = models.BooleanField(default=True)
 
     # Function to attempt to return the inherited object for this item.
     def get_inherited(self):
@@ -112,6 +114,9 @@ class ContentPost(Post):
     def post(self):
         return self
 
+    def get_post(self):
+        return self.post_ptr
+
     def get_type(self):
         return self._meta.verbose_name
 
@@ -120,6 +125,10 @@ class ContentPost(Post):
 
     def privacy(self):
         return self.type
+
+    @property
+    def get_privacy(self):
+        return self.privacy
 
 
 class SharePost(Post):
@@ -234,6 +243,17 @@ class NewsItem(models.Model):
     def get_privacy(self):
         original = self.post.get_inherited()
         return original.privacy()
+
+    def get_comment_settings(self):
+        original = self.post
+        return original.allow_commenting
+
+    def get_share_settings(self):
+        original = self.post
+        return original.allow_sharing
+
+    def get_post(self):
+        return self.post
 
     @property
     def timestamp(self):
