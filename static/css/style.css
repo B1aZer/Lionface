@@ -95,9 +95,13 @@ a.filterON:hover {
     width:100%;
 }
 
-a.colored_tag {
+a.colored_tag, a.colored_tag:active, a.colored_tag:active {
     color: #A70; 
-    text-decoration: underline;
+    text-decoration: none;
+}
+
+a.colored_tag:hover {
+	text-decoration: underline;
 }
 
 /* Profile */
@@ -363,7 +367,7 @@ a.profile_btn:hover {
 }
 
 .share_content {
-	padding: 10px 15px 0px 15px; 
+	padding: 10px 15px 5px 15px; 
 	background-color: #F7F7F7;
 	-moz-border-radius: 3px;
 	border-radius: 3px;

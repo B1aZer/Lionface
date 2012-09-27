@@ -11,9 +11,15 @@
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>
+<<<<<<< HEAD
             <a class="toggle_comments" href="">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span>
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span>
-            <a href="#" style="color: #AAA;">Hide Feed (news feed only)</a>
+                {% if item|follows:request.user %}
+                <a href="#" class="follow_post">Unfollow</a> <span style="color: transparent;"> -- </span>
+                {% else %}
+                <a href="#" class="follow_post">Follow</a> <span style="color: transparent;"> -- </span>
+                {% endif %}
+            <a href="#" class="toggle_settings" >Settings</a>
         </div>
         <div class="post_settings" style="display:none">
             <form>
@@ -27,6 +33,12 @@
                   <option value="Friends" {% if item.get_privacy == "F" %} selected="selected" {% endif %}>Friends</option>
                 </select>
             </form>
+=======
+            <a class="toggle_comments" href="">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+            <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+			<a href="#" style="color: #AAA;">Hide Feed (news feed only)</a>
+
+>>>>>>> 008dcff1ac2641411e2d300edfe04ba0035e5995
         </div><br />
         <div class="comments comment_{{ item.id }}" style="display: none;">
 			<div class="comment_container">
@@ -55,8 +67,12 @@
         <div class="post_bottom">
             {% if not del_false %}
                 {% if item.post.user.id == request.user.id  or item.user_to.id == request.user.id or item.user.id == request.user.id%}
+<<<<<<< HEAD
+				<a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span>
+=======
 				<a href="#" class="post_settings" >Settings</a> <span style="color: transparent;"> -- </span> 
 				<a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
+>>>>>>> 008dcff1ac2641411e2d300edfe04ba0035e5995
                 {% endif %}
                 {% if item.get_privacy == "P" %}
                 <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>
