@@ -13,14 +13,8 @@
         <div>
             <a class="toggle_comments" href="">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
-            {% if item.get_owner != request.user %}
-                {% if item|follows:request.user %}
-                <a href="#" class="follow_post">Unfollow</a> <span style="color: transparent;"> -- </span> 
-                {% else %}
-                <a href="#" class="follow_post">Follow</a> <span style="color: transparent;"> -- </span> 
-                {% endif %}
-            {% endif %}
-            <a href="#" class="post_settings" >Settings</a>
+			<a href="#" style="color: #AAA;">Hide Feed (news feed only)</a>
+
         </div><br />
         <div class="comments comment_{{ item.id }}" style="display: none;">
 			<div class="comment_container">
@@ -33,6 +27,13 @@
     <div id="{{item.id}}" style="display: none;">
 
         <div class="post_timestamp">
+            {% if item.get_owner != request.user %}
+                {% if item|follows:request.user %}
+                <a href="#" class="follow_post">Unfollow</a> <span style="color: transparent;"> -- </span> 
+                {% else %}
+                <a href="#" class="follow_post">Follow</a> <span style="color: transparent;"> -- </span> 
+                {% endif %}
+            {% endif %}
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
 
@@ -40,6 +41,7 @@
         <div class="post_bottom">
             {% if not del_false %}
                 {% if item.post.user.id == request.user.id  or item.user_to.id == request.user.id or item.user.id == request.user.id%}
+				<a href="#" class="post_settings" >Settings</a> <span style="color: transparent;"> -- </span> 
 				<a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
                 {% if item.get_privacy == "P" %}
@@ -59,6 +61,7 @@
                 {% else %}
                 {% endif %}   
             {% endif %}
+				<span style="color: transparent;"> -- </span> (album name)
         </div>
 		</div>
     </div>
