@@ -119,5 +119,9 @@ def follows(item,user):
         return item.get_post() in user.follows.all()
     return False
 
+@register.filter(name='following')
+def following(item):
+    return item.get_post().following.count()
+
 
 

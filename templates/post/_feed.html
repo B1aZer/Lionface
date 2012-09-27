@@ -41,13 +41,11 @@
     <div id="{{item.id}}" style="display: none;">
 
         <div class="post_timestamp">
-            {% if item.get_owner != request.user %}
                 {% if item|follows:request.user %}
-                <a href="#" class="follow_post">Unfollow</a> <span style="color: transparent;"> -- </span> 
+                <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %} ({{ item|following }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
                 {% else %}
                 <a href="#" class="follow_post">Follow</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
-            {% endif %}
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
 
@@ -55,7 +53,7 @@
         <div class="post_bottom">
             {% if not del_false %}
                 {% if item.post.user.id == request.user.id  or item.user_to.id == request.user.id or item.user.id == request.user.id%}
-				<a href="#" class="post_settings" >Settings</a> <span style="color: transparent;"> -- </span> 
+				<a href="#" class="toggle_settings" >Settings</a> <span style="color: transparent;"> -- </span> 
 				<a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
                 {% if item.get_privacy == "P" %}

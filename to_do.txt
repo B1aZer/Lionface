@@ -1,7 +1,5 @@
 ##next###
-#maybe change shared shared object a bit
-#do not send notf to self
-#follo already followed
+privacy only on content post
 ###later###
 mass maubmit on ajax
 the album page (and in the future the loves page) direct back to the profile

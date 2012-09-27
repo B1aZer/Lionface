@@ -329,13 +329,16 @@ function post_comment(form_id, url) {
         url: url,
         success: function(html, textStatus) {
             /*$('#comment_form_'+form_id+' form').replaceWith(html.html);*/
-            if ($('#comment_form_'+form_id).prev().find('.comment_list:last').length > 0) {
-                $('#comment_form_'+form_id).prev().find('.comment_list:last').after(html.html);
+            if ($('#comment_form_'+form_id).closest('.comment_container').find('.comment_list:last').length) {
+                $('#comment_form_'+form_id).closest('.comment_container').find('.comment_list:last').after(html.html);
             }
             else {
-                $('#comment_form_'+form_id).prev().append(html.html);   
+                $('#comment_form_'+form_id).closest('.comment_container').find('#comments').append(html.html);   
             }
             $('#comment_form_'+form_id+' form textarea').val('');
+            /** following mark */
+            $('#comment_form_'+form_id).closest('.result').find('.follow_post').html('Unfollow');
+
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             $('#comment_form_'+form_id+' form').replaceWith('Your comment was unable to be posted at this time.  We apologise for the inconvenience.');
