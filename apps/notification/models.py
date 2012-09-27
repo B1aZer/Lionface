@@ -56,13 +56,10 @@ def create_share_notifiaction(sender, instance, created, **kwargs):
     if created:
         try:
             post = instance.content_object
-            if post.following:
-                for user in post.following:
-                    Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
-        #if not iterable
-        except TypeError:
-            user = post.following
-            Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
+            if post.following.all():
+                for user in post.following.all():
+                    if user <> instance.user_to:
+                        Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
         except:
             pass
     if created and instance.user <> instance.user_to:
@@ -79,13 +76,10 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
     news_post = comment.content_object
     try:
         post = news_post.post
-        if post.following:
-            for user in post.following:
-                Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
-    #if not iterable
-    except TypeError:
-        user = post.following
-        Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
+        if post.following.all():
+            for user in post.following.all():
+                if user <> comment.user:
+                    Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
     except:
         pass
     if comment.content_object.post.user <> comment.user:

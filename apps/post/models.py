@@ -26,7 +26,7 @@ class QuerySet(models.query.QuerySet):
 class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
     user_to = models.ForeignKey(UserProfile,  related_name='user_to')
-    following = models.ForeignKey(UserProfile,  related_name='follows', null=True, blank=True)
+    following = models.ManyToManyField(UserProfile,  related_name='follows', null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
