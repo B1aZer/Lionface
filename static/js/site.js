@@ -412,7 +412,7 @@ function toggle_privacy(post_id, privacy) {
 
 /** Make excerpts for news feed */
 function make_excerpts() {
-    var splitter = '<a href="#" class="excerpt">show more</a>'
+    var splitter = '<a href="#" class="excerpt">Show Entire Post</a>'
     if ($('.result').length) {
         $('.result').each(function (index) {
             if ($(this).find('.excerpt').length) {

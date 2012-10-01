@@ -131,7 +131,7 @@ def excerpt(value, autoescape=None):
     # string format command
     length = len(lines)
     if length > 7:
-        lines.insert(7,'<a href="#" class="excerpt">show more</a>')
+        lines.insert(7,'<a href="#" class="excerpt">Show Entire Post</a>')
     #for i, line in enumerate(lines):
             #lines[i] = (u"%0" + width  + u"d. %s") % (i + 1, line)
     return mark_safe(u'\n'.join(lines))
