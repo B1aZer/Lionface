@@ -210,18 +210,22 @@ def delete_own_comment(request, message_id):
 
 @login_required
 def delete(request, post_id = None):
-    data = {'status': 'OK'}
+    data = {'status': 'FAIL'}
     if request.method == 'GET' and 'type' in request.GET and 'ajax' in request.GET:
+        #this will fire on ajax post posting
         post_type = request.GET['type']
         if post_type == 'content post':
             post_news = ContentPost.objects.get(id=post_id)
             DeleteNewsFeeds.delay(post_news)
+            data['status'] = 'OK'
             return HttpResponse(json.dumps(data), "application/json")
     if post_id:
+        #this is news feed delete
         if 'user' in request.GET:
             owner = UserProfile.objects.get(id=int(request.GET['user']))
         else:
             owner = request.user
+        #ownership is defined using template
         post = NewsItem.objects.get(id=post_id)
         #restore original count of shares
         post_type = request.GET.get('type')
@@ -231,6 +235,7 @@ def delete(request, post_id = None):
                 if original.content_object.shared != 0:
                     original.content_object.shared -= 1
                     original.content_object.save()
+        data['status'] = 'OK'
         DeleteNewsFeeds.delay(post,user=owner)
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -306,7 +311,7 @@ def change_settings(request):
             else:
                 post.allow_sharing = False
                 post.save()
-    return  HttpResponse(json.dumps(data), "application/json") 
+    return  HttpResponse(json.dumps(data), "application/json")
 
 @login_required
 def test(request):

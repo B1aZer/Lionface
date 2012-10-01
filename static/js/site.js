@@ -285,8 +285,10 @@ function del_post(elem) {
         url:url,
         callback:function(post_data) 
         {
-            $('.post_'+elem).prev('hr').hide();
-            $('.post_'+elem).fadeOut();
+            if (post_data.status == 'OK') {
+                $('.post_'+elem).prev('hr').hide();
+                $('.post_'+elem).fadeOut();
+            }
         }
     });    
 }       

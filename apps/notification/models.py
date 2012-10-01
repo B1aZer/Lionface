@@ -56,44 +56,38 @@ def add_post_to_followings(sender, instance, created, **kwargs):
 post_save.connect(add_post_to_followings, sender=ContentPost)
 
 def create_share_notifiaction(sender, instance, created, **kwargs):
-    if created and instance.user <> instance.user_to:
-        Notification(user=instance.user, type='PS', other_user=instance.user_to, content_object=instance).save()
-    #create notifiactions for all followers of this post
     if created:
         try:
             post = instance.get_original_post()
-            if post.following.all():
-                for user in post.following.all():
-                    if user <> instance.user_to:
-                        Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
         except:
-            pass
-    #if created and instance.user <> instance.user_to:
-        #adding this post to following list
-        #parent post
-        #instance.user_to.follows.add(instance.content_object)
-        #child post
-        #instance.user_to.follows.add(instance.get_original_post())
-    #all users
+            post = None
+        #create notification for owner
+        if instance.user <> instance.user_to and instance.user in post.following.all():
+            Notification(user=instance.user, type='PS', other_user=instance.user_to, content_object=instance).save()
+        #create notifiactions for all followers of this post
+        if post.following.all():
+            for user in post.following.all():
+                if user <> instance.user_to and user <> instance.user:
+                    Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
+    #adding to following list
     instance.user_to.follows.add(instance)
 post_save.connect(create_share_notifiaction, sender=SharePost)
 
 def create_comment_notifiaction(sender, comment, request, **kwargs):
-    #if comment.content_object.post.user <> comment.user:
-        #Notification(user=comment.content_object.post.user, type='CS', other_user=comment.user, content_object=comment.content_object).save()
-    #create notifiactions for all followers of this post
     news_post = comment.content_object
+    #creating notification for owner if following
+    if news_post.post.user <> comment.user and news_post.post.user in news_post.post.following.all():
+        Notification(user=comment.content_object.post.user, type='CS', other_user=comment.user, content_object=comment.content_object).save()
+    #create notifiactions for all followers of this post
     try:
         post = news_post.post
         if post.following.all():
             for user in post.following.all():
-                if user <> comment.user:
-                    Notification(user=user, type='CS', other_user=comment.user, content_object=comment.content_object).save()
+                if user <> comment.user and user <> post.user:
+                    Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
     except:
         pass
-    #if comment.content_object.post.user <> comment.user:
-    #adding all users
-        #adding this post to following list
+    #adding this post to following list
     comment.user.follows.add(comment.content_object.post)
 comment_was_posted.connect(create_comment_notifiaction)
 

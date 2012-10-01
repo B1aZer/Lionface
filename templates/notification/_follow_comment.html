@@ -1,6 +1,6 @@
 <li class="follow_comment notification {type: 'comment post', id: '{{ notification.content_object.id }}'}">
 <div style="padding: 15px;" class="link-output">
-      <a {% if notification.new_one %} class="new_notification" {% else %} {% endif %} href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a><br /><span style="color: #888;">commented on a post.<br /><pan style="font-size: 8pt;">You are following this post.</span></span>
+      <a {% if notification.new_one %} class="new_notification" {% else %} {% endif %} href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a><br /><span style="color: #888;">commented on a post.<br /><span style="font-size: 8pt;">You are following this post.</span></span>
   </div>
   <div class="separator"></div>
 </li>

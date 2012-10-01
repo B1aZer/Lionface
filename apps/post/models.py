@@ -235,6 +235,8 @@ class NewsItem(models.Model):
     def get_owner(self):
         try:
             original = self.post.get_inherited()
+            if original._meta.verbose_name == 'share post':
+                return original.user_to
         except:
             return False
         return original.user
