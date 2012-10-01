@@ -13,7 +13,9 @@
   {% if current_user|has_friend_request:user %}
     Friend request pending.
   {% else %}
-    <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">Add Friend</a>
+    <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}" style="margin-right: 10px;">+ Add</a>
   {% endif %}
+	+ Follow
 {% endif %}
+<div style="font-size: 6pt; color: #CCC;">Degree of Separation: (count)</div>
 </span>

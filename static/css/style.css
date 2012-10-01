@@ -106,6 +106,13 @@ a.colored_tag:hover {
 
 /* Profile */
 
+.post_settings {
+	padding: 7px;
+	border: 1px solid #CCC;
+	background: #FAFAFA;
+	margin: 10px 0 0 0;
+}
+
 a.post:link, a.post:active, a.post:visited, .submit_comment, .send { 
 	padding: 6px 20px 4px 20px;
 	-moz-border-radius: 3px;
@@ -592,9 +599,25 @@ a.profile_btn:hover {
 	border-color: #CCC;
 }
 
+.header_profile_image div {
+	display: inline-block; 
+	float: left; 
+	background-size: 34px 34px; 
+	width: 34px; height: 34px; 
+	position: relative; left: 0px; top: -10px;
+	-moz-box-shadow: 0 2px 4px -2px #777;
+	box-shadow: 0 2px 4px -2px #777;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #DDD;
+}
+
+a.header_profile_image:hover {
+	background: none #EEE;
+}
 
 .left_links li a:link, .left_links li a:active, .left_links li a:visited { 
-	padding: 7px 10px 8px 10px; 
+	padding: 15px 10px 10px 10px; 
 	color: #777; 
 	font-size: 10pt;
 }
@@ -609,6 +632,7 @@ a.profile_btn:hover {
 
 .left_links li a.settings:link, .left_links li a.settings:active, .left_links li a.settings:visited {
 	color: #BBB;
+	display: inline-block;
 }
 
 .left_links li a.settings:hover {
@@ -616,9 +640,7 @@ a.profile_btn:hover {
 }
 
 .left_links li #signout {
-	color: #BBB;
-	position: absolute;
-	left: 275px; top: 10px;
+	color: #AAA;
 	display: none;
 }
 
@@ -641,7 +663,7 @@ a.nav_page:link, a.nav_page:active, a.nav_page:visited {
 	font-size: 8pt;
 	color: #999;
 	position: absolute;
-	left: 35px;
+	left: 35px; top: 23px;
 	padding: 5px;
 	background: #FFF;
 	border: 1px solid #DDD;
@@ -973,6 +995,7 @@ a.love:hover {
  }
 
 .love_container {
+	position: relative;
 	-moz-border-radius: 0 0 10px 10px; 
 	border-radius: 0 0 10px 10px;
 	background: #a2c185; /* Old browsers */
@@ -985,9 +1008,20 @@ a.love:hover {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a2c185', endColorstr='#889966',GradientType=0 ); /* IE6-9 */
 }
 .love_container:hover { 
-
 	-moz-box-shadow: inset 0 4px 10px -6px #000;
 	box-shadow: inset 0 4px 10px -6px #000;
+}
+
+.earth {
+	z-index; 999;
+	display: block;
+	position: absolute; left: 0px; top: 10px;
+	width: 100px; height: 100px;
+	background-image: url(../images/earth.png); 
+	background-position: center center;
+	background-size: 100px 100px;
+	-moz-border-radius: 0 0 10px 10px; 
+	border-radius: 0 0 10px 10px;
 }
 
 .cover_photo {
@@ -997,6 +1031,7 @@ a.love:hover {
 	position: relative;
 	-moz-box-shadow: 0 4px 10px -6px #333;
 	box-shadow: 0 4px 10px -6px #333;
+	z-index: 998;
 }
 
 .content_area_pages {
@@ -1005,27 +1040,21 @@ a.love:hover {
 .pages_nav_area {
 	padding: 12px 0px;
 	width: 900px;
-	background: #555555; /* Old browsers */
-	background: -moz-linear-gradient(top, #555555 0%, #333333 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#555555), color-stop(100%,#333333)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #555555 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #555555 0%,#333333 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #555555 0%,#333333 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #555555 0%,#333333 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
+	background: #fafafa; /* Old browsers */
+	background: -moz-linear-gradient(top, #fafafa 0%, #eeeeee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
 	border: 1px solid #EEE;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
 
 #pages_nav_page { 
-	margin: 10px 0;	background: #fafafa; /* Old browsers */
-	background: -moz-linear-gradient(top, #fafafa 0%, #eeeeee 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */ 
+	margin: 10px 0;
 }
 
 #pages_nav_page a:link, #pages_nav_page a:active, #pages_nav_page a:visited, 
@@ -1038,7 +1067,7 @@ a.love:hover {
 a.nonprofit_btn:link, a.nonprofit_btn:active, a.nonprofit_btn:visited,
 a.business_btn:link, a.business_btn:active, a.business_btn:visited {
 	padding: 7px 12px;
-	color: #FFF;
+	color: #666;
 	margin: 0 5px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -1148,13 +1177,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', end
 
 .content_pages img {
 	margin: 5px 0;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	-moz-box-shadow: 0 4px 8px -4px #333;
-	box-shadow: 0 4px 8px -4px #333;
 }
 
 .content_pages img:hover {
-	-moz-box-shadow: 0 4px 14px -4px #333;
-	box-shadow: 0 4px 14px -4px #333;
+	-moz-box-shadow: 0 4px 8px -4px #777;
+	box-shadow: 0 4px 8px -4px #777;
 }

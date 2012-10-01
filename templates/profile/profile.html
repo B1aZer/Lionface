@@ -4,19 +4,19 @@
 {% block content_title %} {{ profile_user.full_name }} | Profile {% endblock %}
 {% block content_middle %}
 {% if profile_user|check_friends_visibility:request.user %}
-<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" >{{ profile_user|show_friend_count }}</a>
+<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_friend_count }}</a>
 {% endif %}
 {% if profile_user|check_follower_visibility:request.user %}
-<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Followers" >{{ profile_user.followers.count }} Follower{{ profile_user.followers.count|pluralize }}</a>
+<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Followers"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user.followers.count }} Follower{{ profile_user.followers.count|pluralize }}</a>
 {% endif %}
 {% if profile_user|check_following_visibility:request.user %}
-<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Following" >{{ profile_user.following.count }} Following</a>
+<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Following"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user.following.count }} Following</a>
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}
 {% if request.user == profile_user %}
 {% elif profile_user|has_friend:request.user %}
-	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px;">- Remove</a>
+	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px; font-size: 8pt;">- Remove</a>
 {% elif profile_user|has_friend_request:request.user %}
 	<span style="color: #999; margin: 0px;" >Friend request pending.</span>
 {% elif profile_user|in_followers:request.user %}
@@ -57,13 +57,16 @@
 </div>
 
 {% if request.user == profile_user %}
+<div style="display: inline-block; font-size: 7pt; color: #999; margin: 10px 0; padding: 4px;">Volunteer: (count)hrs</div>
 {% else %}
 {% if profile_user|check_message_sending:request.user %}
-<div style="margin: 10px 0;"><a href="#" id="send_message" class="profile_nav" style="font-size: 9pt;" onClick="HideContent('send_message'); return false;">Send Message</a></div>
+<div style="margin: 10px 0; display: inline-block;" id="send_message"><a href="#" class="profile_nav" style="font-size: 8pt;">Send Message</a></div><div style="display: inline-block; font-size: 7pt; color: #999; margin: 10px 0; padding: 4px 0;">Volunteer: (count)hrs</div>
+
 {% endif %}
 
+
 <div style="position: relative;">
-<form action="." method="post" class="send_message_form" style="display:none;">
+<form action="." method="post" class="send_message_form" style="display:none;" id="message_form">
     {% csrf_token %}
 
     {% if form_mess.non_field_errors %}
@@ -79,7 +82,7 @@
     {% endif %}
     {{ form_mess.content }} 
 
-    <p><input name="message" type="submit" class="blue_btn" style="font-size: 8pt;" value="Send" /></p>
+    <p><input name="message" type="submit" class="blue_btn" style="font-size: 8pt;" value="Send" /> <a href="#" onClick="HideContent('message_form'); return false;" style="font-size: 7pt; color: #999; margin-left: 10px;">Cancel</a></p>
 </form> 
 </div>
 

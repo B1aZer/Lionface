@@ -4,9 +4,9 @@
 {% block content_title %}{{ profile_user.first_name }} {{ profile_user.last_name }} | Profile{% endblock %}
 {% block content_middle %}
 {% if profile_user == user %}
-{{ user|show_friend_count }}
-<span style="color: transparent;">| |</span> {{ user.followers.count }} follower{{ user.followers.count|pluralize }}
-<span style="color: transparent;">| |</span> {{ user.following.count }} following
+<span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user|show_friend_count }}</span>
+<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user.followers.count }} Follower{{ user.followers.count|pluralize }}</span>
+<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user.following.count }} Following</span>
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}

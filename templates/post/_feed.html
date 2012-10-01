@@ -13,17 +13,17 @@
         <div>
             <a class="toggle_comments" href="">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span>
             <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span>
-            <a href="#" style="color: #AAA;">Hide Feed (news feed only)</a>
+            <a href="#" style="color: #AAA;">Hide Feed (news feed only, friends only)</a>
         </div>
         <div class="post_settings" style="display:none">
             <form>
-                <input type="checkbox" name="comment_settings" value="on" {% if item.get_comment_settings %}checked="checked"{% endif %}>On<span style="color: transparent;"> -- -- -- </span>
+                <input type="checkbox" name="comment_settings" value="on" {% if item.get_comment_settings %}checked="checked"{% endif %}> Comments<span style="color: transparent;"> -- -- -- </span>
                 <span class="in_progress" style="display:none;">
                     <input type="checkbox" name="sharing_settings" value="on" {% if item.get_share_settings %}checked="checked"{% endif %}>On<span style="color: transparent;"> -- </span>
                 </span>
                 <span style="color: transparent;"> -- -- -- - </span>
                 <select name="privacy_settings">
-                    <option value="Public" {% if item.get_privacy == "P" %} selected="selected" {% endif %}>Public</option>
+                  <option value="Public" {% if item.get_privacy == "P" %} selected="selected" {% endif %}>Public</option>
                   <option value="Friends" {% if item.get_privacy == "F" %} selected="selected" {% endif %}>Friends</option>
                 </select>
             </form>
