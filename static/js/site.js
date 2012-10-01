@@ -438,12 +438,12 @@ $(document).ready(function() {
         var toggled = $(this).data('toggled');
         $(this).data('toggled', !toggled);
         if (!toggled) {
-            $('.comment_'+post_id).fadeIn(function() {
+            $('.comment_'+post_id).show(function() {
                 $('.text_comment').autosize();
             });
         }
         else {
-            $('.comment_'+post_id).fadeOut(); 
+            $('.comment_'+post_id).hide(); 
         }
     });
 
@@ -474,6 +474,7 @@ $(document).ready(function() {
         check_for_notifications();
     }, 20000);
 
+    /** Change privacy settings for content posts */
     $(document).on('click','.toggle_privacy', function() {
         var self = $(this);
         var post = $(this).parents('.result');
@@ -569,10 +570,18 @@ $(document).ready(function() {
                         toggle_privacy(post_id, data_back.privacy);
                     }
                     if (data_back.commenting) {
+                        $('#hide_comment_link_'+post_id).hide();
                         $('#hide_comment_'+post_id).hide();
                     }
                     else {
+                        $('#hide_comment_link_'+post_id).show();
                         $('#hide_comment_'+post_id).show();
+                    }  
+                    if (data_back.sharing) {
+                        $('#hide_share_'+post_id).hide();
+                    }
+                    else {
+                        $('#hide_share_'+post_id).show();
                     }
                 }
             }

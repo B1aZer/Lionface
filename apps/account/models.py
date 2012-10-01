@@ -217,9 +217,12 @@ class UserProfile(User):
         return ('profile.views.profile', [str(self.username)])
 
     def _get_full_name(self):
-        "Returns the person's full name."
         return self.optional_name or '%s %s' % (self.first_name, self.last_name)
     full_name = property(_get_full_name)
+
+    def get_full_name(self):
+        "Returns the person's full name."
+        return self.full_name
 
 
 def update_user_profile(sender, instance, raw, using, **kwargs):
