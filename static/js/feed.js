@@ -23,6 +23,7 @@ function loadNewsFeed(elem) {
             var offs = $('html, body').find('#post_'+ids).offset();
             $('html, body').animate({scrollTop:offs.top}, 500); 
         }
+        make_excerpts();
 
       },
       error: function() {
@@ -66,6 +67,8 @@ function hide_add_link() {
    }
 
 }    
+
+      
 
 $(document).ready(function(){
 

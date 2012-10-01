@@ -410,6 +410,24 @@ function toggle_privacy(post_id, privacy) {
     }
 }
 
+/** Make excerpts for news feed */
+function make_excerpts() {
+    var splitter = '<a href="#" class="excerpt">show more</a>'
+    if ($('.result').length) {
+        $('.result').each(function (index) {
+            if ($(this).find('.excerpt').length) {
+                var content = $(this).find('.post_content').html();
+                content = content.split(splitter);
+                html_before = content[0]
+                html_after = content[1]
+                //remove <br> from beggining
+                html_after = html_after.replace(/^<br>/g, '')
+                /*console.log(content);*/
+                $(this).find('.post_content').html(html_before).append(splitter).append('<div class="full_post" style="display:none">' + html_after + '</div>');
+            }
+        });
+    }
+}     
 
 $(document).ready(function() {
     hookLinks();
@@ -583,6 +601,31 @@ $(document).ready(function() {
             }
         });
     });
+
+    /** Show full post */
+    $(document).on('click','.excerpt', function(e) {
+        e.preventDefault();
+        var self = $(this);
+        var post_content = $(this).parent();
+        if (post_content.find('.full_post').length) {
+            var html_after = post_content.find('.full_post').html();
+            post_content.find('.full_post').show();
+            /*post_content.append(html_after);*/
+            self.hide();
+            post_content.append('<a href="#" class="show_less">Hide</a>');
+        }
+    });
+
+    /** Show excerpt from post */
+    $(document).on('click','.show_less', function(e) {
+        e.preventDefault();
+        var self = $(this);
+        var post_content = $(this).parent();
+        post_content.find('.full_post').hide(); 
+        post_content.find('.excerpt').show(); 
+        self.remove();
+    });
+    
 
 });
 

@@ -77,6 +77,8 @@ $(function() {
             callback: function(data) {
                     $("#news_feed").prepend(data.html);
                     $('.postbox_textarea').val('');
+                    console.log('saving');
+                    make_excerpts();
             },
         });
         return false;

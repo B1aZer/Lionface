@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.utils.html import escape
+from django.utils.safestring import mark_safe
 from tags.models import *
 from smileys.models import Smiley
 import re
@@ -122,6 +123,18 @@ def follows(item,user):
 @register.filter(name='following')
 def following(item):
     return item.get_post().following.count()
+
+@register.filter(is_safe=True, needs_autoescape=True)
+def excerpt(value, autoescape=None):
+    lines = value.split(u'\n')
+    # Find the maximum width of the line count, for use with zero padding
+    # string format command
+    length = len(lines)
+    if length > 7:
+        lines.insert(7,'<a href="#" class="excerpt">show more</a>')
+    #for i, line in enumerate(lines):
+            #lines[i] = (u"%0" + width  + u"d. %s") % (i + 1, line)
+    return mark_safe(u'\n'.join(lines))
 
 
 
