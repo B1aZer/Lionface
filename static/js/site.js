@@ -260,21 +260,15 @@ function ReverseContentDisplay(d) {
 
 function share_post(elem) { 
     url = "/posts/share/" + elem + "/";
-
-    if (window.location.pathname.indexOf('lionface') >= 0) 
-    { 
-        url = '/lionface' +  url;
-    }       
-
-    $.ajax(url,
-        {
-            success: function(data) {
-                alert("shared");
-            },
-            error: function() {
-                alert('Unable to share post.');
+    make_request({
+        url:url,
+        callback: function(data) {
+            if (data.status == 'OK') {
+                $('.post_'+elem).find('.share_text').html('<p> Shared. </p>');
+                $('.post_'+elem).find('.share_text').show();
             }
-        });    
+        }
+    });    
 
 }          
 
