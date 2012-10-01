@@ -45,11 +45,15 @@
     <div id="{{item.id}}" style="display: none;">
 
         <div class="post_timestamp">
-                {% if item|follows:request.user %}
-                <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %} ({{ item|following }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
-                {% else %}
-                <a href="#" class="follow_post">Follow</a> {% ifequal item|following 0 %} {% else %} ({{ item|following }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
-                {% endif %}
+            {% if item.get_type != 'friend post' %}
+                <span id="hide_follow_link_{{ item.get_id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
+                    {% if item|follows:request.user %}
+                    <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %} ({{ item|following }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+                    {% else %}
+                    <a href="#" class="follow_post">Follow</a> {% ifequal item|following 0 %} {% else %} ({{ item|following }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+                    {% endif %}
+                </span>
+            {% endif %}
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
 
@@ -58,7 +62,9 @@
             {% if not del_false %}
             <!--This will fire on news feed-->
                 {% if item.get_owner.id == request.user.id  or item.user_to.id == request.user.id or item.user.id == request.user.id %}
-				<a href="#" class="toggle_settings" >Settings</a> <span style="color: transparent;"> -- </span> 
+                    {% if item.get_type != 'friend post' %}
+                    <a href="#" class="toggle_settings" >Settings</a> <span style="color: transparent;"> -- </span> 
+                    {% endif %}
 				<a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> -- </span> 
                 {% endif %}
                 {% if item.get_privacy == "P" %}

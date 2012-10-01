@@ -571,10 +571,12 @@ $(document).ready(function() {
                     }
                     if (data_back.commenting) {
                         $('#hide_comment_link_'+post_id).hide();
+                        $('#hide_follow_link_'+post_id).hide();
                         $('#hide_comment_'+post_id).hide();
                     }
                     else {
                         $('#hide_comment_link_'+post_id).show();
+                        $('#hide_follow_link_'+post_id).show();
                         $('#hide_comment_'+post_id).show();
                     }  
                     if (data_back.sharing) {
