@@ -264,7 +264,7 @@ function share_post(elem) {
         url:url,
         callback: function(data) {
             if (data.status == 'OK') {
-                $('.post_'+elem).find('.share_text').html('<p> Shared. </p>');
+                $('.post_'+elem).find('.share_text').html('<span class="shared"> Shared </span>');
                 $('.post_'+elem).find('.share_text').show();
             }
         }
