@@ -50,6 +50,15 @@ class Post(models.Model):
     def render(self):
         return ""
 
+    def get_owner(self):
+        try:
+            original = self.get_inherited()
+            if original._meta.verbose_name == 'share post':
+                return original.user_to
+        except:
+            return False
+        return original.user
+
     def delete(self, *args, **kwargs):
         """We are checkig if post exist in any newsfeed,
         delete otherwise"""
@@ -156,7 +165,7 @@ class SharePost(Post):
         return original
 
     def get_owner(self):
-        return self.user
+        return self.user_to
 
     def render(self):
         #import pdb;pdb.set_trace()

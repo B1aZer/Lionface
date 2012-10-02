@@ -62,12 +62,12 @@ def create_share_notifiaction(sender, instance, created, **kwargs):
         except:
             post = None
         #create notification for owner
-        if instance.user <> instance.user_to and instance.user in post.following.all():
-            Notification(user=instance.user, type='PS', other_user=instance.user_to, content_object=instance).save()
+        if post.get_owner() <> instance.user_to and post.get_owner() in post.following.all():
+            Notification(user=post.get_owner(), type='PS', other_user=instance.user_to, content_object=instance).save()
         #create notifiactions for all followers of this post
         if post.following.all():
             for user in post.following.all():
-                if user <> instance.user_to and user <> instance.user:
+                if user <> instance.user_to and user <> post.get_owner():
                     Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
     #adding to following list
     instance.user_to.follows.add(instance)
@@ -76,14 +76,14 @@ post_save.connect(create_share_notifiaction, sender=SharePost)
 def create_comment_notifiaction(sender, comment, request, **kwargs):
     news_post = comment.content_object
     #creating notification for owner if following
-    if news_post.post.user <> comment.user and news_post.post.user in news_post.post.following.all():
-        Notification(user=comment.content_object.post.user, type='CS', other_user=comment.user, content_object=comment.content_object).save()
+    if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.post.following.all():
+        Notification(user=comment.content_object.post.get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
     #create notifiactions for all followers of this post
     try:
         post = news_post.post
         if post.following.all():
             for user in post.following.all():
-                if user <> comment.user and user <> post.user:
+                if user <> comment.user and user <> post.get_owner():
                     Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
     except:
         pass

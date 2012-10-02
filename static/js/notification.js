@@ -3,33 +3,24 @@
 function load_post(post, type) { 
     url = "/posts/show/";
 
-     if (window.location.pathname.indexOf('lionface') >= 0) 
-  { 
-    url = '/lionface' +  url;
-  }       
-    
-    //var $elem = $(document.createElement('div'));
-    //$(".right_col").append($elem);
     var $elem = $('.right_content');
     $elem.html("");
     $elem.addClass("large_loader"); 
 
-    $.ajax(
-
-    {
-      type: 'POST',
+    make_request({
       url: url,
       data: {
           post_id : post,
           post_type : type
       },
-      success: function(data) {
+      callback: function(data) {
         //alert(data.html);
         $elem.removeClass("large_loader");
         $elem.html(data.html);
+        make_excerpts();
 
       },
-      error: function() {
+      errorback: function() {
         alert('Unable to retrieve data.');
         $elem.removeClass("large_loader");
       }
