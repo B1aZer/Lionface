@@ -112,4 +112,54 @@ $(function() {
 
     $('.postbox_textarea').autosize();
 
+    /*********** Albums ***********/
+
+    /*$(document).on('click','#albums_link',function(e) {   */
+        /*e.preventDefault();*/
+        /*$('#postbox').hide();*/
+        /*$('#news_feed').html("<div class='large_loader'></div>");*/
+        /*url='albums/?json'*/
+        /*make_request({*/
+            /*url:url,*/
+            /*callback:function(data){*/
+                /*$('#news_feed').html(data.html);*/
+                /*},*/
+                /*errorback:function(){*/
+                    /*$('#news_feed').html('Unable to load albums');*/
+                    /*}*/
+/*});*/
+/*});*/
+    $(document).on('submit','#create_album_form',function(e) {    
+        e.preventDefault();
+        var url = 'albums/';
+        make_request({
+            url:url,
+            data:$(this).serialize(),
+            callback:function(data){
+                if (data.status == 'OK' && data.html) {
+                    $('.albums').append(data.html);
+                    $('#album_name').val('');
+                }
+            },
+            errorback:function(){
+            }
+        });
+
+    });
+
+    $(document).on('click','#create_album_link',function(e) {    
+        var toggled = $(this).data('toggled');
+        $(this).data('toggled', !toggled);     
+        if (!toggled){
+            $('#create_album_form').show();
+        }
+        else {
+            $('#create_album_form').hide();
+        }
+    });
+
+    
+
+
+
 });

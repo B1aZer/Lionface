@@ -1,0 +1,40 @@
+{% extends 'profile/profile.html' %}
+{% load media friends format_results %}
+
+{% block right_col %}
+
+<div style="padding: 10px; position: relative; left: 40px;">
+    <div style="padding: 15px 0 25px 0px;">
+        <a href="." id="posts_link" class="profile_nav">Posts</a>
+        <a href="?albums" id="albums_link" class="profile_nav">Albums</a>
+        <a href="#" id="loves_link" class="profile_nav">Loves</a>
+    </div>  
+
+<!--sample css-->
+<style type="text/css">
+#create_album {
+    cursor:pointer;
+}
+#create_album:hover {
+    text-decoration:underline;
+}
+</style>
+
+    <span id="create_album_link" style="cursor:pointer">Create album</span>
+    <form id="create_album_form" style="display:none">
+        <input id="album_name" name="album_name">
+        <input type="submit" value="save">
+    </form>
+
+    <div class="albums">
+    {% for album in albums %}
+        <p>{{ album.name }}</p>
+        {% if album.posts.all %}
+        <div>related posts: {{ album.posts.all }}</div>
+        {% endif %}
+    {% endfor %}  
+    </div>
+
+</div>
+{% include_media 'profile.js' %}
+{% endblock %}

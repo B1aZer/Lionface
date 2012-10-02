@@ -32,6 +32,14 @@
                   <option value="Friends" {% if item.get_privacy == "F" %} selected="selected" {% endif %}>Friends</option>
                 </select>
                 {% endif %}
+                {% if request.user.get_albums %}
+                <select name="attach_to_album" multiple="multiple">
+                    {% for album in request.user.get_albums %}
+                    <option value="{{ album.name }}" {% if album in item.get_albums %} selected="selected" {% endif %}>{{ album.name }}</option>
+                    {% endfor %}
+                </select>
+                  <p>Hold down the Ctrl (windows) / Command (Mac) button to select multiple options.</p>
+                {% endif %}
             </form>
         </div><br />
         <div id="hide_comment_{{ item.get_id }}" {% if not item.get_comment_settings %}  style="display:none" {% endif %} >
@@ -87,7 +95,7 @@
                 {% else %}
                 {% endif %}
             {% endif %}
-				<span style="color: transparent;"> -- </span> (album name)
+            <span style="color: transparent;"> -- </span> {{ item.get_albums_names }}
         </div>
 		</div>
     </div>

@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 
 from account.models import UserProfile
 from messaging.models import Messaging
+from post.models import Albums
 from notification.models import Notification
 from messaging.forms import MessageForm
 from .forms import *
@@ -94,6 +95,20 @@ def profile(request, username=None):
                 mess.save()
                 return HttpResponseRedirect(request.path)
 
+
+    if request.method == 'GET' and 'albums' in request.GET:
+        """Albums view"""
+        return render_to_response(
+            'profile/albums.html',
+            {
+                'profile_user': profile_user,
+                'not_count': Notification.objects.filter(user=request.user,read=False).count(),
+                'form_mess' : form_mess,
+                'albums' : Albums.objects.all(),
+            },
+            RequestContext(request)
+        )
+
     return render_to_response(
         'profile/profile.html',
         {
@@ -104,6 +119,17 @@ def profile(request, username=None):
         },
         RequestContext(request)
     )
+
+@login_required
+def albums(request):
+    data = {'status':'FAIL'}
+    if request.method == 'POST' and 'album_name' in request.POST:
+        data = {'status':'OK'}
+        album, created = Albums.objects.get_or_create(name=request.POST['album_name'], user = request.user)
+        if created:
+            data['html'] = "<p>%s</p>" % album.name
+
+    return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
 def settings(request):

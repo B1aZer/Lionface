@@ -98,9 +98,9 @@
 {% include_media 'feed.js' %}
 <div style="padding: 10px; position: relative; left: 40px;">
     <div style="padding: 15px 0 25px 0px;">
-        <a href="#" class="profile_nav">Posts</a>
-        <a href="#" class="profile_nav">Albums</a>
-        <a href="#" class="profile_nav">Loves</a>
+        <a href="#" id="posts_link" class="profile_nav">Posts</a>
+        <a href="?albums" id="albums_link" class="profile_nav">Albums</a>
+        <a href="#" id="loves_link" class="profile_nav">Loves</a>
     </div>
 
     {% if profile_user|has_friend:request.user or request.user == profile_user %}
@@ -125,7 +125,7 @@
                                             <div class="post_option">
                                                 <input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;"> 
                                             <label for="checkbox" style="cursor: pointer;"> Friends</label>
-												</div>>
+												</div>
                                         {% else %}
                                             {% if request.user|check_option:"posting_default" == "Friends Only" %}
                                                 <div class="post_option">

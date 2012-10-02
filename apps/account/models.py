@@ -131,6 +131,9 @@ class UserProfile(User):
             options[option.name] = option.value
         return options
 
+    def get_albums(self):
+        return self.albums_set.all()
+
     def check_option(self,name,value=None):
         name = "option_%s" % name
         try:

@@ -266,9 +266,21 @@ class NewsItem(models.Model):
     def get_post(self):
         return self.post
 
+    def get_albums(self):
+        return self.post.albums_set.all()
+
+    def get_albums_names(self):
+        return ",".join([x.name for x in self.post.albums_set.all()])
+
     @property
     def timestamp(self):
         return self.date
+
+class Albums(models.Model):
+    name = models.CharField(max_length=200)
+    user = models.ForeignKey(UserProfile)
+    date = models.DateTimeField(auto_now_add=True)
+    posts = models.ManyToManyField(Post, null=True, blank=True)
 
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
