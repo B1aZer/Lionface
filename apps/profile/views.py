@@ -104,7 +104,7 @@ def profile(request, username=None):
                 'profile_user': profile_user,
                 'not_count': Notification.objects.filter(user=request.user,read=False).count(),
                 'form_mess' : form_mess,
-                'albums' : Albums.objects.all(),
+                'albums' : request.user.albums_set.all(),
             },
             RequestContext(request)
         )
