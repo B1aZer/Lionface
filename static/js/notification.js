@@ -28,6 +28,12 @@ function load_post(post, type) {
 
 }     
 
+function reset_notificaton_count() {  
+    if ($('#notifications_id_notif span').length) {
+        $('#notifications_id_notif span').remove();
+    }
+}
+
 $(document).ready(function(){
     $(document).on('click',".profile_post, .shared_post, .comment_submitted, .follow_comment, .follow_shared", function(e) {
         var starter = document.elementFromPoint(e.clientX, e.clientY);  
@@ -66,4 +72,6 @@ $(document).ready(function(){
             $(this).find('.new_notification').removeClass('new_notification');
         }
     });
+
+    reset_notificaton_count();
 }); 

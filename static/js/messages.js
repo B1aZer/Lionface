@@ -201,6 +201,12 @@ function load_messages(user_id, sort, page, incolumn) {
             });  
 }
 
+function reset_message_count() {
+    if ($('#messages_id_notif span').length) {
+        $('#messages_id_notif span').remove();
+    }
+}
+
 $(document).ready(function() { 
         
     auto_complete();
@@ -293,5 +299,7 @@ $(document).ready(function() {
             load_messages($('body').data('messages').user_id,false,$('body').data('messages').nextpage,true);
         }
     });
+
+    reset_message_count();
 
 })

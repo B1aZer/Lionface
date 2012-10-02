@@ -136,5 +136,10 @@ def excerpt(value, autoescape=None):
             #lines[i] = (u"%0" + width  + u"d. %s") % (i + 1, line)
     return mark_safe(u'\n'.join(lines))
 
+@register.filter(name="mark_read")
+def mark_read(message):
+    message.mark_read()
+    return ""
+
 
 

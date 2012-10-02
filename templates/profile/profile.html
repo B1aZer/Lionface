@@ -15,22 +15,22 @@
 {% endblock %}
 {% block content_subtitle %}
 {% if request.user == profile_user %}
-<soan style="color: #AAA; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</soan>
+<span style="color: #AAA; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</span>
 {% elif profile_user|has_friend:request.user %}
-	<soan style="color: #BBB; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</soan>
+	<span style="color: #BBB; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</span>
 	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px; font-size: 8pt;">- Remove</a>
 {% elif profile_user|has_friend_request:request.user %}
-	<soan style="color: #999; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</soan>
+	<span style="color: #999; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</span>
 	<span style="color: #999; margin: 0px;" >Friend request pending.</span>
 {% elif profile_user|in_followers:request.user %}
     {% if profile_user|check_friend_request:request.user %} 
-	<soan style="color: #BBB; font-size: 8pt; margin: 5px; position: relative; top: -3px;">{{ profile_user.username }}</soan>
+	<span style="color: #BBB; font-size: 8pt; margin: 5px; position: relative; top: -3px;">{{ profile_user.username }}</span>
 	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
     {% endif %}
 	<a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
 {% else %}
     {% if profile_user|check_friend_request:request.user %} 
-	<soan style="color: #BBB; font-size: 8pt; margin: 5px; position: relative; top: -3px;">{{ profile_user.username }}</soan>
+	<span style="color: #BBB; font-size: 8pt; margin: 5px; position: relative; top: -3px;">{{ profile_user.username }}</span>
 	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
     {% endif %}
     {% if profile_user|check_following:request.user %} 

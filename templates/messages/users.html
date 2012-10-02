@@ -19,6 +19,9 @@
 
                 </div>
             </div>
+                {% for mess in request.user.message_to.all %}
+                    {{ mess|mark_read }}
+                {% endfor %}
             {% endfor %}
 
             {% if messages %}

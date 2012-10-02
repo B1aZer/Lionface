@@ -273,10 +273,10 @@ class NewsItem(models.Model):
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
         UpdateNewsFeeds.delay(instance.get_inherited())
-#post_save.connect(update_news_feeds, sender=Post)
 post_save.connect(update_news_feeds, sender=FriendPost)
 post_save.connect(update_news_feeds, sender=ContentPost)
 post_save.connect(update_news_feeds, sender=SharePost)
+
 def delete_news_feeds(sender, instance, **kwargs):
     """Deletes original post"""
     try:
@@ -286,6 +286,14 @@ def delete_news_feeds(sender, instance, **kwargs):
         pass
 post_delete.connect(delete_news_feeds, sender=NewsItem)
 #post_delete.connect(delete_news_feeds, sender=ContentPost)
+
+def change_default_settings(sender, instance, created, **kwargs):
+    if created:
+        instance.allow_commenting = not instance.user.check_option('comment_default','Disabled')
+        instance.allow_sharing = not instance.user.check_option('share_default','Disabled')
+        instance.save()
+post_save.connect(change_default_settings, sender=ContentPost)
+post_save.connect(change_default_settings, sender=SharePost)
 
 # Logic is that as each post is saved, the news feed for each related user
 # is rebuilt or amended by celery.  The news feed is basically a long timeline
