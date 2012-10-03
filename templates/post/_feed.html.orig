@@ -101,9 +101,13 @@
                 {% else %}
                 {% endif %}
             {% endif %}
+<<<<<<< HEAD
+            <span style="color: transparent;"> -- </span> <a href="#" style="color: #C92;">{{ item.get_albums_names }}</a>
+=======
             {% if item.get_album %}
-            <span style="color: transparent;"> -- </span> <a href="{% url profile.views.album_posts album_id=item.get_album.id %}" class="album_name" style="color: #C92;">{{>{{ item.get_album.name }}</a>
+            <span style="color: transparent;"> -- </span> <a href="{% url profile.views.album_posts album_id=item.get_album.id %}" class="album_name">{{ item.get_album.name }}</a>
             {% endif %}
+>>>>>>> 67fd17538669f387ca34bb0a3891c954ff6308ec
         </div>
 		</div>
     </div>

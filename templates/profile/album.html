@@ -1,0 +1,6 @@
+            <div id="album_{{ album.id }}" class="albums_list">
+                <span class="album_name_list">{{ album.name }}</span> 
+                <!-- This will be replaced with <input id="edit_album_name"> -->
+                <span class="albums_count">{{ album.get_count }} <a href="{% url profile.views.album_posts album_id=album.id %}" class="show_album_posts" >Post{{ album.get_count|pluralize }}</a></span>
+                <span class="albums_edit">Delete</span>
+            </div>

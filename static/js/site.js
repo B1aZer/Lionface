@@ -75,6 +75,10 @@ function make_request(input) {
 
 }
 
+function get_int(id) {
+    return id.replace( /^\D+/g, '')
+}
+
 function hookLinks() {
     // Friend links.
     $('.link-add-friend').unbind('click');
@@ -596,6 +600,9 @@ $(document).ready(function() {
                     }
                     else {
                         $('#hide_share_'+post_id).show();
+                    }
+                    if (data_back.album || data_back.album == '') {
+                        post.find('.album_name').html(data_back.album);
                     }
                 }
             }

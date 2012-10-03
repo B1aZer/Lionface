@@ -12,6 +12,8 @@ from notification.models import Notification
 from messaging.forms import MessageForm
 from .forms import *
 
+from django.db.models import F
+
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
@@ -47,7 +49,7 @@ def profile_image(request, username=None):
         try:
             profile_user = UserProfile.objects.get(username=username)
         except UserProfile.DoesNotExist:
-            return Http404()
+            raise Http404
     else:
         profile_user = request.user
 
@@ -72,7 +74,7 @@ def profile(request, username=None):
         try:
             profile_user = UserProfile.objects.get(username=username)
         except UserProfile.DoesNotExist:
-            return Http404()
+            raise Http404
     else:
         profile_user = request.user
 
@@ -104,7 +106,7 @@ def profile(request, username=None):
                 'profile_user': profile_user,
                 'not_count': Notification.objects.filter(user=request.user,read=False).count(),
                 'form_mess' : form_mess,
-                'albums' : request.user.albums_set.all(),
+                'albums' : request.user.albums_set.all().order_by('position'),
             },
             RequestContext(request)
         )
@@ -122,13 +124,104 @@ def profile(request, username=None):
 
 @login_required
 def albums(request):
+    """Albums view"""
+    profile_user = request.user
+
+    return render_to_response(
+        'profile/albums.html',
+        {
+            'profile_user': profile_user,
+            'not_count': Notification.objects.filter(user=request.user,read=False).count(),
+            'albums' : request.user.albums_set.all().order_by('position'),
+        },
+        RequestContext(request)
+    )
+
+@login_required
+def album_posts(request, album_id=None):
+    profile_user = request.user
+
+    if album_id:
+        try:
+            current = Albums.objects.get(id=album_id)
+        except:
+            current = []
+
+    return render_to_response(
+        'profile/album_posts.html',
+        {
+            'profile_user': profile_user,
+            'not_count': Notification.objects.filter(user=request.user,read=False).count(),
+            'items' : current.posts.all(),
+        },
+        RequestContext(request)
+    )
+
+@login_required
+def album_create(request):
     data = {'status':'FAIL'}
     if request.method == 'POST' and 'album_name' in request.POST:
         data = {'status':'OK'}
         album, created = Albums.objects.get_or_create(name=request.POST['album_name'], user = request.user)
         if created:
-            data['html'] = "<p>%s</p>" % album.name
+            data['html'] = render_to_string('profile/album.html',
+                {
+                    'album' : album,
+                }, context_instance=RequestContext(request))
+    return HttpResponse(json.dumps(data), "application/json")
 
+@login_required
+def album_postion(request):
+    data = {'status':'OK'}
+    if request.method == 'POST' and 'album_id' in request.POST:
+        album_id = request.POST.get('album_id',None)
+        pos_bgn = request.POST.get('position_bgn',None)
+        pos_end = request.POST.get('position_end',None)
+        try:
+            current = Albums.objects.get(id=album_id)
+            current.position = int(pos_end)
+            if request.user == current.user:
+                current.save()
+                if pos_bgn < pos_end:
+                    albums = Albums.objects.filter(position__gte=pos_bgn, position__lte=pos_end, user=request.user).exclude(id=current.id)
+                    albums.update(position=F('position') - 1)
+                elif pos_bgn > pos_end:
+                    albums = Albums.objects.filter(position__gte=pos_end, position__lte=pos_bgn, user=request.user).exclude(id=current.id)
+                    albums.update(position=F('position') + 1)
+                else:
+                    pass
+        except:
+            pass
+    return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def change_album_name(request):
+    data = {'status':'FAIL'}
+    if request.method == 'POST' and 'album_id' in request.POST:
+        album_id = request.POST.get('album_id',None)
+        album_name = request.POST.get('album_name',None)
+        try:
+            current = Albums.objects.get(id=album_id)
+            current.name = album_name.strip()
+            if request.user == current.user:
+                current.save()
+                data['status']='OK'
+        except:
+            pass
+    return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def delete_album(request):
+    data = {'status':'FAIL'}
+    if request.method == 'POST' and 'album_id' in request.POST:
+        album_id = request.POST.get('album_id',None)
+        try:
+            current = Albums.objects.get(id=album_id)
+            if request.user == current.user:
+                current.delete()
+                data['status']='OK'
+        except:
+            pass
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
@@ -200,7 +293,7 @@ def related_users(request,username=None):
         try:
             profile_user = UserProfile.objects.get(username=username)
         except UserProfile.DoesNotExist:
-            return Http404()
+            raise Http404()
 
     if request.method == 'GET':
         data = {}
@@ -245,7 +338,7 @@ def filter_add(request):
     if request.method == 'POST' and 'filter_name' in request.POST:
         filter_name = request.POST['filter_name']
         filters = request.user.filters.split(',')
-        if filter_name == 'People':
+        if filter_name == 'Friends':
                 if 'F' not in filters:
                     filters.append('F')
                     filters = ','.join(filters)
@@ -265,7 +358,7 @@ def filter_remove(request):
     if request.method == 'POST' and 'filter_name' in request.POST:
         filter_name = request.POST['filter_name']
         filters = request.user.filters.split(',')
-        if filter_name == 'People':
+        if filter_name == 'Friends':
                 if 'F' in filters:
                     filters.remove('F')
                     filters = ','.join(filters)

@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
 from django.db.models.signals import post_save, post_delete
+from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
 
 import re
@@ -32,6 +33,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
     allow_commenting = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
+    album = models.ForeignKey('Albums', related_name="posts", on_delete=models.SET_NULL, null=True, blank=True)
 
     # Function to attempt to return the inherited object for this item.
     def get_inherited(self):
@@ -48,7 +50,7 @@ class Post(models.Model):
         return self.user.friends.all()
 
     def render(self):
-        return ""
+        return self.get_inherited().render()
 
     def get_owner(self):
         try:
@@ -58,6 +60,31 @@ class Post(models.Model):
         except:
             return False
         return original.user
+
+    def get_type(self):
+        try:
+            original = self.get_inherited()
+        except:
+            return False
+        return original._meta.verbose_name
+
+    def get_post(self):
+        return self
+
+    def get_privacy(self):
+        original = self.get_inherited()
+        return original.privacy()
+
+    def get_comment_settings(self):
+        original = self
+        return original.allow_commenting
+
+    def get_share_settings(self):
+        original = self
+        return original.allow_sharing
+
+    def get_album(self):
+        return self.album
 
     def delete(self, *args, **kwargs):
         """We are checkig if post exist in any newsfeed,
@@ -266,21 +293,12 @@ class NewsItem(models.Model):
     def get_post(self):
         return self.post
 
-    def get_albums(self):
-        return self.post.albums_set.all()
-
-    def get_albums_names(self):
-        return ",".join([x.name for x in self.post.albums_set.all()])
+    def get_album(self):
+        return self.post.album
 
     @property
     def timestamp(self):
         return self.date
-
-class Albums(models.Model):
-    name = models.CharField(max_length=200)
-    user = models.ForeignKey(UserProfile)
-    date = models.DateTimeField(auto_now_add=True)
-    posts = models.ManyToManyField(Post, null=True, blank=True)
 
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
@@ -307,7 +325,34 @@ def change_default_settings(sender, instance, created, **kwargs):
 post_save.connect(change_default_settings, sender=ContentPost)
 post_save.connect(change_default_settings, sender=SharePost)
 
-# Logic is that as each post is saved, the news feed for each related user
-# is rebuilt or amended by celery.  The news feed is basically a long timeline
-# of all posts related to a user.  When friends are added or deleted, the
-# feed is also heavily updated to add or remove relevant entries.
+class Albums(models.Model):
+    name = models.CharField(max_length=200)
+    user = models.ForeignKey(UserProfile)
+    date = models.DateTimeField(auto_now_add=True)
+    position = models.IntegerField(blank = True, null = True)
+
+    def get_count(self):
+        try:
+            return self.posts.count()
+        except:
+            return 0
+
+def change_album_postion(sender, instance, created, **kwargs):
+    if created:
+        #getting max position
+        max_pos = Albums.objects.filter(user=instance.user).order_by("-position")[0].position
+        if max_pos is not None:
+            instance.position = max_pos + 1
+            instance.save()
+        else:
+            instance.position = 0
+            instance.save()
+post_save.connect(change_album_postion, sender=Albums)
+
+def change_album_postion_ondelete(sender, instance, **kwargs):
+    albums = Albums.objects.filter(position__gt=instance.position,user=instance.user)
+    if albums.count() > 0:
+        albums.update(position=F('position') - 1)
+post_delete.connect(change_album_postion_ondelete, sender=Albums)
+
+
