@@ -1,5 +1,16 @@
 {% extends 'profile/profile.html' %}
 {% load media friends format_results %}
+{% block content_title %} <a href="." class="name_link">{{ profile_user.full_name }}</a> | Albums {% endblock %}
+{% block content_middle %}{% endblock %}
+{% block content_subtitle %}
+	<span style="color: #AAA; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</span>
+{% endblock %}
+
+{% block left_col %}
+<div  onclick="window.location.href = '{% url profile.views.profile profile_user.username %}';return false;" 
+    class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;"></div>
+
+{% endblock %}
 
 {% block right_col %}
 
@@ -20,15 +31,15 @@
 }
 </style>
 
-    <span id="create_album_link" style="cursor:pointer">Create album</span>
+    <div id="create_album_link" style="cursor:pointer">+ Create Album</div>
     <form id="create_album_form" style="display:none">
         <input id="album_name" name="album_name">
-        <input type="submit" value="save">
+        <input type="submit" value="+ Create" class="blue_btn" style="font-size: 8pt;">
     </form>
 
     <div class="albums">
     {% for album in albums %}
-        <p>{{ album.name }}</p>
+        <div class="albums_list"><span class="album_name_list">{{ album.name }}</span> <span class="albums_count">(count) Posts</span> <span class="albums_edit">Edit</span></div>
         {% if album.posts.all %}
         <div>related posts: {{ album.posts.all }}</div>
         {% endif %}

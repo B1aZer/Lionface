@@ -106,6 +106,18 @@ a.colored_tag:hover {
 
 /* Profile */
 
+.subtitle_username {
+	color: #AAA; font-size: 8pt; margin: 5px;
+}
+
+a.name_link:link, a.name_link:active, a.name_link:visited {
+	color: #777;
+}
+
+a.name_link:hover {
+	color: #F58;
+}
+
 .shared {
 	background: #900;
 	display: inline-block;
@@ -178,6 +190,7 @@ a.post:link, a.post:active, a.post:visited, .submit_comment, .send {
 	font-size: 10pt !important;
 	cursor: pointer;
 }
+
 .submit_comment {
 	padding: 4px 7px;
 	border: 0px;
@@ -202,6 +215,7 @@ a.post:hover, .submit_comment:hover, .send:hover {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55aaee', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
 	-moz-box-shadow: inset 0 2px 6px -2px #777;
 	box-shadow: inset 0 2px 6px -2px #777; 
+	color: #FFF;
 }
 
 a.profile_nav:link, a.profile_nav:active, a.profile_nav:visited {
@@ -496,7 +510,7 @@ a.profile_btn:hover {
 .send_message_form {
 	font-size: 8pt;
 	position: absolute;
-	left: 210px; top: -170px;
+	left: 210px; top: -250px;
 	z-index: 9999;
 	background: #FAFAFA;
 	border: 1px solid #DDD;
@@ -509,6 +523,96 @@ a.profile_btn:hover {
 .send_message_form textarea {
 	width: 638px;
 	height: 50px !important;
+}
+
+/* Albums */
+
+.albums {
+	width: 560px;
+	padding: 10px 20px;
+	background: #FAFAFA;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	margin: 10px 0;
+}
+
+.albums_list {
+	border: 1px solid #DDD;
+	border-width: 0 0 1px 0;
+	padding: 7px 7px 7px 0;
+	margin: 10px 0;
+	position: relative;
+}
+
+.album_name_list {
+	color: #38C;
+	cursor: pointer;
+	font-size: 14pt;
+	padding: 4px 12px;
+}
+
+.album_name_list:hover {
+	color: #5AE;
+	background: #FFF;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.albums_count {
+	margin: 0px 10px; color: #999; font-size: 8pt;
+}
+
+.albums_edit {
+	position: absolute;
+	right: -7px; top: 6px;
+	color: #999;
+	font-size: 8pt;
+	cursor: pointer;
+	padding: 7px;
+}
+
+.albums_edit:hover {
+	color: #333;
+}
+
+a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
+	font-size: 8pt;
+	color: #999;
+	position: absolute;
+	right: 0px; top: 0px;
+}
+
+
+#create_album_link {
+	padding: 7px 10px;
+	color: #777;
+	margin: 10px 0;
+	display: inline-block;
+}
+
+#create_album_link:hover {
+	color: #333;
+	background: #FAFAFA;
+	-moz-box-shadow: inset 0 2px 4px -2px #777;
+	box-shadow: inset 0 2px 4px -2px #777; 
+}
+
+#create_album_form {
+	display: inline-block;
+	padding: 7px 10px;
+	background: #F7F7F7;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	margin-left: 20px;
+	-moz-box-shadow: 0 4px 8px -4px #777;
+	box-shadow: 0 4px 8px -4px #777;
+}
+
+#album_name {
+	border: 1px solid #CCC;
+	padding: 5px;
+	width: 200px;
+	margin-right: 10px;
 }
 
 /* Base */
@@ -539,7 +643,7 @@ a.profile_btn:hover {
 	opacity: 1;
 }
 
-.left { float: left; }
+.left { float: left; color: #999; }
 .right { float: right; position: relative; }
 .center { text-align: center; position: absolute; left: 0px; top: 0px; width: 900px; }
 
@@ -1122,6 +1226,7 @@ a.business_btn:link, a.business_btn:active, a.business_btn:visited {
 	border-radius: 3px;
 }
 
+
 .pages_nav_area a:hover, a.business_btn:hover, .create_business a.business_btn:hover, a.business_on,
 #pages_nav_page a:hover, #pages_nav_page a.business_btn:hover, #pages_nav_page a.business_on
 {
@@ -1192,14 +1297,14 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 }
 
 .create_business a.business_btn, .create_nonprofit a.nonprofit_btn {
-background: #555555; /* Old browsers */
-background: -moz-linear-gradient(top, #555555 0%, #333333 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#555555), color-stop(100%,#333333)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #555555 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #555555 0%,#333333 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #555555 0%,#333333 100%); /* IE10+ */
-background: linear-gradient(to bottom, #555555 0%,#333333 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', endColorstr='#333333',GradientType=0 ); /* IE6-9 */	border-radius: 3px;
+	background: #555555; /* Old browsers */
+	background: -moz-linear-gradient(top, #555555 0%, #333333 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#555555), color-stop(100%,#333333)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #555555 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #555555 0%,#333333 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #555555 0%,#333333 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #555555 0%,#333333 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', endColorstr='#333333',GradientType=0 ); /* IE6-9 */	border-radius: 3px;
 	display: inline-block;
 	width: 100px;
 	text-align: center;
@@ -1232,3 +1337,4 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', end
 	-moz-box-shadow: 0 4px 8px -4px #777;
 	box-shadow: 0 4px 8px -4px #777;
 }
+	

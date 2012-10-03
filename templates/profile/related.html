@@ -11,15 +11,24 @@
 {% endblock %}
 {% block content_subtitle %}
 {% if request.user == profile_user %}
+<span class="subtitle_username">{{ profile_user.username }}</span>
 {% elif profile_user|has_friend:request.user %}
-	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px;">- Remove</a>
+	<span class="subtitle_username">{{ profile_user.username }}</span>
+	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px; font-size: 8pt;">- Remove</a>
 {% elif profile_user|has_friend_request:request.user %}
-	<span style="color: #999; margin: 0px;" >Friend request pending.</span>
+	<span class="subtitle_username">{{ profile_user.username }}</span>
+	<span class="subtitle_username">Friend request pending.</span>
 {% elif profile_user|in_followers:request.user %}
+    {% if profile_user|check_friend_request:request.user %} 
+	<span  class="subtitle_username" style="position: relative; top: -3px;">{{ profile_user.username }}</span>
 	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+    {% endif %}
 	<a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
 {% else %}
+    {% if profile_user|check_friend_request:request.user %} 
+	<span  class="subtitle_username" style="position: relative; top: -3px;">{{ profile_user.username }}</span>
 	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+    {% endif %}
     {% if profile_user|check_following:request.user %} 
 	<a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >+ Follow</a>
     {% endif %}
