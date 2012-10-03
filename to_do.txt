@@ -1,5 +1,6 @@
 ##next###
 Comment for Posts
+view album name in feed
 
 privacy only on content post
 deleting sharing origin wont delete children
