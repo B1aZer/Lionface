@@ -147,7 +147,7 @@ a.name_link:hover {
 a.excerpt:link, a.excerpt:active, a.excerpt:visited, a.show_less:link, a.show_less:active, a.show_less:visited {
 	padding: 4px 10px;
 	background: #;
-	color: #777;
+	color: #555;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	font-size: 7pt;
