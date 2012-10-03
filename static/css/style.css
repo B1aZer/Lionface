@@ -1,6 +1,18 @@
 /* Imported CSS from prototype */
+@font-face {
+	font-family: "Kievit";
+	src: url('fonts/Kievit.eot');
+    src: local(my_font), url('fonts/Kievit.ttf') format('opentype');
+}
+@font-face {
+	font-family: "Kievit";
+	src: url('fonts/Kievit-Bold.eot');
+    src: local(my_font), url('fonts/Kievit-Bold.ttf') format('opentype');
+	font-weight: bold;
+}
+
 body { 
-	font-family: Arial, "Esteban", "Palatino Linotype", "Book Antiqua", Palatino, serif; 
+	font-family: "Kievit", Arial, serif; 
 	font-size: 10pt; 
 	color: #222;
 	margin: 0px; 
@@ -87,6 +99,7 @@ a.filterON:hover {
 	text-align: center;
 	padding: 100px 0;
 	font-size: 18pt;
+	line-height: 22pt;
 	color: #BBB;
 }
 
@@ -318,6 +331,7 @@ a.profile_btn:hover {
 	font-size: 10pt;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	line-height: 12pt;
 }
 
 .post_content p {
@@ -749,7 +763,6 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 
 #header #search_bar input[type=submit]:hover {
 	color: #555;
-	border-color: #CCC;
 }
 
 .header_profile_image div {
@@ -757,7 +770,7 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 	float: left; 
 	background-size: 34px 34px; 
 	width: 34px; height: 34px; 
-	position: relative; left: 0px; top: -10px;
+	position: relative; left: 0px; top: -12px;
 	-moz-box-shadow: 0 2px 4px -2px #777;
 	box-shadow: 0 2px 4px -2px #777;
 	-moz-border-radius: 3px;
@@ -770,7 +783,7 @@ a.header_profile_image:hover {
 }
 
 .left_links li a:link, .left_links li a:active, .left_links li a:visited { 
-	padding: 15px 10px 10px 10px; 
+	padding: 16px 10px 10px 10px; 
 	color: #777; 
 	font-size: 10pt;
 }
@@ -1159,10 +1172,6 @@ a.love:hover {
 	background: -ms-linear-gradient(top, #a2c185 0%,#889966 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #a2c185 0%,#889966 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a2c185', endColorstr='#889966',GradientType=0 ); /* IE6-9 */
-}
-.love_container:hover { 
-	-moz-box-shadow: inset 0 4px 10px -6px #000;
-	box-shadow: inset 0 4px 10px -6px #000;
 }
 
 .earth {

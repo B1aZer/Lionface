@@ -12,10 +12,12 @@
     {% if item.get_type != 'friend post' %}
         <div>
             <span id="hide_comment_link_{{ item.get_id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
-                <a class="toggle_comments" href="">Comment</a>{% ifequal comment_count 0 %} {% else %} ({{ comment_count }}) {% endifequal %} <span style="color: transparent;"> -- </span>
+                <a class="toggle_comments" href="">Comment</a>{% ifequal comment_count 0 %} {% else %} 
+					<span style="color: transparent;">-</span> <span style="color: #555;">{{ comment_count }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
             </span>
             <span id="hide_share_{{ item.get_id }}" {% if not item.get_share_settings %} style="display: none;" {% endif %}>
-                <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} ({{ item.shared }}) {% endifequal %} <span style="color: transparent;"> -- </span>
+                <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} 
+					<span style="color: transparent;">-</span> <span style="color: #555;">{{ item.shared }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
             </span>
             <a href="#" style="color: #AAA;">Hide Feed (news feed only, friends only)</a>
         </div>
@@ -58,9 +60,11 @@
             {% if item.get_type != 'friend post' %}
                 <span id="hide_follow_link_{{ item.get_id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                     {% if item|follows:request.user %}
-                    <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %} ({{ item|following }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+                    <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %} 
+						<span style="color: transparent;">-</span> <span style="color: #555;">{{ item|following }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span> 
                     {% else %}
-                    <a href="#" class="follow_post">Follow</a> {% ifequal item|following 0 %} {% else %} ({{ item|following }}) {% endifequal %} <span style="color: transparent;"> -- </span> 
+                    <a href="#" class="follow_post">Follow</a> {% ifequal item|following 0 %} {% else %} 
+						<span style="color: transparent;">-</span> <span style="color: #555;">{{ item|following }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span> 
                     {% endif %}
                 </span>
             {% endif %}
@@ -95,7 +99,7 @@
                 {% else %}
                 {% endif %}
             {% endif %}
-            <span style="color: transparent;"> -- </span> {{ item.get_albums_names }}
+            <span style="color: transparent;"> -- </span> <a href="#" style="color: #C92;">{{ item.get_albums_names }}</a>
         </div>
 		</div>
     </div>
