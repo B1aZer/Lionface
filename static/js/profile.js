@@ -114,24 +114,10 @@ $(function() {
 
     /*********** Albums ***********/
 
-    /*$(document).on('click','#albums_link',function(e) {   */
-        /*e.preventDefault();*/
-        /*$('#postbox').hide();*/
-        /*$('#news_feed').html("<div class='large_loader'></div>");*/
-        /*url='albums/?json'*/
-        /*make_request({*/
-            /*url:url,*/
-            /*callback:function(data){*/
-                /*$('#news_feed').html(data.html);*/
-                /*},*/
-                /*errorback:function(){*/
-                    /*$('#news_feed').html('Unable to load albums');*/
-                    /*}*/
-/*});*/
-/*});*/
+    /** Create album */
     $(document).on('submit','#create_album_form',function(e) {    
         e.preventDefault();
-        var url = 'albums/';
+        var url = 'album_create/';
         make_request({
             url:url,
             data:$(this).serialize(),
@@ -139,6 +125,7 @@ $(function() {
                 if (data.status == 'OK' && data.html) {
                     $('.albums').append(data.html);
                     $('#album_name').val('');
+                    $('.albums').show();
                 }
             },
             errorback:function(){
@@ -147,16 +134,99 @@ $(function() {
 
     });
 
+    /** Delete album */
+    $(document).on('click','.albums_edit',function(e) {    
+        var self = $(this);
+        var url = 'delete_album/';
+        var album_id = get_int(self.parent().attr('id'));
+        make_request({
+            url:url,
+            data:{
+                album_id:album_id,    
+            },
+            callback:function(data){
+                if (data.status == 'OK') {
+                    self.parent().slideUp();
+                }
+            },
+        });
+
+    });       
+
+    /** Show create form */
     $(document).on('click','#create_album_link',function(e) {    
         var toggled = $(this).data('toggled');
         $(this).data('toggled', !toggled);     
         if (!toggled){
             $('#create_album_form').show();
+            $('#album_name').focus();
         }
         else {
             $('#create_album_form').hide();
         }
     });
+
+    /** inline name change */
+    $(document).on('click','.album_name_list',function(e) {
+        var self = $(this);
+        var album_id = get_int(self.parent().attr('id'));
+        var name = $(this).html();
+        self.replaceWith('<input id="edit_album_name" name="album_name">');
+        $('#edit_album_name').focus();
+        $('#edit_album_name').blur(function() {
+            var new_name = $(this).val(); 
+            if (new_name == '' || new_name == name) {
+                $(this).replaceWith(self);
+            }else {
+                var url = 'album_name/' 
+                make_request({
+                    url:url,
+                    data:{
+                        album_id:album_id,
+                        album_name:new_name
+                    },
+                    callback:function(data){
+                        if (data.status =='OK') {
+                            self.html(new_name);
+                        }
+                    }
+                })
+                $(this).replaceWith(self);
+            }
+        });
+    });
+
+
+    
+
+    // Making sortable
+    var post_bgn = 0;
+
+    $( ".albums" ).sortable({
+        start: function(event, ui) { 
+            post_bgn = ui.item.index();
+        },
+        stop: function(event, ui) {
+            /*console.log("New position: " + ui.item.index());*/
+            /*console.log("Old position: " + post_bgn);*/
+            var item_id = get_int(ui.item[0].id)
+            url = 'change_position/'
+            if (ui.item.index() != post_bgn) {
+                make_request({
+                    url:url,
+                    data: {
+                        album_id:item_id,
+                        position_bgn:post_bgn,
+                        position_end:ui.item.index()
+                    },
+                    callback: function() {
+                    }
+                });
+            }
+        }
+    });
+    $( ".albums" ).disableSelection();
+    
 
     
 

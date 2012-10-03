@@ -317,23 +317,19 @@ def change_settings(request):
             post.save()
             data['sharing'] = 'turned off'
         if 'attach_to_album' in request.POST:
-            albums = request.POST.getlist('attach_to_album')
-            post_albums = post.albums_set.all()
-            for album in albums:
-                try:
-                    alb_obj = Albums.objects.get(name=album)
-                    if alb_obj not in post_albums:
-                        alb_obj.posts.add(post)
-                        alb_obj.save()
-                    #else:
-                        #alb_obj.posts.remove(post)
-                        #alb_obj.save()
-                except ObjectDoesNotExist:
-                    continue
-            for album in post_albums:
-                if album.name not in albums:
-                    post.albums_set.remove(album)
-                    post.save
+            album_id = request.POST['attach_to_album']
+            post_album = post.album
+            try:
+                alb_obj = Albums.objects.get(id=album_id, user=request.user)
+                if alb_obj <> post_album:
+                    alb_obj.posts.add(post)
+                    alb_obj.save()
+                    data['album'] = alb_obj.name
+            except ObjectDoesNotExist:
+                if post.album:
+                    #remove post from album
+                    post.album.posts.remove(post)
+                data['album'] = ""
         else:
             post.albums_set.clear()
     return  HttpResponse(json.dumps(data), "application/json")

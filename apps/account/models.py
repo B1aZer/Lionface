@@ -132,7 +132,7 @@ class UserProfile(User):
         return options
 
     def get_albums(self):
-        return self.albums_set.all()
+        return self.albums_set.all().order_by('position')
 
     def check_option(self,name,value=None):
         name = "option_%s" % name
