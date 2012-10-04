@@ -1,6 +1,6 @@
 {% extends 'profile/profile.html' %}
 {% load media friends format_results %}
-{% block content_title %} <a href="." class="name_link">{{ profile_user.full_name }}</a> | Albums {% endblock %}
+{% block content_title %} <a href="{{ profile_user.get_absolute_url }}" class="name_link">{{ profile_user.full_name }}</a> | Albums {% endblock %}
 {% block content_middle %}{% endblock %}
 {% block content_subtitle %}
 	<span style="color: #AAA; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</span>

@@ -2,7 +2,7 @@
 {% load i18n static media %}
 
 {% block content_title %}
-{{ user.full_name }} | Account
+<a href="{% url profile.views.profile %}" class="name_link">{{ user.full_name }}</a> | Account
 {% endblock %}
 
 {% block content_middle %}
@@ -125,7 +125,7 @@
     <td>Friends Only</td>
 </tr>
 <tr>
-    <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Comments and shares inherit the privacy settings of their parent post. If your post is public then comments, commenting and sharing is also available to the public. </span></td>
+    <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Commenting and sharing inherit the privacy settings of their parent post. If your post is public then  commenting and sharing is also available to the public. </span></td>
 </tr>
 <tr>
     <td width="200">Comment Default<br></td>
@@ -214,7 +214,7 @@
 
 </div>
 
-<div style="position: absolute; left: 0px; bottom: 0px; padding: 15px 10px; background: #EEE; width: 680px;">
+<div class="save_container">
 <input type="hidden" name="form_name" id="form_name">
 <input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> 
 </form>

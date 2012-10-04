@@ -17,6 +17,9 @@
 	margin: 0 0 140px 0;
 }
 
+.next_generation {
+	font-size: 50pt; padding-top: 50px; line-height: 44pt; font-family: 'Jenna Sue'; z-index: 999; text-shadow: 0 1px 1px #FFF;
+}
 
 #login_box {
 	width: 900px; 

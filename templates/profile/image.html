@@ -1,7 +1,7 @@
 {% extends 'profile/base.html' %}
 {% load media friends format_results %}
 
-{% block content_title %} {{ profile_user.full_name }} | Photos{% endblock %}
+{% block content_title %} <a href="{{ profile_user.get_absolute_url }}" class="name_link">{{ profile_user.full_name }}</a> | Photos{% endblock %}
 {% block content_middle %}
 {% endblock %}
 {% block content_subtitle %}
@@ -10,21 +10,23 @@
 {% endblock %}
 
 {% block left_col %}
-<div  onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
-	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 69px 69px; height: 69px; background-position: center left;">
+<div style="position: relative; top: -1px;">
+<div onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
+	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 70px 70px; height: 70px; background-position: center left;">
 		{% if request.user == profile_user %}
-        <div style="position: relative; top: 5px; left: 70px; display: block; width: 129px; background: #FFF; z-index: 997;" align="center">
+        <div style="position: relative; top: 6px; left: 70px; display: block; width: 129px; background: #FFF; z-index: 997;" align="center">
             <a id="upload_picture" class="upload" style="display:none;">Upload</a><br /><a href="{% url profile.views.reset_picture %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
         </div>
         {% endif %}
-    
+ 
 </div>
 
-        <div style="position: relative; top: -55px; left: 70px; display: block; width: 130px; font-size: 8pt; color: #999;" align="center">
+        <div class="photos_count" align="center">
 		# Photos
 		</div>
+
 <div style="position: relative;">
-<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -94px;">
+<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -92px;">
     {% csrf_token %}
     {{ form.photo.errors }}
     <p><label for="id_photo">Upload</label></p>
@@ -32,19 +34,23 @@
     <p><input name="image" type="submit" class="blue_btn" value="Upload" /></p>
 </form>
 </div>
-
+</div>
 {% endblock %}
 
 {% block right_col %}
 	<div style="padding: 10px; position: relative; left: 40px; height: 50px;">
     <div style="padding: 15px 0 25px 0px;">
-        <a href="" class="profile_nav">Posts</a>
-        <a href="/user/{{ profile_user }}?album" class="profile_nav">Albums</a>
+        <a href="{{ profile_user.get_absolute_url }}" class="profile_nav">Posts</a>
+        <a href="{{ profile_user.get_absolute_url }}../albums" class="profile_nav">Albums</a>
         <a href="#" class="profile_nav">Loves</a>
     </div>
 	</div>
+{% endblock %}
+
 	
-<div style="width: 878px; position: relative; left: -200px; border: 1px solid #DDD; padding: 10px; color: #FFF; margin-top: 20px;" align="center">
+{% block center_col %}
+<div align="center">
+<div style="width: 878px; border: 1px solid #DDD; padding: 10px; color: #FFF;" align="center">
 	<table align="center" width="900">
 		<tr>
 		<td width="25%"><div style="background: #aaa; width: 200px; height: 200px;"></div></td>
@@ -53,6 +59,7 @@
 		<td width="25%"><div style="background: #aaa; width: 200px; height: 200px;"></div></td>
 		</tr>
 	</table>
+</div>
 </div>
   {% include_media 'profile.js' %}
 {% endblock %}

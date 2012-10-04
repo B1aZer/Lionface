@@ -4,7 +4,7 @@
 {% block content %}
 <div class="content_area notifications">
     <div id="profile_top">
-        <div class="left">{% block content_title %} {{ user.full_name }} | Messages{% endblock %}</div>
+        <div class="left">{% block content_title %} <a href="{% url profile.views.profile %}" class="name_link">{{ user.full_name }}</a> | Messages{% endblock %}</div>
         <div class="right" style="color: #555;">{% block content_subtitle %}
             <!--I will use this link for both views, except .bottom class will be added, when postbox is at the top-->
             <a href="#" id="show_older" class="older_mess" style="margin: 0; position: relative; left: 2px;">Show Older Messages</a>

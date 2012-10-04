@@ -35,7 +35,7 @@
                 </select>
                 {% endif %}
                 {% if request.user.get_albums %}
-                <select name="attach_to_album">
+                <span style="color: transparent;"> -- -- -- - </span>Album: <select name="attach_to_album">
                     {% if not item.get_album %}
                     <option value="" selected="selected"></option>
                     {% endif %}
