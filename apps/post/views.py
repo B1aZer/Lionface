@@ -325,7 +325,7 @@ def change_settings(request):
                     alb_obj.posts.add(post)
                     alb_obj.save()
                     data['album'] = alb_obj.name
-            except ObjectDoesNotExist:
+            except:
                 if post.album:
                     #remove post from album
                     post.album.posts.remove(post)
