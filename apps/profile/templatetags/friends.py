@@ -14,6 +14,10 @@ def has_friend(user, friend):
 def has_friend_request(user, friend):
     return user.has_friend_request(friend)
 
+@register.filter(name='in_hidden')
+def in_hidden(user, friend):
+    return user.in_hidden(friend)
+
 @register.filter(name='in_followers')
 def in_followers(user, friend):
     return user.in_followers(friend)

@@ -199,7 +199,20 @@
 </tr>
 <tr>
     <td>Hidden Feeds</td>
-    <td><span style="font-size: 11px; color: #999;">none</span></td>
+    <td><span style="font-size: 11px; color: #999;">
+            {% if user.hidden.all %}
+            <select multiple="multiple" name="rem_hidden_list">
+                {% for hidden in user.hidden.all %}
+                    <option value="{{ hidden.id }}">{{ hidden.full_name }}</option>
+                {% endfor %}
+            </select>
+            <div>
+                <input id="rem_hidden_btn" type="submit" value="Remove Hidden" name="rem_hidden" class="default" style="font-size: 8pt !important;" />
+            </div>
+            {% else %}
+            none
+            {% endif %}
+        </span></td>
 </tr>
 <tr>
     <td>Blocked Users</td>

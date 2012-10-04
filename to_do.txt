@@ -1,6 +1,6 @@
 ##next###
-Comment for Posts
-view album name in feed
+remove from blcoked on unfriending
+remove privacy for profile
 
 privacy only on content post
 deleting sharing origin wont delete children

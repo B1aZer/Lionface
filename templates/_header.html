@@ -57,8 +57,9 @@
 		<a href="{% url messaging.views.messages %}" id="messages_id_notif" class="nav_messages" title=" Messages ">
             {% if request.user.new_messages > 0 %} <span class="count">{{request.user.new_messages}}</span> {% endif %}
         </a><br />
-        {% if not_count > 0 %}
-        <a href="{% url notification.views.notifications %}" id="notifications_id_notif" class="nav_notifications" title=" Notifications " target="_top"><span class="count">{{not_count}}</span></a>
+        {% if request.user.new_notifcations > 0 %}
+        <a href="{% url notification.views.notifications %}" id="notifications_id_notif" class="nav_notifications" title=" Notifications " target="_top">
+            <span class="count">{{request.user.new_notifcations}}</span></a>
         {% else %}
         <a href="{% url notification.views.notifications %}" id="notifications_id_notif" class="nav_notifications" title=" Notifications " target="_top"></a>
         {% endif %}

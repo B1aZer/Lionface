@@ -9,6 +9,7 @@ from itertools import chain
 
 FILTER_TYPE = (
     ('F', 'Friend Feed'),
+    ('W', 'Following Feed'),
     ('T', 'Tag Feed'),
     ('P', 'Pages Feed'),
     ('A', 'Public Feed'),
@@ -37,6 +38,9 @@ class FriendRequest(models.Model):
         from post.models import FriendPost
         self.from_user.friends.add(self.to_user)
         self.from_user.save()
+        # following removes current's followers
+        #if self.to_user in self.from_user.following.all():
+            #self.from_user.remove_following(self.to_user)
         Notification(user=self.from_user, type='FA', other_user=self.to_user, content_object = self).save()
         FriendPost(user=self.from_user, friend=self.to_user, user_to=self.to_user).save()
         #AddFriendToFeed.delay(self.from_user, self.to_user)
@@ -60,9 +64,10 @@ class UserProfile(User):
     # Logic is if a friend is in the 'friends' collection then they are verified.
     # If there is an active FriendRequest then it's still pending.
     friends = models.ManyToManyField('self', related_name='friends')
+    hidden = models.ManyToManyField('self', symmetrical=False, related_name='hidden_from')
     photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
     filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
-    followers =  models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
+    followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
 
     def has_friend(self, user):
@@ -88,9 +93,11 @@ class UserProfile(User):
 
         return mutual_friends
 
-
     def has_friend_request(self, user):
         return FriendRequest.objects.filter(Q(from_user=self, to_user=user) | Q(to_user=self, from_user=user)).count() > 0
+
+    def in_hidden(self, user):
+        return self.hidden.filter(id=user.id).count() > 0
 
     # Returns a queryset for all news items this user can see in date order.
     def get_news(self):
@@ -102,11 +109,18 @@ class UserProfile(User):
 
     def get_messages(self):
         from post.models import NewsItem
+        filters = self.filters.split(',')
         #return NewsItem.objects.filter(post__user_to__in=self.friends.all()).exclude(post__user=self).order_by('date').reverse()
-        user_list = self.friends.all()
-        following = self.following.all()
-        following = [x for x in following if x.check_visiblity('follow',self)]
-        #following = self.get_following_active()
+        if 'F' in filters:
+            blocked_list = [x.id for x in self.hidden.all()]
+            user_list = self.friends.all().exclude(id__in=blocked_list)
+        else:
+            user_list = []
+        if 'W' in filters:
+            following = self.following.all()
+            following = [x for x in following if x.check_visiblity('follow',self)]
+        else:
+            following = []
         user_list = list(set(list(chain(user_list,following))))
         return NewsItem.objects.filter(user__in=user_list).exclude(post__user=self).order_by('date').reverse()
 
@@ -186,6 +200,9 @@ class UserProfile(User):
     def new_messages(self):
         return self.message_to.filter(read=False).count()
 
+    def new_notifcations(self):
+        return self.notification_set.filter(read=False).count()
+
     def add_follower(self, person):
         relationship, created = Relationship.objects.get_or_create(
             from_user=self,
@@ -228,6 +245,13 @@ class UserProfile(User):
         return self.full_name
 
 
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        uprofile = UserProfile(user_ptr_id=instance.pk)
+        uprofile.__dict__.update(instance.__dict__)
+        uprofile.save()
+post_save.connect(create_user_profile, sender=User)
+
 def update_user_profile(sender, instance, raw, using, **kwargs):
     try:
         current = sender.objects.get(id=instance.id)
@@ -265,9 +289,4 @@ class UserOptions(models.Model):
     value = models.CharField(max_length='100')
     user = models.ForeignKey(UserProfile)
 
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        uprofile = UserProfile(user_ptr_id=instance.pk)
-        uprofile.__dict__.update(instance.__dict__)
-        uprofile.save()
-post_save.connect(create_user_profile, sender=User)
+

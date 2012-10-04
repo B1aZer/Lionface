@@ -217,35 +217,6 @@ function hookLinks() {
         return false;
     });   
 
-    $('.link-unfollow').unbind('click');
-    $('.link-unfollow').click(function() {
-        var data = $(this).metadata();
-        var $this = $(this);
-        if(data.user !== undefined) {
-            $this.unbind('click');
-            var $ohtml = $this.html();
-            $this.append('<div class="link_loader"></div>');
-
-            $.ajax('/account/unfollow/',{
-                type: 'GET',
-                data: 'user=' + encodeURIComponent(data.user),
-                success: function(data) {
-                    $this.html($ohtml);
-                    if(data.status == 'OK') {
-                        $this.html('+ Follow');
-                        $this.removeClass('link-unfollow');
-                        $this.addClass('link-follow');
-                        hookLinks();
-                    }
-                },
-                error: function() {
-                    hookLinks();
-                    $this.html($ohtml);
-                }
-            });
-        }
-        return false;
-    });                
 }
 
 function HideContent(d) {
@@ -435,6 +406,46 @@ function make_excerpts() {
 
 $(document).ready(function() {
     hookLinks();
+    /* Make excerpts here to prevent same function on all views without ajax */
+    make_excerpts();
+
+    /******** FRIENDS **********/
+
+    $(document).on('click','.link-unfollow',function(e) {
+        e.preventDefault();
+        var data = $(this).metadata();
+        var $this = $(this);
+        if(data.user !== undefined) {
+            $this.unbind('click');
+            var $ohtml = $this.html();
+            $this.append('<div class="link_loader"></div>');
+
+            $.ajax('/account/unfollow/',{
+                type: 'GET',
+                data: 'user=' + encodeURIComponent(data.user),
+                success: function(data) {
+                    $this.html($ohtml);
+                    if(data.status == 'OK') {
+                        if ($this.attr('class').indexOf('unfollow_feed') >= 0) {
+                            $this.html('');
+                        }
+                        else {
+                            $this.html('+ Follow');
+                        }
+                        $this.removeClass('link-unfollow');
+                        $this.addClass('link-follow');
+                        hookLinks();
+                    }
+                },
+                error: function() {
+                    hookLinks();
+                    $this.html($ohtml);
+                }
+            });
+        }
+        return false;
+    });                
+    
 
     //Swith search queries
     $('#quick_search').submit(function() {
@@ -463,15 +474,15 @@ $(document).ready(function() {
         }
     });
 
-    url = '/auto/';
-    url_user = '/user/profile/'
+    var url_auto = '/auto/';
+    var url_user = '/user/profile/'
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
     { 
-        url = '/lionface' +  url;
+        url_auto = '/lionface' +  url_auto;
         url_user = '/lionface' +  url_user;
     }     
     $( "#search_input" ).autocomplete({
-        source: url,
+        source: url_auto,
     }).keydown(function(e){
         if (e.keyCode === 13){
             console.log($(this).val());
@@ -633,6 +644,24 @@ $(document).ready(function() {
         post_content.find('.excerpt').show(); 
         self.remove();
     });
+
+    /** Hide users from feed */
+    $(document).on('click','.hide_feed', function(e) {
+        e.preventDefault();
+        var self = $(this);
+        var post = $(this).closest('.result');
+        var meta = post.metadata();
+        var url = '/user/block/';
+        make_request({
+            url:url,
+            data:{
+                user:meta.user,
+            },
+            callback: function() {
+            }
+        });
+    });
+    
     
 
 });

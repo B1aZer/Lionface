@@ -25,22 +25,18 @@ except ImportError:
 
 @login_required
 def feed(request, user_id = None):
-    filters = request.user.filters.split(',')
     items = request.user.get_news()
+    news_feed_flag = False
     #news feed
     if not user_id:
+        news_feed_flag = True
         user_id = request.user.id
-        #items = request.user.get_messages().get_tagged_posts(tags)
-        if 'F' in filters:
-            items = request.user.get_messages().remove_similar().remove_to_other().get_public_posts(request.user)
-        else:
-            items = []
+        items = request.user.get_messages().remove_similar().remove_to_other().get_public_posts(request.user)
         tags = request.user.user_tag_set.all()
         if tags:
             tags = [x.name.upper() for x in tags if x.active]
             tagged_posts = NewsItem.objects.all()
             tagged_posts = [x for x in tagged_posts for y in x.post.tags.all() if y.name.upper() in tags ]
-            #tagged_posts = NewsItem.objects.filter(post__tags__name__in=tags).order_by('-date')
             items = list(chain(items, tagged_posts))
             items = list(set(items))
             items = sorted(items,key=lambda post: post.date, reverse=True)
@@ -57,6 +53,7 @@ def feed(request, user_id = None):
         'post/_feed.html',
         {
             'items': items,
+            'news_feed': news_feed_flag,
         },
         RequestContext(request)
     )

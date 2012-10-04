@@ -28,10 +28,23 @@ def feed(request):
     return render_to_response(
         'profile/feed.html',
         {
-            'not_count': Notification.objects.filter(user=request.user,read=False).count()
         },
         RequestContext(request)
     )
+
+@login_required
+def block_friend(request):
+    data={'status':'FAIL'}
+    user_id = request.POST.get('user',None)
+    try:
+        user = UserProfile.objects.get(id=user_id)
+    except:
+        raise Http404
+    if request.user != user:
+        request.user.hidden.add(user)
+        request.user.save()
+        data['status']='OK'
+    return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
 def timeline(request):
@@ -237,6 +250,8 @@ def delete_album(request):
 def settings(request):
     changed = False
     active = 'basics'
+    form = UserInfoForm(instance=request.user,initial = request.user.get_options())
+    form_pass = PasswordChangeForm(user=request.user)
     if request.method == 'POST':
         if 'change_pass' in request.POST:
             form_pass = PasswordChangeForm(user=request.user, data=request.POST)
@@ -262,10 +277,14 @@ def settings(request):
                 active = 'privacy'
             else:
                 active = 'basics'
-    else:
-
-        form = UserInfoForm(instance=request.user,initial = request.user.get_options())
-        form_pass = PasswordChangeForm(user=request.user)
+        elif 'rem_hidden' in request.POST:
+            hidden_users = request.POST.getlist('rem_hidden_list')
+            for user_id in hidden_users:
+                try:
+                    user = UserProfile.objects.get(id=user_id)
+                    request.user.hidden.remove(user)
+                except:
+                    continue
 
     return render_to_response(
         'profile/settings.html',
@@ -353,6 +372,12 @@ def filter_add(request):
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
+        if filter_name == 'Following':
+                if 'W' not in filters:
+                    filters.append('W')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
         if filter_name == 'Pages':
                 if 'P' not in filters:
                     filters.append('P')
@@ -370,6 +395,12 @@ def filter_remove(request):
         if filter_name == 'Friends':
                 if 'F' in filters:
                     filters.remove('F')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Following':
+                if 'W' in filters:
+                    filters.remove('W')
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
