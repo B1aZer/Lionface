@@ -16,19 +16,25 @@
 
 <div style="padding: 10px; position: relative; left: 40px;">
     <div style="padding: 15px 0 25px 0px;">
+        {% if profile_user == request.user %}
         <a href="{% url profile.views.profile %}" id="posts_link" class="profile_nav">Posts</a>
+        {% else %}
+        <a href="{{ profile_user.get_absolute_url }}" id="posts_link" class="profile_nav">Posts</a>
+        {% endif %}
         <a href="." id="albums_link" class="profile_nav">Albums</a>
         <a href="#" id="loves_link" class="profile_nav">Loves</a>
     </div>  
 
+    {% if profile_user == request.user %}
     <div id="create_album_link" style="cursor:pointer">+ Create Album</div>
     <form id="create_album_form" style="display:none">
         <input id="album_name" name="album_name">
         <input type="submit" value="+ Create" class="blue_btn" style="font-size: 8pt;">
     </form>
+    {% endif %}
 
     
-        <div class="albums" {% if not albums %} style="display:none" {% endif %}>
+    <div {% if profile_user == request.user %}class="albums sortable"{% else %}class="albums"{% endif %} {% if not albums %} style="display:none" {% endif %}>
         {% for album in albums %}
 
         {% include 'profile/album.html' %}

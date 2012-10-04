@@ -202,7 +202,7 @@ $(function() {
     // Making sortable
     var post_bgn = 0;
 
-    $( ".albums" ).sortable({
+    $( ".sortable" ).sortable({
         start: function(event, ui) { 
             post_bgn = ui.item.index();
         },
@@ -225,7 +225,7 @@ $(function() {
             }
         }
     });
-    $( ".albums" ).disableSelection();
+    $( ".sortable" ).disableSelection();
     
 
     

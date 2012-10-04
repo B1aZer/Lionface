@@ -99,7 +99,11 @@
 <div style="padding: 10px; position: relative; left: 40px;">
     <div style="padding: 15px 0 25px 0px;">
         <a href="." id="posts_link" class="profile_nav">Posts</a>
+        {% if profile_user == request.user %}
         <a href="{% url profile.views.albums %}" id="albums_link" class="profile_nav">Albums</a>
+        {% else %}
+        <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="profile_nav">Albums</a>
+        {% endif %}
         <a href="#" id="loves_link" class="profile_nav">Loves</a>
     </div>
 

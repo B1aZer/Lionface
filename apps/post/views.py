@@ -63,6 +63,7 @@ def feed(request, user_id = None):
 
 @login_required
 def timeline(request,post_num=5):
+    """Not sure if needed or not"""
     items = request.user.get_news()[post_num:5]
     return render_to_response(
         'post/_timeline.html',

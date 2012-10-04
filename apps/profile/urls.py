@@ -19,4 +19,5 @@ urlpatterns = patterns('',
     url(r'profile/(?P<username>\w+)/$', views.profile),
     url(r'profile/(?P<username>\w+)/related/$', views.related_users),
     url(r'profile/(?P<username>\w+)/image/$', views.profile_image),
+    url(r'profile/(?P<username>\w+)/albums/$', views.albums, name="users-albums"),
 )

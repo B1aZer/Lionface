@@ -9,17 +9,16 @@ from django.db.models.signals import post_save, post_delete
 from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
 
-# import the logging library
-import logging
-logger = logging.getLogger(__name__)
-
-
 import re
 from .utils import QuerySetManager
 from django.utils.safestring import mark_safe
 from itertools import chain
 
 from tasks import UpdateNewsFeeds
+
+# import the logging library
+import logging
+logger = logging.getLogger(__name__)
 
 class QuerySet(models.query.QuerySet):
     """Base QuerySet class for adding custom methods that are made
@@ -93,7 +92,7 @@ class Post(models.Model):
 
     def get_news(self):
         try:
-            news_feed = NewsItem.objects.filter(post_id=self.id).get()
+            news_feed = NewsItem.objects.filter(post_id=self.id)
         except:
             logger.warning('more than 1 object')
             news_feed = []

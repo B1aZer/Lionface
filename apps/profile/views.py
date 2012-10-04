@@ -123,22 +123,28 @@ def profile(request, username=None):
     )
 
 @login_required
-def albums(request):
+def albums(request, username=None):
     """Albums view"""
-    profile_user = request.user
+    if username != None:
+        try:
+            profile_user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            raise Http404
+    else:
+        profile_user = request.user
 
     return render_to_response(
         'profile/albums.html',
         {
             'profile_user': profile_user,
             'not_count': Notification.objects.filter(user=request.user,read=False).count(),
-            'albums' : request.user.albums_set.all().order_by('position'),
+            'albums' : profile_user.albums_set.all().order_by('position'),
         },
         RequestContext(request)
     )
 
 @login_required
-def album_posts(request, album_id=None):
+def album_posts(request, username=None, album_id=None):
     profile_user = request.user
 
     if album_id:
@@ -146,7 +152,7 @@ def album_posts(request, album_id=None):
             current = Albums.objects.get(id=album_id)
             items = current.posts.all()
             #getting news_feed for Post Objects
-            items = [x.get_news() for x in items]
+            items = [x.get_news().get_public_posts(profile_user)[0] for x in items]
         except:
             items = []
 

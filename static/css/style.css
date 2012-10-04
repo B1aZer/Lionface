@@ -575,6 +575,12 @@ a.profile_btn:hover {
 	padding: 4px 12px;
 }
 
+.album_name_others {
+	color: #38C;
+	font-size: 14pt;
+	padding: 4px 12px;
+}
+
 .album_name_list:hover {
 	color: #5AE;
 	background: #FFF;
