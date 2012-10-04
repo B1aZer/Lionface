@@ -36,9 +36,7 @@
                 {% endif %}
                 {% if request.user.get_albums %}
                 <span style="color: transparent;"> -- -- -- - </span>Album: <select name="attach_to_album">
-                    {% if not item.get_album %}
-                    <option value="" selected="selected"></option>
-                    {% endif %}
+                    <option value=""{% if not item.get_album %}selected="selected"{% endif %}></option>
                     {% for album in request.user.get_albums %}
                     <option value="{{ album.id }}" {% if album == item.get_album %} selected="selected" {% endif %}>{{ album.name }}</option>
                     {% endfor %}
@@ -101,9 +99,8 @@
                 {% else %}
                 {% endif %}
             {% endif %}
-            {% if item.get_album %}
-            <span style="color: transparent;"> -- </span> <a href="{% url profile.views.album_posts album_id=item.get_album.id %}" class="album_name" style="color: #C92;">{{ item.get_album.name }}</a>
-            {% endif %}
+            {% url profile.views.album_posts album_id=item.get_album.id as the_url %}
+            <span style="color: transparent;"> -- </span> <a href="{{the_url}}" class="album_name" style="color: #C92;">{{ item.get_album.name }}</a>
         </div>
 		</div>
     </div>

@@ -10,6 +10,7 @@ from tags.models import Tag
 from post.models import NewsItem
 from tasks import DeleteNewsFeeds
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
+from django.core.urlresolvers import reverse
 
 from django.shortcuts import get_object_or_404
 from django.contrib import comments
@@ -325,6 +326,7 @@ def change_settings(request):
                     alb_obj.posts.add(post)
                     alb_obj.save()
                     data['album'] = alb_obj.name
+                    data['album_url'] = reverse('profile.views.album_posts', kwargs={'album_id': alb_obj.id}) 
             except:
                 if post.album:
                     #remove post from album

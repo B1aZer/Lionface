@@ -9,6 +9,11 @@ from django.db.models.signals import post_save, post_delete
 from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
 
+# import the logging library
+import logging
+logger = logging.getLogger(__name__)
+
+
 import re
 from .utils import QuerySetManager
 from django.utils.safestring import mark_safe
@@ -85,6 +90,14 @@ class Post(models.Model):
 
     def get_album(self):
         return self.album
+
+    def get_news(self):
+        try:
+            news_feed = NewsItem.objects.filter(post_id=self.id).get()
+        except:
+            logger.warning('more than 1 object')
+            news_feed = []
+        return news_feed
 
     def delete(self, *args, **kwargs):
         """We are checkig if post exist in any newsfeed,

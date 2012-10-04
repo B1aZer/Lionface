@@ -144,15 +144,18 @@ def album_posts(request, album_id=None):
     if album_id:
         try:
             current = Albums.objects.get(id=album_id)
+            items = current.posts.all()
+            #getting news_feed for Post Objects
+            items = [x.get_news() for x in items]
         except:
-            current = []
+            items = []
 
     return render_to_response(
         'profile/album_posts.html',
         {
             'profile_user': profile_user,
             'not_count': Notification.objects.filter(user=request.user,read=False).count(),
-            'items' : current.posts.all(),
+            'items' : items,
         },
         RequestContext(request)
     )

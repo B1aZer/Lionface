@@ -76,11 +76,11 @@ post_save.connect(create_share_notifiaction, sender=SharePost)
 def create_comment_notifiaction(sender, comment, request, **kwargs):
     news_post = comment.content_object
     #creating notification for owner if following
-    if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.post.following.all():
-        Notification(user=comment.content_object.post.get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
+    if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.get_post().following.all():
+        Notification(user=comment.content_object.get_post().get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
     #create notifiactions for all followers of this post
     try:
-        post = news_post.post
+        post = news_post.get_post()
         if post.following.all():
             for user in post.following.all():
                 if user <> comment.user and user <> post.get_owner():
@@ -88,7 +88,7 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
     except:
         pass
     #adding this post to following list
-    comment.user.follows.add(comment.content_object.post)
+    comment.user.follows.add(comment.content_object.get_post())
 comment_was_posted.connect(create_comment_notifiaction)
 
 def create_follow_notification(sender, instance, created, **kwargs):
