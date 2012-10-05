@@ -459,7 +459,7 @@ $(document).ready(function() {
     });                
     
 
-    //Swith search queries
+    //Switch search queries
     $('#quick_search').submit(function() {
         if ( $(this).find('#search_input').val().indexOf( "#" ) !== -1 ) {
             var tag=$(this).find('#search_input').val().split(' ');
@@ -486,6 +486,7 @@ $(document).ready(function() {
         }
     });
 
+    /** Autocomplete for search input */
     var url_auto = '/auto/';
     var url_user = '/user/profile/'
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
@@ -506,6 +507,16 @@ $(document).ready(function() {
         .append( "<a>" + item.label + '<div class="auto_subtext">' + item.value + '</div>' + "</a>" )
         .appendTo( ul );
     };
+
+    /** Autocomplete for blocking users */
+    var url_auto = '/auto/';
+    if (window.location.pathname.indexOf('/lionface/') >= 0) 
+    { 
+        url_auto = '/lionface' +  url_auto;
+    }     
+    $( "#block_user" ).autocomplete({
+        source: url_auto,
+    }); 
 
     //checking for new nofifications
     setInterval(function() {

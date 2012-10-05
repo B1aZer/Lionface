@@ -216,7 +216,13 @@
 </tr>
 <tr>
     <td>Blocked Users</td>
-    <td><span style="font-size: 11px; color: #999;">none</span></td>
+    <td><span style="font-size: 11px; color: #999;">
+            {% if user.get_bocked %}
+                {{user.get_bocked}}
+            {% else %}
+                <input id="block_user" name="block_user" type="text">
+            {% endif %}
+    </span></td>
 </tr>
 <tr>
     <td>&nbsp;</td>

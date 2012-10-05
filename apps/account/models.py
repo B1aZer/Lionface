@@ -66,6 +66,7 @@ class UserProfile(User):
     # If there is an active FriendRequest then it's still pending.
     friends = models.ManyToManyField('self', related_name='friends')
     hidden = models.ManyToManyField('self', symmetrical=False, related_name='hidden_from')
+    blocked = models.ManyToManyField('self', symmetrical=False, related_name='blocked_from')
     photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
     filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
@@ -99,6 +100,9 @@ class UserProfile(User):
 
     def in_hidden(self, user):
         return self.hidden.filter(id=user.id).count() > 0
+
+    def get_bocked(self):
+        return self.blocked.all()
 
     # Returns a queryset for all news items this user can see in date order.
     def get_news(self):

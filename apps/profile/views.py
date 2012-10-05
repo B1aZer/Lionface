@@ -9,11 +9,13 @@ from account.models import UserProfile
 from messaging.models import Messaging
 from post.models import Albums
 from notification.models import Notification
+
 from messaging.forms import MessageForm
 from .forms import *
 
 from django.db.models import F
 
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
@@ -33,7 +35,7 @@ def feed(request):
     )
 
 @login_required
-def block_friend(request):
+def hide_friend(request):
     data={'status':'FAIL'}
     user_id = request.POST.get('user',None)
     try:
@@ -75,7 +77,10 @@ def profile_image(request, username=None):
         RequestContext(request)
     )
 
+from .decorators import access_required
+# THIS HACKING WORKS!!!
 @login_required
+#@access_required('admin')
 def profile(request, username=None):
     # TODO: Logic here needs to see what relation the current user is to the profile user
     # and compare this against their privacy settings to see what can be seen.
@@ -279,6 +284,14 @@ def settings(request):
                         option.save()
                     except ObjectDoesNotExist:
                         request.user.useroptions_set.create(name=name,value=request.POST[name])
+                if name == 'block_user':
+                    #This is for blocked users
+                    username = request.POST[name]
+                    try:
+                        user = UserProfile.objects.get(username=username)
+                    except UserProfile.DoesNotExist:
+                        continue
+                    request.user.blocked.add(user)
             if form.is_valid():
                 form.save()
             #Pop-up right window
@@ -294,6 +307,11 @@ def settings(request):
                     request.user.hidden.remove(user)
                 except:
                     continue
+            #Pop-up right window
+            if request.POST.get('form_name') == 'privacy':
+                active = 'privacy'
+            else:
+                active = 'basics'
 
     return render_to_response(
         'profile/settings.html',
