@@ -5,7 +5,7 @@
                 <span class="album_name_others">{{ album.name }}</span> 
                 {% endif %}
                 <!-- This will be replaced with <input id="edit_album_name"> -->
-                <span class="albums_count">{{ album.get_count }} <a href="{% url profile.views.album_posts album_id=album.id %}" class="show_album_posts" >Post{{ album.get_count|pluralize }}</a></span>
+                <span class="albums_count">{{ album.get_count }} <a href="{% url profile.views.album_posts username=profile_user.username album_id=album.id %}" class="show_album_posts" >Post{{ album.get_count|pluralize }}</a></span>
                 {% if profile_user == request.user %}
                 <span class="albums_edit">Delete</span>
                 {% endif %}

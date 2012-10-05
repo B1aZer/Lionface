@@ -105,6 +105,8 @@ def friend_remove(request):
         except User.DoesNotExist:
             raise Http404()
         request.user.friends.remove(friend)
+        if friend in request.user.get_following_blocked():
+            request.user.activate_following(friend)
         return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
     raise Http404()
 

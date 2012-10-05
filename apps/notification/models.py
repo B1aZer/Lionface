@@ -57,18 +57,21 @@ post_save.connect(add_post_to_followings, sender=ContentPost)
 
 def create_share_notifiaction(sender, instance, created, **kwargs):
     if created:
-        try:
-            post = instance.get_original_post()
-        except:
-            post = None
-        #create notification for owner
-        if post.get_owner() <> instance.user_to and post.get_owner() in post.following.all():
-            Notification(user=post.get_owner(), type='PS', other_user=instance.user_to, content_object=instance).save()
-        #create notifiactions for all followers of this post
-        if post.following.all():
-            for user in post.following.all():
-                if user <> instance.user_to and user <> post.get_owner():
-                    Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
+        #get child post
+        post = instance.get_original_post()
+        if post:
+            #create notification for owner
+            if post.get_owner() <> instance.user_to and post.get_owner() in post.following.all():
+                Notification(user=post.get_owner(), type='PS', other_user=instance.user_to, content_object=instance).save()
+            #create notifiactions for all followers of this post
+            if post.following.all():
+                for user in post.following.all():
+                    if user <> instance.user_to and user <> post.get_owner():
+                        Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
+        else:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning('shared post was not found')
     #adding to following list
     instance.user_to.follows.add(instance)
 post_save.connect(create_share_notifiaction, sender=SharePost)

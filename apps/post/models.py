@@ -20,6 +20,7 @@ from tasks import UpdateNewsFeeds
 import logging
 logger = logging.getLogger(__name__)
 
+
 class QuerySet(models.query.QuerySet):
     """Base QuerySet class for adding custom methods that are made
     available on both the manager and subsequent cloned QuerySets"""
@@ -27,6 +28,15 @@ class QuerySet(models.query.QuerySet):
     @classmethod
     def as_manager(cls, ManagerClass=QuerySetManager):
         return ManagerClass(cls)
+
+
+
+class CustomQuerySet(QuerySet):
+    def get_news_post(self):
+        """ getting news feed for post ids"""
+        news = NewsItem.objects.filter(post_id__in=self.values_list('id', flat=True))
+        return news
+
 
 class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
@@ -38,6 +48,7 @@ class Post(models.Model):
     allow_commenting = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
     album = models.ForeignKey('Albums', related_name="posts", on_delete=models.SET_NULL, null=True, blank=True)
+    objects = CustomQuerySet.as_manager()
 
     # Function to attempt to return the inherited object for this item.
     def get_inherited(self):
@@ -90,12 +101,19 @@ class Post(models.Model):
     def get_album(self):
         return self.album
 
-    def get_news(self):
-        try:
-            news_feed = NewsItem.objects.filter(post_id=self.id)
-        except:
-            logger.warning('more than 1 object')
-            news_feed = []
+    def get_news(self, ids = None):
+        if not ids:
+            try:
+                news_feed = NewsItem.objects.filter(post_id=self.id)
+            except:
+                logger.warning('more than 1 object')
+                news_feed = []
+        else:
+            try:
+                news_feed = NewsItem.objects.filter(post_id__in=ids)
+            except:
+                logger.warning('Error retrieving news posts')
+                news_feed = []
         return news_feed
 
     def delete(self, *args, **kwargs):
@@ -121,6 +139,7 @@ class FriendPost(Post):
 
     def privacy(self):
         return ""
+
 
 
 class ContentPost(Post):
@@ -179,6 +198,7 @@ class ContentPost(Post):
         return self.privacy
 
 
+
 class SharePost(Post):
     content = models.TextField(null=True)
     id_news = models.IntegerField(default=0)
@@ -211,6 +231,7 @@ class SharePost(Post):
         return mark_safe("""<a href='%s'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
                             <div class='share_content'>%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
+
 class CustomQuerySet(QuerySet):
     def get_public_posts(self, user=None):
         if not user:
@@ -242,6 +263,7 @@ class CustomQuerySet(QuerySet):
                 if item.post.user <> item.post.user_to:
                     self = self.exclude(id=item.id)
         return self
+
 
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)

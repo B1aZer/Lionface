@@ -158,14 +158,23 @@ def albums(request, username=None):
 
 @login_required
 def album_posts(request, username=None, album_id=None):
-    profile_user = request.user
+    if username != None:
+        try:
+            profile_user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            raise Http404
+    else:
+        profile_user = request.user
 
     if album_id:
         try:
+            from post.models import Post
             current = Albums.objects.get(id=album_id)
-            items = current.posts.all()
+            items = Post.objects.filter(album_id = current.id)
             #getting news_feed for Post Objects
-            items = [x.get_news().get_public_posts(profile_user)[0] for x in items]
+            items = items.get_news_post()
+            items = items.get_public_posts(profile_user)
+            items = sorted(items,key=lambda post: post.date, reverse=True)
         except:
             items = []
 
@@ -332,7 +341,7 @@ def related_users(request,username=None):
             users.extend(friends)
             data['html'] = [x.username for x in friends]
         if 'Following' in request.GET and profile_user.check_visiblity('following_list',request.user):
-            following = profile_user.following.all()
+            following = profile_user.get_following_active()
             users.extend(following)
             data['html'] = [x.username for x in following]
         if 'Followers' in request.GET and profile_user.check_visiblity('follower_list',request.user):

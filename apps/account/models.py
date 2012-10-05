@@ -39,8 +39,9 @@ class FriendRequest(models.Model):
         self.from_user.friends.add(self.to_user)
         self.from_user.save()
         # following removes current's followers
-        #if self.to_user in self.from_user.following.all():
+        if self.to_user in self.from_user.get_following_active():
             #self.from_user.remove_following(self.to_user)
+            self.from_user.block_following(self.to_user)
         Notification(user=self.from_user, type='FA', other_user=self.to_user, content_object = self).save()
         FriendPost(user=self.from_user, friend=self.to_user, user_to=self.to_user).save()
         #AddFriendToFeed.delay(self.from_user, self.to_user)
@@ -117,7 +118,7 @@ class UserProfile(User):
         else:
             user_list = []
         if 'W' in filters:
-            following = self.following.all()
+            following = self.get_following_active()
             following = [x for x in following if x.check_visiblity('follow',self)]
         else:
             following = []
@@ -220,8 +221,23 @@ class UserProfile(User):
         following = [x.from_user for x in following]
         return following
 
+    def get_following_blocked(self):
+        following = Relationship.objects.filter(to_user=self, status=0)
+        following = [x.from_user for x in following]
+        return following
+
+    def get_following_count(self):
+        count = Relationship.objects.filter(to_user=self, status=1).count()
+        return count
+
+    def get_followers_count(self):
+        count = Relationship.objects.filter(from_user=self, status=1).count()
+        return count
+
     def in_followers(self,user):
-        if user in self.followers.all():
+        followers = Relationship.objects.filter(from_user=self)
+        followers = [x.to_user for x in followers]
+        if user in followers:
             return True
         else:
             return False
@@ -230,6 +246,20 @@ class UserProfile(User):
         Relationship.objects.filter(
                 from_user=user,
                 to_user=self).delete()
+        return
+
+    def block_following(self, user):
+        following = Relationship.objects.filter(
+                from_user=user,
+                to_user=self)
+        following.update(status = 0)
+        return
+
+    def activate_following(self, user):
+        following = Relationship.objects.filter(
+                from_user=user,
+                to_user=self)
+        following.update(status = 1)
         return
 
     @models.permalink

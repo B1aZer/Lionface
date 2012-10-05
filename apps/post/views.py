@@ -256,7 +256,7 @@ def share(request, post_id = None):
                 shared.save()
             else:
                 #if was
-                shared = SharePost(user = post_type.user , user_to=request.user , content = post_type.content, id_news = post_type.id_news, content_object = post_type )
+                shared = SharePost(user = post_type.user , user_to=request.user , content = post_type.content, id_news = post_id, content_object = post_type )
                 post_type.shared +=1
                 post_type.save()
                 shared.save()

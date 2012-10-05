@@ -22,7 +22,6 @@ def in_hidden(user, friend):
 def in_followers(user, friend):
     return user.in_followers(friend)
 
-
 @register.filter(name='show_friend_count')
 def show_friend_count(user):
     wordarray = ['2', '3', '4', '5', '6', '7', '8', '9']

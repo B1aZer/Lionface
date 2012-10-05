@@ -341,6 +341,11 @@ function check_for_messages(){
                             }
                         }
                     }
+                    else {
+                        if ($('#messages_id_notif span').length) {
+                            $('#messages_id_notif span').remove();
+                        }
+                    }
                 }
             },
             error: function() {
@@ -364,6 +369,11 @@ function check_for_notifications(){
                     else {
                         $('#notifications_id_notif').append('<span class="count">'+data.notfs+'</span>');
                     }
+                }
+            }
+            else {
+                if ($('#notifications_id_notif span').length) {
+                    $('#notifications_id_notif span').remove();
                 }
             }
     
@@ -426,15 +436,17 @@ $(document).ready(function() {
                 success: function(data) {
                     $this.html($ohtml);
                     if(data.status == 'OK') {
+                        //this will fire only on news feed
                         if ($this.attr('class').indexOf('unfollow_feed') >= 0) {
                             $this.html('');
+                            loadNewsFeed($("#news_feed"));
                         }
                         else {
                             $this.html('+ Follow');
-                        }
                         $this.removeClass('link-unfollow');
                         $this.addClass('link-follow');
                         hookLinks();
+                        }
                     }
                 },
                 error: function() {
@@ -658,6 +670,7 @@ $(document).ready(function() {
                 user:meta.user,
             },
             callback: function() {
+                loadNewsFeed($("#news_feed"));
             }
         });
     });

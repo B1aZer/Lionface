@@ -5,8 +5,8 @@
 {% block content_middle %}
 {% if profile_user == user %}
 <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user|show_friend_count }}</span>
-<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user.followers.count }} Follower{{ user.followers.count|pluralize }}</span>
-<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user.following.count }} Following</span>
+<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user.get_followers_count }} Follower{{ user.get_followers_count|pluralize }}</span>
+<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user.get_following_count }} Following</span>
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}

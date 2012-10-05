@@ -28,6 +28,7 @@
         </div>
         <div class="share_text" style="display: none;">
         </div>
+        {% if item.get_owner == request.user %}
         <div class="post_settings" style="display:none">
             <form>
                 <input type="checkbox" name="comment_settings" value="on" {% if item.get_comment_settings %}checked="checked"{% endif %}> Comments<span style="color: transparent;"> -- -- -- </span>
@@ -48,7 +49,9 @@
                 </select>
                 {% endif %}
             </form>
-        </div><br />
+        </div>
+        {% endif %}
+        <br />
         <div id="hide_comment_{{ item.get_id }}" {% if not item.get_comment_settings %}  style="display:none" {% endif %} >
             <div class="comments comment_{{ item.id }}" style="display: none;">
                 <div class="comment_container">
@@ -81,7 +84,7 @@
             {% if not del_false %}
             <!--This will fire on news feed-->
                 {% if item.get_owner.id == request.user.id  or item.user_to.id == request.user.id or item.user.id == request.user.id %}
-                    {% if item.get_type != 'friend post' %}
+                    {% if item.get_type != 'friend post' and item.get_owner == request.user %}
                     <a href="#" class="toggle_settings" >Settings</a> <span style="color: transparent;"> - | - </span> 
                     {% endif %}
 				<a href="javascript:del_post({{item.id}});">Delete</a> <span style="color: transparent;"> - | - </span> 
@@ -104,8 +107,8 @@
                 {% else %}
                 {% endif %}
             {% endif %}
-            {% url profile.views.album_posts album_id=item.get_album.id as the_url %}
-            <span style="color: transparent;"> - | - </span> <a href="{{the_url}}" class="album_name" style="color: #C92;">{{ item.get_album.name }}</a>
+            {% url users-albums-posts username=item.get_owner.username album_id=item.get_album.id as the_url %}
+            <span style="color: transparent;"> - | - </span> <a href="{{ the_url }}" class="album_name" style="color: #C92;">{{ item.get_album.name }}</a>
         </div>
 		</div>
     </div>

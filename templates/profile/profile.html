@@ -7,10 +7,10 @@
 <a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_friend_count }}</a>
 {% endif %}
 {% if profile_user|check_follower_visibility:request.user %}
-<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Followers"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user.followers.count }} Follower{{ profile_user.followers.count|pluralize }}</a>
+<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Followers"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user.get_followers_count }} Follower{{ profile_user.get_followers_count|pluralize }}</a>
 {% endif %}
 {% if profile_user|check_following_visibility:request.user %}
-<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Following"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user.following.count }} Following</a>
+<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Following"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user.get_following_count }} Following</a>
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}
