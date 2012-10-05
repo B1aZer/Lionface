@@ -16,12 +16,23 @@
       <div class="heart float_box">
         {% block heart %}
         <div class="next_generation"><span style="font-size: 25pt;">The</span> <span style="font-size: 40pt;">Next Generation</span><br /><span style="font-size: 25pt;">in</span> Social Networking</div>
-        <div style="font-size: 18px;">
-          <a href="{% url account.views.signup %}" class="su">Create an Account</a>
+        <div>
+          <a href="{% url account.views.signup %}" class="create">Create an Account</a>
         </div>
         {% endblock %}
       </div>
     </div>
   </div>
+	<div style="width: 100%; margin-top: 25px; background: #DDD; padding: 7px 0;">
+		<div class="enabled_container"><div class="enabled">Lf</div> Lionface Enabled</div>
+		<div class="enabled_container"><div class="enabled">n</div> Nonprofits Enabled</div>
+		<div class="enabled_container"><div class="enabled">b</div> Businesses Enabled</div>
+		<div class="enabled_container"><div class="enabled"><span style="position: relative; top: 1px;">#</span></div> Tags Enabled</div>
+		<div class="enabled_container"><div class="enabled"><span style="position: relative; top: -1px;">+</span></div> Followers Enabled</div>
+		<div class="enabled_container"><div class="enabled"><span style="position: relative; top: -1px; font-size: 14pt;">:]</span></div> Albums Enabled</div>
+	</div>
+	
 </div>
+
+
 {% endblock %}

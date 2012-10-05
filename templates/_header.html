@@ -1,7 +1,7 @@
 {% load media format_results %}
 <div id="header">
   <div class="content_area">
-    <div class="left_links" style="position: relative; top: -14px; left: 0pt;">
+    <div class="left_links" style="position: relative; top: -25px; left: 0pt;">
       <ul>
         <li><a href="{% url profile.views.profile %}" style="font-size: 12pt;" class="header_profile_image">
 			<div style="background: url('/{{ request.user.photo|format_image:request.get_full_path }}'); background-size: 34px 34px;"></div>
@@ -42,7 +42,7 @@
 
 <div style="position: relative; width: 900px; height: 1px; text-align: left;">
 
-	<div style="position: relative; left: -42px; top: 33px; width: 35px; z-index: 9999;">
+	<div style="position: relative; left: -42px; top: 27px; width: 35px; z-index: 9999;">
 		<div onMouseOver="ShowContent('page'); return false;" onMouseOut="HideContent('page'); return false;" style="position: relative;">
 			<div id="page" class="page" style="display: none;"><a href="#">Settings</a> 
 			<div style="display: block; color: #F58; padding: 4px 0;">(love count)</div></div> <a href="{% url pages.views.page %}" class="nav_page"></a>
@@ -52,7 +52,7 @@
 
 <div style="position: relative; width: 900px; height: 1px; text-align: right;">
 
-	<div style="position: relative; right: -908px; top: 29px; width: 35px; z-index: 100;">
+	<div style="position: relative; right: -908px; top: 23px; width: 35px; z-index: 100;">
         
 		<a href="{% url messaging.views.messages %}" id="messages_id_notif" class="nav_messages" title=" Messages ">
             {% if request.user.new_messages > 0 %} <span class="count">{{request.user.new_messages}}</span> {% endif %}

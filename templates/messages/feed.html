@@ -4,7 +4,7 @@
 
 
 <div class="mess" {% if request.user == message.user %} style="left: 146px; background: #FAFAFA;" {% endif %}>
-{{ message.user }} <span style="display: none;">to {{ message.user_to }}</span> <span style="color: #AAA; font-size: 8pt;">  {{ message.date }}</span>
+{{ message.user.full_name }} <span style="display: none;">to {{ message.user_to }}</span> <span style="color: #AAA; font-size: 8pt; margin-left: 10px;">  {{ message.date }}</span>
 <p>{{ message.content|escaping|smileys}}</p>
 </div>
 

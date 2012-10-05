@@ -1,13 +1,12 @@
-/* Imported CSS from prototype */
 @font-face {
-	font-family: "Kievit";
-	src: url('fonts/Kievit.eot');
-    src: local(my_font), url('fonts/Kievit.ttf') format('opentype');
+	font-family: "Kievit-Custom";
+	src: url('fonts/Kievit-Custom.eot');
+    src: local(my_font), url('fonts/Kievit-Custom.ttf') format('opentype');
 }
 @font-face {
-	font-family: "Kievit";
-	src: url('fonts/Kievit-Bold.eot');
-    src: local(my_font), url('fonts/Kievit-Bold.ttf') format('opentype');
+	font-family: "Kievit-Custom";
+	src: url('fonts/Kievit-Bold-Custom.eot');
+    src: local(my_font), url('fonts/Kievit-Bold-Custom.ttf') format('opentype');
 	font-weight: bold;
 }
 @font-face {
@@ -18,7 +17,7 @@
 }
 
 body { 
-	font-family: "Kievit", Arial, serif; 
+	font-family: "Kievit-Custom", Arial, serif; 
 	font-size: 10pt; 
 	color: #222;
 	margin: 0px; 
@@ -52,40 +51,38 @@ h3 { text-align: center; font-size: 16px; }
 /* News Feed */
 
 a.filter:link, a.filter:active, a.filter:visited { 
-	color: #27B; 
+	color: #AAA; 
 	position: relative; 
 	display: block; 
 	text-decoration: none; 
-	padding: 10px 0 10px 10px;
+	padding: 10px 5px 7px 10px;
 	width: 180px; 
 	font-size: 10pt; 
-	margin: 5px 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	background: #FFF;
-	color: #555;
+	margin: 5px 0px;
+	border-right: 5px solid #EEE;
 }
 a.filter:hover { 
-	background: #FAFAFA;
-	color: #333; 
+	color: #777;
+	background: #FBFBFB;
+	border-color: #CCC;
 }
 a.filterON:link, a.filterON:active, a.filterON:visited { 
 	position: relative; 
 	display: block; 
 	text-decoration: none;
-	padding: 10px 0 10px 10px; 
+	padding: 10px 5px 7px 10px; 
 	width: 180px; 
 	font-size: 10pt; 
-	background: #EEE;
-	color: #555; 
-	margin: 5px 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	color: #000; 
+	margin: 5px 0px;
+	border-right: 5px solid #333;
+	background: #F8F8F8;
 }
 
 a.filterON:hover { 
-	background: #FAFAFA;
-	color: #333;
+	color: #777;
+	background: #FBFBFB;
+	border-color: #CCC;
 }
 
 .remove_tag {
@@ -257,9 +254,9 @@ a.profile_nav:hover {
 	text-decoration: none;
 	color: #555;
 	border-color: #DDD;
-	-moz-box-shadow: inset 0 2px 4px -2px #777;
-	box-shadow: inset 0 2px 4px -2px #777; 
-	padding: 7px;
+	-moz-box-shadow: 0 2px 4px -2px #777;
+	box-shadow: 0 2px 4px -2px #777; 
+	padding: 7px 7px 5px 7px;
 	border: 1px solid transparent;
 	margin-right: 4px;
 
@@ -268,7 +265,7 @@ a.profile_nav:hover {
 a.profile_btn, a.profile_btn:active, a.profile_btn:visited {
 	display: inline-block;
 	height 20px;
-	padding: 5px 10px;;
+	padding: 6px 10px 4px 10px;
 	border: 1px solid #DDD;
 	text-align: center;
 	color: #555;
@@ -377,7 +374,12 @@ a.profile_btn:hover {
 }
 
 .postoptions_container {
-	padding: 7px 7px 0 7px;
+	padding: 7px 7px 3px 7px;
+}
+
+#news_feed {
+	position: relative;
+	top: -13px;
 }
 
 #postbox {
@@ -391,8 +393,8 @@ a.profile_btn:hover {
 	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
 	-moz-border-radius: 3px; border-radius: 3px;
-	-moz-box-shadow: 0px 4px 10px -6px #777;
-	box-shadow: 0px 4px 10px -6px #777;
+	-moz-box-shadow: 0px 4px 8px -4px #555;
+	box-shadow: 0px 4px 8px -4px #555;
 }
 
 .noPhoto { 
@@ -502,7 +504,7 @@ a.profile_btn:hover {
 
 .comment {
 	color: #444; 
-	font-size: 9pt !important; 
+	font-size: 10pt !important; 
 	padding: 0;
 	margin: 0;
 	-moz-border-radius: 3px;
@@ -527,7 +529,7 @@ a.profile_btn:hover {
 }
 
 .text_comment {
-    font-size: 11px;
+    font-size: 10pt;
     line-height: 1;
 }
 
@@ -736,14 +738,7 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
   height: 40px;
 	border: 1px solid #CCC;
 	border-width: 0 0 1px 0;
-	background: #ffffff; /* Old browsers */
-	background: -moz-linear-gradient(top, #ffffff 0%, #EEE 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#EEE)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #ffffff 0%,#EEE 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #ffffff 0%,#EEE 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #ffffff 0%,#EEE 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #ffffff 0%,#EEE 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#EEE',GradientType=0 ); /* IE6-9 */
+	background: #333;
 	-moz-box-shadow: 0 0 8px -2px #333;
 	box-shadow: 0 0 8px -2px #333;
 }
@@ -757,9 +752,7 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 #header #search_bar { 
 	float: right; 
 	background: #FFF; 
-	border: 8px solid #EAEAEA; 
-	border-width: 8px 12px 7px 12px;
-	position: relative; left: 3px;
+	position: relative; top: 7px;
 }
 
 #header #search_bar input[type=text] { 
@@ -786,51 +779,52 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 
 .header_profile_image div {
 	display: inline-block; 
-	float: left; 
 	background-size: 34px 34px; 
+	background-repeat: no-repeat;
+	background-position: center center;
 	width: 34px; height: 34px; 
-	position: relative; left: 0px; top: -12px;
-	-moz-box-shadow: 0 2px 4px -2px #777;
-	box-shadow: 0 2px 4px -2px #777;
+	position: relative; left: -4px; top: 11px;
+	background: #DDD;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	background: #DDD;
+	border: 1px solid #AAA;
 }
 
 a.header_profile_image:hover {
-	background: none #EEE;
+	background: none #555;
+	color: #FFF;
 }
 
 .left_links li a:link, .left_links li a:active, .left_links li a:visited { 
 	padding: 16px 10px 10px 10px; 
-	color: #777; 
+	color: #BBB; 
 	font-size: 10pt;
 }
 
 .left_links li a:hover { 
-	color: #333; 
+	color: #FFF; 
 	text-decoration: none; 
-	background-image: url(../images/triangle.png);
-	background-repeat: no-repeat;
-	background-position: center bottom;
+	background: #444;
 }
 
 .left_links li a.settings:link, .left_links li a.settings:active, .left_links li a.settings:visited {
-	color: #BBB;
+	color: #888;
 	display: inline-block;
+	background: none;
 }
 
 .left_links li a.settings:hover {
-	color: #896;
+	color: #AB8;
 }
 
 .left_links li #signout {
 	color: #AAA;
 	display: none;
+	background: none;
 }
 
 .left_links li #signout:hover {
-	color: #000;
+	color: #FFF;
 }
 
 a.nav_page:link, a.nav_page:active, a.nav_page:visited {
@@ -916,10 +910,10 @@ a.nav_notifications:hover {
 	color: #FFF;
 	text-decoration: none;
 	background: #B22;
-	padding: 2px 4px 2px 4px;
+	padding: 4px 5px 1px 5px;
 	font-size: 8pt;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
 	position: absolute; right: -7px; top: 22px;
 }
 
@@ -1132,7 +1126,7 @@ a.older_mess:link, a.older_mess:visited, a.older_mess:active {
 .settings_nav li {
 	display: block:
 	color: #555;
-	padding: 10px; padding-left: 25px;
+	padding: 10px 10px 7px 25px;
 	margin: 10px 0;
 	background: #fafafa; /* Old browsers */
 	background: -moz-linear-gradient(top, #fafafa 0%, #eeeeee 100%); /* FF3.6+ */
@@ -1146,23 +1140,18 @@ a.older_mess:link, a.older_mess:visited, a.older_mess:active {
 	border-radius: 7px;
 	position: relative;
 	top: -20px;
-	-moz-box-shadow: 0 4px 8px -4px #555;
-	box-shadow: 0 4px 8px -4px #555; 
+	-moz-box-shadow: 0 4px 8px -4px #777;
+	box-shadow: 0 4px 8px -4px #777; 
 }
 
 .settings_nav li:hover {
 	cursor: pointer;
-	background: rgb(85,170,238); /* Old browsers */
-	background: -moz-linear-gradient(top, rgba(85,170,238,1) 0%, rgba(34,119,187,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(85,170,238,1)), color-stop(100%,rgba(34,119,187,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55aaee', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
+	background: #EEE;
 	background-position: center right;
 	background-repeat: no-repeat;
-	color: #FFF;
+	color: #000;
+	-moz-box-shadow: 0 4px 8px -4px #333;
+	box-shadow: 0 4px 8px -4px #333; 
 
 }
 
@@ -1217,7 +1206,7 @@ a.older_mess:link, a.older_mess:visited, a.older_mess:active {
 
 a.love:link, a.love:active, a.love:visited { 
 	display: inline-block; 
-	padding: 6px 12px 6px 12px; 
+	padding: 8px 12px 6px 12px; 
 	color: #F58; 
 	font-size: 12pt;
 	text-decoration: none; 
@@ -1316,11 +1305,12 @@ a.love:hover {
 .pages_nav_area a:link, .pages_nav_area a:active, .pages_nav_area a:visited, 
 a.nonprofit_btn:link, a.nonprofit_btn:active, a.nonprofit_btn:visited,
 a.business_btn:link, a.business_btn:active, a.business_btn:visited {
-	padding: 7px 12px;
+	padding: 11px 12px 9px 12px;
 	color: #666;
-	margin: 0 5px;
+	margin: 0px 5px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	position: relative; top: 2px;
 }
 
 
@@ -1337,6 +1327,8 @@ a.business_btn:link, a.business_btn:active, a.business_btn:visited {
 	background: -ms-linear-gradient(top, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* IE10+ */
 	background: linear-gradient(to bottom, rgba(85,170,238,1) 0%,rgba(34,119,187,1) 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55aaee', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
+	-moz-box-shadow: inset 0 2px 4px -2px #555;
+	box-shadow: inset 0 2px 4px -2px #555;  
 
 }
 
@@ -1351,6 +1343,8 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	background: -ms-linear-gradient(top, #a2c185 0%,#889966 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #a2c185 0%,#889966 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a2c185', endColorstr='#889966',GradientType=0 ); /* IE6-9 */
+	-moz-box-shadow: inset 0 2px 4px -2px #555;
+	box-shadow: inset 0 2px 4px -2px #555; 
 }
 
 .create_options {

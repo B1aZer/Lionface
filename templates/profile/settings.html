@@ -201,13 +201,13 @@
     <td>Hidden Feeds</td>
     <td><span style="font-size: 11px; color: #999;">
             {% if user.hidden.all %}
-            <select multiple="multiple" name="rem_hidden_list">
+            <select multiple="multiple" name="rem_hidden_list" style="padding: 4px; border: 1px solid #DDD; -moz-border-radius: 3px; border-radius: 3px; width: 200px; height: 50px;">
                 {% for hidden in user.hidden.all %}
                     <option value="{{ hidden.id }}">{{ hidden.full_name }}</option>
                 {% endfor %}
             </select>
-            <div>
-                <input id="rem_hidden_btn" type="submit" value="Remove Hidden" name="rem_hidden" class="default" style="font-size: 8pt !important;" />
+            <div style="display: inline-block; position: relative; left: 5px; top: -12px;">
+                <input id="rem_hidden_btn" type="submit" value="Unhide" name="rem_hidden" class="blue_btn" style="font-size: 8pt !important;" />
             </div>
             {% else %}
             none
