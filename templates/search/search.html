@@ -7,8 +7,9 @@
         {% if query %}
             {% for result in page.object_list %}
                 <div class="result">
+				<div class="result_search">
                   {{ result.object|format_result:user }}
-                </div>
+                </div></div>
             {% empty %}
                 <p align="center" class="no_posts">No results found.</p>
             {% endfor %}

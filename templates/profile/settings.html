@@ -125,7 +125,7 @@
     <td>Friends Only</td>
 </tr>
 <tr>
-    <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Commenting and sharing inherit the privacy settings of their parent post. If your post is public then  commenting and sharing is also available to the public. </span></td>
+    <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Commenting and sharing inherit the privacy settings of their parent post. If your post is public then  commenting and sharing is also available to the public. You may, however, disable these functions by default, or manually on individual posts.</span></td>
 </tr>
 <tr>
     <td width="200">Comment Default<br></td>
@@ -137,6 +137,21 @@
     <td width="200">Share Default</td>
     <td>
         {{ form.option_share_default }}
+    </td>
+</tr>
+<tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+</tr>
+<tr>
+    <td width="200">Profile Pictures Album</td>
+    <td>
+        <select>
+			<option selected>Public</option>
+			<option>Friend's Friends</option>
+			<option>Friends</option>
+			<option>Just Me</option>
+		</select>
     </td>
 </tr>
 <tr>
@@ -190,8 +205,15 @@
     </td>
 </tr>
 <tr>
-    <td>Loves List</td>
-    <td>Public</td>
+    <td>Loves</td>
+    <td>
+	<span style="color: #AAA;">On Your Profile:</span> Public<br />
+	<span style="color: #AAA;">On Pages:</span>
+		<select>
+			<option selected>Public</option>
+			<option>Private</option>
+		</select>
+	</td>
 </tr>
 <tr>
     <td>&nbsp;</td>
