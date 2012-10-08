@@ -258,6 +258,7 @@
     </span></td>
 </tr>
 {% endif %}
+{% if user.get_blocked_from %}
 <tr>
     <td>Blocked From</td>
     <td><span style="font-size: 11px; color: #999;">
@@ -272,6 +273,7 @@
             {% endif %}
     </span></td>
 </tr> 
+{% endif %}
 <tr>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
