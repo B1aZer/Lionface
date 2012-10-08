@@ -154,6 +154,8 @@ class UserProfile(User):
         # Blocked
         if self.get_blocked():
             blocked = [x for x in self.get_blocked()]
+        else:
+            blocked = []
         user_list = list(set(list(chain(user_list,following))))
         return NewsItem.objects.filter(user__in=user_list).exclude(user__in=blocked).exclude(post__user=self).order_by('date').reverse()
 
