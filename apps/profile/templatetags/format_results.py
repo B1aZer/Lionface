@@ -56,6 +56,14 @@ def strip_comment(comment):
     comment = bleach.linkify(comment,target='_top',title=True)
     return comment
 
+@register.filter(name='get_comment_counter')
+def get_comment_counter(item, user):
+    try:
+        counter = item.get_comment_counter(user)
+    except:
+        counter = 0
+    return counter
+
 # Function for stripping tags.
 @register.filter(name='color_tags',is_safe=True)
 def color_tags(text):

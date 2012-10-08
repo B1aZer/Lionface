@@ -15,9 +15,12 @@ from .forms import *
 
 from django.db.models import F
 
+from .decorators import unblocked_users
 from django.contrib.auth.decorators import user_passes_test
+
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
+
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
 try:
@@ -59,6 +62,7 @@ def timeline(request):
     )
 
 @login_required
+@unblocked_users
 def profile_image(request, username=None):
     if username != None:
         try:
@@ -77,10 +81,8 @@ def profile_image(request, username=None):
         RequestContext(request)
     )
 
-from .decorators import access_required
-# THIS HACKING WORKS!!!
 @login_required
-#@access_required('admin')
+@unblocked_users
 def profile(request, username=None):
     # TODO: Logic here needs to see what relation the current user is to the profile user
     # and compare this against their privacy settings to see what can be seen.
@@ -141,6 +143,7 @@ def profile(request, username=None):
     )
 
 @login_required
+@unblocked_users
 def albums(request, username=None):
     """Albums view"""
     if username != None:
@@ -162,6 +165,7 @@ def albums(request, username=None):
     )
 
 @login_required
+@unblocked_users
 def album_posts(request, username=None, album_id=None):
     if username != None:
         try:
@@ -312,6 +316,19 @@ def settings(request):
                 active = 'privacy'
             else:
                 active = 'basics'
+        elif 'rem_blocked' in request.POST:
+            blocked_users = request.POST.getlist('rem_blocked_list')
+            for user_id in blocked_users:
+                try:
+                    user = UserProfile.objects.get(id=user_id)
+                    request.user.blocked.remove(user)
+                except:
+                    continue
+            #Pop-up right window
+            if request.POST.get('form_name') == 'privacy':
+                active = 'privacy'
+            else:
+                active = 'basics'
 
     return render_to_response(
         'profile/settings.html',
@@ -341,6 +358,7 @@ def delete_profile(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
+@unblocked_users
 def related_users(request,username=None):
     if not username:
         profile_user = request.user
@@ -355,7 +373,7 @@ def related_users(request,username=None):
         users = []
 
         if 'Friends' in request.GET and profile_user.check_visiblity('friend_list',request.user):
-            friends = profile_user.friends.all()
+            friends = profile_user.get_friends()
             users.extend(friends)
             data['html'] = [x.username for x in friends]
         if 'Following' in request.GET and profile_user.check_visiblity('following_list',request.user):
@@ -363,7 +381,7 @@ def related_users(request,username=None):
             users.extend(following)
             data['html'] = [x.username for x in following]
         if 'Followers' in request.GET and profile_user.check_visiblity('follower_list',request.user):
-            followers = profile_user.followers.all()
+            followers = profile_user.get_followers_active()
             users.extend(followers)
             data['html'] = [x.username for x in followers]
 

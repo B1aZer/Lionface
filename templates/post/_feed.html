@@ -1,7 +1,6 @@
 {% load media comments format_results friends %}
 
 {% for item in items %}
-{% get_comment_count for item as comment_count %}
 {% if not notification %}
 	<hr style="position: relative; left: 50px; background-color: #E7E7E7; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
@@ -13,8 +12,8 @@
     {% if item.get_type != 'friend post' %}
         <div>
             <span id="hide_comment_link_{{ item.get_id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
-                <a class="toggle_comments" href="">Comment</a>{% ifequal comment_count 0 %} {% else %} 
-					<span style="color: transparent;">-</span> <span style="color: #555;">{{ comment_count }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
+                <a class="toggle_comments" href="">Comment</a>{% ifequal item|get_comment_counter:request.user 0 %} {% else %} 
+					<span style="color: transparent;">-</span> <span style="color: #555;">{{ item|get_comment_counter:request.user }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
             </span>
             <span id="hide_share_{{ item.get_id }}" {% if not item.get_share_settings %} style="display: none;" {% endif %}>
                 <a href="javascript:share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} 
@@ -79,8 +78,6 @@
             {% endif %}
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
-
-
         <div class="post_bottom">
             {% if not del_false %}
             <!--This will fire on news feed-->

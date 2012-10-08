@@ -1,4 +1,5 @@
 {% load format_results %}
+{% if comment.user.id not in request.user.get_blocked_ids %}
 <div class="comment_list" id="comment_{{ comment.id }}">
         <div  onMouseOver="ShowContent('z{{ comment.id }}');ShowContent('p{{ comment.id }}'); return false;" onMouseOut="HideContent('z{{ comment.id }}');HideContent('p{{ comment.id }}'); return false;">
             <dt id="c{{ comment.id }}">
@@ -30,3 +31,4 @@
         <hr noshade="noshade" style="border: 0px; height: 1px; background: #FFF;" size="1" />
         <div style="height: 7px;"></div>
     </div>            
+{% endif %}

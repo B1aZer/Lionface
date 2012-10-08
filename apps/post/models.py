@@ -9,6 +9,10 @@ from django.db.models.signals import post_save, post_delete
 from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
 
+from django.contrib.contenttypes.models import ContentType
+from django.contrib import comments
+from django.conf import settings
+
 import re
 from .utils import QuerySetManager
 from django.utils.safestring import mark_safe
@@ -263,6 +267,12 @@ class CustomQuerySet(QuerySet):
                 if item.post.user <> item.post.user_to:
                     self = self.exclude(id=item.id)
         return self
+    def filter_blocked(self, user=None):
+        if user:
+            for item in self:
+                if item.get_owner() in user.get_blocked():
+                    self = self.exclude(id=item.id)
+        return self
 
 
 class NewsItem(models.Model):
@@ -329,6 +339,14 @@ class NewsItem(models.Model):
 
     def get_album(self):
         return self.post.album
+
+    def get_comment_counter(self, user=None):
+        value = comments.get_model().objects.filter(
+        content_type = ContentType.objects.get_for_model(self),
+        object_pk = self.pk,
+        site__pk = settings.SITE_ID
+        ).exclude(user__in=user.get_blocked()).count()
+        return value
 
     @property
     def timestamp(self):

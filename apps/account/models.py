@@ -95,14 +95,36 @@ class UserProfile(User):
 
         return mutual_friends
 
+    def get_friends(self):
+        return self.friends.exclude(user__in=self.get_blocked())
+
+    def get_friends_count(self):
+        blocked_id = [x.id for x in self.get_blocked()]
+        return self.friends.exclude(id__in=blocked_id).count()
+
     def has_friend_request(self, user):
         return FriendRequest.objects.filter(Q(from_user=self, to_user=user) | Q(to_user=self, from_user=user)).count() > 0
 
     def in_hidden(self, user):
         return self.hidden.filter(id=user.id).count() > 0
 
-    def get_bocked(self):
+    def get_blocked(self):
+        blocked = [x for x in self.blocked.all()]
+        blocked_from = [x for x in self.blocked_from.all()]
+        blocked_all = list(set(list(chain(blocked,blocked_from))))
+        return blocked_all
+
+    def get_blocked_ids(self):
+        blocked = [x.id for x in self.blocked.all()]
+        blocked_from = [x.id for x in self.blocked_from.all()]
+        blocked_all = list(set(list(chain(blocked,blocked_from))))
+        return blocked_all
+
+    def get_blocked_self(self):
         return self.blocked.all()
+
+    def get_blocked_from(self):
+        return self.blocked_from.all() 
 
     # Returns a queryset for all news items this user can see in date order.
     def get_news(self):
@@ -112,22 +134,27 @@ class UserProfile(User):
         #not only his
         return NewsItem.objects.filter(hidden=False).order_by('date').reverse()
 
+    # Return feed dpending on selected filters
     def get_messages(self):
         from post.models import NewsItem
         filters = self.filters.split(',')
-        #return NewsItem.objects.filter(post__user_to__in=self.friends.all()).exclude(post__user=self).order_by('date').reverse()
+        # Friends
         if 'F' in filters:
-            blocked_list = [x.id for x in self.hidden.all()]
-            user_list = self.friends.all().exclude(id__in=blocked_list)
+            hidden_list = [x.id for x in self.hidden.all()]
+            user_list = self.friends.all().exclude(id__in=hidden_list)
         else:
             user_list = []
+        # Following
         if 'W' in filters:
             following = self.get_following_active()
             following = [x for x in following if x.check_visiblity('follow',self)]
         else:
             following = []
+        # Blocked
+        if self.get_blocked():
+            blocked = [x for x in self.get_blocked()]
         user_list = list(set(list(chain(user_list,following))))
-        return NewsItem.objects.filter(user__in=user_list).exclude(post__user=self).order_by('date').reverse()
+        return NewsItem.objects.filter(user__in=user_list).exclude(user__in=blocked).exclude(post__user=self).order_by('date').reverse()
 
     def get_filters(self):
         filters = self.filters.split(',')
@@ -222,8 +249,13 @@ class UserProfile(User):
 
     def get_following_active(self):
         following = Relationship.objects.filter(to_user=self, status=1)
-        following = [x.from_user for x in following]
+        following = [x.from_user for x in following if x.from_user not in self.get_blocked()]
         return following
+
+    def get_followers_active(self):
+        followers = Relationship.objects.filter(from_user=self, status=1)
+        followers = [x.to_user for x in followers if x.to_user not in self.get_blocked()]
+        return followers
 
     def get_following_blocked(self):
         following = Relationship.objects.filter(to_user=self, status=0)
@@ -231,11 +263,11 @@ class UserProfile(User):
         return following
 
     def get_following_count(self):
-        count = Relationship.objects.filter(to_user=self, status=1).count()
+        count = Relationship.objects.filter(to_user=self, status=1).exclude(from_user__in=self.get_blocked()).count()
         return count
 
     def get_followers_count(self):
-        count = Relationship.objects.filter(from_user=self, status=1).count()
+        count = Relationship.objects.filter(from_user=self, status=1).exclude(to_user__in=self.get_blocked()).count()
         return count
 
     def in_followers(self,user):

@@ -41,8 +41,11 @@ def feed(request, user_id = None):
             items = list(set(items))
             items = sorted(items,key=lambda post: post.date, reverse=True)
     else:
-        #show messages adressed to user
+        # show messages adressed to user
         items = items.filter(user=user_id)
+        # remove blocked
+        if request.user.get_blocked():
+            items = items.filter_blocked(user=request.user)
         if int(request.user.id) <> int(user_id):
             items = items.get_public_posts(request.user)
     #import pdb;pdb.set_trace()
