@@ -96,7 +96,8 @@ class UserProfile(User):
         return mutual_friends
 
     def get_friends(self):
-        return self.friends.exclude(user__in=self.get_blocked())
+        blocked_ids = [x.id for x in self.get_blocked_self()]
+        return self.friends.exclude(id__in=blocked_ids)
 
     def get_friends_count(self):
         blocked_id = [x.id for x in self.get_blocked()]

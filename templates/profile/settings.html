@@ -237,9 +237,16 @@
         </span></td>
 </tr>
 <tr>
+    <td>Block User</td>
+    <td><span stydle="font-size: 11px; color: #999;">
+                <input id="block_user" name="block_user" type="text">
+    </span></td>
+</tr>
+<tr>     
+{% if user.get_blocked_self %}
+<tr>
     <td>Blocked Users</td>
     <td><span style="font-size: 11px; color: #999;">
-            {% if user.get_blocked_self %}
                 <select multiple="multiple" name="rem_blocked_list" style="padding: 4px; border: 1px solid #DDD; -moz-border-radius: 3px; border-radius: 3px; width: 200px; height: 50px;">
                 {% for blocked in user.get_blocked_self %}
                     <option value="{{ blocked.id }}">{{ blocked.full_name }}</option>
@@ -248,11 +255,9 @@
                 <div style="display: inline-block; position: relative; left: 5px; top: -12px;">
                     <input id="rem_blocked_btn" type="submit" value="Unblock" name="rem_blocked" class="blue_btn" style="font-size: 8pt !important;" />
                 </div>
-            {% else %}
-                <input id="block_user" name="block_user" type="text">
-            {% endif %}
     </span></td>
 </tr>
+{% endif %}
 <tr>
     <td>Blocked From</td>
     <td><span style="font-size: 11px; color: #999;">

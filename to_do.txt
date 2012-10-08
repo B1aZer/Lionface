@@ -2,7 +2,8 @@
 deleting sharing origin wont delete children
 wrong privacy on deleted
 
-you still can recieve messages from blocked users
+you still can recieve messages from blocked users, you can
+see them in notifiactions as well
 
 ###later###
 mass maubmit on ajax
