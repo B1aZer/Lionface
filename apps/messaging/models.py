@@ -30,6 +30,9 @@ class Messaging(models.Model):
             pass
         else:
             send = True
+        # Blocked Users
+        #if self.user in self.user_to.get_blocked():
+            #send = False
         if (send):
             super(Messaging, self).save(*args, **kwargs)
         return send

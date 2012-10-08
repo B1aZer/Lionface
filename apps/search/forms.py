@@ -18,8 +18,11 @@ class SearchForm(ModelSearchForm):
             for one_user in res:
                 #if hasattr(one_user.object, 'userprofile'):
                 if one_user.object:
-                    #if user was deleted
+                    #if user was not deleted
                     if not one_user.object.check_visiblity("search",user):
+                        res = res.exclude(username=one_user.username)
+                    # if in blocked list -> exclude
+                    if one_user.object in user.get_blocked():
                         res = res.exclude(username=one_user.username)
                 else:
                     res = res.exclude(username=one_user.username)

@@ -61,12 +61,14 @@ def create_share_notifiaction(sender, instance, created, **kwargs):
         post = instance.get_original_post()
         if post:
             #create notification for owner
-            if post.get_owner() <> instance.user_to and post.get_owner() in post.following.all():
+            if post.get_owner() <> instance.user_to and post.get_owner() in post.following.all() \
+                    and instance.user_to not in post.get_owner().get_blocked():
                 Notification(user=post.get_owner(), type='PS', other_user=instance.user_to, content_object=instance).save()
             #create notifiactions for all followers of this post
             if post.following.all():
                 for user in post.following.all():
-                    if user <> instance.user_to and user <> post.get_owner():
+                    if user <> instance.user_to and user <> post.get_owner() \
+                            and instance.user_to not in user.get_blocked():
                         Notification(user=user, type='FS', other_user=instance.user_to, content_object=instance).save()
         else:
             import logging
@@ -79,14 +81,16 @@ post_save.connect(create_share_notifiaction, sender=SharePost)
 def create_comment_notifiaction(sender, comment, request, **kwargs):
     news_post = comment.content_object
     #creating notification for owner if following
-    if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.get_post().following.all():
+    if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.get_post().following.all() \
+            and comment.user not in news_post.get_owner().get_blocked():
         Notification(user=comment.content_object.get_post().get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
     #create notifiactions for all followers of this post
     try:
         post = news_post.get_post()
         if post.following.all():
             for user in post.following.all():
-                if user <> comment.user and user <> post.get_owner():
+                if user <> comment.user and user <> post.get_owner() \
+                        and comment.user not in user.get_blocked():
                     Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
     except:
         pass

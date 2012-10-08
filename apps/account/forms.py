@@ -5,25 +5,26 @@ import re, datetime
 import pytz
 
 class LoginForm(forms.Form):
-    email = forms.EmailField()
+    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'or username'}))
     password = forms.CharField(max_length=20, min_length=4, widget=forms.PasswordInput())
     preserve = forms.BooleanField(label='Stay logged in', required=False)
     tzone = forms.CharField(max_length=100,label='Timezone', required=False, widget=forms.HiddenInput)
 
     def login(self, request):
+        username_or_email = self.cleaned_data['email']
         try:
-            user = User.objects.get(email__iexact=self.cleaned_data['email'])
-            user = authenticate(username=user.username, password=self.cleaned_data['password'])
-            if user is not None:
-                login(request, user)
-            if self.cleaned_data.get('tzone'):
-                request.session['django_timezone'] = pytz.timezone(self.cleaned_data['tzone'])
-            if self.cleaned_data['preserve']:
-                request.session.set_expiry(datetime.timedelta(days=365))
-            return user
+            user = User.objects.get(email__iexact=username_or_email)
+            username = user.username
         except User.DoesNotExist:
-            print "No user was found with this e-mail address [%s]." % (self.cleaned_data['email'])
-            return None
+            username = username_or_email.strip()
+        user = authenticate(username=username, password=self.cleaned_data['password'])
+        if user is not None:
+            login(request, user)
+        if self.cleaned_data.get('tzone'):
+            request.session['django_timezone'] = pytz.timezone(self.cleaned_data['tzone'])
+        if self.cleaned_data['preserve']:
+            request.session.set_expiry(datetime.timedelta(days=365))
+        return user
 
 
 class SignupForm(forms.Form):
