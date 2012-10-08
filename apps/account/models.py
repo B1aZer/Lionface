@@ -233,7 +233,7 @@ class UserProfile(User):
             self.useroptions_set.create(name=name,value=value)
 
     def new_messages(self):
-        return self.message_to.filter(read=False).count()
+        return self.message_to.filter(viewed=False).count()
 
     def new_notifcations(self):
         return self.notification_set.filter(read=False).count()

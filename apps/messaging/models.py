@@ -10,9 +10,15 @@ class Messaging(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     content = models.CharField(max_length=5000)
     read = models.BooleanField(default=False)
+    viewed = models.BooleanField(default=False)
 
     def mark_read(self):
         self.read = True
+        self.viewed = True
+        self.save()
+
+    def mark_viewed(self):
+        self.viewed = True
         self.save()
 
     def save(self, *args, **kwargs):

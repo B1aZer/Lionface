@@ -19,10 +19,13 @@
 
                 </div>
             </div>
+            {% comment %}
                 {% for mess in request.user.message_to.all %}
                     {{ mess|mark_read }}
                 {% endfor %}
+            {% endcomment %}
             {% endfor %}
+
 
             {% if messages %}
             <div style="border: 1px solid #EEE; border-width: 1px 0 0 0; margin-top: 5px;">

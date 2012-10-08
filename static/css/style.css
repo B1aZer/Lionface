@@ -1102,6 +1102,10 @@ a.new_notification {
 	padding: 12px 14px 6px 14px; 
 }
 
+.mess_unread p {
+    border-left: 2px solid #A70;
+} 
+
 .message {
 	display: block;
 	width: 160px;

@@ -50,6 +50,9 @@ def messages(request):
             last_mess = Messaging.objects.filter(Q(user_to=message.user, user = user) | Q(user=message.user, user_to = user)).latest('date').date
             names.append({ 'name':message.user.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new,
                 'link':link, 'image':image, 'id': id_user, 'last_mess' : last_mess})
+        # This counter is for main page only
+        message.mark_viewed()
+
     for message in messages_out:
         if not message.user_to in users:
             users.append(message.user_to)
@@ -105,9 +108,6 @@ def show(request):
         user = UserProfile.objects.get(id=int(request.POST['user_id']))
 
         messages = Messaging.objects.filter(Q(user_to=request.user, user = user) | Q(user=request.user, user_to = user)).order_by('-date')
-        messages_to = Messaging.objects.filter(user_to=request.user).order_by('date')
-        for mess in messages_to:
-            mess.mark_read()
 
         #import pdb;pdb.set_trace()
         page = int(request.POST.get('page', 1))
@@ -154,5 +154,11 @@ def show(request):
 
         data['mr'] = Messaging.objects.filter(user_to=request.user, user = user).count()
         data['ms'] = Messaging.objects.filter(user=request.user, user_to = user).count()
+
+        # Marking read for all
+        messages_to = Messaging.objects.filter(user_to=request.user).order_by('date')
+        for mess in messages_to:
+            mess.mark_read()
+        
 
     return HttpResponse(json.dumps(data), "application/json")

@@ -10,7 +10,7 @@ except ImportError:
 
 def messages_check(request):
     data = {'status':'ok'}
-    new_messages = Messaging.objects.filter(user_to = request.user, read=False).count()
+    new_messages = Messaging.objects.filter(user_to = request.user, viewed=False).count()
 
     data['mess'] = new_messages
 
