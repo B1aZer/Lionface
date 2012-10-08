@@ -18,7 +18,7 @@
 			<table width="100%"><tr>
 			<td align="left">
 				<a href="#" class="business_on" style="color: #FFF;">Business Pages</a> 
-				<a href="#" style="margin: 0px; position: relative; left: -3px;">Leaderboard</a>
+				<a href="#">Leaderboard</a>
 			</td>
 			<td align="right">
 				<a href="#" class="nonprofit_btn">Nonprofit Pages</a>
@@ -29,34 +29,122 @@
 	
 	<div class="create_business" id="create_business">
 		<table width="100%"><tr>
-			<td width="20%" align="right">Business Name</td>
-			<td width="20%" align="right"><input type="text" /></td>
-			<td width="20%" align="right"><div style="position: relative;">Page Username<div style="font-size: 8pt; color: #AAA; position: absolute; left: 60px; top: 25px; width: 300px; text-align: left;">lionface.org/business/(page username)</div></div></td>
-			<td width="20%" align="right"><input type="text"  /></td>
-			<td width="20%" align="left">
+			<td align="right">Business Name</td>
+			<td align="left"><input type="text" /><div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></div></td>
+			<td align="right"><div style="position: relative;">Business Username</td>
+			<td width="200" align="left"><input type="text"  /><div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/business/(page username)</div></div></td>
+			<td width="33%" align="left"><div style="position: relative; left: 7px;">Category:</div>
 				<select>
-				<option selected>Categories</option>
+				<option selected>Undefined</option>
+				<option>Accomodation</option>
+				<option>Airline</option>
+				<option>Automotive</option>
+				<option>Automotive (Dealer)</option>
+				<option>Automotive (Service)</option>
+				<option>Bank</option>
+				<option>Bar/Pub </option>
+				<option>Bar/Club</option>
+				<option>Computer (Software)</option>
+				<option>Computer/Gadget (Hardware)</option>
+				<option>Consultant</option>
+				<option>Convenience Store</option>
+				<option>Energy</option>
+				<option>Entertainment (Cinema)</option>
+				<option>Entertainment (Performance)</option>
+				<option>Fashion (Brand)</option>
+				<option>Fashion (Cosmetic Brand)</option>
+				<option>Fashion (Footwear Brand)</option>
+				<option>Food/Drink (Brand/Supplier)</option>
+				<option>Food/Drink (Cafe)</option>
+				<option>Food/Drink (Counter Served)</option>
+				<option>Food/Drink (Drive Thru)</option>
+				<option>Food/Drink (Waitstaff Served)</option>
+				<option>Groceries</option>
+				<option>Industrial</option>
+				<option>Insurance</option>
+				<option>Health (Treatment)</option>
+				<option>Health (Gym/Studio)</option>
+				<option>Media</option>
+				<option>Media (Internet)</option>
+				<option>Media (Print)</option>
+				<option>Media (Social)</option>
+				<option>Media (TV/Movie)</option>
+				<option>Phone/Internet Provider</option>
+				<option>Recreation</option>
+				<option>Recreation (Theme/Water Park)</option>
+				<option>Resort/Spa</option>
+				<option>Retail</option>
+				<option>Retail (Art)</option>
+				<option>Retail (Clothing)</option>
+				<option>Retail (Electronics)</option>
+				<option>Retail (Footwear)</option>
+				<option>Retail (Home Improvement)</option>
+				<option>Retail (Office)</option>
+				<option>Retail (Pet)</option>
+				<option>Retail (Specialty)</option>
+				<option>Retail (Sports/Recreation)</option>
+				<option>Services</option>
+				<option>Services (Accounting)</option>
+				<option>Services (Legal)</option>
+				<option>Services (Web)</option>
+				<option>Travel</option>
+
 				</select></td>
 		</tr><tr>
-			<td colspan="2" align="right" style="font-size: 8pt; color: #999;"><input type="checkbox" /> I have the legal right to represent this business entity.</td>
-			<td colspan="2" align="right" style="font-size: 8pt; color: #999;"><input type="checkbox" /> I agree to the terms.</td>
+			<td colspan="4" align="right" style="font-size: 8pt; color: #999;">
+				<input type="checkbox" /> I have the legal right to represent this business entity.
+				<input type="checkbox" style="margin-left: 20px;" /> I agree to the terms.</td>
 			<td align="left"><a href="#" class="business_btn">Create Business</a> 
 				<a href="#" title=" Cancel " onClick="HideContent('create_business'); HideContent('create'); return false;" style="color: #777;">x</a></td>
 		</tr></table>
 	</div>
 	<div class="create_nonprofit" id="create_nonprofit">
 		<table width="100%"><tr>
-			<td width="20%" align="right">Nonprofit Name</td>
-			<td width="20%" align="right"><input type="text" /></td>
-			<td width="20%" align="right"><div style="position: relative;">Page Username<div style="font-size: 8pt; color: #AAA; position: absolute; left: 60px; top: 25px; width: 300px; text-align: left;">lionface.org/nonprofit/(page username)</div></div></td>
-			<td width="20%" align="right"><input type="text" /></td>
-			<td width="20%" align="left">
+			<td align="right">Nonprofit Name</td>
+			<td align="left"><input type="text" /><div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
+			<td align="right"><div style="position: relative;">Nonprofit Username</div></td>
+			<td width="200" align="left"><input type="text" /><div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/nonprofit/(page username)</div></td>
+			<td width="33%" align="left"><div style="position: relative; left: 7px;">Category:</div>
 				<select>
-				<option selected>Categories</option>
+				<option selected>Undefined</option>
+				<option>Advocacy</option>
+				<option>Animals</option>
+				<option>Art/Culture</option>
+				<option>Business</option>
+				<option>Business (Grants/Micro-Loans)</option>
+				<option>Disaster Response/Relief</option>
+				<option>Counseling/Intervention</option>
+				<option>Counseling/Intervention (Domestic Abuse)</option>
+				<option>Counseling/Intervention (Drugs)</option>
+				<option>Education</option>
+				<option>Education (Family/Health)</option>
+				<option>Education (Literacy)</option>
+				<option>Education (Nature)</option>
+				<option>Education (Technology)</option>
+				<option>Environment</option>
+				<option>Environment (Forests)</option>
+				<option>Environment (Oceans)</option>
+				<option>Environment (Protection)</option>
+				<option>Environment (Reduce, Reuse, Recycle)</option>
+				<option>Environment (Restoration)</option>
+				<option>Equality</option>
+				<option>Food Bank/Soup Kitchen</option>
+				<option>Funds/Foundations</option>
+				<option>Health</option>
+				<option>Housing</option>
+				<option>Human Rights</option>
+				<option>Human Rights (Trafficking)</option>
+				<option>Outreach</option>
+				<option>Outreach (Youth)</option>
+				<option>Poverty Relief</option>
+				<option>Refugee/Immigrant Support</option>
+				<option>Science/Technology</option>
+				<option>Services</option>
 				</select></td>
 		</tr><tr>
-			<td colspan="2" align="right" style="font-size: 8pt; color: #999;"><input type="checkbox" /> I have the legal right to represent this nonprofit entity.</td>
-			<td colspan="2" align="right" style="font-size: 8pt; color: #999;"><input type="checkbox" /> I agree to the terms.</td>
+			<td colspan="4" align="right" style="font-size: 8pt; color: #999;">
+				<input type="checkbox" /> I have the legal right to represent this nonprofit entity.
+				<input type="checkbox" style="margin-left: 20px;" /> I agree to the terms.</td>
 			<td align="left"><a href="#" class="nonprofit_btn">Create Nonprofit</a> 
 				<a href="#" title=" Cancel " onClick="HideContent('create_nonprofit'); HideContent('create'); return false;" style="color: #777;">x</a></td>
 		</tr></table>

@@ -1,7 +1,9 @@
 {% load media friends %}
 {% for user in users %}
-    <div class="result">
+	<div class="result">
+    <div class="result_related">
         <div class="user_thumbnail"></div>
+<table height="55"><tr><td>
         <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a> <div class="username"> {{ user.username }}  </div><br/>
         <span class="subtext" style="margin: 7px 0;">
     {% if current_user|mutual_friends:user %} 
@@ -13,12 +15,25 @@
           {% if current_user|has_friend_request:user %}
             Friend request pending.
           {% else %}
-            <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">Add Friend</a>
+            <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">+ Add</a>
           {% endif %}
+    {% if user|in_followers:request.user %}
+	  <a href=javascript:;' class="link-unfollow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >- Unfollow</a>
+    {% else %}
+	  <a href=javascript:;' class="link-follow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >+ Follow</a>
+    {% endif %}
         {% endif %}
-<div style="font-size: 6pt; color: #CCC;">Degree of Separation: (count)</div>
+<div class="DoS">
+<table width="200" height="100%"><tr><td align="right">
+Degree of Separation:<br />
+{% if current_user|has_friend:user %}
+This is your friend!
+{% endif %}
+</td><td align="left" style="font-size: 16pt;">0</td></tr></table></div>
         </span>
+</td></tr></table>
     </div>
+</div>
 {% empty %}
     <p align="center" class="no_posts">No results found.</p>
 {% endfor %}

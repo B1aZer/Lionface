@@ -1,6 +1,8 @@
 {% load media friends format_results %}
 
 <a href="{{ user.get_absolute_url }}"><div class="user_thumbnail" style="background-image: url('/{{ user.photo|format_image }}'); background-size: 50px 50px;"></div></a>
+
+<table height="55"><tr><td>
 <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a> <div class="username"> {{ user.username }}  </div><br/>
 <span class="subtext" style="margin: 7px 0;">
 
@@ -13,9 +15,25 @@
   {% if current_user|has_friend_request:user %}
     Friend request pending.
   {% else %}
-    <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}" style="margin-right: 10px;">+ Add</a>
+    <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">+ Add</a>
   {% endif %}
-	+ Follow
+    {% if user|in_followers:request.user %}
+	  <a href=javascript:;' class="link-unfollow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >- Unfollow</a>
+    {% else %}
+	  <a href=javascript:;' class="link-follow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >+ Follow</a>
+    {% endif %}
 {% endif %}
-<div style="font-size: 6pt; color: #CCC;">Degree of Separation: (count)</div>
+
+<div class="DoS" onMouseOver="ShowContent('{{ user.username }}'); return false;" onMouseOut="HideContent('{{ user.username }}'); return false;">
+<table width="150" height="100%"><tr><td align="right">
+Degree of Separation:<br />
+{% if current_user|has_friend:user %}
+This is your friend!
+{% else %}
+<div class="lf_ref" id="{{ user.username }}">
+<table width="170" height="100%"><tr><td><span style="font-weight: bold;">Not enough connections?</span><br /> Try inviting more people to Lionface or adding more friends. It will work.</td></tr></table>
+</div>
+{% endif %}
+</td><td align="left" style="font-size: 16pt;">0</td></tr></table></div>
 </span>
+</td></tr></table>

@@ -62,10 +62,11 @@
 </div>
 
 {% if request.user == profile_user %}
-<div style="display: inline-block; font-size: 7pt; color: #999; margin: 10px 0; padding: 4px;">Volunteer: (count)hrs</div>
+<div class="DoS_profile">Degree of Separation: lol this is you</div>
 {% else %}
 {% if profile_user|check_message_sending:request.user %}
-<div style="margin: 10px 0; display: inline-block;" id="send_message"><a href="#" class="profile_nav" style="font-size: 8pt;">Send Message</a></div><div style="display: inline-block; font-size: 7pt; color: #999; margin: 10px 0; padding: 4px 0;">Volunteer: (count)hrs</div>
+<div class="DoS_profile">Degree of Separation: 0</div>
+<div style="margin: 10px 0; display: inline-block;" id="send_message"><a href="#" class="profile_nav" style="font-size: 10pt;">Send Message</a></div>
 
 {% endif %}
 
