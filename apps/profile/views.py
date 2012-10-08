@@ -207,6 +207,7 @@ def album_create(request):
             data['html'] = render_to_string('profile/album.html',
                 {
                     'album' : album,
+                    'profile_user' : request.user,
                 }, context_instance=RequestContext(request))
     return HttpResponse(json.dumps(data), "application/json")
 
