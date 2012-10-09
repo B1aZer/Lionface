@@ -21,7 +21,7 @@ body {
 	font-size: 10pt; 
 	color: #222;
 	margin: 0px; 
-	background-color: #FFF; 
+	background-color: #FDFDFD; 
 }
 
 		
@@ -93,6 +93,14 @@ a.filterON:hover {
 }
 
 .remove_tag:hover {
+	color: #900;
+}
+
+a.hide_feed, a.unfollow_feed {
+	color: #BBB;
+}
+
+a.hide_feed:hover, a.unfollow_feed:hover {
 	color: #900;
 }
 
@@ -737,6 +745,7 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
   position: relative;
   -moz-box-shadow: 0 4px 8px -4px #777;
   box-shadow: 0 4px 8px -4px #777;
+  background: #FFF;
 }
 
 .center_col {
@@ -988,8 +997,8 @@ a.nav_notifications:hover {
 
 .result_related:hover, .result_search:hover {
 	background: #FAFAFA;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
 }
 
 .result .user_thumbnail {
@@ -1039,7 +1048,7 @@ a.nav_notifications:hover {
 .notifications .right_col { width: 700px; margin-left: 200px; padding: 0px; }
 
 .link-output:hover {
-	background: url(../images/arrow.png) #FAFAFA;
+	background: url(../images/arrow.png) #FFF;
 	background-size: 20px 20px;
 	background-position: center right; 
 	background-repeat: no-repeat;
@@ -1118,7 +1127,7 @@ a.new_notification {
 }
 
 .message:hover {
-	background: url(../images/arrow.png) #FAFAFA;
+	background: url(../images/arrow.png) #FFF;
 	background-size: 20px 20px;
 	background-position: center right; 
 	background-repeat: no-repeat;
