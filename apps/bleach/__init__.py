@@ -103,14 +103,28 @@ def clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES,
         strip_disallowed_elements = strip
         strip_html_comments = strip_comments
 
-    parser = html5lib.HTMLParser(tokenizer=s)
+    #parser = html5lib.HTMLParser(tokenizer=s)
+    # Since we really want to sanitize input
+    parser = html5lib.HTMLParser(tokenizer=HTMLSanitizer)
 
     return _render(parser.parseFragment(text)).strip()
 
+class Mys(BleachSanitizer):
+        """this sanitizer for linkify only"""
+        ae = ALLOWED_TAGS
+        ae.append('iframe')
+        allowed_elements = ae
+        aa = ALLOWED_ATTRIBUTES
+        aa['iframe'] = ['width','height','src','frameborder','allowfullscreen']
+        aa['a'] = ['href', 'title', 'class', 'name', 'title', 'target', 'rel']
+        allowed_attributes = aa
+        allowed_css_properties = ALLOWED_STYLES
+        strip_disallowed_elements = False
+        strip_html_comments = True
 
 def linkify(text, nofollow=True, target=None, title=True, filter_url=identity,
             filter_text=identity, skip_pre=False, parse_email=False,
-            tokenizer=HTMLSanitizer):
+            tokenizer=Mys):
     """Convert URL-like strings in an HTML fragment to links.
 
     linkify() converts strings that look like URLs or domain names in a

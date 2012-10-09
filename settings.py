@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'tags',
     'messaging',
     'smileys',
+    'oembed',
 )
 
 # A sample logging configuration. The only tangible logging

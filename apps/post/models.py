@@ -158,6 +158,7 @@ class ContentPost(Post):
     def render(self):
         #from django.utils.html import escape
         import bleach
+        from oembed.core import replace
         #import pdb;pdb.set_trace()
         def add_http(url):
             if re.search('http://',url):
@@ -166,7 +167,12 @@ class ContentPost(Post):
                 url = u"".join([u'http://', url])
             return url
 
-        self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
+        # Clean
+        #self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
+        self.content = bleach.clean(self.content)
+        # Embed videos
+        self.content = replace(self.content,max_width=555,fixed_width=555)
+        # Linkify 
         self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
 
         return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
