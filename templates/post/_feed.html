@@ -122,3 +122,9 @@
 <p class="no_posts">No filters have been selected.</p>
 {% endif %}
 {% endfor %}
+
+{% if items.has_next %}
+
+<a id="see_more_feed" href="?page={{ items.next_page_number }}"> See More </a>
+
+{% endif %}

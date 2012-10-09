@@ -2,15 +2,17 @@ from django.http import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext,loader
-import datetime
 
 from models import *
 from account.models import UserProfile
 from tags.models import Tag
 from post.models import NewsItem
+
 from tasks import DeleteNewsFeeds
+
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.shortcuts import get_object_or_404
 from django.contrib import comments
@@ -25,6 +27,7 @@ except ImportError:
 
 @login_required
 def feed(request, user_id = None):
+    data = {}
     items = request.user.get_news()
     news_feed_flag = False
     #news feed
@@ -56,14 +59,37 @@ def feed(request, user_id = None):
     #if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):
         #items = items.get_public_posts()
 
-    return render_to_response(
+    # PAGINATION #
+    paginator = Paginator(items, 7)
+    items = paginator.page(1)
+
+    if request.method == 'GET':
+        page = request.GET.get('page', None)
+        if page:
+            try:
+                items = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                items = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                items = paginator.page(paginator.num_pages)
+        else:
+            page = 1
+
+    data['html'] = loader.render_to_string(
         'post/_feed.html',
         {
             'items': items,
             'news_feed': news_feed_flag,
+            'page': page,
         },
         RequestContext(request)
     )
+
+    data['page'] = page
+
+    return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
 def timeline(request,post_num=5):

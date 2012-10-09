@@ -1,34 +1,44 @@
-function loadNewsFeed(elem) {
-  var $elem = elem;
-  var $data = elem.metadata();
-  $elem.html("<div class='large_loader'></div>");
-  
-  url = "/posts/feed/";
-  if($data.type == "profile")
-    url = "/posts/feed/" + $data.user + "/";
+function loadNewsFeed(elem, page) {
 
-  if (window.location.pathname.indexOf('lionface') >= 0) 
-  { 
-    url = '/lionface' +  url;
-  }
-  
-  $.ajax(url,
-    {
-      success: function(data) {
-        $elem.html(data);
-        $(window).data('ajax_finished','true');
-        var hash = document.location.hash;
-        if (hash) {
-            var ids = hash.replace("#","");
-            var offs = $('html, body').find('#post_'+ids).offset();
-            $('html, body').animate({scrollTop:offs.top}, 500); 
+    var $elem = elem;
+    var $data = elem.metadata();
+    $elem.html("<div class='large_loader'></div>");
+
+    if (typeof page === "undefined") {
+        page = 1;
+    }
+
+    url = "/posts/feed/?page="+page;
+    if($data.type == "profile")
+        url = "/posts/feed/" + $data.user + "/?page="+page;
+
+    make_request({
+        url:url,
+        callback: function(data) {
+            if (page > 1) {
+                $elem.replaceWith(data.html);
+            }
+            else {
+                $elem.html(data.html);
+            }
+            $(document).data('ajax_finished','true');
+            /** scroll to hash, not used */
+            /*
+            var hash = document.location.hash;
+            if (hash) {
+                var ids = hash.replace("#","");
+                var offs = $('html, body').find('#post_'+ids).offset();
+                $('html, body').animate({scrollTop:offs.top}, 500); 
+            }
+            */
+            make_excerpts();
+            if (data.page) {
+                $(document).data('feed_page', data.page);
+            }
+        },
+        errorback: function() {
+            $elem.html('Unable to retrieve data.');
         }
-        make_excerpts();
-
-      },
-      error: function() {
-        $elem.html('Unable to retrieve data.');
-      }
     });
 }
 
@@ -323,8 +333,19 @@ $(document).ready(function(){
 
         }); 
     }); 
-  
-
+    
+    /** Load more post in newsfeed */
+    $(document).on('click','#see_more_feed',function(e){
+        e.preventDefault();
+        var self = $(this)
+        var page = get_int(self.attr('href'));
+        if ($("#news_feed").length) {
+            $("#news_feed").append("<div id='new_posts'></div>");
+            $("#new_posts").addClass($("#news_feed").attr('class'));
+        }
+        self.remove();
+        loadNewsFeed($("#new_posts"),page);
+    })
 
 });
 
