@@ -685,8 +685,21 @@ $(document).ready(function() {
             }
         });
     });
-    
-    
+
+    /** toggle post subtext */
+    $(document).on('mouseover','.result',function() {
+    var meta = $(this).metadata();
+    if (meta.type != 'friend post') {
+        ShowContent(meta.postid);
+    }
+    });
+
+    $(document).on('mouseout','.result',function() {
+    var meta = $(this).metadata();
+    if (meta.type != 'friend post') {
+        HideContent(meta.postid);
+    }
+    });
 
 });
 
