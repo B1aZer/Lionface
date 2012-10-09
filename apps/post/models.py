@@ -268,7 +268,7 @@ class CustomQuerySet(QuerySet):
                     self = self.exclude(id=item.id)
         return self
     def filter_blocked(self, user=None):
-        if user:
+        if user and user.get_blocked():
             for item in self:
                 if item.get_owner() in user.get_blocked():
                     self = self.exclude(id=item.id)

@@ -31,7 +31,11 @@ def feed(request, user_id = None):
     if not user_id:
         news_feed_flag = True
         user_id = request.user.id
-        items = request.user.get_messages().remove_similar().remove_to_other().get_public_posts(request.user)
+        items = request.user.get_messages() \
+                .remove_similar() \
+                .remove_to_other() \
+                .filter_blocked(user=request.user) \
+                .get_public_posts(request.user)
         tags = request.user.user_tag_set.all()
         if tags:
             tags = [x.name.upper() for x in tags if x.active]
