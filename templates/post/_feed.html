@@ -5,7 +5,7 @@
 {% if not notification %}
 	<hr style="position: relative; left: 50px; background-color: #E7E7E7; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
-<div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {type: '{{item.get_type}}', user: '{{ item.user.id }}', postid: '{{ item.id }}' }">
+<div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {{item.get_type_class}} {type: '{{item.get_type}}', user: '{{ item.user.id }}', postid: '{{ item.id }}' }">
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.get_owner.photo|format_image:request.get_full_path }}'); background-size: 50px 50px;"></div></a>
     {{ item.render|smileys|excerpt|linebreaks|color_tags }}

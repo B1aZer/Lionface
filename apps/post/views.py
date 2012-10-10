@@ -258,7 +258,10 @@ def delete(request, post_id = None):
         else:
             owner = request.user
         #ownership is defined using template
-        post = NewsItem.objects.get(id=post_id)
+        try:
+            post = NewsItem.objects.get(id=post_id)
+        except NewsItem.DoesNotExist:
+            return HttpResponse(json.dumps(data), "application/json")
         #restore original count of shares
         post_type = request.GET.get('type')
         if post_type == 'share post':

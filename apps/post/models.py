@@ -318,6 +318,13 @@ class NewsItem(models.Model):
             return False
         return original._meta.verbose_name
 
+    def get_type_class(self):
+        try:
+            original = self.post.get_inherited()
+        except:
+            return False
+        return original._meta.db_table
+
     def get_owner(self):
         try:
             original = self.post.get_inherited()
