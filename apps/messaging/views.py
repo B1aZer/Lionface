@@ -159,6 +159,5 @@ def show(request):
         messages_to = Messaging.objects.filter(user_to=request.user).order_by('date')
         for mess in messages_to:
             mess.mark_read()
-        
 
     return HttpResponse(json.dumps(data), "application/json")

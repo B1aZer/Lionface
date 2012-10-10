@@ -113,6 +113,7 @@ class Mys(BleachSanitizer):
         """this sanitizer for linkify only"""
         ae = ALLOWED_TAGS
         ae.append('iframe')
+        ae.append('script')
         allowed_elements = ae
         aa = ALLOWED_ATTRIBUTES
         aa['iframe'] = ['width','height','src','frameborder','allowfullscreen']

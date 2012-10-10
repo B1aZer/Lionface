@@ -226,10 +226,5 @@ $(function() {
         }
     });
     $( ".sortable" ).disableSelection();
-    
-
-    
-
-
 
 });

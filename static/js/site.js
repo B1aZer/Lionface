@@ -414,6 +414,17 @@ function make_excerpts() {
     }
 }     
 
+/** scrolling embed fix */
+function fix_embed() {
+    if ($('.post_content').length) {
+        $('.post_content').each(function(i){
+        if (!($(this).find('iframe').attr('scrolling'))) {
+                $(this).find('iframe').attr('scrolling','no');
+            }
+        })
+    }    
+}
+
 $(document).ready(function() {
     hookLinks();
     /* Make excerpts here to prevent same function on all views without ajax */
