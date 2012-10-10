@@ -67,7 +67,9 @@ def get_comment_counter(item, user):
 # Function for stripping tags.
 @register.filter(name='color_tags',is_safe=True)
 def color_tags(text):
-    text = re.sub(r'(#([\w]+))',r'<a href="/tag/?models=tags_tag&q=\2" class="colored_tag">\1</a>',text)
+    # Has problems with urls(#) (?<!http)
+    text = re.sub(r"""((?:\A|\s)
+                        #([\w]+))""",r'<a href="/tag/?models=tags_tag&q=\2" class="colored_tag">\1</a>',text)
     return text
 
 @register.filter(name='smileys',is_safe=True)
