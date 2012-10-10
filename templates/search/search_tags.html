@@ -6,9 +6,11 @@
     <form method="get" action=".">
         {% if query %}
             {% for result in page.object_list %}
-                <div class="result" style="position: relative; left: 0px; top: 0px;">
+				<div class="result">
+                <div class="result_post">
                   {{ result.object|format_tag:request }}
                 </div>
+				</div>
             {% empty %}
                 <p align="center" class="no_posts">No results found.</p>
             {% endfor %}

@@ -171,7 +171,7 @@ class ContentPost(Post):
         #self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
         self.content = bleach.clean(self.content)
         # Embed videos
-        self.content = replace(self.content,max_width=555,fixed_width=555)
+        self.content = replace(self.content,max_width=535,fixed_width=535)
         # Linkify 
         self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
 

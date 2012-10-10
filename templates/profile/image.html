@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block left_col %}
-<div style="position: relative; top: -1px;">
+<div style="position: relative; top: -1px; background: #FFF;">
 <div onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
 	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px;">
 		{% if request.user == profile_user %}
@@ -50,10 +50,11 @@
 	
 {% block center_col %}
 <div align="center">
-<div style="width: 878px; border: 1px solid #DDD; padding: 10px; color: #FFF; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777;" align="center">
+<div class="image_container" align="center">
 	<table align="center" width="900">
 		<tr>
-		<td width="25%"><div style="background: #DDD; width: 200px; height: 200px;" onMouseOver="ShowContent('image_settings'); return false;" onMouseOut="HideContent('image_settings'); return false;">
+		<td width="25%">
+		<div style="background: #DDD; width: 200px; height: 200px;" onMouseOver="ShowContent('image_settings'); return false;" onMouseOut="HideContent('image_settings'); return false;">
 			<div id="image_settings"><a href="#" style="float: left;" title="Make Primary Photo">+</a><a href="#" style="float: right;" title="Delete Photo">x</a></div></div></td>
 		<td width="25%"><div style="background: #DDD; width: 200px; height: 200px;"></div></td>
 		<td width="25%"><div style="background: #DDD; width: 200px; height: 200px;"></div></td>
