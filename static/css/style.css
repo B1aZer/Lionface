@@ -63,7 +63,7 @@ a.filter:link, a.filter:active, a.filter:visited {
 }
 a.filter:hover { 
 	color: #777;
-	background: #FBFBFB;
+	background: #F5F5F5;
 	border-color: #CCC;
 }
 a.filterON:link, a.filterON:active, a.filterON:visited { 
@@ -76,12 +76,12 @@ a.filterON:link, a.filterON:active, a.filterON:visited {
 	color: #000; 
 	margin: 5px 0px;
 	border-right: 5px solid #333;
-	background: #F8F8F8;
+	background: #EEE;
 }
 
 a.filterON:hover { 
 	color: #777;
-	background: #FBFBFB;
+	background: #F5F5F5;
 	border-color: #CCC;
 }
 
@@ -138,6 +138,21 @@ a.colored_tag:hover {
 	background: #EEE;
 	text-decoration: none;
 	color: #A70;
+}
+
+.post_friendpost {
+	position: relative;
+}
+.post_friendpost .timestamp {
+	width: 250px;
+	position: absolute;
+	left: 0px; top: -40px;
+}
+.post_friendpost .post_bottom {
+	position: absolute;
+	left: -2px;
+	top: 45px;
+	width: 250px;
 }
 
 /* Profile */
@@ -450,8 +465,8 @@ a.profile_btn:hover {
 	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
 	-moz-border-radius: 3px; border-radius: 3px;
-	-moz-box-shadow: 0px 4px 8px -4px #555;
-	box-shadow: 0px 4px 8px -4px #555;
+	-moz-box-shadow: 0px 4px 8px -4px #333;
+	box-shadow: 0px 4px 8px -4px #333;
 }
 
 .noPhoto { 
@@ -565,7 +580,7 @@ a.profile_btn:hover {
 .post_bottom {
 	position: absolute; 
 	bottom: 0px; 
-	right: 10px; 
+	right: 9px; 
 	font-size: 8pt; 
 	color: #AAA;
 }
