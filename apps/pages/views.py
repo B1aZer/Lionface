@@ -3,7 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 @login_required
-def main(request):
+def main(request, username=None):
 
     return render_to_response(
         'pages/main.html',
@@ -13,7 +13,7 @@ def main(request):
     )
 
 @login_required
-def page(request):
+def page(request, username=None):
 
     return render_to_response(
         'pages/page.html',

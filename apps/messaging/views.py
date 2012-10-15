@@ -16,7 +16,7 @@ except ImportError:
     import simplejson as json
 
 @login_required
-def messages(request):
+def messages(request, username=None):
     form = MessageForm()
     send = False
 
@@ -101,7 +101,7 @@ def messages(request):
     )
 
 @login_required
-def show(request):
+def show(request, username=None):
     data = {'status': 'OK'}
     max_mess = 7
     if request.method == 'POST' and 'user_id' in request.POST:

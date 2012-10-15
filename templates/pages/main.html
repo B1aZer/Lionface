@@ -155,7 +155,7 @@
 <table width="880" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
   <tr>
     <td>
-        <a href="{% url pages.views.page %}"> <img src="" alt="" width="200" height="200"  /></a></td>
+        <a href="{% url pages.views.page request.user.username %}"> <img src="" alt="" width="200" height="200"  /></a></td>
     <td>
       <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
     <td>
@@ -165,7 +165,7 @@
   </tr>
     <tr>
     <td>
-      <a href="{% url pages.views.page %}">Random Business</a><br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
+      <a href="{% url pages.views.page request.user.username %}">Random Business</a><br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
     <td>
       Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
     <td>

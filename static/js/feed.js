@@ -98,17 +98,11 @@ $(document).ready(function(){
   var send = 'filter_name='+tag_val.textContent; 
 
     if ($(this).hasClass('filterON')) {
-    url = '/user/filter/remove/';
-        if (window.location.pathname.indexOf('lionface') >= 0) 
-          { 
-            url = '/lionface' +  url;
-          } 
-
-          $.ajax({
-                type: "POST",
-                data: send,
+    url = '/account/filter/remove/';
+          make_request({
                 url: url,
-                success: function(html, textStatus) {
+                data: send,
+                callback: function(html) {
                     if (html.status == 'OK') {
                         
                         self.removeClass('filterON');
@@ -117,7 +111,7 @@ $(document).ready(function(){
                         loadNewsFeed($("#news_feed"));
                     }
                 },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorback: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert('Sorry! impossible to deactivate filter');
                 }
 
@@ -125,17 +119,11 @@ $(document).ready(function(){
     
     }
     else {
-    url = '/user/filter/add/';
-        if (window.location.pathname.indexOf('lionface') >= 0) 
-          { 
-            url = '/lionface' +  url;
-          }
-
-        $.ajax({
-                type: "POST",
-                data: send,
+    url = '/account/filter/add/';
+        make_request({
                 url: url,
-                success: function(html, textStatus) {
+                data: send,
+                callback: function(html, textStatus) {
                     if (html.status == 'OK') {
                         
                         self.removeClass('filter');
@@ -144,7 +132,7 @@ $(document).ready(function(){
                         loadNewsFeed($("#news_feed"));
                     }
                 },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorback: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert('Sorry! impossible to deactivate filter');
                 }
 

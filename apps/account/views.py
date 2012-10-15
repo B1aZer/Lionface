@@ -129,3 +129,69 @@ def friend_decline(request, request_id):
     except FriendRequest.DoesNotExist:
         raise Http404()
     raise Http404()
+
+@login_required
+def hide_friend(request):
+    data={'status':'FAIL'}
+    user_id = request.POST.get('user',None)
+    try:
+        user = UserProfile.objects.get(id=user_id)
+    except:
+        raise Http404
+    if request.user != user:
+        request.user.hidden.add(user)
+        request.user.save()
+        data['status']='OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def filter_add(request):
+    data = {'status': 'OK'}
+    if request.method == 'POST' and 'filter_name' in request.POST:
+        filter_name = request.POST['filter_name']
+        filters = request.user.filters.split(',')
+        if filter_name == 'Friends':
+                if 'F' not in filters:
+                    filters.append('F')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Following':
+                if 'W' not in filters:
+                    filters.append('W')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Pages':
+                if 'P' not in filters:
+                    filters.append('P')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+    return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def filter_remove(request):
+    data = {'status': 'OK'}
+    if request.method == 'POST' and 'filter_name' in request.POST:
+        filter_name = request.POST['filter_name']
+        filters = request.user.filters.split(',')
+        if filter_name == 'Friends':
+                if 'F' in filters:
+                    filters.remove('F')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Following':
+                if 'W' in filters:
+                    filters.remove('W')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Pages':
+                if 'P' in filters:
+                    filters.remove('P')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+    return HttpResponse(json.dumps(data), "application/json")

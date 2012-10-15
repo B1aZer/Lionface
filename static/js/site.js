@@ -499,7 +499,7 @@ $(document).ready(function() {
 
     /** Autocomplete for search input */
     var url_auto = '/auto/';
-    var url_user = '/user/profile/'
+    var url_user = '/';
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
     { 
         url_auto = '/lionface' +  url_auto;
@@ -685,7 +685,7 @@ $(document).ready(function() {
         var self = $(this);
         var post = $(this).closest('.result');
         var meta = post.metadata();
-        var url = '/user/block/';
+        var url = '/account/hide/';
         make_request({
             url:url,
             data:{

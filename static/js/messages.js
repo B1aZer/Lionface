@@ -73,7 +73,7 @@ function load_messages(user_id, sort, page, incolumn) {
         //saving some values
         $('body').data('messages', { user_id: user_id, sort: sort, page: page });
 
-        url = "/messages/show/";
+        url = "show/";
 
         if (window.location.pathname.indexOf('/lionface/') >= 0) 
         { 
@@ -219,7 +219,7 @@ $(document).ready(function() {
         /*$('#message_form').submit();*/
         /*$('#id_content').val('');*/
 
-        url = "/messages/";
+        url = ".";
 
         make_request({url:url, data:$('#message_form').serialize(), callback:function(data) {
 

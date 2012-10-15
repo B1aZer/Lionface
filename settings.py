@@ -82,6 +82,7 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+# this is re valued in local
 MIDDLEWARE_CLASSES = (
     'mediagenerator.middleware.MediaMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -114,6 +115,7 @@ TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates'),
 )
 
+# this is re valued in local
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -252,7 +254,7 @@ else:
 	    pass
 
 ABSOLUTE_URL_OVERRIDES = {
-    'auth.user': lambda o: "/user/profile/%s/" % o.username,
+    'auth.user': lambda o: "/%s/" % o.username,
 }
 
 CELERY_QUEUES = {"lionface": {"exchange": "lionface", "binding_key": "lionface"}}

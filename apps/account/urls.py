@@ -14,4 +14,8 @@ urlpatterns = patterns('',
 
     url(r'unfollow/$', views.unfollow),
     url(r'follow/$', views.follow),
+
+    url(r'hide/$', views.hide_friend),
+    url(r'filter/add/$', views.filter_add),
+    url(r'filter/remove/$', views.filter_remove),
 )

@@ -13,7 +13,7 @@ except ImportError:
     import simplejson as json
 
 @login_required
-def notifications(request):
+def notifications(request, username=None):
     #import pdb;pdb.set_trace()
     list1 = Notification.objects.filter(user=request.user, type="FR").order_by("-date")
     list2 = Notification.objects.filter(user=request.user).exclude(type="FR").order_by("-date")

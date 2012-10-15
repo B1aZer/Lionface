@@ -4,7 +4,7 @@
 {% block content %}
   <div class="content_area notifications">
     <div id="profile_top">
-      <div class="left">{% block content_title %} <a href="{% url profile.views.profile %}" class="name_link">{{ user.full_name }}</a> | Notifications{% endblock %}</div>
+      <div class="left">{% block content_title %} <a href="{{ request.user.get_absolute_url }}" class="name_link">{{ user.full_name }}</a> | Notifications{% endblock %}</div>
       <div class="right" style="color: #555;">{% block content_subtitle %}{% endblock %}</div>
     </div>
     <div style="clear: both;"></div>

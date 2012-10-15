@@ -27,12 +27,10 @@ urlpatterns = patterns('',
     url(r'^about/$', 'public.views.about'),
     url(r'^feedback/$', 'public.views.feedback'),
     url(r'^account/', include('account.urls')),
-    url(r'^notifications/', include('notification.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^posts/', include('post.urls')),
     url(r'^tags/', include('tags.urls')),
-    url(r'^messages/', include('messaging.urls')),
-    url(r'^pages/', include('pages.urls')),
+    url(r'^check/', include('comet.urls')),
     url(r'^search/', login_required(search_view_factory(
         #view_class=SearchView,
             view_class=search.views.CustumSearchView,
@@ -45,12 +43,14 @@ urlpatterns = patterns('',
             form_class=search.forms.TagSearchForm,
         ))),
     url(r'^auto/', 'search.views.auto_complete'),
-    url(r'^check/', include('comet.urls')),
-    url(r'^import/', include('smileys.urls')),
+    url(r'^import/$', include('smileys.urls')),
+    url(r'^(?P<username>\w+)/notifications/', include('notification.urls')),
+    url(r'^(?P<username>\w+)/messages/', include('messaging.urls')),
+    url(r'^(?P<username>\w+)/pages/', include('pages.urls')),
 )
 
 urlpatterns += patterns('',
-    url(r'^', include('profile.urls')),
+    url(r'', include('profile.urls')),
 )
 
 # ... the rest of your URLconf goes here ...
