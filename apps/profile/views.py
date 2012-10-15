@@ -15,7 +15,7 @@ from .forms import *
 
 from django.db.models import F
 
-from .decorators import unblocked_users
+from .decorators import unblocked_users, default_user
 from django.contrib.auth.decorators import user_passes_test
 
 from django.contrib.auth.forms import PasswordChangeForm
@@ -29,7 +29,7 @@ except ImportError:
     import simplejson as json
 
 @login_required
-def feed(request):
+def feed(request, username=None):
     return render_to_response(
         'profile/feed.html',
         {
@@ -64,6 +64,7 @@ def timeline(request):
 @login_required
 @unblocked_users
 def profile_image(request, username=None):
+
     if username != None:
         try:
             profile_user = UserProfile.objects.get(username=username)
@@ -81,9 +82,10 @@ def profile_image(request, username=None):
         RequestContext(request)
     )
 
-@login_required
-@unblocked_users
-def profile(request, username=None):
+#@login_required
+#@unblocked_users
+#@default_user
+def profile(request, username='admin'):
     # TODO: Logic here needs to see what relation the current user is to the profile user
     # and compare this against their privacy settings to see what can be seen.
     form = ImageForm()
@@ -142,6 +144,8 @@ def profile(request, username=None):
         RequestContext(request)
     )
 
+    return
+
 @login_required
 @unblocked_users
 def albums(request, username=None):
@@ -198,7 +202,7 @@ def album_posts(request, username=None, album_id=None):
     )
 
 @login_required
-def album_create(request):
+def album_create(request, username=None):
     data = {'status':'FAIL'}
     if request.method == 'POST' and 'album_name' in request.POST:
         data = {'status':'OK'}
@@ -212,7 +216,7 @@ def album_create(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def album_postion(request):
+def album_postion(request, username=None):
     data = {'status':'OK'}
     if request.method == 'POST' and 'album_id' in request.POST:
         album_id = request.POST.get('album_id',None)
@@ -236,7 +240,7 @@ def album_postion(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def change_album_name(request):
+def change_album_name(request, username=None):
     data = {'status':'FAIL'}
     if request.method == 'POST' and 'album_id' in request.POST:
         album_id = request.POST.get('album_id',None)
@@ -252,7 +256,7 @@ def change_album_name(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def delete_album(request):
+def delete_album(request, username=None):
     data = {'status':'FAIL'}
     if request.method == 'POST' and 'album_id' in request.POST:
         album_id = request.POST.get('album_id',None)
@@ -266,7 +270,7 @@ def delete_album(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def settings(request):
+def settings(request, username=None):
     changed = False
     active = 'basics'
     form = UserInfoForm(instance=request.user,initial = request.user.get_options())
@@ -291,9 +295,9 @@ def settings(request):
                         request.user.useroptions_set.create(name=name,value=request.POST[name])
                 if name == 'block_user':
                     #This is for blocked users
-                    username = request.POST[name]
+                    user_name = request.POST[name]
                     try:
-                        user = UserProfile.objects.get(username=username)
+                        user = UserProfile.objects.get(username=user_name)
                     except UserProfile.DoesNotExist:
                         continue
                     request.user.blocked.add(user)
@@ -343,7 +347,7 @@ def settings(request):
     )
 
 @login_required
-def delete_profile(request):
+def delete_profile(request, username=None):
     data = {'status':'FAIL'}
     if request.method == 'POST':
         if 'confirm_password' in request.POST:
@@ -459,7 +463,7 @@ def filter_remove(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def reset_picture(request):
+def reset_picture(request, username=None):
     request.user.photo = 'images/noProfilePhoto.png'
     request.user.save()
-    return redirect('profile.views.profile')
+    return redirect('profile.views.profile', username=request.user.username)

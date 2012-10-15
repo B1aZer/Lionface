@@ -3,10 +3,10 @@
   <div class="content_area">
     <div class="left_links" style="position: relative; top: -25px; left: 0pt;">
       <ul>
-        <li><a href="{% url profile.views.profile %}" style="font-size: 12pt;" class="header_profile_image">
+        <li><a href="{% url profile.views.profile username=request.user.username %}" style="font-size: 12pt;" class="header_profile_image">
 			<div style="background: url('/{{ request.user.photo|format_image:request.get_full_path }}'); background-size: 34px 34px;"></div>
 			 {{ user.first_name }}</a></li>
-        <li><a href="{% url profile.views.feed %}">News Feed</a></li>
+        <li><a href="{% url profile.views.feed username=request.user.username %}">News Feed</a></li>
         <li><a href="{% url pages.views.main %}">Pages</a></li>
 <div onMouseOver="ShowContent('signout'); return false;" onMouseOut="HideContent('signout'); return false;" style="display: inline-block;">
 		<li>

@@ -2,14 +2,14 @@
 {% load i18n static media %}
 
 {% block content_title %}
-<a href="{% url profile.views.profile %}" class="name_link">{{ user.full_name }}</a> | Account
+<a href="{{ request.user.get_absolute_url }}" class="name_link">{{ user.full_name }}</a> | Account
 {% endblock %}
 
 {% block content_middle %}
 {% endblock %}
 
 {% block content_subtitle %}
-<a href="{% url profile.views.profile %}" style="color: #AAA;">Cancel</a>
+<a href="{{ request.user.get_absolute_url }}" style="color: #AAA;">Cancel</a>
 {% endblock %}
 
 <div class="left_col">
@@ -288,7 +288,7 @@
 <input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> 
 </form>
 <a href="#" id="delete_account" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Account</a>
-<form id="delete_account_form" action="{% url profile.views.delete_profile %}" method="post" style="display:none">{% csrf_token %}
+<form id="delete_account_form" action="{% url profile.views.delete_profile username=request.user.username %}" method="post" style="display:none">{% csrf_token %}
 <input id="submit_delete" type="submit" class="blue_btn" name="delete_account" value="Delete">
 <label for="id_confirm_pass">Confirm Password:</label>
 <input type="password" name="confirm_password" id="id_confirm_pass">

@@ -27,7 +27,6 @@ urlpatterns = patterns('',
     url(r'^about/$', 'public.views.about'),
     url(r'^feedback/$', 'public.views.feedback'),
     url(r'^account/', include('account.urls')),
-    url(r'^user/', include('profile.urls')),
     url(r'^notifications/', include('notification.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
     url(r'^posts/', include('post.urls')),
@@ -50,6 +49,9 @@ urlpatterns = patterns('',
     url(r'^import/', include('smileys.urls')),
 )
 
+urlpatterns += patterns('',
+    url(r'^', include('profile.urls')),
+)
 
 # ... the rest of your URLconf goes here ...
 

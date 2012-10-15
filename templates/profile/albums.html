@@ -16,11 +16,7 @@
 
 <div style="padding: 10px; position: relative; left: 40px;">
     <div style="padding: 15px 0 25px 0px;">
-        {% if profile_user == request.user %}
-        <a href="{% url profile.views.profile %}" id="posts_link" class="profile_nav">Posts</a>
-        {% else %}
-        <a href="{{ profile_user.get_absolute_url }}" id="posts_link" class="profile_nav">Posts</a>
-        {% endif %}
+        <a href="{% url profile.views.profile username=profile_user.username %}" id="posts_link" class="profile_nav">Posts</a>
         <a href="." id="albums_link" class="profile_nav">Albums</a>
         <a href="#" id="loves_link" class="profile_nav">Loves</a>
     </div>  

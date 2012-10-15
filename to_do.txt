@@ -1,9 +1,6 @@
 ##next###
 deleting sharing origin wont delete children
 wrong privacy on deleted
-
-"I added a border-left to messages, can you apply a separate style to unread messages so the left border is #A70, and read messages are the #CCC you see now? It will make life easier for the user if they have several new messages at once. (When you get the time, of course.)"
-
 ###later###
 mass maubmit on ajax
 the album page (and in the future the loves page) direct back to the profile
@@ -19,4 +16,6 @@ visiblity for mess(?) is wrong for user = self
 remove dated notif's
 ###!!!###
 removing Post from signals
+
+CELERYD AND CELERYBEAT (do not forget to run them)
 

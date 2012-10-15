@@ -27,3 +27,14 @@ def unblocked_users(func):
             return func(request, *args, **kwargs)
     return decorator
 
+def default_user(func):
+    """ Passing optional arg to view """
+    @wraps(func, assigned=available_attrs(func))
+    def decorator(request, *args, **kwargs):
+        if request.user:
+            kwargs['username'] = request.user.username
+            return func(request, *args, **kwargs)
+        else:
+            return func(request, *args, **kwargs)
+    return decorator
+

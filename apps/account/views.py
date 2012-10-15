@@ -63,7 +63,7 @@ def home(request):
     if not request.user.is_authenticated(): return public.views.home(request)
 
     # Redirect to the user's feed
-    return redirect(profile.views.feed)
+    return redirect(profile.views.feed, username = request.user)
 
 @login_required
 def follow(request):
