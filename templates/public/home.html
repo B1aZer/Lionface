@@ -17,12 +17,14 @@
         {% block heart %}
         <div class="next_generation"><span style="font-size: 25pt;">The</span> <span style="font-size: 40pt;">Next Generation</span><br /><span style="font-size: 25pt;">in</span> Social Networking</div>
         <div>
-          <a href="{% url account.views.signup %}" class="create">Create an Account</a>
+          <a href="{% url account.views.signup %}" class="create" onMouseOver="ReverseContentDisplay('create_sub'); return false;" onMouseOut="ReverseContentDisplay('create_sub'); return false;">Create an Account</a>
+		  <div style="display: none; position: relative; top: 45px;" id="create_sub">No ads. Always free.</div>
         </div>
         {% endblock %}
       </div>
     </div>
   </div>
+	<div class="faith">Here at Lionface, we have faith in the immediate future. <span style="color: #AAA; margin: 10px;">Learn more about us by clicking the links below.</span></div>
 	<div class="enabled_table">
 		<div class="enabled_container" onClick="ReverseContentDisplay('lionface'); return false;"><div class="enabled">Lf</div> Lionface</div>
 		<div class="enabled_container"><div class="enabled">n</div> Nonprofits</div>
@@ -34,7 +36,7 @@
 
 	</div>
 	<div class="enabled_results" style="display: none; padding: 30px 10px;" id="lionface">
-		<span style="font-size: 14pt; line-height: 20pt;">Lionface has (count) registered users.</span><br />Join the action. :)
+		<span style="font-size: 14pt; line-height: 20pt;">Lionface has (count) registered users.</span><br />Join the action! Share your heart.
 	</div>	
 </div>
 
