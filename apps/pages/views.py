@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 def main(request, username=None):
 
     return render_to_response(
-        'pages/main.html',
+        'pages/business.html',
         {
         },
         RequestContext(request)
@@ -21,3 +21,23 @@ def page(request, username=None):
         },
         RequestContext(request)
     )
+
+@login_required
+def leaderboard(request, username=None):
+
+    return render_to_response(
+        'pages/leaderboard.html',
+        {
+        },
+        RequestContext(request)
+    )
+
+@login_required
+def nonprofit(request, username=None):
+
+    return render_to_response(
+        'pages/nonprofit.html',
+        {
+        },
+        RequestContext(request)
+    ) 

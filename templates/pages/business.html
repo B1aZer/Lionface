@@ -1,7 +1,5 @@
 {% extends "profile/base.html" %}
 
-
-
 {% block content %}
   <div class="content_area">
     <div id="profile_top">
@@ -17,11 +15,11 @@
 		<div class="pages_nav_area">
 			<table width="100%"><tr>
 			<td align="left">
-				<a href="#" class="business_on" style="color: #FFF;">Business Pages</a> 
-				<a href="#">Leaderboard</a>
+				<a href="." class="business_on" style="color: #FFF;">Business Pages</a> 
+                <a href="{% url pages.views.leaderboard username=request.user.username %}">Leaderboard</a>
 			</td>
 			<td align="right">
-				<a href="#" class="nonprofit_btn">Nonprofit Pages</a>
+				<a href="{% url pages.views.nonprofit username=request.user.username %}" class="nonprofit_btn">Nonprofit Pages</a>
 			</td>
 			</tr></table>
 		</div>
@@ -30,7 +28,8 @@
 	<div class="create_business" id="create_business">
 		<table width="100%"><tr>
 			<td align="right">Business Name</td>
-			<td align="left"><input type="text" /><div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></div></td>
+			<td align="left"><input type="text" />
+                <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
 			<td align="right"><div style="position: relative;">Business Username</td>
 			<td width="200" align="left"><input type="text"  /><div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/business/(page username)</div></div></td>
 			<td width="33%" align="left"><div style="position: relative; left: 7px;">Category:</div>

@@ -13,13 +13,28 @@ def home(request):
     )
 
 def terms(request):
-    return HttpResponse('Ok')
+    return render_to_response(
+        'public/terms.html',
+        {
+        },
+        RequestContext(request)
+    )
 
 def privacy(request):
     return HttpResponse('Ok')
 
 def about(request):
-    return HttpResponse('Ok')
+    return render_to_response(
+        'public/about.html',
+        {
+        },
+        RequestContext(request)
+    )
 
 def feedback(request):
-    return HttpResponse('Ok')
+    return render_to_response(
+        'public/feedback.html',
+        {
+        },
+        RequestContext(request)
+    )

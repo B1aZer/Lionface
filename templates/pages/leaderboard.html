@@ -1,0 +1,32 @@
+{% extends "profile/base.html" %}
+
+
+
+{% block content %}
+
+<div class="content_area">
+    <div id="profile_top">
+      <div class="left"><a href="#" class="profile_nav" style="margin: 0px; font-size: 8pt; color: #555;">Browse</a></div>
+      <div class="right" style="position: relative;">
+		<div class="create_options" style="display: none;" id="create">
+			<a href="#" class="business_btn" style="font-size: 8pt;" onClick="ShowContent('create_business'); HideContent('create_nonprofit'); return false;">Create Business</a> 
+			<a href="#" class="nonprofit_btn" style="font-size: 8pt;" onClick="ShowContent('create_nonprofit'); HideContent('create_business'); return false;">Create Nonprofit</a></div>
+		<a href="#" class="profile_nav" style="margin: 0px; font-size: 8pt; color: #555;" onClick="ShowContent('create'); return false;">+ Create Page</a></div>
+    </div>
+	<div style="clear: both;"></div>
+	<div class="content_area_pages">
+		<div class="pages_nav_area">
+			<table width="100%"><tr>
+			<td align="left">
+				<a href="{% url pages.views.main username=request.user.username %}" >Business Pages</a> 
+                <a href=".">Leaderboard</a>
+			</td>
+			<td align="right">
+				<a href="{% url pages.views.nonprofit username=request.user.username %}" class="nonprofit_btn">Nonprofit Pages</a>
+			</td>
+			</tr></table>
+		</div>
+	</div>    
+</div>
+
+{% endblock %}
