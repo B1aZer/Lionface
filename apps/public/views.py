@@ -1,7 +1,15 @@
 from django.http import *
 from django.shortcuts import render_to_response
+from django.template.loader import render_to_string
 from django.template import RequestContext
+from django.template import TemplateDoesNotExist
 from account.forms import *
+from account.models import UserProfile
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 def home(request):
     return render_to_response(
@@ -38,3 +46,17 @@ def feedback(request):
         },
         RequestContext(request)
     )
+
+def micro(request):
+    data = {'status':'OK'}
+    name = request.GET.get('name')
+    try:
+        data['html'] = render_to_string('public/micro/%s.html' % name,
+                {
+                    'users_total' : UserProfile.objects.count(),
+                }, context_instance=RequestContext(request))
+    except TemplateDoesNotExist:
+        data['html'] = "Sorry! Wrong template."
+    except:
+        data = {'status':'FAIL'}
+    return HttpResponse(json.dumps(data), "application/json")

@@ -1,3 +1,5 @@
+/***** MAIN JS FILE (will load on every page) *****/
+
 //function for ajax POST requests
 jQuery(document).ajaxSend(function(event, xhr, settings) {
     function getCookie(name) {
@@ -223,15 +225,11 @@ function HideContent(d) {
     if(d.length < 1) { return; }
     document.getElementById(d).style.display = "none";
 }
+
 function ShowContent(d) {
     if(d.length < 1) { return; }
     document.getElementById(d).style.display = "block";
 }
-function ReverseContentDisplay(d) {
-    if(d.length < 1) { return; }
-    if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
-    else { document.getElementById(d).style.display = "none"; }
-}       
 
 function share_post(elem) { 
     url = "/posts/share/" + elem + "/";
@@ -505,19 +503,21 @@ $(document).ready(function() {
         url_auto = '/lionface' +  url_auto;
         url_user = '/lionface' +  url_user;
     }     
-    $( "#search_input" ).autocomplete({
-        source: url_auto,
-    }).keydown(function(e){
-        if (e.keyCode === 13){
-            console.log($(this).val());
-            window.location = url_user + $(this).val();  
-        }
-    }).data( "autocomplete" )._renderItem = function( ul, item ) {
-        return $( "<li></li>" )
-        .data( "item.autocomplete", item )
-        .append( "<a>" + item.label + '<div class="auto_subtext">' + item.value + '</div>' + "</a>" )
-        .appendTo( ul );
-    };
+    if ($("#search_input").length) {
+        $( "#search_input" ).autocomplete({
+            source: url_auto,
+        }).keydown(function(e){
+            if (e.keyCode === 13){
+                console.log($(this).val());
+                window.location = url_user + $(this).val();  
+            }
+        }).data( "autocomplete" )._renderItem = function( ul, item ) {
+            return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append( "<a>" + item.label + '<div class="auto_subtext">' + item.value + '</div>' + "</a>" )
+            .appendTo( ul );
+        };
+    }
 
     /** Autocomplete for blocking users */
     var url_auto = '/auto/';

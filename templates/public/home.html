@@ -26,19 +26,22 @@
   </div>
 	<div class="faith">Here at Lionface, we have faith in the immediate future. <span style="color: #AAA; margin: 10px;">Learn more about us by clicking the links below.</span></div>
 	<div class="enabled_table">
-		<div class="enabled_container" onClick="ReverseContentDisplay('lionface'); return false;"><div class="enabled">Lf</div> Lionface</div>
-		<div class="enabled_container"><div class="enabled">n</div> Nonprofits</div>
-		<div class="enabled_container"><div class="enabled">b</div> Businesses</div>
-		<div class="enabled_container"><div class="enabled"><span style="position: relative; top: 1px;">#</span></div> Tags</div>
-		<div class="enabled_container"><div class="enabled"><span style="position: relative; top: -1px;">+</span></div> Followers</div>
-		<div class="enabled_container"><div class="enabled">d&#176;</div> Degree of Separation</div>
-		<div class="enabled_container"><div class="enabled"><span style="position: relative; top: -1px; font-size: 14pt;">:]</span></div> Albums</div>
+		<div id="lionface" class="enabled_container public_link"><div class="enabled">Lf</div> Lionface</div>
+		<div id="nonprofits" class="enabled_container public_link"><div class="enabled">n</div> Nonprofits</div>
+		<div id="business" class="enabled_container public_link"><div class="enabled">b</div> Businesses</div>
+		<div id="tags" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: 1px;">#</span></div> Tags</div>
+		<div id="followers" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: -1px;">+</span></div> Followers</div>
+		<div id="dos" class="enabled_container public_link"><div class="enabled">d&#176;</div> Degree of Separation</div>
+		<div id="albums" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: -1px; font-size: 14pt;">:]</span></div> Albums</div>
 
 	</div>
-	<div class="enabled_results" style="display: none; padding: 30px 10px;" id="lionface">
-		<span style="font-size: 14pt; line-height: 20pt;">Lionface has (count) registered users.</span><br />Join the action! Share your heart.
+	<div class="enabled_results" style="display: none; padding: 30px 10px;">
 	</div>	
 </div>
 
 
+{% endblock %}
+
+{% block footer_js %}
+{% include_media 'public.js' %}
 {% endblock %}

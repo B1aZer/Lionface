@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', 'account.views.home', name='home'),
+    url(r'^micro/$', 'public.views.micro'),
     url(r'^terms/$', 'public.views.terms'),
     url(r'^privacy/$', 'public.views.privacy'),
     url(r'^about/$', 'public.views.about'),

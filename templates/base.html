@@ -77,6 +77,8 @@ var timezone = jstz.determine();
 
     {% endblock %}
 
-  {% include_media 'common.js' %}
+    {% block footer_js %}
+        {% include_media 'common.js' %}
+    {% endblock %}
   </body>
 </html>
