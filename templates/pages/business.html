@@ -16,10 +16,10 @@
 			<table width="100%"><tr>
 			<td align="left">
 				<a href="." class="business_on" style="color: #FFF;">Business Pages</a> 
-                <a href="{% url pages.views.leaderboard username=request.user.username %}">Leaderboard</a>
+                <a href="{% url pages.views.leaderboard %}">Leaderboard</a>
 			</td>
 			<td align="right">
-				<a href="{% url pages.views.nonprofit username=request.user.username %}" class="nonprofit_btn">Nonprofit Pages</a>
+				<a href="{% url pages.views.nonprofit %}" class="nonprofit_btn">Nonprofit Pages</a>
 			</td>
 			</tr></table>
 		</div>
@@ -154,7 +154,7 @@
 <table width="880" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
   <tr>
     <td>
-        <a href="{% url pages.views.page request.user.username %}"> <img src="" alt="" width="200" height="200"  /></a></td>
+        <a href="{% url pages.views.page %}"> <img src="" alt="" width="200" height="200"  /></a></td>
     <td>
       <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
     <td>
@@ -164,7 +164,7 @@
   </tr>
     <tr>
     <td>
-      <a href="{% url pages.views.page request.user.username %}">Random Business</a><br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
+      <a href="{% url pages.views.page %}">Random Business</a><br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
     <td>
       Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
     <td>

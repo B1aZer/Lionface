@@ -44,9 +44,9 @@ urlpatterns = patterns('',
         ))),
     url(r'^auto/', 'search.views.auto_complete'),
     url(r'^import/$', include('smileys.urls')),
+    url(r'^pages/', include('pages.urls')),
     url(r'^(?P<username>\w+)/notifications/', include('notification.urls')),
     url(r'^(?P<username>\w+)/messages/', include('messaging.urls')),
-    url(r'^(?P<username>\w+)/pages/', include('pages.urls')),
 )
 
 urlpatterns += patterns('',
