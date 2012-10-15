@@ -94,7 +94,7 @@ a.reset:hover {
 	margin-top: 10px;
 }
 
-.enabled_container:hover {
+.enabled_container:hover, .container_active {
 	background: #ffffff; /* Old browsers */
 	background: -moz-linear-gradient(top, #ffffff 40%, #eeeeee 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(40%,#ffffff), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */

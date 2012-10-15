@@ -9,6 +9,7 @@ $(document).ready(function() {
     $(document).on('click','.public_link',function() {
         var name = $(this).attr('id');
         var url = '/micro/';
+        var self = $(this);
         $.ajax(url,{
                 type: 'GET',
                 data: 'name=' + name,
@@ -16,6 +17,8 @@ $(document).ready(function() {
                     if(data.status == 'OK') {
                         $('.enabled_results').html(data.html);
                         $('.enabled_results').show();
+                        $('.container_active').removeClass('container_active');
+                        self.addClass('container_active');
                     }
                 },
                 error: function() {
