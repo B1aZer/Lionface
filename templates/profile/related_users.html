@@ -1,4 +1,4 @@
-{% load media friends %}
+{% load media friends format_results %}
 {% for user in users %}
 	<div class="result">
     <div class="result_related">
@@ -15,12 +15,16 @@
           {% if current_user|has_friend_request:user %}
             Friend request pending.
           {% else %}
-            <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">+ Add</a>
+                {% if user|check_friend_request:current_user %}    
+                    <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">+ Add</a>
+                {% endif %}
           {% endif %}
     {% if user|in_followers:request.user %}
 	  <a href=javascript:;' class="link-unfollow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >- Unfollow</a>
     {% else %}
-	  <a href=javascript:;' class="link-follow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >+ Follow</a>
+        {% if user|check_following:current_user %}    
+          <a href=javascript:;' class="link-follow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >+ Follow</a>
+        {% endif %}
     {% endif %}
         {% endif %}
 <div class="DoS">

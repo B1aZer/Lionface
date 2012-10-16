@@ -247,7 +247,7 @@ class CustomQuerySet(QuerySet):
         if not user:
             return [x for x in self if x.get_privacy == 'P']
         else:
-            return [x for x in self if x.get_privacy == 'P' or (x.get_privacy == 'F' and x.post.user.has_friend(user)) or (x.get_privacy == 'F' and x.post.user == user) or x.get_privacy == '']
+            return [x for x in self if x.get_privacy == 'P' or (x.get_privacy == 'F' and x.get_owner().has_friend(user)) or (x.get_privacy == 'F' and x.get_owner() == user) or x.get_privacy == '']
     def get_tagged_posts(self,tags):
         #import pdb;pdb.set_trace()
         tagged_posts = [x for x in self if x.post.tags.filter(name__in=tags)]
@@ -330,6 +330,8 @@ class NewsItem(models.Model):
             original = self.post.get_inherited()
             if original._meta.verbose_name == 'share post':
                 return original.user_to
+            if original._meta.verbose_name == 'friend post':
+                return self.user
         except:
             return False
         return original.user
@@ -337,6 +339,12 @@ class NewsItem(models.Model):
     @property
     def get_privacy(self):
         original = self.post.get_inherited()
+        if original._meta.verbose_name == 'friend post':
+            owner = self.user
+            if owner.check_option('friend_list','Public'):
+                return 'P'
+            else:
+                return 'F'
         return original.privacy()
 
     def get_comment_settings(self):
