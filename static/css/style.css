@@ -1510,7 +1510,7 @@ a.business_btn:link, a.business_btn:active, a.business_btn:visited {
 
 }
 
-a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page a.nonprofit_btn:hover, a.nonprofit_on,
+a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page a.nonprofit_btn:hover, a.nonprofit_on, a.nonprofit_on:hover,
 #pages_nav_page a.nonprofit_on:link, #pages_nav_page a.business_on:active, #pages_nav_page a.business_on:visited, #pages_nav_page a.business_on:hover {
 	color: #FFF;
 	text-decoration: none;
@@ -1616,6 +1616,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	box-shadow: 0 4px 12px -4px #999;
 	-moz-border-radius: 7px;
 	border-radius: 7px; 
+	margin: 10px 0;
 }
 
 .content_pages td {
