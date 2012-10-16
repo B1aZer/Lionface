@@ -360,7 +360,8 @@ def change_settings(request):
                     alb_obj.posts.add(post)
                     alb_obj.save()
                     data['album'] = alb_obj.name
-                    data['album_url'] = reverse('profile.views.album_posts', kwargs={'album_id': alb_obj.id}) 
+                    data['album_url'] = reverse('profile.views.album_posts', kwargs={'album_id': alb_obj.id, \
+                            'username':request.user.username})
             except:
                 if post.album:
                     #remove post from album

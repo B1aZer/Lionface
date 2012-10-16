@@ -110,7 +110,7 @@
                 {% endif %}
             {% endif %}
             {% url users-albums-posts username=item.get_owner.username album_id=item.get_album.id as the_url %}
-             <a href="{{ the_url }}" class="album_name" style="color: #C92;">{{ item.get_album.name }}</a>
+            <a href="{{ the_url }}" class="album_name" style="color: #C92;{% if not the_url %} display:none;{% endif %}">{{ item.get_album.name }}</a>
         </div>
 		</div>
     </div>
