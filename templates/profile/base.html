@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load media %}
 
+{% block js %}
+<script>
+$.extend(LionFace.user,{'album_count':{{ profile_user.get_album_count }}});
+</script>
+{% endblock %}
 
 {% block body %}
 {% include '_header.html' %}

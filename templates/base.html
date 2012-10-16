@@ -8,6 +8,12 @@
     <title>{% block title %}{{ current_site.name }}{% endblock %}</title>
     {% include_media 'main.css' %}
     {% block css %}{% endblock %}
+    <script>
+    var LionFace = {};
+    LionFace.user = {
+            username: "{{ request.user.username }}",
+    }
+    </script>
 
     {% include_media 'main.js' %}
     {% block js %}{% endblock %}

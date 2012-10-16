@@ -125,7 +125,7 @@ class UserProfile(User):
         return self.blocked.all()
 
     def get_blocked_from(self):
-        return self.blocked_from.all() 
+        return self.blocked_from.all()
 
     # Returns a queryset for all news items this user can see in date order.
     def get_news(self):
@@ -182,6 +182,9 @@ class UserProfile(User):
 
     def get_albums(self):
         return self.albums_set.all().order_by('position')
+
+    def get_album_count(self):
+        return self.albums_set.count()
 
     def check_option(self,name,value=None):
         name = "option_%s" % name
