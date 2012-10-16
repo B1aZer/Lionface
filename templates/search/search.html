@@ -2,6 +2,30 @@
 {% load media format_results %}
 
 {% block content_title %}Search Results{% endblock %}
+
+{% block js %}
+<script>
+/** ajax pagination*/
+$(document).on('click','#search_next', function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        make_request({
+            url:url,
+            callback:function(data){
+                //console.log($(data).find('.result').html());
+                $('.result :last').after($(data).find('.result'));
+                if ($(data).find('#search_navigation').length) {
+                    $('#search_navigation').replaceWith($(data).find('#search_navigation'));
+                }
+                else {
+                    $('#search_navigation').remove();
+                }
+            }
+        });
+});
+</script>
+{% endblock %}
+
 {% block right_col %}
     <form method="get" action=".">
         {% if query %}
@@ -14,11 +38,9 @@
                 <p align="center" class="no_posts">No results found.</p>
             {% endfor %}
 
-            {% if page.has_previous or page.has_next %}
-                <div>
-                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
-                    |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+            {% if page.has_next %}
+                <div id="search_navigation">
+                    {% if page.has_next %}<a id="search_next" href="?q={{ query }}&amp;models=account.userprofile&amp;page={{ page.next_page_number }}">{% endif %}See More{% if page.has_next %}</a>{% endif %}
                 </div>
             {% endif %}
         {% else %}

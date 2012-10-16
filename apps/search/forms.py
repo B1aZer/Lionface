@@ -2,6 +2,7 @@ from haystack.forms import ModelSearchForm
 from haystack.forms import SearchForm as SF
 from haystack.query import SearchQuerySet, SQ
 from current_user.middleware import get_current_user
+from tags.models import Tag
 
 class SearchForm(ModelSearchForm):
 
@@ -17,7 +18,7 @@ class SearchForm(ModelSearchForm):
             # TODO: Privacy settings will come in here too at some point.
             for one_user in res:
                 #if hasattr(one_user.object, 'userprofile'):
-                if one_user.object:
+                if one_user.object and not isinstance(one_user.object,Tag):
                     #if user was not deleted
                     if not one_user.object.check_visiblity("search",user):
                         res = res.exclude(username=one_user.username)
