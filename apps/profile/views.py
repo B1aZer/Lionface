@@ -365,14 +365,16 @@ def related_users(request,username=None):
 
         if 'Friends' in request.GET and profile_user.check_visiblity('friend_list',request.user):
             friends = profile_user.get_friends()
+            if friends:
+                friends = friends.exclude(id=request.user.id)
             users.extend(friends)
             data['html'] = [x.username for x in friends]
         if 'Following' in request.GET and profile_user.check_visiblity('following_list',request.user):
-            following = profile_user.get_following_active()
+            following = profile_user.get_following_active(request.user)
             users.extend(following)
             data['html'] = [x.username for x in following]
         if 'Followers' in request.GET and profile_user.check_visiblity('follower_list',request.user):
-            followers = profile_user.get_followers_active()
+            followers = profile_user.get_followers_active(request.user)
             users.extend(followers)
             data['html'] = [x.username for x in followers]
 

@@ -4,13 +4,13 @@
 {% block content_title %} <a href="{{ profile_user.get_absolute_url }}" class="name_link">{{ profile_user.full_name }}</a> | Profile {% endblock %}
 {% block content_middle %}
 {% if profile_user|check_friends_visibility:request.user %}
-<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_friend_count }}</a>
+<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_friend_count:request.user }}</a>
 {% endif %}
 {% if profile_user|check_follower_visibility:request.user %}
-<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Followers"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user.get_followers_count }} Follower{{ profile_user.get_followers_count|pluralize }}</a>
+<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Followers"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_followers_count:request.user }} Follower{{ profile_user.get_followers_count|pluralize }}</a>
 {% endif %}
 {% if profile_user|check_following_visibility:request.user %}
-<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Following"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user.get_following_count }} Following</a>
+<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Following"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_following_count:request.user }} Following</a>
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}

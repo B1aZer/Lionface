@@ -99,9 +99,13 @@ class UserProfile(User):
         blocked_ids = [x.id for x in self.get_blocked_self()]
         return self.friends.exclude(id__in=blocked_ids)
 
-    def get_friends_count(self):
+    def get_friends_count(self, user=None):
         blocked_id = [x.id for x in self.get_blocked()]
-        return self.friends.exclude(id__in=blocked_id).count()
+        friends = self.friends.exclude(id__in=blocked_id)
+        if user:
+            friends = friends.exclude(id=user.id)
+        friends_count = friends.count()
+        return friends_count
 
     def has_friend_request(self, user):
         return FriendRequest.objects.filter(Q(from_user=self, to_user=user) | Q(to_user=self, from_user=user)).count() > 0
@@ -253,13 +257,17 @@ class UserProfile(User):
             to_user=self)
         return relationship
 
-    def get_following_active(self):
+    def get_following_active(self, user=None):
         following = Relationship.objects.filter(to_user=self, status=1)
+        if user:
+            following = following.exclude(from_user=user.id)
         following = [x.from_user for x in following if x.from_user not in self.get_blocked()]
         return following
 
-    def get_followers_active(self):
+    def get_followers_active(self, user=None):
         followers = Relationship.objects.filter(from_user=self, status=1)
+        if user:
+            followers = followers.exclude(to_user=user.id)
         followers = [x.to_user for x in followers if x.to_user not in self.get_blocked()]
         return followers
 
@@ -268,12 +276,20 @@ class UserProfile(User):
         following = [x.from_user for x in following]
         return following
 
-    def get_following_count(self):
-        count = Relationship.objects.filter(to_user=self, status=1).exclude(from_user__in=self.get_blocked()).count()
+    def get_following_count(self, user=None):
+        if not user:
+            count = Relationship.objects.filter(to_user=self, status=1).exclude(from_user__in=self.get_blocked()).count()
+        else:
+            count = Relationship.objects.filter(to_user=self, status=1).exclude(from_user__in=self.get_blocked()).\
+                    exclude(from_user__id=user.id).count()
         return count
 
-    def get_followers_count(self):
-        count = Relationship.objects.filter(from_user=self, status=1).exclude(to_user__in=self.get_blocked()).count()
+    def get_followers_count(self, user=None):
+        if not user:
+            count = Relationship.objects.filter(from_user=self, status=1).exclude(to_user__in=self.get_blocked()).count()
+        else:
+            count = Relationship.objects.filter(from_user=self, status=1).exclude(to_user__in=self.get_blocked()).\
+                    exclude(to_user__id=user.id).count()
         return count
 
     def in_followers(self,user):

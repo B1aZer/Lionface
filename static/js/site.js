@@ -700,14 +700,14 @@ $(document).ready(function() {
     /** toggle post subtext */
     $(document).on('mouseover','.result',function() {
     var meta = $(this).metadata();
-    if (meta.type != 'friend post') {
+    if (meta.type != 'friend post' && meta.postid) { 
         ShowContent(meta.postid);
     }
     });
 
     $(document).on('mouseout','.result',function() {
     var meta = $(this).metadata();
-    if (meta.type != 'friend post') {
+    if (meta.type != 'friend post' && meta.postid) {
         HideContent(meta.postid);
     }
     });
