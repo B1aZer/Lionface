@@ -40,7 +40,7 @@
 
 <div style="position: relative; width: 900px; height: 1px; text-align: left;">
 
-	<div style="position: relative; left: -42px; top: 27px; width: 35px; z-index: 9999;">
+	<div style="position: relative; left: -42px; top: 31px; width: 35px; z-index: 9999;">
 		<div onMouseOver="ShowContent('page'); return false;" onMouseOut="HideContent('page'); return false;" style="position: relative;">
 			<div id="page" class="page" style="display: none;"><a href="#">Settings</a> 
 			<div style="display: block; color: #F58; padding: 4px 0;">(love count)</div></div> <a href="{% url pages.views.page %}" class="nav_page"></a>
@@ -50,7 +50,7 @@
 
 <div style="position: relative; width: 900px; height: 1px; text-align: right;">
 
-	<div style="position: relative; right: -908px; top: 23px; width: 35px; z-index: 100;">
+	<div style="position: relative; right: -908px; top: 27px; width: 35px; z-index: 100;">
         
 		<a href="{% url messaging.views.messages request.user.username %}" id="messages_id_notif" class="nav_messages" title=" Messages ">
             {% if request.user.new_messages > 0 %} <span class="count">{{request.user.new_messages}}</span> {% endif %}
