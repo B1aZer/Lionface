@@ -462,7 +462,6 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
             friend = model.objects.get(id=pk)
             # if no current connections
             if Degree.objects.filter(Q(from_user=instance, to_user=friend) | Q(from_user=friend, to_user=instance)).count() == 0:
-                #import pdb;pdb.set_trace()
                 # creating new
                 conn = Degree(from_user=instance, to_user=friend)
                 conn.path = "%s,%s" % (instance.id, friend.id)
@@ -475,45 +474,52 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                 conns_frnd_to = Degree.objects.filter(to_user=friend)
                 conns_frnd_from = Degree.objects.filter(from_user=friend)
 
-                if conns_inst_to.count() > 0:
+                #caching results
+                import cPickle
+                pickle_str = cPickle.dumps(conns_inst_to)
+                qs1 = cPickle.loads(pickle_str)
+                pickle_str = cPickle.dumps(conns_inst_from)
+                qs2 = cPickle.loads(pickle_str)
+                pickle_str = cPickle.dumps(conns_frnd_to)
+                qs3 = cPickle.loads(pickle_str)
+                pickle_str = cPickle.dumps(conns_frnd_from)
+                qs4 = cPickle.loads(pickle_str)
+
+                if qs1.count() > 0:
                     # we need to create passive connection for every connected user
-                    for cn in conns_inst_to:
-                        conn_inst_to = Degree(from_user=cn.from_user,\
+                    for cn in qs1:
+                        Degree.objects.get_or_create(from_user=cn.from_user,\
                                 to_user=friend,\
                                 path="%s,%s" % (cn.path, friend.id),\
                                 distance = cn.distance + 1)
                 # and reverse
-                if conns_inst_from.count() > 0:
+                if qs2.count() > 0:
                     # we need to create passive connection for every connected user
-                    for cn in conns_inst_from:
-                        conn_inst_from = Degree(from_user=friend,\
+                    for cn in qs2:
+                        Degree.objects.get_or_create(from_user=friend,\
                                 to_user=cn.to_user,\
                                 path="%s,%s" % (friend.id, cn.path),\
                                 distance = cn.distance + 1)
 
                 # if we have other connections here:
-                if conns_frnd_to.count() > 0:
+                if qs3.count() > 0:
                     # we need to create passive connection for every connected user
-                    for cn in conns_frnd_to:
-                        conn_frnd_to = Degree(from_user=cn.from_user,\
+                    for cn in qs3:
+                        Degree.objects.get_or_create(from_user=cn.from_user,\
                                 to_user=instance,\
                                 path="%s,%s" % (cn.path, instance.id),\
                                 distance = cn.distance + 1)
                 # we also want to make reverse connection here,
                 # since we dont know who is friended by whoom
-                if conns_frnd_from.count() > 0:
-                    for cn in conns_frnd_from:
-                        conn_frnd_from = Degree(from_user=instance,\
+                if qs4.count() > 0:
+                    for cn in qs4:
+                        Degree.objects.get_or_create(from_user=instance,\
                                 to_user=cn.to_user,\
                                 path="%s,%s" % (instance.id, cn.path ),\
                                 distance = cn.distance + 1)
                 # saving later, so we wont able to see new connection above
                 conn.save()
                 reverse_conn.save()
-                conn_inst_to.save()
-                conn_inst_from.save()
-                conn_frnd_to.save()
-                conn_frnd_from.save()
         except:
             import logging
             logger = logging.getLogger(__name__)
