@@ -63,9 +63,7 @@ var timezone = jstz.determine();
 
       <div id="footer">
         <div class="highlight">
-        <a href="{% url public.views.about %}" target="_top" style="color: #777;">About</a>
-		<span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" target="_top" style="color: #777;">Terms</a>
-		<span style="color: transparent;">--</span> 
+        
 <SCRIPT LANGUAGE="JavaScript">
 
     today=new Date();
@@ -78,7 +76,9 @@ var timezone = jstz.determine();
     document.write(y0);
   // end hiding --->
 </SCRIPT> 
-<span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top">Feedback</a>
+		<span style="color: transparent;">--</span> <a href="{% url public.views.about %}" target="_top" style="color: #777;">About</a>
+		<span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" target="_top" style="color: #777;">Terms</a>
+		<span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top">Feedback</a>
       </div></div>
 
     {% endblock %}

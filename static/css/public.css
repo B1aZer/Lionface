@@ -254,10 +254,17 @@ a.create:hover {
 
 .micro_title { 
 	font-size: 20pt; 
-	line-height: 24pt; 
+	line-height: 22pt; 
 	display: block; 
 	padding: 7px 0; 
 	border-bottom: 1px solid #DDD;
+}
+
+.micro_title_small { 
+	font-size: 14pt; 
+	display: block; 
+	padding: 40px 0 0 0; 
+	border-top: 1px solid #DDD;
 }
 
 .album_box {
@@ -282,26 +289,74 @@ a.create:hover {
 	color: #000;
 }
 
+.team_bio {
+	display: inline-block;
+	width: 580px;
+	border: 1px solid #EEE;
+	padding: 10px 10px 5px 10px;
+	text-align: left;
+	margin: 10px 0px 0px 0px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-moz-box-shadow: 0 2px 4px -2px #999;
+	box-shadow: 0 2px 4px -2px #999;
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffffff 40%, #eeeeee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(40%,#ffffff), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffffff 40%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffffff 40%,#eeeeee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffffff 40%,#eeeeee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ffffff 40%,#eeeeee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
+}
+
 .micro_page {
 	display: inline-block;
 	width: 175px;
 	border: 1px solid #DDD;
-	padding: 9px 10px 5px 10px;
+	padding: 5px 10px 5px 10px;
 	text-align: left;
 	margin: 10px 5px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 
-.micro_page img {
-	margin-right: 15px;
+.micro_page_about {
+	display: inline-block;
+	width: 210px;
+	border: 1px solid #DDD;
+	padding: 5px 10px 5px 10px;
+	text-align: left;
+	margin: 0px 0px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #FFF;
 }
 
-.micro_page:hover {
+.micro_page img, .team_bio img, .micro_page_about img {
+	margin-right: 15px;	
+}
+
+.micro_page:hover{
 	cursor: pointer;
 	background: #FFF;
 	-moz-box-shadow: inset 0 2px 4px -2px #555;
 	box-shadow: inset 0 2px 4px -2px #555;
+	border-color: #EEE;
+}
+
+.team_bio:hover {
+	cursor: pointer;
+	border-color: #DDD;
+	-moz-box-shadow: 0 2px 4px -2px #555;
+	box-shadow: 0 2px 4px -2px #555;
+}
+
+.micro_page_about:hover {
+	cursor: pointer;
+	background: #FFF;
+	-moz-box-shadow: 0 2px 4px -2px #555;
+	box-shadow: 0 2px 4px -2px #555;
 	border-color: #EEE;
 }
 
