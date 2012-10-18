@@ -65,7 +65,7 @@
 <div class="DoS_profile">Degree of Separation: lol this is you</div>
 {% else %}
 {% if profile_user|check_message_sending:request.user %}
-<div class="DoS_profile">Degree of Separation: 0</div>
+<div class="DoS_profile">Degree of Separation: {{ profile_user|degree_of_separation:request.user }}</div>
 <div style="margin: 10px 0; display: inline-block;" id="send_message"><a href="#" class="profile_nav" style="font-size: 10pt;">Send Message</a></div>
 
 {% endif %}

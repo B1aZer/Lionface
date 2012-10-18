@@ -10,7 +10,7 @@
         <div class="mutual_friends">Mutual Friends: {{ current_user|mutual_friends:user }}</div>
     {% endif %}
 {% if current_user|has_friend:user %}
-  <!-- Mutual friends -->
+    <a href='javascript:;' class="link-remove-friend {user: {{ user.id }}}">- Remove</a>
 {% else %}
   {% if current_user|has_friend_request:user %}
     Friend request pending.
@@ -38,6 +38,6 @@ This is your friend!
 <table width="170" height="100%"><tr><td><span style="font-weight: bold;">Not enough connections?</span><br /> Try inviting more people to Lionface or adding more friends. It will work.</td></tr></table>
 </div>
 {% endif %}
-</td><td align="left" style="font-size: 16pt;">0</td></tr></table></div>
+</td><td align="left" style="font-size: 16pt;">{{ current_user|degree_of_separation:user }}</td></tr></table></div>
 </span>
 </td></tr></table>

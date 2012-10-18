@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, post_delete, pre_save, m2m_changed
 from django.db.models.query import Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
@@ -60,7 +60,6 @@ class FriendRequest(models.Model):
             super(FriendRequest, self).save(*args, **kwargs)
         return send
 
-
 class UserProfile(User):
     # Logic is if a friend is in the 'friends' collection then they are verified.
     # If there is an active FriendRequest then it's still pending.
@@ -94,6 +93,30 @@ class UserProfile(User):
                 mutual_friends += 1
 
         return mutual_friends
+
+    def get_degree_for(self, user):
+        for friend in self.friends.all():
+            if friend.id == user.id:
+                return 0
+
+        for friend in self.friends.all():
+            for ffriend in friend.friends.all():
+                if ffriend.id == user.id:
+                    return 1
+
+        for friend in self.friends.all():
+            for ffriend in friend.friends.all():
+                for fffriend in ffriend.friends.all():
+                    if fffriend.id == user.id:
+                        return 2
+        return "none"
+        """
+        dos = Degree.objects.filter(from_user=self, to_user=user)
+        if dos.count() > 0:
+            return dos[0].distance
+        else:
+            return 'none'
+        """
 
     def get_friends(self):
         blocked_ids = [x.id for x in self.get_blocked_self()]
@@ -332,7 +355,6 @@ class UserProfile(User):
         "Returns the person's full name."
         return self.full_name
 
-
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         uprofile = UserProfile(user_ptr_id=instance.pk)
@@ -371,6 +393,64 @@ class Relationship(models.Model):
             super(Relationship, self).save(*args, **kwargs)
         return follow
 
+
+class Degree(models.Model):
+    from_user = models.ForeignKey(UserProfile, related_name='degree_from')
+    to_user = models.ForeignKey(UserProfile, related_name='degree_to')
+    date = models.DateTimeField(auto_now_add=True)
+    distance = models.IntegerField(default=0)
+
+def update_degree_of_separation(sender, instance, created, **kwargs):
+    if created:
+        # find all connections with final point equals to user
+        # A -> B
+        doses = Degree.objects.filter(to_user=instance.from_user).\
+                exclude(from_user=instance.from_user, to_user=instance.to_user).\
+                exclude(from_user=instance.to_user, to_user=instance.from_user)
+                # exclude newly created
+        if doses.count() > 0:
+            for dos in doses:
+                # make new connections with friended user
+                if Degree.objects.filter(from_user=dos.from_user, to_user=instance.to_user).count() == 0:
+                    Degree(from_user=dos.from_user, to_user=instance.to_user, distance = dos.distance + 1).save()
+                else:
+                    # second run, firing above
+                    Degree.objects.get_or_create(from_user=instance.to_user, to_user=instance.from_user, distance = dos.distance + 1)
+#post_save.connect(update_degree_of_separation, sender=Degree)
+
+def update_degree_of_separation_on_delete(sender, instance, using, **kwargs):
+    import pdb;pdb.set_trace()
+    # 3 -> 2
+    doses = Degree.objects.filter(from_user=instance.to_user).\
+                exclude(from_user=instance.from_user, to_user=instance.to_user).\
+                exclude(from_user=instance.to_user, to_user=instance.from_user)
+    if doses.count() > 0:
+            for dos in doses:
+                # update connections with all connected users
+                Degree(from_user=dos.from_user, to_user=instance.to_user).delete()
+#post_delete.connect(update_degree_of_separation_on_delete, sender=Degree)
+
+def create_degree_of_separation(sender, instance, action, reverse, model, pk_set, using, **kwargs):
+    if action == 'post_remove':
+        try:
+            pk = pk_set.pop()
+            friend = model.objects.get(id=pk)
+            Degree.objects.filter(Q(from_user=instance, to_user=friend) | Q(from_user=friend, to_user=instance)).delete()
+        except:
+            pass
+    elif action == 'post_add':
+        try:
+            pk = pk_set.pop()
+            friend = model.objects.get(id=pk)
+            # if no current connections
+            if Degree.objects.filter(Q(from_user=instance, to_user=friend) | Q(from_user=friend, to_user=instance)).count() == 0:
+                Degree(from_user=instance, to_user=friend).save()
+                Degree(from_user=friend, to_user=instance).save()
+        except:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning('error in dos')
+#m2m_changed.connect(create_degree_of_separation, sender=UserProfile.friends.through)
 
 class UserOptions(models.Model):
     name = models.CharField(max_length='100')
