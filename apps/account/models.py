@@ -1,9 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.db.models.signals import post_save, post_delete, pre_save, m2m_changed
+from django.db.models.signals import post_save, post_delete, pre_save
 from django.db.models.query import Q
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
 
 from itertools import chain
 
@@ -95,20 +95,26 @@ class UserProfile(User):
         return mutual_friends
 
     def get_degree_for(self, user):
+        from degrees.models import Degree
+        deg = Degree.objects.filter(from_user=self, to_user=user)
+        if deg.count() > 0:
+            deg = deg[0].distance
+        else:
+            deg = 'none'
         for friend in self.friends.all():
             if friend.id == user.id:
-                return 0
+                return "%s|%s" % (0,deg)
 
         for friend in self.friends.all():
             for ffriend in friend.friends.all():
                 if ffriend.id == user.id:
-                    return 1
+                    return "%s|%s" % (1,deg)
 
         for friend in self.friends.all():
             for ffriend in friend.friends.all():
                 for fffriend in ffriend.friends.all():
                     if fffriend.id == user.id:
-                        return 2
+                        return "%s|%s" % (2,deg)
         return "none"
         """
         dos = Degree.objects.filter(from_user=self, to_user=user)
@@ -393,14 +399,6 @@ class Relationship(models.Model):
             super(Relationship, self).save(*args, **kwargs)
         return follow
 
-
-class Degree(models.Model):
-    from_user = models.ForeignKey(UserProfile, related_name='degree_from')
-    to_user = models.ForeignKey(UserProfile, related_name='degree_to')
-    date = models.DateTimeField(auto_now_add=True)
-    distance = models.IntegerField(default=0)
-    path = models.TextField(blank=True)
-
 def update_degree_of_separation(sender, instance, created, **kwargs):
     if created:
         import pdb;pdb.set_trace()
@@ -447,84 +445,6 @@ def update_degree_of_separation_on_delete(sender, instance, using, **kwargs):
                 # update connections with all connected users
                 Degree(from_user=dos.from_user, to_user=instance.to_user).delete()
 #post_delete.connect(update_degree_of_separation_on_delete, sender=Degree)
-
-def create_degree_of_separation(sender, instance, action, reverse, model, pk_set, using, **kwargs):
-    if action == 'post_remove':
-        try:
-            pk = pk_set.pop()
-            friend = model.objects.get(id=pk)
-            Degree.objects.filter(Q(from_user=instance, to_user=friend) | Q(from_user=friend, to_user=instance)).delete()
-        except:
-            pass
-    elif action == 'post_add':
-        try:
-            pk = pk_set.pop()
-            friend = model.objects.get(id=pk)
-            # if no current connections
-            if Degree.objects.filter(Q(from_user=instance, to_user=friend) | Q(from_user=friend, to_user=instance)).count() == 0:
-                # creating new
-                conn = Degree(from_user=instance, to_user=friend)
-                conn.path = "%s,%s" % (instance.id, friend.id)
-                # 2 way connection
-                reverse_conn = Degree(from_user=friend, to_user=instance)
-                reverse_conn.path = "%s,%s" % (friend.id, instance.id)
-                # if we have other connections here:
-                conns_inst_to = Degree.objects.filter(to_user=instance)
-                conns_inst_from = Degree.objects.filter(from_user=instance)
-                conns_frnd_to = Degree.objects.filter(to_user=friend)
-                conns_frnd_from = Degree.objects.filter(from_user=friend)
-
-                #caching results
-                import cPickle
-                pickle_str = cPickle.dumps(conns_inst_to)
-                qs1 = cPickle.loads(pickle_str)
-                pickle_str = cPickle.dumps(conns_inst_from)
-                qs2 = cPickle.loads(pickle_str)
-                pickle_str = cPickle.dumps(conns_frnd_to)
-                qs3 = cPickle.loads(pickle_str)
-                pickle_str = cPickle.dumps(conns_frnd_from)
-                qs4 = cPickle.loads(pickle_str)
-
-                if qs1.count() > 0:
-                    # we need to create passive connection for every connected user
-                    for cn in qs1:
-                        Degree.objects.get_or_create(from_user=cn.from_user,\
-                                to_user=friend,\
-                                path="%s,%s" % (cn.path, friend.id),\
-                                distance = cn.distance + 1)
-                # and reverse
-                if qs2.count() > 0:
-                    # we need to create passive connection for every connected user
-                    for cn in qs2:
-                        Degree.objects.get_or_create(from_user=friend,\
-                                to_user=cn.to_user,\
-                                path="%s,%s" % (friend.id, cn.path),\
-                                distance = cn.distance + 1)
-
-                # if we have other connections here:
-                if qs3.count() > 0:
-                    # we need to create passive connection for every connected user
-                    for cn in qs3:
-                        Degree.objects.get_or_create(from_user=cn.from_user,\
-                                to_user=instance,\
-                                path="%s,%s" % (cn.path, instance.id),\
-                                distance = cn.distance + 1)
-                # we also want to make reverse connection here,
-                # since we dont know who is friended by whoom
-                if qs4.count() > 0:
-                    for cn in qs4:
-                        Degree.objects.get_or_create(from_user=instance,\
-                                to_user=cn.to_user,\
-                                path="%s,%s" % (instance.id, cn.path ),\
-                                distance = cn.distance + 1)
-                # saving later, so we wont able to see new connection above
-                conn.save()
-                reverse_conn.save()
-        except:
-            import logging
-            logger = logging.getLogger(__name__)
-            logger.warning('error in dos')
-m2m_changed.connect(create_degree_of_separation, sender=UserProfile.friends.through)
 
 class UserOptions(models.Model):
     name = models.CharField(max_length='100')
