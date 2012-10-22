@@ -17,22 +17,30 @@
         {% block heart %}
         <div class="next_generation"><span style="font-size: 25pt;">The</span> <span style="font-size: 40pt;">Next Generation</span><br /><span style="font-size: 25pt;">in</span> Social Networking</div>
         <div>
-          <a href="{% url account.views.signup %}" class="create" onMouseOver="ReverseContentDisplay('create_sub'); return false;" onMouseOut="ReverseContentDisplay('create_sub'); return false;">Create an Account</a>
-		  <div style="display: none; position: relative; top: 45px;" id="create_sub">No ads. Always free.</div>
+          <a href="{% url account.views.signup %}" class="create">Create an Account</a>
+
         </div>
         {% endblock %}
       </div>
     </div>
   </div>
-	<div class="learn_more">Learn more about Lionface by clicking the links below.</div>
+	<div class="learn_more" id="learn" style="color: #BBB;">Learn more about Lionface by clicking the links below.</div>
+	<div class="learn_more" id="lf" style="display: none;">Lionface</div>
+	<div class="learn_more" id="n" style="display: none;">Nonprofits</div>
+	<div class="learn_more" id="b" style="display: none;">Businesses</div>
+	<div class="learn_more" id="t" style="display: none;">Tags</div>
+	<div class="learn_more" id="f" style="display: none;">Followers</div>
+	<div class="learn_more" id="d" style="display: none;">Degree of Separation</div>
+	<div class="learn_more" id="a" style="display: none;">Albums</div>
+
 	<div class="enabled_table">
-		<div id="lionface" class="enabled_container public_link"><div class="enabled">Lf</div> Lionface</div>
-		<div id="nonprofits" class="enabled_container public_link"><div class="enabled">n</div> Nonprofits</div>
-		<div id="business" class="enabled_container public_link"><div class="enabled">b</div> Businesses</div>
-		<div id="tags" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: 1px;">#</span></div> Tags</div>
-		<div id="followers" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: -1px;">+</span></div> Followers</div>
-		<div id="dos" class="enabled_container public_link"><div class="enabled">d&#176;</div> Degree of Separation</div>
-		<div id="albums" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: -1px; font-size: 14pt;">:]</span></div> Albums</div>
+		<div id="lionface" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('lf'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('lf'); return false;"><div class="enabled">Lf</div></div>
+		<div id="nonprofits" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('n'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('n'); return false;"><div class="enabled">n</div></div>
+		<div id="business" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('b'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('b'); return false;"><div class="enabled">b</div></div>
+		<div id="tags" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('t'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('t'); return false;"><div class="enabled"><span style="position: relative; top: 1px;">#</span></div></div>
+		<div id="followers" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('f'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('f'); return false;"><div class="enabled"><span style="position: relative; top: -1px;">+</span></div></div>
+		<div id="dos" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('d'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('d'); return false;"><div class="enabled">d&#176;</div></div>
+		<div id="albums" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('a'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('a'); return false;"><div class="enabled"><span style="position: relative; top: -1px; font-size: 14pt;">:]</span></div></div>
 
 	</div>
 	<div class="enabled_results" style="display: none; padding: 30px 10px;">
