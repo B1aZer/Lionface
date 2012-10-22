@@ -136,7 +136,7 @@ LionFace.Profile.prototype = {
         /** Create album */
         $(document).on('submit','#create_album_form',function(e) {    
             e.preventDefault();
-            var albums = LionFace.user.album_count;
+            var albums = parseInt(LionFace.user.album_count);
             var url = 'album_create/';
             make_request({
                 url:url,
@@ -161,7 +161,7 @@ LionFace.Profile.prototype = {
         $(document).on('click','.albums_edit',function(e) {    
             var self = $(this);
             var url = 'delete_album/';
-            var albums = LionFace.user.album_count;
+            var albums = parseInt(LionFace.user.album_count);
             var album_id = get_int(self.parent().attr('id'));
             make_request({
                 url:url,
@@ -253,7 +253,7 @@ LionFace.Profile.prototype = {
     },
 
     hide_album_hint : function() {
-        if ($('#albums_hint').length && LionFace.user.album_count < 2) {
+        if ($('#albums_hint').length && parseInt(LionFace.user.album_count) < 2) {
             $('#albums_hint').hide();
         }
         else {

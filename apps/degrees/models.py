@@ -34,6 +34,7 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
         or update old paths, if necessary
         """
         created = 0
+        updated_count = 0
         updated = []
         #import pdb;pdb.set_trace()
 
@@ -107,6 +108,7 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                                 # adding to queue current pair
                                 if {'user':neigh.to_user.id,'friend':friend.id} not in updated:
                                     updated.append({'user':neigh.to_user.id,'friend':friend.id})
+                                updated_count += 1
                         except:
                             continue
                         # since there can be new connection
@@ -123,6 +125,7 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                                 conn_neigh.save()
                                 if {'user':friend.id,'friend':neigh.from_user.id} not in updated:
                                     updated.append({'user':friend.id,'friend':neigh.from_user.id})
+                                updated_count += 1
                         except:
                             continue
 
@@ -140,6 +143,7 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                                 conn_neigh.save()
                                 if {'user':neigh.to_user.id,'friend':user.id} not in updated:
                                     updated.append({'user':neigh.to_user.id,'friend':user.id})
+                                updated_count += 1
                         except:
                             continue
 
@@ -155,8 +159,12 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                                 conn_neigh.save()
                                 if {'user':user.id,'friend':neigh.from_user.id} not in updated:
                                     updated.append({'user':user.id,'friend':neigh.from_user.id})
+                                updated_count += 1
                         except:
                             continue
+
+            logger = logging.getLogger(__name__)
+            logger.warning('We updated: %s records, total: %s users' % (updated_count, UserProfile.objects.count()))
 
 
             #!!! This implementation will not work on ALL dependants,
@@ -223,9 +231,9 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
             # saving later, so we wont able to see new connection above
             # this is not necessary since we caching results above
             # saving above
-            
+
             logger = logging.getLogger(__name__)
-            logger.warning('We created: %s new connections' % (created))
+            logger.warning('We created: %s new connections, total: %s users' % (created, UserProfile.objects.count()))
 
     if action == 'post_remove':
         try:

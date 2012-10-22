@@ -3,7 +3,7 @@
 
 {% block js %}
 <script>
-$.extend(LionFace.user,{'album_count':{{ profile_user.get_album_count }}});
+$.extend(LionFace.user,{'album_count':'{{ profile_user.get_album_count }}'});
 </script>
 {% endblock %}
 

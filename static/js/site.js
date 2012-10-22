@@ -83,8 +83,7 @@ function get_int(id) {
 
 function hookLinks() {
     // Friend links.
-    $('.link-add-friend').unbind('click');
-    $('.link-add-friend').click(function() {
+    $(document).on('click','.link-add-friend', function() {
         var data = $(this).metadata();
         var $this = $(this);
         if(data.user !== undefined) {
@@ -110,8 +109,7 @@ function hookLinks() {
         return false;
     });
 
-    $('.link-remove-friend').unbind('click');
-    $('.link-remove-friend').click(function() {
+    $(document).on('click', '.link-remove-friend', function() {
         var data = $(this).metadata();
         var $this = $(this);
         if(data.user !== undefined) {
@@ -137,8 +135,7 @@ function hookLinks() {
         return false;
     });   
 
-    $('.link-accept-friend').unbind('click');
-    $('.link-accept-friend').click(function() {
+    $(document).on('click', '.link-accept-friend', function() {
         var data = $(this).metadata();
         var $this = $(this);
         if(data.request !== undefined) {
@@ -163,8 +160,7 @@ function hookLinks() {
         return false;
     });
 
-    $('.link-decline-friend').unbind('click');
-    $('.link-decline-friend').click(function() {
+    $(document).on('click','.link-decline-friend',function() {
         var data = $(this).metadata();
         var $this = $(this);
         if(data.request !== undefined) {
@@ -189,8 +185,7 @@ function hookLinks() {
         return false;
     });
 
-    $('.link-follow').unbind('click');
-    $('.link-follow').click(function() {
+    $(document).on('click', '.link-follow', function() {
         var data = $(this).metadata();
         var $this = $(this);
         if(data.user !== undefined) {
