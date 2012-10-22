@@ -1,4 +1,5 @@
 {% extends "profile/base.html" %}
+{% load media %}
 
 
 
@@ -22,7 +23,7 @@
 			<tr>
 			<td width="100"><div style="width: 90px; height: 90px; background: #EEE; margin: 10px; position: relative; top: 7px;"></div><td>
 			<td><div style="padding: 10px 0px; position: relative; top: 10px;">
-				<span style="font-size: 14pt; color: #896;">Page Name</span> <span style="color: #999;">(category)</span>
+				<span style="font-size: 14pt; color: #909e4a;">Page Name</span> <span style="color: #999;">(category)</span>
 				<div style="padding: 10px 7px 10px 0px; line-height: 14pt;">Lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na  <a href="#" style="font-size: 8pt; color: #AAA;">Edit</a></div>
 			<td/>
 			<td width="250" class="love_container" align="center"><div class="sponsored"></div><div style="padding: 10px 20px;">
@@ -36,7 +37,44 @@
 	</div>
 	
 
-<div class="content_pages" id="business">
+
+<div align="center">
+<div class="page_container">
+	<div class="float_left">
+
+    <div id="postbox">
+            <div style="padding: 10px;" align="left">
+                <textarea name="content" class="updates_textarea"></textarea><br /><br />
+				<a href="#" class="post" id="postboxbutton" style="padding: 6px 7px 4px 7px;">Post Update</a> <div class="attach">Attach</div><br />
+            </div>
+    </div>
+<br /><br />
+<div class="friend_container">
+		<div class="friend_title" style="color: #909e4a;">Nonprofit Friends</div> <div class="see_all">see all</div><br />
+<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+<br /><br />
+		<div class="friend_title" style="color: #3082b1;">Business Friends</div> <div class="see_all">see all</div><br />
+<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+</div>
+
+</div>
+
+	<div class="page_center">
+			<div style="padding: 15px;">
+
+			</div>
+	</div>
+</div>
+</div>
+<div>
+
+
 </div>
 
 
