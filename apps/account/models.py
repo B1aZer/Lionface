@@ -96,11 +96,10 @@ class UserProfile(User):
 
     def get_degree_for(self, user):
         from degrees.models import Degree
+        deg = 'none'
         deg = Degree.objects.filter(from_user=self, to_user=user)
         if deg.count() > 0:
             deg = deg[0].distance
-        else:
-            deg = 'none'
         for friend in self.friends.all():
             if friend.id == user.id:
                 return "%s|%s" % (0,deg)
@@ -115,7 +114,7 @@ class UserProfile(User):
                 for fffriend in ffriend.friends.all():
                     if fffriend.id == user.id:
                         return "%s|%s" % (2,deg)
-        return "none"
+        return deg
         """
         dos = Degree.objects.filter(from_user=self, to_user=user)
         if dos.count() > 0:

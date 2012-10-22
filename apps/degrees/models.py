@@ -31,9 +31,10 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
         """
         This function will find all dependent cells,
         make new connections
-        or update thir pathes, if necessary
+        or update old paths, if necessary
         """
         created = 0
+        updated = []
         #import pdb;pdb.set_trace()
 
         # if we have other connections here:
@@ -56,83 +57,114 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
         if not created_conn:
             conn.distance = 0
             update = True
+            if {'user':user,'friend':friend} not in updated:
+                updated.append({'user':user,'friend':friend})
         # 2 way connection
         reverse_conn, created_reverse_conn = Degree.objects.get_or_create(from_user=friend, to_user=user)
         reverse_conn.path = "%s,%s" % (friend.id, user.id)
         if not created_reverse_conn:
             reverse_conn.distance = 0
             update = True
+            if {'user':user,'friend':friend} not in updated:
+                updated.append({'user':user,'friend':friend})
 
         # saving
         conn.save()
         reverse_conn.save()
 
-        #import pdb;pdb.set_trace()
         if update:
-            #wile looop
+            while updated:
+                """
+                OPTIMIZE:
+                    maybe we could check only half of neighbours
+                logic here:
                 #check all neighbours
                 #new shortest path ?
                 #yes->update check again
-            neigh_inst_from = Degree.objects.filter(from_user=user, distance=0)
-            #neigh_inst_to = Degree.objects.filter(to_user=user, distance=0)
-            # find all connections from my neighbours to newly friend
-            # if distance > 1, fix
-            if neigh_inst_from.count() > 0:
-                for neigh in neigh_inst_from:
-                    try:
-                        conn_neigh = Degree.objects.get(to_user=friend, from_user=neigh.to_user)
-                        if conn_neigh.distance > 1:
-                            conn_neigh.distance = 1
-                            # path should be traversed through user
-                            conn_neigh.path = "%s,%s,%s" % (neigh.to_user.id, user.id, friend.id)
-                            conn_neigh.save()
-                    except:
-                        continue
-                    # since there can be new connection
+                """
+            #wile looop
+                #import pdb;pdb.set_trace()
+                updating = updated.pop()
+                user = updating.get('user')
+                friend = updating.get('friend')
+                current = Degree.objects.get(from_user=user, to_user=friend)
+                current_rev = Degree.objects.get(from_user=friend, to_user=user)
 
-            neigh_inst_to = Degree.objects.filter(to_user=user, distance=0)
-            if neigh_inst_to.count() > 0:
-                for neigh in neigh_inst_to:
-                    try:
-                        conn_neigh = Degree.objects.get(to_user=neigh.from_user, from_user=friend)
-                        if conn_neigh.distance > 1:
-                            conn_neigh.distance = 1
-                            conn_neigh.path = "%s,%s,%s" % (friend.id, user.id, neigh.from_user.id)
-                            conn_neigh.save()
-                    except:
-                        continue
+                neigh_inst_from = Degree.objects.filter(from_user=user, distance=0)
+                # find all connections from my neighbours to newly friend
+                # if distance > 1, fix
+                if neigh_inst_from.count() > 0:
+                    for neigh in neigh_inst_from:
+                        try:
+                            conn_neigh = Degree.objects.get(to_user=friend, from_user=neigh.to_user)
+                            # if distance greater than current + 1
+                            if conn_neigh.distance > current.distance + 1:
+                                conn_neigh.distance = current.distance + 1
+                                # path should be traversed through user
+                                #conn_neigh.path = "%s,%s,%s" % (neigh.to_user.id, user.id, friend.id)
+                                conn_neigh.path = "%s,%s" % (neigh.to_user.id, current.path)
+                                conn_neigh.save()
+                                # adding to queue current pair
+                                if {'user':neigh.to_user.id,'friend':friend.id} not in updated:
+                                    updated.append({'user':neigh.to_user.id,'friend':friend.id})
+                        except:
+                            continue
+                        # since there can be new connection
 
-            neigh_friend_from = Degree.objects.filter(from_user=friend, distance=0)
-            if neigh_friend_from.count() > 0:
-                for neigh in neigh_friend_from:
-                    try:
-                        conn_neigh = Degree.objects.get(to_user=user, from_user=neigh.to_user)
-                        if conn_neigh.distance > 1:
-                            conn_neigh.distance = 1
-                            conn_neigh.path = "%s,%s,%s" % (neigh.to_user.id, friend.id, user.id)
-                            conn_neigh.save()
-                    except:
-                        continue
+                neigh_inst_to = Degree.objects.filter(to_user=user, distance=0)
+                if neigh_inst_to.count() > 0:
+                    for neigh in neigh_inst_to:
+                        try:
+                            conn_neigh = Degree.objects.get(to_user=neigh.from_user, from_user=friend)
+                            if conn_neigh.distance > current_rev.distance + 1:
+                                conn_neigh.distance = current_rev.distance + 1
+                                #conn_neigh.path = "%s,%s,%s" % (friend.id, user.id, neigh.from_user.id)
+                                conn_neigh.path = "%s,%s" % (current_rev.path, neigh.from_user.id)
+                                conn_neigh.save()
+                                if {'user':friend.id,'friend':neigh.from_user.id} not in updated:
+                                    updated.append({'user':friend.id,'friend':neigh.from_user.id})
+                        except:
+                            continue
 
-            neigh_friend_to = Degree.objects.filter(to_user=friend, distance=0)
-            if neigh_friend_to.count() > 0:
-                for neigh in neigh_friend_to:
-                    try:
-                        conn_neigh = Degree.objects.get(to_user=neigh.from_user, from_user=user)
-                        if conn_neigh.distance > 1:
-                            conn_neigh.distance = 1
-                            conn_neigh.path = "%s,%s,%s" % (user.id, friend.id, neigh.from_user.id)
-                            conn_neigh.save()
-                    except:
-                        continue
+                # This will fire on reverse connections
+
+                neigh_friend_from = Degree.objects.filter(from_user=friend, distance=0)
+                if neigh_friend_from.count() > 0:
+                    for neigh in neigh_friend_from:
+                        try:
+                            conn_neigh = Degree.objects.get(to_user=user, from_user=neigh.to_user)
+                            if conn_neigh.distance > current_rev.distance + 1:
+                                conn_neigh.distance = current_rev.distance + 1
+                                #conn_neigh.path = "%s,%s,%s" % (neigh.to_user.id, friend.id, user.id)
+                                conn_neigh.path = "%s,%s" % (neigh.to_user.id, current_rev.path)
+                                conn_neigh.save()
+                                if {'user':neigh.to_user.id,'friend':user.id} not in updated:
+                                    updated.append({'user':neigh.to_user.id,'friend':user.id})
+                        except:
+                            continue
+
+                neigh_friend_to = Degree.objects.filter(to_user=friend, distance=0)
+                if neigh_friend_to.count() > 0:
+                    for neigh in neigh_friend_to:
+                        try:
+                            conn_neigh = Degree.objects.get(to_user=neigh.from_user, from_user=user)
+                            if conn_neigh.distance > current.distance + 1:
+                                conn_neigh.distance = current.distance + 1
+                                #conn_neigh.path = "%s,%s,%s" % (user.id, friend.id, neigh.from_user.id)
+                                conn_neigh.path = "%s,%s" % (current.path, neigh.from_user.id)
+                                conn_neigh.save()
+                                if {'user':user.id,'friend':neigh.from_user.id} not in updated:
+                                    updated.append({'user':user.id,'friend':neigh.from_user.id})
+                        except:
+                            continue
 
 
             #!!! This implementation will not work on ALL dependants,
-            # since not all dependats have pases traversing through current nodes
+            # since not all dependats have paths traversing through current nodes
 
 
             # find all dependent nodes
-            # dependent means current nodes, should be in thir pathes
+            # dependent means current nodes, should be in their paths
             # since we have problems with sqlite, we will use where
             """
             dependants = Degree.objects.extra(where=["path like '%%"+str(friend.id)+"%%"+str(user.id)+"%%'"])

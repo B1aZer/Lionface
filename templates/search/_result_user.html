@@ -38,6 +38,12 @@ This is your friend!
 <table width="170" height="100%"><tr><td><span style="font-weight: bold;">Not enough connections?</span><br /> Try inviting more people to Lionface or adding more friends. It will work.</td></tr></table>
 </div>
 {% endif %}
-</td><td align="left" style="font-size: 16pt;">{{ current_user|degree_of_separation:user }}</td></tr></table></div>
+</td>
+{% if current_user|degree_of_separation:user %}
+<td align="left" title="{{ current_user|degree_of_separation:user }}" style="font-size: 16pt;">{{ current_user|degree_of_separation:user }}</td>
+{% else %}
+<td align="left" title="Unknown" style="font-size: 16pt;">--</td>
+{% endif %}
+</tr></table></div>
 </span>
 </td></tr></table>
