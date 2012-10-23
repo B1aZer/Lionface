@@ -2,6 +2,7 @@
 deleting sharing origin wont delete children
 wrong privacy on deleted
 ###later###
+#notifiaction flashing is wrong on page load
 mass maubmit on ajax
 the album page (and in the future the loves page) direct back to the profile
 ###
