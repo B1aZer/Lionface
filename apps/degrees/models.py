@@ -5,6 +5,7 @@ from django.db.models.query import Q
 import cPickle
 import re
 import logging
+import re
 
 # Create your models here.
 
@@ -48,11 +49,13 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
         current.delete()
         current_rev.delete()
 
+
         # find all dependants
+        # path traversing
         #deps = Degree.objects.extra(where=["path like '%%"+str(user.id)+"%%"+str(friend.id)+"%%'"]).order_by('distance')
         #deps_rev = Degree.objects.extra(where=["path like '%%"+str(friend.id)+"%%"+str(user.id)+"%%'"]).order_by('distance')
-        deps = Degree.objects.filter(path__contains='%s,%s' % (user.id, friend.id))
-        deps_rev = Degree.objects.filter(path__contains='%s,%s' % (friend.id, user.id))
+        deps = Degree.objects.filter(path__iregex=r'(,|\A)%s,%s(,|\Z)' % (user.id, friend.id))
+        deps_rev = Degree.objects.filter(path__iregex=r'(,|\A)%s,%s(,|\Z)' % (friend.id, user.id))
 
         if deps.count():
             updating = True
@@ -64,26 +67,157 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
         """
         logic here:
             ask all nighbours if they have path to old node
-            if yes, update
-            we need 2 loops
-            1st one for finding new shrtest
-            2nd one for updating othe cells
-
-            or go system
-
-            while loop
-            check all friends, on ckecking mark checked
-            remove from queue on 0 friends left
-            should run 2 times (?)
+            if no, wait until loop is finished
+            if someone made new connection
+            look again
         """
         deps = list(deps)
         deps_lost = list(deps)
+        i=1
         while updating:
+            i+=1
             # flag for global update
             # we need to run all dependants at least once
+            y=0
             updating = False
             for dep in deps:
                 #deps.remove(dep)
+                neighs = Degree.objects.filter(from_user=dep.from_user, distance = 0)
+                for neigh in neighs:
+                    try:
+                        shortest = Degree.objects.get(from_user=neigh.to_user, to_user=dep.to_user)
+                        # hooray! shortest pass
+                        #if '%s,%s' % (user.id, friend.id) not in shortest.path:
+                        if not re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (user.id, friend.id),  shortest.path):
+                            # check length (and current path)
+                            #if '%s,%s' % (user.id, friend.id) in dep.path:
+                            if re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (user.id, friend.id),  dep.path):
+                                # if we have wrong path
+                                dep.path = "%s,%s" % (dep.from_user.id, shortest.path)
+                                dep.distance = shortest.distance + 1
+                                dep.save()
+                                deps_lost.remove(dep)
+                                updating = True
+                            else:
+                                # path already updated from neighbour
+                                # we need to check current length
+                                if shortest.distance + 1 < dep.distance:
+                                    dep.path = "%s,%s" % (dep.from_user.id, shortest.path)
+                                    dep.distance = shortest.distance + 1
+                                    dep.save()
+                                    updating = True
+                    except Degree.DoesNotExist:
+                        continue
+                    except:
+                        logger = logging.getLogger(__name__)
+                        logger.warning('Error in updating, id of degree = %s' % dep.id)
+                        raise
+                # if no shortest found
+                # append to lost list
+                #if not updated:
+                    #deps_lost.append(dep)
+
+        deps_rev = list(deps_rev)
+        deps_rev_lost = list(deps_rev)
+        i=1
+        while updating_rev:
+            i+=1
+            y=0
+            updating_rev = False
+            for dep in deps_rev:
+                y+=1
+                #deps_rev.remove(dep)
+                neighs = Degree.objects.filter(from_user=dep.from_user, distance = 0)
+                for neigh in neighs:
+                    try:
+                        shortest = Degree.objects.get(from_user=neigh.to_user, to_user=dep.to_user)
+                        #if '%s,%s' % (friend.id, user.id) not in shortest.path:
+                        if not re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (friend.id, user.id),  shortest.path):
+                            #if '%s,%s' % (friend.id, user.id) in dep.path:
+                            if re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (friend.id, user.id),  dep.path):
+                                dep.path = "%s,%s" % (dep.from_user.id, shortest.path)
+                                dep.distance = shortest.distance + 1
+                                dep.save()
+                                updated_count += 1
+                                updating_rev = True
+                                deps_rev_lost.remove(dep)
+                            else:
+                                if shortest.distance + 1 < dep.distance:
+                                    dep.path = "%s,%s" % (dep.from_user.id, shortest.path)
+                                    dep.distance = shortest.distance + 1
+                                    dep.save()
+                                    updated_count += 1
+                                    updating_rev = True
+                    except Degree.DoesNotExist:
+                        continue
+                    except:
+                        logger = logging.getLogger(__name__)
+                        logger.warning('Error in updating rev, id of degree = %s' % dep.id)
+                        raise
+
+
+        #if not deps_lost and not deps_rev_lost:
+
+            # remove all connections
+            # we can't do that
+            # since although we have losters
+            # there still could be connection
+            # exmple: triangle connection
+            #removed_count += len(deps_lost)
+            #for conn in deps_lost:
+                #conn.delete()
+                #deps_lost.remove(conn)
+        #else:
+        # restore original
+        restored = 0
+        neighs = Degree.objects.filter(from_user=user, distance = 0)
+        for neigh in neighs:
+            try:
+                shortest = Degree.objects.get(from_user=neigh.to_user, to_user=friend)
+                if '%s,%s' % (user.id, friend.id) not in shortest.path:
+                    obj, created = Degree.objects.get_or_create(from_user=user, to_user=friend)
+                    if created:
+                        obj.path="%s,%s" % (user.id, shortest.path)
+                        obj.distance = shortest.distance + 1
+                        obj.save()
+                        restored +=1
+                    else:
+                        if shortest.distance + 1 < obj.distance:
+                            obj.path="%s,%s" % (user.id, shortest.path)
+                            obj.distance = shortest.distance + 1
+                            obj.save()
+            except Degree.DoesNotExist:
+                continue
+
+        # reverse
+
+        neighs = Degree.objects.filter(from_user=friend, distance = 0)
+        for neigh in neighs:
+            try:
+                shortest = Degree.objects.get(from_user=neigh.to_user, to_user=user)
+                if '%s,%s' % (friend.id, user.id) not in shortest.path:
+                    obj, created = Degree.objects.get_or_create(from_user=friend, to_user=user)
+                    if created:
+                        obj.path="%s,%s" % (friend.id, shortest.path)
+                        obj.distance = shortest.distance + 1
+                        obj.save()
+                        restored +=1
+                    else:
+                         if shortest.distance + 1 < obj.distance:
+                            obj.path="%s,%s" % (friend.id, shortest.path)
+                            obj.distance = shortest.distance + 1
+                            obj.save()
+
+            except Degree.DoesNotExist:
+                continue
+
+
+
+        # FIXME
+        # if we still have someone left
+        # check last time through neigh
+        if deps_lost:
+            for dep in deps_lost:
                 neighs = Degree.objects.filter(from_user=dep.from_user, distance = 0)
                 for neigh in neighs:
                     try:
@@ -108,17 +242,9 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                                     updating = True
                     except Degree.DoesNotExist:
                         continue
-                # if no shortest found
-                # append to lost list
-                #if not updated:
-                    #deps_lost.append(dep)
 
-        deps_rev = list(deps_rev)
-        deps_rev_lost = list(deps_rev)
-        while updating_rev:
-            updating_rev = False
-            for dep in deps_rev:
-                #deps_rev.remove(dep)
+        if deps_rev_lost:
+            for dep in deps_rev_lost:
                 neighs = Degree.objects.filter(from_user=dep.from_user, distance = 0)
                 for neigh in neighs:
                     try:
@@ -141,61 +267,28 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                     except Degree.DoesNotExist:
                         continue
 
+        # if we still have losters,
+        # delete them
+
         if deps_lost:
-            # remove all connections
             removed_count += len(deps_lost)
             for conn in deps_lost:
                 conn.delete()
-        else:
-            # restre original
-            neighs = Degree.objects.filter(from_user=user, distance = 0)
-            for neigh in neighs:
-                try:
-                    shortest = Degree.objects.get(from_user=neigh.to_user, to_user=friend)
-                    if '%s,%s' % (user.id, friend.id) not in shortest.path:
-                        obj, created = Degree.objects.get_or_create(from_user=user, to_user=friend)
-                        if created:
-                            obj.path="%s,%s" % (user.id, shortest.path)
-                            obj.distance = shortest.distance + 1
-                            obj.save()
-                        else:
-                            if shortest.distance + 1 < obj.distance:
-                                obj.path="%s,%s" % (user.id, shortest.path)
-                                obj.distance = shortest.distance + 1
-                                obj.save()
-                except Degree.DoesNotExist:
-                    continue
+                #deps_lost.remove(conn)
 
         if deps_rev_lost:
             removed_count += len(deps_rev_lost)
             for conn in deps_rev_lost:
-                conn.delete()
-        else:
-            neighs = Degree.objects.filter(from_user=friend, distance = 0)
-            for neigh in neighs:
-                try:
-                    shortest = Degree.objects.get(from_user=neigh.to_user, to_user=user)
-                    if '%s,%s' % (friend.id, user.id) not in shortest.path:
-                        obj, created = Degree.objects.get_or_create(from_user=friend, to_user=user)
-                        if created:
-                            obj.path="%s,%s" % (friend.id, shortest.path)
-                            obj.distance = shortest.distance + 1
-                            obj.save()
-                        else:
-                             if shortest.distance + 1 < obj.distance:
-                                obj.path="%s,%s" % (friend.id, shortest.path)
-                                obj.distance = shortest.distance + 1
-                                obj.save()
 
-                except Degree.DoesNotExist:
-                    continue
+                conn.delete()
+                #deps_rev_lost.remove(conn)
 
         logger = logging.getLogger(__name__)
-        logger.warning('We removed: %s records, updated: %s, dependants: %s/2 ' % (removed_count, updated_count, dep_count))
+        logger.warning('We removed: %s records, updated: %s, restored %s, dependants: %s/2 ' % (removed_count, updated_count, restored, dep_count))
 
         return True
 
-    def _make_connection(user, friend, update=False):
+    def _make_connection(user=None, friend=None, update=False, updated=[]):
         """
         This function will find all dependent cells,
         make new connections
@@ -203,43 +296,42 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
         """
         created = 0
         updated_count = 0
-        updated = []
-        #import pdb;pdb.set_trace()
 
-        # if we have other connections here:
-        conns_inst_to = Degree.objects.filter(to_user=user)
-        conns_inst_from = Degree.objects.filter(from_user=user)
-        conns_frnd_to = Degree.objects.filter(to_user=friend)
-        conns_frnd_from = Degree.objects.filter(from_user=friend)
-        #caching results
-        pickle_str = cPickle.dumps(conns_inst_to)
-        qs1 = cPickle.loads(pickle_str)
-        pickle_str = cPickle.dumps(conns_inst_from)
-        qs2 = cPickle.loads(pickle_str)
-        pickle_str = cPickle.dumps(conns_frnd_to)
-        qs3 = cPickle.loads(pickle_str)
-        pickle_str = cPickle.dumps(conns_frnd_from)
-        qs4 = cPickle.loads(pickle_str)
-        # original connection between 2 nodes
-        conn, created_conn = Degree.objects.get_or_create(from_user=user, to_user=friend)
-        conn.path = "%s,%s" % (user.id, friend.id)
-        if not created_conn:
-            conn.distance = 0
-            update = True
-            if {'user':user,'friend':friend} not in updated:
-                updated.append({'user':user,'friend':friend})
-        # 2 way connection
-        reverse_conn, created_reverse_conn = Degree.objects.get_or_create(from_user=friend, to_user=user)
-        reverse_conn.path = "%s,%s" % (friend.id, user.id)
-        if not created_reverse_conn:
-            reverse_conn.distance = 0
-            update = True
-            if {'user':user,'friend':friend} not in updated:
-                updated.append({'user':user,'friend':friend})
+        if not update:
+            # if we have other connections here:
+            conns_inst_to = Degree.objects.filter(to_user=user)
+            conns_inst_from = Degree.objects.filter(from_user=user)
+            conns_frnd_to = Degree.objects.filter(to_user=friend)
+            conns_frnd_from = Degree.objects.filter(from_user=friend)
+            #caching results
+            pickle_str = cPickle.dumps(conns_inst_to)
+            qs1 = cPickle.loads(pickle_str)
+            pickle_str = cPickle.dumps(conns_inst_from)
+            qs2 = cPickle.loads(pickle_str)
+            pickle_str = cPickle.dumps(conns_frnd_to)
+            qs3 = cPickle.loads(pickle_str)
+            pickle_str = cPickle.dumps(conns_frnd_from)
+            qs4 = cPickle.loads(pickle_str)
+            # original connection between 2 nodes
+            conn, created_conn = Degree.objects.get_or_create(from_user=user, to_user=friend)
+            conn.path = "%s,%s" % (user.id, friend.id)
+            if not created_conn:
+                conn.distance = 0
+                update = True
+                if {'user':user,'friend':friend} not in updated:
+                    updated.append({'user':user,'friend':friend})
+            # 2 way connection
+            reverse_conn, created_reverse_conn = Degree.objects.get_or_create(from_user=friend, to_user=user)
+            reverse_conn.path = "%s,%s" % (friend.id, user.id)
+            if not created_reverse_conn:
+                reverse_conn.distance = 0
+                update = True
+                if {'user':user,'friend':friend} not in updated:
+                    updated.append({'user':user,'friend':friend})
 
-        # saving
-        conn.save()
-        reverse_conn.save()
+            # saving
+            conn.save()
+            reverse_conn.save()
 
 
         if update:
@@ -363,10 +455,16 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                 logger.warning('We updated: %s records' % (dependant))
             """
         else:
+            qs1_count = qs1.count()
+            qs2_count = qs2.count()
+            qs3_count = qs3.count()
+            qs4_count = qs4.count()
             # We only creating connections for current user
             # but we also need connections for all neighbours
-            if qs1.count() > 0:
-                created += qs1.count()
+            if qs1_count > 0:
+                created += qs1_count
+                if qs4_count > 0:
+                    created += (qs1_count) * (qs4_count - 1)
                 # we need to create passive connection for every connected user
                 for cn in qs1:
                     Degree.objects.get_or_create(from_user=cn.from_user,\
@@ -381,8 +479,10 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                             distance = cn.distance + 1 + cnn.distance + 1)
 
             # and reverse
-            if qs2.count() > 0:
-                created += qs2.count()
+            if qs2_count > 0:
+                created += qs2_count
+                if qs3_count > 0:
+                    created += (qs2_count) * (qs3_count - 1)
                 # we need to create passive connection for every connected user
                 for cn in qs2:
                     Degree.objects.get_or_create(from_user=friend,\
@@ -396,8 +496,10 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                             distance = cnn.distance + 1 + cn.distance + 1)
 
             # if we have other connections here:
-            if qs3.count() > 0:
-                created += qs3.count()
+            if qs3_count > 0:
+                created += qs3_count
+                if qs2_count > 0:
+                    created += (qs3_count) * (qs2_count - 1)
                 # we need to create passive connection for every connected user
                 for cn in qs3:
                     Degree.objects.get_or_create(from_user=cn.from_user,\
@@ -411,9 +513,10 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                             distance = cn.distance + 1 + cnn.distance + 1)
             # we also want to make reverse connection here,
             # since we dont know who is friended by whoom
-            if qs4.count() > 0:
-                #created += qs4.count() * (qs1.count() + 1) - qs1.count()
-                created += qs4.count()
+            if qs4_count > 0:
+                created += qs4_count
+                if qs1_count > 0:
+                    created += (qs4_count) * (qs1_count - 1)
                 for cn in qs4:
                     Degree.objects.get_or_create(from_user=user,\
                             to_user=cn.to_user,\
