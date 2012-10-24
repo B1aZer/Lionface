@@ -174,7 +174,8 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
         for neigh in neighs:
             try:
                 shortest = Degree.objects.get(from_user=neigh.to_user, to_user=friend)
-                if '%s,%s' % (user.id, friend.id) not in shortest.path:
+                #if '%s,%s' % (user.id, friend.id) not in shortest.path:
+                if not re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (user.id, friend.id),  shortest.path):
                     obj, created = Degree.objects.get_or_create(from_user=user, to_user=friend)
                     if created:
                         obj.path="%s,%s" % (user.id, shortest.path)
@@ -195,7 +196,8 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
         for neigh in neighs:
             try:
                 shortest = Degree.objects.get(from_user=neigh.to_user, to_user=user)
-                if '%s,%s' % (friend.id, user.id) not in shortest.path:
+                #if '%s,%s' % (friend.id, user.id) not in shortest.path:
+                if not re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (friend.id, user.id),  shortest.path):
                     obj, created = Degree.objects.get_or_create(from_user=friend, to_user=user)
                     if created:
                         obj.path="%s,%s" % (friend.id, shortest.path)
@@ -223,9 +225,11 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                     try:
                         shortest = Degree.objects.get(from_user=neigh.to_user, to_user=dep.to_user)
                         # hooray! shortest pass
-                        if '%s,%s' % (user.id, friend.id) not in shortest.path:
+                        #if '%s,%s' % (user.id, friend.id) not in shortest.path:
+                        if not re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (user.id, friend.id),  shortest.path):
                             # check length (and current path)
-                            if '%s,%s' % (user.id, friend.id) in dep.path:
+                            #if '%s,%s' % (user.id, friend.id) in dep.path:
+                            if re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (user.id, friend.id),  dep.path):
                                 # if we have wrong path
                                 dep.path = "%s,%s" % (dep.from_user.id, shortest.path)
                                 dep.distance = shortest.distance + 1
@@ -249,8 +253,10 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                 for neigh in neighs:
                     try:
                         shortest = Degree.objects.get(from_user=neigh.to_user, to_user=dep.to_user)
-                        if '%s,%s' % (friend.id, user.id) not in shortest.path:
-                            if '%s,%s' % (friend.id, user.id) in dep.path:
+                        #if '%s,%s' % (friend.id, user.id) not in shortest.path:
+                        if not re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (friend.id, user.id),  shortest.path):
+                            #if '%s,%s' % (friend.id, user.id) in dep.path:
+                            if re.match(r'.*(,|\A)%s,%s(,|\Z).*' % (friend.id, user.id),  dep.path):
                                 dep.path = "%s,%s" % (dep.from_user.id, shortest.path)
                                 dep.distance = shortest.distance + 1
                                 dep.save()
