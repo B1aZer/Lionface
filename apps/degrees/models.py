@@ -363,6 +363,8 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                 logger.warning('We updated: %s records' % (dependant))
             """
         else:
+            # We only creating connections for current user
+            # but we also need connections for all neighbours
             if qs1.count() > 0:
                 created += qs1.count()
                 # we need to create passive connection for every connected user
@@ -371,6 +373,13 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                             to_user=friend,\
                             path="%s,%s" % (cn.path, friend.id),\
                             distance = cn.distance + 1)
+                    # we also need conn's for every neighbour of this user
+                    for cnn in qs4:
+                        Degree.objects.get_or_create(from_user=cn.from_user,\
+                            to_user=cnn.to_user,\
+                            path="%s,%s" % (cn.path, cnn.path),\
+                            distance = cn.distance + 1 + cnn.distance + 1)
+
             # and reverse
             if qs2.count() > 0:
                 created += qs2.count()
@@ -380,6 +389,11 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                             to_user=cn.to_user,\
                             path="%s,%s" % (friend.id, cn.path),\
                             distance = cn.distance + 1)
+                    for cnn in qs3:
+                        Degree.objects.get_or_create(from_user=cnn.from_user,\
+                            to_user=cn.to_user,\
+                            path="%s,%s" % (cnn.path, cn.path),\
+                            distance = cnn.distance + 1 + cn.distance + 1)
 
             # if we have other connections here:
             if qs3.count() > 0:
@@ -390,15 +404,26 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                             to_user=user,\
                             path="%s,%s" % (cn.path, user.id),\
                             distance = cn.distance + 1)
+                    for cnn in qs2:
+                        Degree.objects.get_or_create(from_user=cn.from_user,\
+                            to_user=cnn.to_user,\
+                            path="%s,%s" % (cn.path, cnn.path),\
+                            distance = cn.distance + 1 + cnn.distance + 1)
             # we also want to make reverse connection here,
             # since we dont know who is friended by whoom
             if qs4.count() > 0:
+                #created += qs4.count() * (qs1.count() + 1) - qs1.count()
                 created += qs4.count()
                 for cn in qs4:
                     Degree.objects.get_or_create(from_user=user,\
                             to_user=cn.to_user,\
-                            path="%s,%s" % (user.id, cn.path ),\
+                            path="%s,%s" % (user.id, cn.path),\
                             distance = cn.distance + 1)
+                    for cnn in qs1:
+                        Degree.objects.get_or_create(from_user=cnn.from_user,\
+                            to_user=cn.to_user,\
+                            path="%s,%s" % (cnn.path, cn.path),\
+                            distance = cnn.distance + 1 + cn.distance + 1)
             # saving later, so we wont able to see new connection above
             # this is not necessary since we caching results above
             # saving above
