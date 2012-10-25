@@ -1662,7 +1662,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bcc966', end
 }
 
 .attach {
-	font-size: 8pt; color: #AAA; margin-left: 10px; display: inline-block; cursor: pointer;
+	font-size: 8pt; color: #AAA; margin-right: 10px; display: inline-block; cursor: pointer;
 }
 
 .attach:hover {
@@ -1670,23 +1670,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bcc966', end
 }
 
 .float_left {
-	float: left; width: 230px; padding: 10px;
-}
-
-.float_left #postbox {
-	width: 240px;  -moz-box-shadow: -6px 0 12px -4px #999; box-shadow: -6px 0 12px -4px #999; background: #FFF; padding: 0 10px; -moz-border-radius: 10px 0 0 10px; border-radius: 10px 0 0 10px;
-}
-
-.updates_textarea {
-	line-height:1; font-size: 15px; width: 200px; height: 100px; border-color: #DDD; -moz-border-radius: 3px; border-radius: 3px;
+	position: absolute; left: 0px; top: 0px; width: 230px; padding: 10px; margin: 0px;
 }
 
 .page_container {
-	width: 900px; background: #EEE; text-align: left; -moz-box-shadow: 0 4px 8px -4px #555; box-shadow: 0 4px 8px -4px #555; -moz-border-radius: 3px; border-radius: 3px;
+	position: relative; width: 900px; background: #EEE; text-align: left; -moz-box-shadow: 0 4px 8px -4px #555; box-shadow: 0 4px 8px -4px #555; -moz-border-radius: 3px; border-radius: 3px;
 }
 
 .page_center {
-	width: 630px; padding: 10px; background: #FFF; position: relative; left: 250px; min-height: 350px; -moz-box-shadow: -6px 0 12px -6px #999; box-shadow: -6px 0 12px -6px #999;
+	width: 630px; min-height: 300px; padding: 10px; background: #FFF; position: relative; left: 250px; -moz-box-shadow: -6px 0 12px -6px #999; box-shadow: -6px 0 12px -6px #999;
 }
 
 .friend_container {
