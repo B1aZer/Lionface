@@ -259,8 +259,6 @@ a.create:hover {
 }
 
 .album_box {
-	display: block;
-	width: 860px;
 	padding: 14px 0px 10px 0px;
 	background: #FAFAFA;
 	border: 5px dashed #EEE;
