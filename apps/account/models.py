@@ -271,7 +271,10 @@ class UserProfile(User):
         return self.message_to.filter(viewed=False).count()
 
     def new_notifcations(self):
-        return self.notification_set.filter(read=False).exclude(type='MC').count()
+        return self.notification_set.filter(read=False) \
+                .exclude(type='MC') \
+                .exclude(type='MF') \
+                .count()
 
     def add_follower(self, person):
         relationship, created = Relationship.objects.get_or_create(

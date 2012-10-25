@@ -1139,7 +1139,7 @@ a.nav_notifications:hover {
 	color: #777;
 }
 
-a.new_notification {
+a.new_notification, span.new_notification {
 	color: #900;
 } 
 
