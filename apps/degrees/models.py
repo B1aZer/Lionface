@@ -213,9 +213,6 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
             except Degree.DoesNotExist:
                 continue
 
-
-
-        # FIXME
         # if we still have someone left
         # check last time through neigh
         if deps_lost:

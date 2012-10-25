@@ -29,5 +29,7 @@ def format_notification(notification):
         return render_to_string('notification/_follow_shared.html', data)
     if notification.type == 'MC':
         return render_to_string('notification/_comment_multiple.html', data)
+    if notification.type == 'MF':
+        return render_to_string('notification/_follow_comment_multiple.html', data)
     return ""
 

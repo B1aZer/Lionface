@@ -1,6 +1,6 @@
 <li class="comment_submitted notification {type: 'comment post', id: '{{ notification.content_object.id }}'}">
   <div style="padding: 15px;" class="link-output">
-      <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}> 2 people </span><br /><span style="color: #777; text-decoration: underline;">commented</span> on your post.
+      <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}> {{ notification.people_counter }} people </span><br /><span style="color: #777; text-decoration: underline;">commented</span> on your post.
   </div>
   <div class="separator"></div>
 </li>

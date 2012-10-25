@@ -16,6 +16,7 @@ NOTIFICATION_TYPES = (
     ('FF', 'Following Acquired'),
     ('FC', 'Follow Comment'),
     ('MC', 'Multiple Comment'),
+    ('MF', 'Multiple Comment Following'),
 )
 
 class Notification(models.Model):
@@ -23,6 +24,7 @@ class Notification(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     type = models.CharField(max_length='2', choices=NOTIFICATION_TYPES)
     read = models.BooleanField(default=False)
+    people_counter = models.IntegerField(default=0)
     hidden = models.BooleanField(default=False)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -42,7 +44,17 @@ class Notification(models.Model):
         if self.type == 'MC':
             original_notfs = Notification.objects.filter(user=self.user, \
                     type='CS', \
-                    object_id = self.content_object.id)
+                    object_id = self.content_object.id,
+                    read = False)
+            if original_notfs.count():
+                original_notfs.update(read=True)
+            self.read = True
+            self.save()
+        if self.type == 'MF':
+            original_notfs = Notification.objects.filter(user=self.user, \
+                    type='FC', \
+                    object_id = self.content_object.id,
+                    read = False)
             if original_notfs.count():
                 original_notfs.update(read=True)
             self.read = True
@@ -95,31 +107,6 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
     if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.get_post().following.all() \
             and comment.user not in news_post.get_owner().get_blocked():
         Notification(user=comment.content_object.get_post().get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
-        # check if notification for this object already exist
-        #import pdb;pdb.set_trace()
-        content_type = ContentType.objects.get_for_model(NewsItem)
-        notfs =  Notification.objects.filter(user=comment.content_object.get_post().get_owner(), \
-                content_type=content_type, \
-                object_id = comment.content_object.id, \
-                read = False).order_by('-date')
-        if notfs.count():
-            # check if MC for this comment already exist
-            notf = Notification.objects.filter(user=comment.content_object.get_post().get_owner(), \
-                    type='MC', \
-                    content_type=content_type, \
-                    object_id = comment.content_object.id)
-            # always creating
-            Notification(user=comment.content_object.get_post().get_owner(), \
-                    type='MC', \
-                    #other_user=comment.user, \
-                    content_object=comment.content_object).save()
-            # hide all original notifications
-            original_notfs = Notification.objects.filter(user=comment.content_object.get_post().get_owner(), \
-                    type='CS', \
-                    object_id = comment.content_object.id, \
-                    read = False)
-            if original_notfs.count():
-                original_notfs.update(hidden=True)
     #create notifiactions for all followers of this post
     try:
         post = news_post.get_post()
@@ -127,13 +114,11 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
             for user in post.following.all():
                 if user <> comment.user and user <> post.get_owner() \
                         and comment.user not in user.get_blocked():
-                    # check if notification for this object alrady exist
-                    if Notification.objects.filter(user=user, content_object=comment.content_object).count():
-                            pass
-                    else:
-                        Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
+                    Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
     except:
-        pass
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning('Error in notifications')
     #adding this post to following list
     comment.user.follows.add(comment.content_object.get_post())
 comment_was_posted.connect(create_comment_notifiaction)
@@ -155,4 +140,42 @@ def delete_dated_notifications(sender, instance, using, **kwargs):
     notf.delete()
 pre_delete.connect(delete_dated_notifications, sender=Post)
 pre_delete.connect(delete_dated_notifications, sender=NewsItem)
+
+def update_notification_count(sender, instance, created, **kwargs):
+    if instance.type in ('CS','FC'):
+        if instance.type == 'CS': notification_type = 'MC'
+        if instance.type == 'FC': notification_type = 'MF'
+        #import pdb;pdb.set_trace()
+    # check if notification for this object already exist
+        notfs =  Notification.objects.filter(user=instance.user, \
+                content_type=instance.content_type, \
+                object_id = instance.content_object.id, \
+                read = False).order_by('-date')
+        if notfs.count() > 1:
+            # check if MC for this comment already exist and have not yet been read
+            notf = Notification.objects.filter(user=instance.user, \
+                    type=notification_type, \
+                    content_type=instance.content_type, \
+                    object_id = instance.content_object.id,
+                    read = False)
+            if not notf.count():
+                obj = Notification(user=instance.user, \
+                        type=notification_type, \
+                        #other_user=comment.user, \
+                        content_object=instance.content_object)
+                obj.people_counter = 2
+                obj.save()
+            else:
+                obj = notf.get()
+                obj.people_counter = obj.people_counter + 1
+                obj.save()
+            # hide all original notifications
+            original_notfs = Notification.objects.filter(user=instance.user, \
+                    type=instance.type, \
+                    object_id = instance.content_object.id, \
+                    read = False)
+            if original_notfs.count():
+                original_notfs.update(hidden=True)
+post_save.connect(update_notification_count, sender=Notification)
+
 
