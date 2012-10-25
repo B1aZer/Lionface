@@ -2,6 +2,7 @@ settings_local.py
 *.pyc
 *.db
 *.log
+logging.log.*
 celerybeat-schedule.db
 celerybeat.pid
 celerybeat-schedule
