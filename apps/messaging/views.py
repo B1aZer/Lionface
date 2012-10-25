@@ -151,7 +151,6 @@ def show(request, username=None):
         data['sort'] = request.user.check_option('reverse') or 'asc'
         data['page'] = page
         data['nextpage'] = next_page
-
         data['mr'] = Messaging.objects.filter(user_to=request.user, user = user).count()
         data['ms'] = Messaging.objects.filter(user=request.user, user_to = user).count()
 

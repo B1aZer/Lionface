@@ -19,7 +19,7 @@ def messages_check(request):
 
 def notifiactions_check(request):
     data = {'status':'ok'}
-    new_notifiactions = Notification.objects.filter(user=request.user,read=False).count()
+    new_notifiactions = request.user.new_notifcations()
 
     data['notfs'] = new_notifiactions
 

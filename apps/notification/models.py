@@ -15,6 +15,7 @@ NOTIFICATION_TYPES = (
     ('PP', 'Profile Post'),
     ('FF', 'Following Acquired'),
     ('FC', 'Follow Comment'),
+    ('MC', 'Multiple Comment'),
 )
 
 class Notification(models.Model):
@@ -22,6 +23,7 @@ class Notification(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     type = models.CharField(max_length='2', choices=NOTIFICATION_TYPES)
     read = models.BooleanField(default=False)
+    hidden = models.BooleanField(default=False)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
@@ -33,7 +35,16 @@ class Notification(models.Model):
     other_user = models.ForeignKey(UserProfile, null=True, related_name='other_user')
 
     def mark_read(self):
-        if not self.read:
+        if not self.read and self.type != 'MC':
+            self.read = True
+            self.save()
+        # multiple
+        if self.type == 'MC':
+            original_notfs = Notification.objects.filter(user=self.user, \
+                    type='CS', \
+                    object_id = self.content_object.id)
+            if original_notfs.count():
+                original_notfs.update(read=True)
             self.read = True
             self.save()
 
@@ -84,6 +95,31 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
     if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.get_post().following.all() \
             and comment.user not in news_post.get_owner().get_blocked():
         Notification(user=comment.content_object.get_post().get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
+        # check if notification for this object already exist
+        #import pdb;pdb.set_trace()
+        content_type = ContentType.objects.get_for_model(NewsItem)
+        notfs =  Notification.objects.filter(user=comment.content_object.get_post().get_owner(), \
+                content_type=content_type, \
+                object_id = comment.content_object.id, \
+                read = False).order_by('-date')
+        if notfs.count():
+            # check if MC for this comment already exist
+            notf = Notification.objects.filter(user=comment.content_object.get_post().get_owner(), \
+                    type='MC', \
+                    content_type=content_type, \
+                    object_id = comment.content_object.id)
+            # always creating
+            Notification(user=comment.content_object.get_post().get_owner(), \
+                    type='MC', \
+                    #other_user=comment.user, \
+                    content_object=comment.content_object).save()
+            # hide all original notifications
+            original_notfs = Notification.objects.filter(user=comment.content_object.get_post().get_owner(), \
+                    type='CS', \
+                    object_id = comment.content_object.id, \
+                    read = False)
+            if original_notfs.count():
+                original_notfs.update(hidden=True)
     #create notifiactions for all followers of this post
     try:
         post = news_post.get_post()
@@ -91,7 +127,11 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
             for user in post.following.all():
                 if user <> comment.user and user <> post.get_owner() \
                         and comment.user not in user.get_blocked():
-                    Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
+                    # check if notification for this object alrady exist
+                    if Notification.objects.filter(user=user, content_object=comment.content_object).count():
+                            pass
+                    else:
+                        Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
     except:
         pass
     #adding this post to following list

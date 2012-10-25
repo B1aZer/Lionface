@@ -15,8 +15,8 @@ except ImportError:
 @login_required
 def notifications(request, username=None):
     #import pdb;pdb.set_trace()
-    list1 = Notification.objects.filter(user=request.user, type="FR").order_by("-date")
-    list2 = Notification.objects.filter(user=request.user).exclude(type="FR").order_by("-date")
+    list1 = Notification.objects.filter(user=request.user, type="FR").exclude(hidden=True).order_by("-date")
+    list2 = Notification.objects.filter(user=request.user).exclude(type="FR").exclude(hidden=True).order_by("-date")
     result_list = list(chain(list1, list2))
 
     #remove deleted content posts:

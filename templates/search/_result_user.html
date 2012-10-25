@@ -6,25 +6,24 @@
 <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a> <div class="username"> {{ user.username }}  </div><br/>
 <span class="subtext" style="margin: 7px 0;">
 
-    {% if current_user|mutual_friends:user %} 
+{% if current_user|mutual_friends:user %} 
         <div class="mutual_friends">Mutual Friends: {{ current_user|mutual_friends:user }}</div>
-    {% endif %}
+{% endif %}
 {% if current_user|has_friend:user %}
     <a href='javascript:;' class="link-remove-friend {user: {{ user.id }}}">- Remove</a>
-{% else %}
-  {% if current_user|has_friend_request:user %}
-    Friend request pending.
-  {% else %}
+{% elif current_user|has_friend_request:user %}
+        Friend request pending.
+{% elif user|in_followers:current_user %}
     {% if user|check_friend_request:current_user %}    
-        <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">+ Add</a>
+    <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">+ Add</a>
     {% endif %}
-  {% endif %}
-    {% if user|in_followers:request.user %}
-	  <a href=javascript:;' class="link-unfollow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >- Unfollow</a>
-    {% else %}
-        {% if user|check_following:current_user %}    
-          <a href=javascript:;' class="link-follow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >+ Follow</a>
-        {% endif %}
+    <a href=javascript:;' class="link-unfollow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >- Unfollow</a>
+{% else %}
+    {% if user|check_friend_request:current_user %}
+    <a href='javascript:;' class="link-add-friend {user: {{ user.id }}}">+ Add</a>
+    {% endif %}
+    {% if user|check_following:current_user %}    
+    <a href=javascript:;' class="link-follow { user: '{{ user.id }}' }" style="margin-left: 10px; cursor: pointer;" >+ Follow</a>
     {% endif %}
 {% endif %}
 

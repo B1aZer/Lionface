@@ -5,7 +5,7 @@
 
 <div class="mess{% if not message.read %} mess_unread{% endif %}" {% if request.user == message.user %} style="left: 85px; border: 2px dashed #EEE; background: #FFF;" {% endif %}>
 <a href="{{ message.user.get_absolute_url }}">{{ message.user.full_name }}</a> <span style="display: none;">to {{ message.user_to }}</span> <span style="color: #AAA; font-size: 8pt; margin-left: 10px;">  {{ message.date }}</span>
-<p>{{ message.content|escaping|smileys}}</p>
+<p>{{ message.content|escaping|smileys|linebreaksbr }}</p>
 </div>
 
 {% endfor %}

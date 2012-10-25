@@ -365,7 +365,8 @@ class NewsItem(models.Model):
         value = comments.get_model().objects.filter(
         content_type = ContentType.objects.get_for_model(self),
         object_pk = self.pk,
-        site__pk = settings.SITE_ID
+        site__pk = settings.SITE_ID,
+        is_removed = False,
         ).exclude(user__in=user.get_blocked()).count()
         return value
 
