@@ -15,8 +15,11 @@ NOTIFICATION_TYPES = (
     ('PP', 'Profile Post'),
     ('FF', 'Following Acquired'),
     ('FC', 'Follow Comment'),
+    ('FS', 'Follow Shared'),
     ('MC', 'Multiple Comment'),
     ('MF', 'Multiple Comment Following'),
+    ('MS', 'Multiple Shared'),
+    ('MM', 'Multiple Shared Following'),
 )
 
 class Notification(models.Model):
@@ -24,7 +27,7 @@ class Notification(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     type = models.CharField(max_length='2', choices=NOTIFICATION_TYPES)
     read = models.BooleanField(default=False)
-    people_counter = models.IntegerField(default=0)
+    #people_counter = models.IntegerField(default=0)
     hidden = models.BooleanField(default=False)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -36,8 +39,11 @@ class Notification(models.Model):
     # General other user (used for Friend Accept, etc)
     other_user = models.ForeignKey(UserProfile, null=True, related_name='other_user')
 
+    def people_counter(self):
+        return self.extra_set.filter(user_id__gt = 0).count() or 1
+
     def mark_read(self):
-        if not self.read and self.type != 'MC':
+        if not self.read:
             self.read = True
             self.save()
         # multiple
@@ -48,8 +54,6 @@ class Notification(models.Model):
                     read = False)
             if original_notfs.count():
                 original_notfs.update(read=True)
-            self.read = True
-            self.save()
         if self.type == 'MF':
             original_notfs = Notification.objects.filter(user=self.user, \
                     type='FC', \
@@ -57,8 +61,26 @@ class Notification(models.Model):
                     read = False)
             if original_notfs.count():
                 original_notfs.update(read=True)
-            self.read = True
-            self.save()
+        if self.type == 'MS':
+            object_ids = [x.id for x in SharePost.objects.filter(object_id = self.content_object.id)]
+            original_notfs = Notification.objects.filter(user=self.user, \
+                    type='PS', \
+                    object_id__in = object_ids,
+                    read = False)
+            for origianl_not in original_notfs:
+                    self.extra_set.create(item_id=origianl_not.content_object.id)
+            if original_notfs.count():
+                original_notfs.update(read=True)
+        if self.type == 'MM':
+            object_ids = [x.id for x in SharePost.objects.filter(object_id = self.content_object.id)]
+            original_notfs = Notification.objects.filter(user=self.user, \
+                    type='FS', \
+                    object_id__in = object_ids,
+                    read = False)
+            for origianl_not in original_notfs:
+                    self.extra_set.create(item_id=origianl_not.content_object.id)
+            if original_notfs.count():
+                original_notfs.update(read=True)
 
 def create_friend_request_notification(sender, instance, created, **kwargs):
     #import pdb;pdb.set_trace()
@@ -142,40 +164,57 @@ pre_delete.connect(delete_dated_notifications, sender=Post)
 pre_delete.connect(delete_dated_notifications, sender=NewsItem)
 
 def update_notification_count(sender, instance, created, **kwargs):
-    if instance.type in ('CS','FC'):
+    """ merge unread notifications to one """
+    if instance.type in ('CS','FC','PS','FS'):
         if instance.type == 'CS': notification_type = 'MC'
         if instance.type == 'FC': notification_type = 'MF'
-        #import pdb;pdb.set_trace()
-    # check if notification for this object already exist
+        if instance.type == 'PS': notification_type = 'MS'
+        if instance.type == 'FS': notification_type = 'MM'
+        # check if notification for this object already exist
+        if instance.type in ('PS','FS'):
+            # get all shrepost's ids for parent (contentpost)
+            object_ids = [x.id for x in SharePost.objects.filter(object_id = instance.content_object.get_original_post().id)]
+            object_id = instance.content_object.get_original_post().id
+            content_object = instance.content_object.get_original_post()
+        else:
+            object_ids = [instance.content_object.id]
+            object_id = instance.content_object.id
+            content_object = instance.content_object
         notfs =  Notification.objects.filter(user=instance.user, \
                 content_type=instance.content_type, \
-                object_id = instance.content_object.id, \
+                object_id__in = object_ids, \
                 read = False).order_by('-date')
         if notfs.count() > 1:
-            # check if MC for this comment already exist and have not yet been read
+            # check if M for this comment already exist and have not yet been read
             notf = Notification.objects.filter(user=instance.user, \
                     type=notification_type, \
-                    content_type=instance.content_type, \
-                    object_id = instance.content_object.id,
+                    #content_type=instance.content_type, \
+                    object_id = object_id,
                     read = False)
             if not notf.count():
                 obj = Notification(user=instance.user, \
                         type=notification_type, \
                         #other_user=comment.user, \
-                        content_object=instance.content_object)
-                obj.people_counter = 2
+                        content_object=content_object)
+                #obj.people_counter = 2
                 obj.save()
             else:
                 obj = notf.get()
-                obj.people_counter = obj.people_counter + 1
-                obj.save()
+                if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                    obj.extra_set.create(user_id=instance.other_user.id)
+                #obj.people_counter = obj.people_counter + 1
+                #obj.save()
             # hide all original notifications
             original_notfs = Notification.objects.filter(user=instance.user, \
                     type=instance.type, \
-                    object_id = instance.content_object.id, \
+                    object_id__in = object_ids, \
                     read = False)
             if original_notfs.count():
                 original_notfs.update(hidden=True)
 post_save.connect(update_notification_count, sender=Notification)
 
+class Extra(models.Model):
+    notification = models.ForeignKey(Notification)
+    item_id = models.IntegerField(null=True)
+    user_id = models.IntegerField(default=0)
 

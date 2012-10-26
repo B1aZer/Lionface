@@ -1,4 +1,4 @@
-<li class="comment_submitted notification {type: 'comment post', id: '{{ notification.content_object.id }}'}">
+<li class="follow_shared notification {type: 'shared_multiple', id: '{{ notification.id }}'}">
   <div style="padding: 15px;" class="link-output">
       <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}>
           {% if notification.people_counter == 1 %}
@@ -6,8 +6,9 @@
           {% else %}
               {{ notification.people_counter }} people
           {% endif %}
-      </span><br /><span style="color: #777; text-decoration: underline;">commented</span> on your post.
+      </span><br /><span style="color: #5AE;">shared</span> a post.<div style="font-size: 8pt; color: #999; margin-top: 5px;">You are following this post.</div>
   </div>
   <div class="separator"></div>
 </li>
+
 

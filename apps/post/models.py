@@ -36,9 +36,12 @@ class QuerySet(models.query.QuerySet):
 
 
 class CustomQuerySet(QuerySet):
-    def get_news_post(self):
+    def get_news_post(self, ids = None):
         """ getting news feed for post ids"""
-        news = NewsItem.objects.filter(post_id__in=self.values_list('id', flat=True))
+        if ids:
+            news = NewsItem.objects.filter(post_id__in=ids)
+        else:
+            news = NewsItem.objects.filter(post_id__in=self.values_list('id', flat=True))
         return news
 
 

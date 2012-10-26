@@ -6,7 +6,7 @@ from django.template import RequestContext,loader
 from models import *
 from account.models import UserProfile
 from tags.models import Tag
-from post.models import NewsItem
+from post.models import NewsItem, Post
 
 from tasks import DeleteNewsFeeds
 
@@ -169,6 +169,7 @@ def follow(request):
 
 def show(request):
     data = {'status': 'OK'}
+    items = []
     if request.method == 'POST' and 'post_id' in request.POST:
         post_type = request.POST['post_type']
         post_id = request.POST['post_id']
@@ -179,17 +180,7 @@ def show(request):
             except ObjectDoesNotExist:
                 data['html'] = "Sorry no such post"
                 return HttpResponse(json.dumps(data), "application/json")
-
-            post = NewsItem.objects.filter(post=cont_post)
-            if len(post) > 0:
-                t = loader.get_template('post/_feed.html')
-                new_post = post
-                c = RequestContext(request,
-                        {
-                            'items': new_post,
-                            'notification':True,
-                        })
-                data['html'] = t.render(c)
+            items = NewsItem.objects.filter(post=cont_post)
 
         if post_type == 'share post':
             try:
@@ -197,30 +188,28 @@ def show(request):
             except ObjectDoesNotExist:
                 data['html'] = "Sorry no such post"
                 return HttpResponse(json.dumps(data), "application/json")
-
-            post = NewsItem.objects.filter(post=share_post)
-            if len(post) > 0:
-                t = loader.get_template('post/_feed.html')
-                new_post = post
-                c = RequestContext(request,
-                        {
-                            'items': new_post,
-                            'notification':True,
-                        })
-                data['html'] = t.render(c)
+            items = NewsItem.objects.filter(post=share_post)
 
         if post_type == 'comment post':
             try:
-                comm_post = NewsItem.objects.filter(id=int(post_id))
+                items = NewsItem.objects.filter(id=int(post_id))
             except ObjectDoesNotExist:
                 data['html'] = "Sorry no such post"
                 return HttpResponse(json.dumps(data), "application/json")
 
-            if len(comm_post) > 0:
+        if post_type == 'shared_multiple':
+            from notification.models import Extra
+            post_ids = [x.item_id for x in Extra.objects.filter(notification__id = post_id)]
+            #post_ids = post_id.replace('[','').replace(']','').split(',')
+            #post_ids = [x.id for x in SharePost.objects.filter(object_id = int(post_id))]
+            if post_ids:
+                items = Post.objects.get_news_post(post_ids)
+
+        if len(items) > 0:
                 t = loader.get_template('post/_feed.html')
                 c = RequestContext(request,
                         {
-                            'items': comm_post,
+                            'items': items,
                             'notification':True,
                         })
                 data['html'] = t.render(c)

@@ -274,6 +274,8 @@ class UserProfile(User):
         return self.notification_set.filter(read=False) \
                 .exclude(type='MC') \
                 .exclude(type='MF') \
+                .exclude(type='MS') \
+                .exclude(type='MM') \
                 .count()
 
     def add_follower(self, person):

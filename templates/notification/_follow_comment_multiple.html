@@ -1,6 +1,12 @@
 <li class="follow_comment notification {type: 'comment post', id: '{{ notification.content_object.id }}'}">
 <div style="padding: 15px;" class="link-output">
-      <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}>{{ notification.people_counter }} people</span><br /><span style="color: #777; text-decoration: underline;">commented</span> on a post.<div style="font-size: 8pt; color: #999; margin-top: 5px;">You are following this post.</div>
+      <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}>
+          {% if notification.people_counter == 1 %}
+              1 user
+          {% else %}
+              {{ notification.people_counter }} people
+          {% endif %}
+      </span><br /><span style="color: #777; text-decoration: underline;">commented</span> on a post.<div style="font-size: 8pt; color: #999; margin-top: 5px;">You are following this post.</div>
   </div>
   <div class="separator"></div>
 </li>
