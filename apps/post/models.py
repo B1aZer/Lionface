@@ -175,7 +175,7 @@ class ContentPost(Post):
         self.content = bleach.clean(self.content)
         # Embed videos
         self.content = replace(self.content,max_width=535,fixed_width=535)
-        # Linkify 
+        # Linkify
         self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
 
         return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
@@ -202,6 +202,9 @@ class ContentPost(Post):
 
     def get_owner(self):
         return self.user
+
+    def get_wall_user(self):
+        return self.user_to   
 
     def privacy(self):
         return self.type
@@ -338,6 +341,9 @@ class NewsItem(models.Model):
         except:
             return False
         return original.user
+
+    def get_wall_user(self):
+        return self.user
 
     @property
     def get_privacy(self):
