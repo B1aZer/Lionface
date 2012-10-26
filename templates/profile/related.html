@@ -3,10 +3,14 @@
 
 {% block content_title %} <a href="{{ profile_user.get_absolute_url }}" class="name_link">{{ profile_user.full_name }}</a> | Community{% endblock %}
 {% block content_middle %}
-{% if profile_user == user %}
-<span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user|show_friend_count }}</span>
-<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user.get_followers_count }} Follower{{ user.get_followers_count|pluralize }}</span>
-<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ user.get_following_count }} Following</span>
+{% if profile_user|check_friends_visibility:request.user %}
+<span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ profile_user|show_friend_count }}</span>
+{% endif %}
+{% if profile_user|check_follower_visibility:request.user %}
+<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ profile_user.get_followers_count }} Follower{{ user.get_followers_count|pluralize }}</span>
+{% endif %}
+{% if profile_user|check_following_visibility:request.user %}
+<span style="color: transparent;">| |</span> <span style="font-size: 8pt; color: #999; margin-right: 4px; padding: 8px;">{{ profile_user.get_following_count }} Following</span>
 {% endif %}
 {% endblock %}
 {% block content_subtitle %}
