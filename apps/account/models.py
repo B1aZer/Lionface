@@ -276,6 +276,8 @@ class UserProfile(User):
                 .exclude(type='MF') \
                 .exclude(type='MS') \
                 .exclude(type='MM') \
+                .exclude(type='FM') \
+                .exclude(type='MP') \
                 .count()
 
     def add_follower(self, person):

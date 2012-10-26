@@ -197,7 +197,7 @@ def show(request):
                 data['html'] = "Sorry no such post"
                 return HttpResponse(json.dumps(data), "application/json")
 
-        if post_type == 'shared_multiple':
+        if post_type in ('shared_multiple','profile_multiple'):
             from notification.models import Extra
             post_ids = [x.item_id for x in Extra.objects.filter(notification__id = post_id)]
             #post_ids = post_id.replace('[','').replace(']','').split(',')

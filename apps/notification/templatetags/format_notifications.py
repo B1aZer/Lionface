@@ -35,5 +35,9 @@ def format_notification(notification):
         return render_to_string('notification/_shared_post_multiple.html', data)
     if notification.type == 'MM':
         return render_to_string('notification/_follow_shared_multiple.html', data)
+    if notification.type == 'FM':
+        return render_to_string('notification/_follow_user_multiple.html', data)
+    if notification.type == 'MP':
+        return render_to_string('notification/_profile_post_multiple.html', data)
     return ""
 

@@ -20,6 +20,8 @@ NOTIFICATION_TYPES = (
     ('MF', 'Multiple Comment Following'),
     ('MS', 'Multiple Shared'),
     ('MM', 'Multiple Shared Following'),
+    ('FM', 'Multiple Following Acquired'),
+    ('MP', 'Multiple Profile Post'),
 )
 
 class Notification(models.Model):
@@ -76,6 +78,20 @@ class Notification(models.Model):
             original_notfs = Notification.objects.filter(user=self.user, \
                     type='FS', \
                     object_id__in = object_ids,
+                    read = False)
+            for origianl_not in original_notfs:
+                    self.extra_set.create(item_id=origianl_not.content_object.id)
+            if original_notfs.count():
+                original_notfs.update(read=True)
+        if self.type == 'FM':
+            original_notfs = Notification.objects.filter(user=self.user, \
+                    type='FF', \
+                    read = False)
+            if original_notfs.count():
+                original_notfs.update(read=True)
+        if self.type == 'MP':
+            original_notfs = Notification.objects.filter(user=self.user, \
+                    type='PP', \
                     read = False)
             for origianl_not in original_notfs:
                     self.extra_set.create(item_id=origianl_not.content_object.id)
@@ -197,7 +213,7 @@ def update_notification_count(sender, instance, created, **kwargs):
                         type=notification_type, \
                         #other_user=comment.user, \
                         content_object=content_object)
-                #obj.people_counter = 2
+                # people counter
                 obj.save()
                 for user_notf in notfs:
                     if obj.extra_set.all():
@@ -211,12 +227,48 @@ def update_notification_count(sender, instance, created, **kwargs):
                 if obj.extra_set.all():
                     if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
                         obj.extra_set.create(user_id=instance.other_user.id)
-                #obj.people_counter = obj.people_counter + 1
-                #obj.save()
             # hide all original notifications
             original_notfs = Notification.objects.filter(user=instance.user, \
                     type=instance.type, \
                     object_id__in = object_ids, \
+                    read = False)
+            if original_notfs.count():
+                original_notfs.update(hidden=True)
+    if instance.type in ('FF','PP'):
+        if instance.type == 'FF': notification_type = 'FM'
+        if instance.type == 'PP': notification_type = 'MP'
+        content_object = instance.content_object
+        # find all unread
+        notfs =  Notification.objects.filter(user=instance.user, \
+            content_type=instance.content_type, \
+            type = instance.type, \
+            read = False).order_by('-date')
+        if notfs.count() > 1:
+            # find M
+            notf = Notification.objects.filter(user=instance.user, \
+                    type=notification_type, \
+                    read = False)
+            if not notf.count():
+                obj = Notification(user=instance.user, \
+                        type=notification_type, \
+                        content_object=content_object)
+                # people counter
+                obj.save()
+                for user_notf in notfs:
+                    if obj.extra_set.all():
+                        if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                            obj.extra_set.create(user_id=user_notf.other_user.id)
+                    else:
+                        obj.extra_set.create(user_id=user_notf.other_user.id)
+
+            else:
+                obj = notf.get()
+                if obj.extra_set.all():
+                    if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                        obj.extra_set.create(user_id=instance.other_user.id)
+            # hide all original notifications
+            original_notfs = Notification.objects.filter(user=instance.user, \
+                    type=instance.type, \
                     read = False)
             if original_notfs.count():
                 original_notfs.update(hidden=True)
