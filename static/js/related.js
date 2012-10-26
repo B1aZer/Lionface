@@ -11,6 +11,10 @@ $(document).ready(function() {
     }
 
     $(document).on('click', '.related', function(){
+        // one filter at a time
+        $('.filterON').toggleClass('filter');
+        $('.filterON').toggleClass('filterON');
+
         $(this).toggleClass('filterON');
         $(this).toggleClass('filter');
 
