@@ -182,6 +182,7 @@ def update_notification_count(sender, instance, created, **kwargs):
             content_object = instance.content_object
         notfs =  Notification.objects.filter(user=instance.user, \
                 content_type=instance.content_type, \
+                type = instance.type, \
                 object_id__in = object_ids, \
                 read = False).order_by('-date')
         if notfs.count() > 1:
@@ -198,10 +199,18 @@ def update_notification_count(sender, instance, created, **kwargs):
                         content_object=content_object)
                 #obj.people_counter = 2
                 obj.save()
+                for user_notf in notfs:
+                    if obj.extra_set.all():
+                        if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                            obj.extra_set.create(user_id=user_notf.other_user.id)
+                    else:
+                        obj.extra_set.create(user_id=user_notf.other_user.id)
+
             else:
                 obj = notf.get()
-                if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
-                    obj.extra_set.create(user_id=instance.other_user.id)
+                if obj.extra_set.all():
+                    if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                        obj.extra_set.create(user_id=instance.other_user.id)
                 #obj.people_counter = obj.people_counter + 1
                 #obj.save()
             # hide all original notifications
