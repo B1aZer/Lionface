@@ -94,6 +94,20 @@ class UserProfile(User):
 
         return mutual_friends
 
+    def list_mutual_friends(self, user):
+        if not user:
+            return
+
+        mutual_friends = []
+        my_freinds = self.friends.all()
+        his_friends = user.friends.all()
+
+        for friend in my_freinds:
+            if friend in his_friends:
+                mutual_friends.append(friend)
+
+        return mutual_friends
+
     def get_degree_for(self, user):
         from degrees.models import Degree
         deg = None

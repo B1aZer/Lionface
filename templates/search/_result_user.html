@@ -1,5 +1,18 @@
 {% load media friends format_results %}
 
+<script>
+$(document).on('click','.mutual_friends',function() {
+        if ($(this).data('toggled')) {
+            $(this).find('.mutual_friend_list').hide();
+            $(this).data('toggled', false);
+        }
+        else {
+            $(this).find('.mutual_friend_list').show();
+            $(this).data('toggled', true);
+        }
+});
+</script>
+
 <a href="{{ user.get_absolute_url }}"><div class="user_thumbnail" style="background-image: url('/{{ user.photo|format_image }}'); background-size: 50px 50px;"></div></a>
 
 <table height="55"><tr><td>
@@ -7,7 +20,13 @@
 <span class="subtext" style="margin: 7px 0;">
 
 {% if current_user|mutual_friends:user %} 
-        <div class="mutual_friends">Mutual Friends: {{ current_user|mutual_friends:user }}</div>
+        <div class="mutual_friends">Mutual Friends: {{ current_user|mutual_friends:user }}
+            <div class="mutual_friend_list" style="display:none">
+                {% for friend in current_user|list_mutual_friends:user %}
+                    <span>{{ friend.get_full_name }}</span>
+                {% endfor %}
+            </div>
+        </div>
 {% endif %}
 {% if current_user|has_friend:user %}
     <a href='javascript:;' class="link-remove-friend {user: {{ user.id }}}">- Remove</a>

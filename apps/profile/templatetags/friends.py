@@ -67,6 +67,10 @@ def check_following(profile, user):
 def mutual_friends(current, user):
     return current.get_mutual_friends(user)
 
+@register.filter(name='list_mutual_friends')
+def list_mutual_friends(current, user):
+    return current.list_mutual_friends(user)
+
 @register.filter(name='degree_of_separation')
 def degree_of_separation(current, user):
     return current.get_degree_for(user)
