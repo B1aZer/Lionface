@@ -27,6 +27,8 @@ class SearchForm(ModelSearchForm):
                         res = res.exclude(username=one_user.username)
                 else:
                     res = res.exclude(username=one_user.username)
+            # custom ordering (by DoS)
+            res = sorted(res,key = lambda s : s.object.get_degree_for(user))
         return res
 
 

@@ -377,6 +377,10 @@ def related_users(request,username=None):
             followers = profile_user.get_followers_active(request.user)
             users.extend(followers)
             data['html'] = [x.username for x in followers]
+        if users:
+            # custom ordering
+            # the same as was ?
+            users = sorted(users, key=lambda s: s.first_name)
 
         if len(data) > 0 and 'ajax' in request.GET:
             data['html'] = render_to_string('profile/related_users.html',
