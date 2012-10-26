@@ -100,6 +100,10 @@ LionFace.Profile.prototype = {
             return false;
         });
 
+        $(document).on('click','.post_option',function(){
+            $(this).find('input').prop('checked', true);
+        });
+
     /*
     //Submit on enter
 
