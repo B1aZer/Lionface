@@ -39,9 +39,13 @@ class FriendRequest(models.Model):
         self.from_user.friends.add(self.to_user)
         self.from_user.save()
         # following removes current's followers
+        #import pdb;pdb.set_trace()
         if self.to_user in self.from_user.get_following_active():
             #self.from_user.remove_following(self.to_user)
             self.from_user.block_following(self.to_user)
+        # for followers
+        if self.to_user in self.from_user.get_followers_active():
+            self.from_user.block_follower(self.to_user)
         Notification(user=self.from_user, type='FA', other_user=self.to_user, content_object = self).save()
         FriendPost(user=self.from_user, friend=self.to_user, user_to=self.to_user).save()
         #AddFriendToFeed.delay(self.from_user, self.to_user)
@@ -327,6 +331,11 @@ class UserProfile(User):
         following = [x.from_user for x in following]
         return following
 
+    def get_followers_blocked(self):
+        followers = Relationship.objects.filter(from_user=self, status=0)
+        followers = [x.to_user for x in followers]
+        return followers
+
     def get_following_count(self, user=None):
         if not user:
             count = Relationship.objects.filter(to_user=self, status=1).exclude(from_user__in=self.get_blocked()).count()
@@ -364,10 +373,24 @@ class UserProfile(User):
         following.update(status = 0)
         return
 
+    def block_follower(self, user):
+        follower = Relationship.objects.filter(
+                from_user=self,
+                to_user=user)
+        follower.update(status = 0)
+        return
+
     def activate_following(self, user):
         following = Relationship.objects.filter(
                 from_user=user,
                 to_user=self)
+        following.update(status = 1)
+        return
+
+    def activate_follower(self, user):
+        following = Relationship.objects.filter(
+                from_user=self,
+                to_user=user)
         following.update(status = 1)
         return
 
