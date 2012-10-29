@@ -53,18 +53,18 @@
 
 /* Component containers
 ----------------------------------*/
-.ui-widget { font-family: Arial,sans-serif; font-size: 9pt; }
-.ui-widget .ui-widget { font-size: 9pt; }
+.ui-widget { font-family: Arial,sans-serif; font-size: 9pt; z-index: 99999; }
+.ui-widget .ui-widget { font-size: 9pt; z-index: 99999; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Arial,sans-serif; font-size: 9pt; }
-.ui-widget-content { border: 1px solid #EEE; background: #ffffff; color: #777; -moz-box-shadow: 0 4px 8px -4px #333; box-shadow: 0 4px 8px -4px #333; }
+.ui-widget-content { border: 1px solid #EEE; background: #ffffff; color: #777; -moz-box-shadow: 0 4px 8px -4px #333; box-shadow: 0 4px 8px -4px #333; z-index: 99999;  }
 .ui-widget-content a { color: #222222; }
 .ui-widget-header { border: 1px solid #EEE; background: #cccccc; color: #777; font-weight: bold; -moz-box-shadow: 0 4px 8px -4px #333; box-shadow: 0 4px 8px -4px #333; }
 .ui-widget-header a { color: #222222; }
 
 /* Interaction states
 ----------------------------------*/
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background: #FFF; font-weight: normal; color: #777; }
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #777; text-decoration: none; }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background: #FFF; font-weight: normal; color: #777; z-index: 99999; }
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #777; text-decoration: none; z-index: 99999;  }
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { 	background: rgb(68,153,221); /* Old browsers */
 	background: -moz-linear-gradient(top, rgba(68,153,221,1) 0%, rgba(34,119,187,1) 100%); /* FF3.6+ */
@@ -75,7 +75,9 @@
 	background: linear-gradient(to bottom, rgba(68,153,221,1) 0%,rgba(34,119,187,1) 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4499dd', endColorstr='#2277bb',GradientType=0 ); /* IE6-9 */
 	font-weight: normal; color: #FFF;
-	border: 1px solid transparent; }
+	border: 1px solid transparent;
+	z-index: 99999; 
+ }
 
 .ui-state-hover a, .ui-state-hover a:hover { color: #FFF; text-decoration: none; }
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #aaaaaa; background: #ffffff url(images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #212121; }
