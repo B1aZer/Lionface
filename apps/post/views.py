@@ -43,7 +43,12 @@ def feed(request, user_id = None):
         if tags:
             tags = [x.name.upper() for x in tags if x.active]
             tagged_posts = NewsItem.objects.all()
-            tagged_posts = [x for x in tagged_posts for y in x.post.tags.all() if y.name.upper() in tags ]
+            try:
+                tagged_posts = [x for x in tagged_posts for y in x.post.tags.all() if y.name.upper() in tags ]
+            except Post.DoesNotExist:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.warning('Error in retrirving Post')
             items = list(chain(items, tagged_posts))
             items = list(set(items))
             items = sorted(items,key=lambda post: post.date, reverse=True)
