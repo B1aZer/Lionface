@@ -245,16 +245,15 @@ SITE_ID = 1
 #BROKER_URL = "django://"
 
 if os.environ.get('production'):
-	try:
-	    from settings_production import *
-	except ImportError:
-	    pass
+    try:
+        from settings_production import *
+    except ImportError:
+        pass
 else:
-
-	try:
-	    from settings_local import *
-	except ImportError:
-	    pass
+    try:
+        from settings_local import *
+    except ImportError:
+        pass
 
 ABSOLUTE_URL_OVERRIDES = {
     'auth.user': lambda o: "/%s/" % o.username,
