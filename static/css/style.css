@@ -53,7 +53,8 @@ h3 { text-align: center; font-size: 16px; }
 	color: #777;
 }
 
-a.filter:link, a.filter:active, a.filter:visited { 
+a.filter:link, a.filter:active, a.filter:visited,
+a.sub_filter:link, a.sub_filter:active, a.sub_filter:visited { 
 	color: #AAA; 
 	position: relative; 
 	display: block; 
@@ -64,11 +65,18 @@ a.filter:link, a.filter:active, a.filter:visited {
 	margin: 5px 0px;
 	border-right: 5px solid #EEE;
 }
-a.filter:hover { 
+a.filter:hover, a.sub_filter:hover { 
 	color: #777;
 	background: #F5F5F5;
 	border-color: #CCC;
 }
+
+a.sub_filter:link, a.sub_filter:active, a.sub_filter:visited {
+	width: 160px;
+	padding: 7px 5px 4px 10px;
+	left: 20px;
+}
+
 a.filterON:link, a.filterON:active, a.filterON:visited { 
 	position: relative; 
 	display: block; 
@@ -82,10 +90,46 @@ a.filterON:link, a.filterON:active, a.filterON:visited {
 	background: #EEE;
 }
 
-a.filterON:hover { 
+a.sub_filterON:link, a._subfilterON:active, a._subfilterON:visited { 
+	position: relative; 
+	display: block; 
+	text-decoration: none;
+	width: 160px;
+	padding: 7px 5px 4px 10px;
+	left: 20px;
+	font-size: 10pt; 
+	color: #000; 
+	margin: 5px 0px;
+	border-right: 5px solid #333;
+	background: #EEE;
+}
+
+a.filterON:hover, a.sub_filterON:hover { 
 	color: #777;
 	background: #F5F5F5;
 	border-color: #CCC;
+}
+
+a.sub_filter_feed:link, a.sub_filter_feed:active, a.sub_filter_feed:visited {
+	display: inline-block;
+	color: #AAA;
+	padding: 5px 7px 1px 7px;
+	border-bottom: 3px solid #EEE;
+}
+
+a.sub_filter_feed:hover {
+	background: #F5F5F5;
+	color: #777;
+	text-decoration: none;
+	border-color: #CCC;
+}
+
+a.sub_filter_feedON:link, a.sub_filter_feedON:active, a.sub_filter_feedON:visited, a.sub_filter_feedON:hover {
+	display: inline-block;
+	color: #000;
+	padding: 4px 7px 1px 7px;
+	border-bottom: 3px solid #333;
+	text-decoration: none;
 }
 
 .remove_tag {
@@ -1767,4 +1811,41 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', end
 .see_all:hover {
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+
+/* Schools */
+
+a.find_school:link, a.find_school:visited, a.find_school:active {
+	display: block;
+	color: #777;
+	padding: 7px 7px 4px 7px;
+	text-align: center;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border-bottom: 1px solid #BBB;
+	margin-bottom: 5px;
+}
+
+a.find_school:hover {
+	color: #000;
+	background: #FAFAFA;
+	text-decoration: none;
+	border-color: #DDD;
+}
+
+a.school_nav:link, a.school_nav:active, a.school_nav:visited {
+	display: block;
+	padding: 12px 7px 8px 7px;
+	color: #555;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border-right: 3px solid transparent;
+}
+
+a.school_nav:hover {
+	background: #FFF;
+	color: #000;
+	text-decoration: none;
+	border-color: #A70;
 }

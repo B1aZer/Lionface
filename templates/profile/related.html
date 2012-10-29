@@ -47,9 +47,14 @@
     {% if profile_user|check_friends_visibility:request.user %}
     <a href="javascript:;" class="feed_type filter related" >Friends</a>
     {% endif %}
+	<a href="javascript:;" class="sub_filter">Family</a>
+	<a href="javascript:;" class="sub_filter">+ Add Custom Filter</a>
+
     {% if profile_user|check_follower_visibility:request.user %}
     <a href="javascript:;" class="feed_type filter related" >Followers</a>
     {% endif %}
+	<a href="javascript:;" class="sub_filter">+ Add Custom Filter</a>
+
     {% if profile_user|check_following_visibility:request.user %}
     <a href="javascript:;" class="feed_type filter related" >Following</a>
     {% endif %}
