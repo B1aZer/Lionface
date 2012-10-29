@@ -444,53 +444,6 @@ class Relationship(models.Model):
             super(Relationship, self).save(*args, **kwargs)
         return follow
 
-def update_degree_of_separation(sender, instance, created, **kwargs):
-    if created:
-        import pdb;pdb.set_trace()
-        # find all connections with final point equals to user
-        # or find all in path
-        # A -> B
-        doses = Degree.objects.filter(to_user=instance.from_user).\
-                exclude(from_user=instance.from_user, to_user=instance.to_user).\
-                exclude(from_user=instance.to_user, to_user=instance.from_user)
-                # exclude newly created
-        if doses.count() > 0:
-            for dos in doses:
-                # make new connections with friended user
-                if Degree.objects.filter(from_user=dos.from_user, to_user=instance.to_user).count() == 0:
-                    conn = Degree(from_user=dos.from_user,\
-                            to_user=instance.to_user,\
-                            distance = dos.distance + 1)
-                    conn.path = "%s,%s" % (dos.path, instance.to_user.id)
-                    conn.save()
-                elif Degree.objects.filter(from_user=instance.from_user, to_user=instance.to_user).count() > 0:
-                    # checking if reverse exist
-                    Degree.objects.get_or_create(from_user=instance.to_user,\
-                            to_user=instance.from_user,\
-                            distance = dos.distance + 1,\
-                            path = "%s,%s" % (instance.to_user.id, dos.path))
-                else:
-                    # second run, firing above above
-                    # reverse path would be different
-                    # maybe check if reverse exist ?
-                    Degree.objects.get_or_create(from_user=instance.to_user,\
-                            to_user=instance.from_user,\
-                            distance = dos.distance + 1,\
-                            path = "%s,%s" % (dos.path, instance.from_user.id))
-                    #post_save.connect(update_degree_of_separation, sender=Degree)
-
-def update_degree_of_separation_on_delete(sender, instance, using, **kwargs):
-    import pdb;pdb.set_trace()
-    # 3 -> 2
-    doses = Degree.objects.filter(from_user=instance.to_user).\
-                exclude(from_user=instance.from_user, to_user=instance.to_user).\
-                exclude(from_user=instance.to_user, to_user=instance.from_user)
-    if doses.count() > 0:
-            for dos in doses:
-                # update connections with all connected users
-                Degree(from_user=dos.from_user, to_user=instance.to_user).delete()
-#post_delete.connect(update_degree_of_separation_on_delete, sender=Degree)
-
 class UserOptions(models.Model):
     name = models.CharField(max_length='100')
     value = models.CharField(max_length='100')
