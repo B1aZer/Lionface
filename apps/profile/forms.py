@@ -1,7 +1,12 @@
-from django import forms
-from account.models import *
-from django.forms import TextInput
 import re
+
+from django import forms
+from django.forms import TextInput
+
+from PIL import Image
+
+from account.models import *
+
 
 class ImageForm(forms.ModelForm):
 
@@ -9,17 +14,24 @@ class ImageForm(forms.ModelForm):
         model = UserProfile
         fields = ('photo',)
 
-    # Add some custom validation to our image field
+    # Add some custom validation to our image field and cropped our image
     def clean_photo(self):
-         image = self.cleaned_data.get('photo',False)
-         if image:
-             if image._size > 1*1024*1024:
-                   raise forms.ValidationError("Image file too large ( > 1mb )")
-             if image.content_type == 'image/gif':
-                   raise forms.ValidationError("Sorry! Gif is prohibited.")
-             return image
-         else:
-             raise forms.ValidationError("Couldn't read uploaded image")
+        try:
+            image = self.cleaned_data['photo']
+        except KeyError:
+            raise forms.ValidationError("Couldn't read uploaded image")
+        if image == self.fields['photo'].initial:
+            raise forms.ValidationError("Please select file and send it")
+        if image.content_type == 'image/gif':
+            raise forms.ValidationError("Sorry! Gif is prohibited.")
+        if image._size > 1*1024*1024:
+            raise forms.ValidationError("Image file too large ( > 1mb )")
+        im = Image.open(image)
+        image.seek(0)
+        image.truncate()
+        im.resize((min(im.size), min(im.size))).save(image)
+        return image
+
 
 POSTING_DEFAULT = [('Public','Public'), ('Friends Only','Friends Only'),]
 SHARE_DEFAULT = [('Enabled','Enabled'), ('Disabled','Disabled'),]
