@@ -1,4 +1,17 @@
-{% extends "profile/base.html" %}
+{% extends "pages/base.html" %}
+
+{% block js %}
+<script>
+$(function() {         
+        if ('{{active}}' == 'Nonprofit') {
+            $('#nonprofit_create').click();
+        }
+        else if ('{{active}}' == 'Business') {
+            $('#business_create').click();
+        }
+}); 
+</script>
+{% endblock %}
 
 {% block content %}
   <div class="content_area">
@@ -6,8 +19,8 @@
       <div class="left"><a href="#" class="profile_nav" style="margin: 0px; font-size: 8pt; color: #555;">Browse</a></div>
       <div class="right" style="position: relative;">
 		<div class="create_options" style="display: none;" id="create">
-			<a href="#" class="business_btn" style="font-size: 8pt;" onClick="ShowContent('create_business'); HideContent('create_nonprofit'); return false;">Create Business</a> 
-			<a href="#" class="nonprofit_btn" style="font-size: 8pt;" onClick="ShowContent('create_nonprofit'); HideContent('create_business'); return false;">Create Nonprofit</a></div>
+			<a id="business_create" href="#" class="business_btn" style="font-size: 8pt;" onClick="ShowContent('create_business'); HideContent('create_nonprofit'); return false;">Create Business</a> 
+			<a id="nonprofit_create" href="#" class="nonprofit_btn" style="font-size: 8pt;" onClick="ShowContent('create_nonprofit'); HideContent('create_business'); return false;">Create Nonprofit</a></div>
 		<a href="#" class="profile_nav" style="margin: 0px; font-size: 8pt; color: #555;" onClick="ShowContent('create'); return false;">+ Create Page</a></div>
     </div>
 	<div style="clear: both;"></div>
@@ -24,128 +37,75 @@
 			</tr></table>
 		</div>
 	</div>
-	
-	<div class="create_business" id="create_business">
+	<form id="business_submit_form" action="" method="post">{% csrf_token %} 
+        <div class="create_business" id="create_business">
+            <table width="100%"><tr>
+                <td align="right">Business Name</td>
+                <td align="left">
+                    {{ form.name.errors }}
+                    {{ form.name }}
+                    <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
+                <td align="right"><div style="position: relative;">Business Username</td>
+                    <td width="200" align="left">
+                        {{ form.username.errors }}
+                        {{ form.username }}
+                        <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/business/(page username)</div></div></td>
+                <td width="33%" align="left"><div style="position: relative; left: 7px;">Category:</div>
+                    {{ form.category.errors }}
+                    {{ form.category }}
+                    </td>
+            </tr><tr>
+                <td colspan="4" align="right" style="font-size: 8pt; color: #999;">
+                    <div>
+                        <span style="margin-right: 170px;">{{ form.represent.errors }}</span>
+                        <span style="margin-left: 20px;">{{ form.terms.errors }}</span>
+                    </div>
+                    {{ form.represent }} <label >{{ form.represent.label }}</label>
+                    {{ form.terms }} <label >{{ form.terms.label }}</label>
+                <td align="left">
+                    <a id="business_submit" href="#" class="business_btn">Create Business</a> 
+                    <a href="#" title=" Cancel " onClick="HideContent('create_business'); HideContent('create'); return false;" style="color: #777;">x</a></td>
+            </tr></table>
+        </div>
+    </form>
+    <form id="nonprofit_submit_form" action="" method="post">{% csrf_token %} 
+	<div class="create_nonprofit" id="create_nonprofit">
 		<table width="100%"><tr>
-			<td align="right">Business Name</td>
-			<td align="left">{{ form.name }}
+			<td align="right">Nonprofit Name</td>
+			<td align="left">
+                {{ form.name.errors }}
+                {{ form.name }}
                 <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
-			<td align="right"><div style="position: relative;">Business Username</td>
-                <td width="200" align="left">{{ form.username }}<div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/business/(page username)</div></div></td>
+			<td align="right"><div style="position: relative;">Nonprofit Username</div></td>
+			<td width="200" align="left">
+                {{ form.username.errors }}
+                {{ form.username }}
+                <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/nonprofit/(page username)</div></td>
 			<td width="33%" align="left"><div style="position: relative; left: 7px;">Category:</div>
+                {{ form.category.errors }}
                 {{ form.category }}
 				</td>
 		</tr><tr>
 			<td colspan="4" align="right" style="font-size: 8pt; color: #999;">
-				<input type="checkbox" /> I have the legal right to represent this business entity.
-				<input type="checkbox" style="margin-left: 20px;" /> I agree to the terms.</td>
-			<td align="left"><a href="#" class="business_btn">Create Business</a> 
-				<a href="#" title=" Cancel " onClick="HideContent('create_business'); HideContent('create'); return false;" style="color: #777;">x</a></td>
-		</tr></table>
-	</div>
-	<div class="create_nonprofit" id="create_nonprofit">
-		<table width="100%"><tr>
-			<td align="right">Nonprofit Name</td>
-			<td align="left"><input type="text" /><div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
-			<td align="right"><div style="position: relative;">Nonprofit Username</div></td>
-			<td width="200" align="left"><input type="text" /><div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/nonprofit/(page username)</div></td>
-			<td width="33%" align="left"><div style="position: relative; left: 7px;">Category:</div>
-				<select>
-				<option selected>Undefined</option>
-				<option>Advocacy</option>
-				<option>Advocacy (Policy)</option>
-				<option>Animals</option>
-				<option>Art/Culture</option>
-				<option>Art/Culture (Music)</option>
-				<option>Art/Culture (Theater)</option>
-				<option>Business</option>
-				<option>Business (Grants/Micro-Loans)</option>
-				<option>Disaster Response/Relief</option>
-				<option>Counseling/Intervention</option>
-				<option>Counseling/Intervention (Domestic Abuse)</option>
-				<option>Counseling/Intervention (Drugs)</option>
-				<option>Education</option>
-				<option>Education (Family/Health)</option>
-				<option>Education (Literacy)</option>
-				<option>Education (Nature)</option>
-				<option>Education (Technology)</option>
-				<option>Environment</option>
-				<option>Environment (Forests)</option>
-				<option>Environment (Oceans)</option>
-				<option>Environment (Protection)</option>
-				<option>Environment (Reduce, Reuse, Recycle)</option>
-				<option>Environment (Restoration)</option>
-				<option>Equality</option>
-				<option>Food Bank/Soup Kitchen</option>
-				<option>Funds/Foundations</option>
-				<option>Health</option>
-				<option>Housing</option>
-				<option>Human Rights</option>
-				<option>Human Rights (Trafficking)</option>
-				<option>Human Services</option>
-				<option>Outreach</option>
-				<option>Outreach (Youth)</option>
-				<option>People with Disabilities</option>
-				<option>Poverty Relief</option>
-				<option>Refugee/Immigrant Support</option>
-				<option>Science/Technology</option>
-				<option>Social Justice</option>
-				</select></td>
-		</tr><tr>
-			<td colspan="4" align="right" style="font-size: 8pt; color: #999;">
-				<input type="checkbox" /> I have the legal right to represent this nonprofit entity.
-				<input type="checkbox" style="margin-left: 20px;" /> I agree to the terms.</td>
-			<td align="left"><a href="#" class="nonprofit_btn">Create Nonprofit</a> 
+                <div>
+                    <span style="margin-right: 170px;">{{ form.represent.errors }}</span>
+                    <span style="margin-left: 20px;">{{ form.terms.errors }}</span>
+                </div>
+                {{ form.represent }} <label >{{ form.represent.label }}</label>
+                {{ form.terms }} <label >{{ form.terms.label }}</label>            
+			<td align="left">
+                <a id="nonprofit_submit" href="#" class="nonprofit_btn">Create Nonprofit</a> 
 				<a href="#" title=" Cancel " onClick="HideContent('create_nonprofit'); HideContent('create'); return false;" style="color: #777;">x</a></td>
 		</tr></table>
 	</div>
+    </form>
 
 
 <div class="content_pages" id="business">
-<table width="880" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
-  <tr>
-    <td>
-        <a href="{% url pages.views.page %}"> <img src="" alt="" width="200" height="200"  /></a></td>
-    <td>
-      <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
-    <td>
-      <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
-    <td>
-      <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
-  </tr>
-    <tr>
-    <td>
-      <a href="{% url pages.views.page %}">Random Business</a><br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-    <td>
-      Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-    <td>
-      Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-    <td>
-      Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-  </tr>
-</table>
-<table width="880" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center">
-  <tr>
-    <td>
-      <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
-    <td>
-      <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
-    <td>
-      <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
-    <td>
-      <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
-  </tr>
-    <tr>
-    <td>
-      Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-    <td>
-      Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-    <td>
-      Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-    <td>
-      Random Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-  </tr>
-</table>
+    <table width="880" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
+        {% include "pages/pages.html" %}
+    </table>
+
 </div>
 
 

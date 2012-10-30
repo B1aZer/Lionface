@@ -1,0 +1,18 @@
+    {% for row in pages %}
+        <tr>
+        {% for page in row %}
+            <td>
+                <a href="{% url pages.views.page slug=page.username %}"> <img src="" alt="{{page.id}}" width="200" height="200"  /></a>
+            </td>
+        {% endfor %}
+        </tr> 
+        <tr>
+        {% for page in row %}
+            <td>
+                {{ page.name }}<br />
+              <span style="font-size: 11px; color: #E39;">(count) Love</span>
+              <span >{{ page.type }} Type</span>
+            </td>
+        {% endfor %}
+        </tr> 
+    {% endfor %}
