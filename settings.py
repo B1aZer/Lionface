@@ -147,6 +147,7 @@ INSTALLED_APPS = (
     'smileys',
     'oembed',
     'degrees',
+    'pages',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -226,6 +227,9 @@ MEDIA_BUNDLES = (
     ),
     ('related.js',
         'js/related.js',
+    ),
+    ('pages.js',
+        'js/pages.js',
     ),
     ('settings.js',
         'js/settings.js',

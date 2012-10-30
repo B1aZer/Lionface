@@ -1,4 +1,4 @@
-{% extends "profile/base.html" %}
+{% extends "pages/base.html" %}
 {% load media %}
 
 
@@ -7,7 +7,7 @@
 
   <div class="content_area">
     <div id="profile_top">
-      <div class="left">(page_username) (page url)</div>
+        <div class="left">{{page.username}} {% url pages.views.page slug=page.username %}</div>
       <div class="right" style="position: relative;">
 		<div>
 			(page friends) 	<a class="profile_btn" style="cursor: pointer;">+ Add</a>
@@ -23,7 +23,11 @@
 			<tr>
 			<td width="100"><div class="page_image"></div><td>
 			<td><div style="padding: 10px 0px; position: relative; top: 10px;">
-				<span style="font-size: 14pt; color: #909e4a;">Page Name</span> <span style="color: #999;">(category)</span>
+                    <span style="font-size: 14pt; color: #909e4a;">{{ page.name }}</span> 
+                    {% if page.category == 'undefined' %}
+                    {% else %}
+                    <span style="color: #999;">{{ page.category }}</span>
+                    {% endif %}
 				<div style="padding: 10px 7px 10px 0px; line-height: 14pt;">Lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na  <a href="#" style="font-size: 8pt; color: #AAA;">Edit</a></div>
 			<td/>
 			<td width="250" class="love_container" align="center"><div class="sponsored"></div><div style="padding: 10px 20px;">
