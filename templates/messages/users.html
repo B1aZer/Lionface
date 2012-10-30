@@ -13,9 +13,10 @@
                     <a id="name_link_{{ user.id }}" href="{{ user.link }}" {% if user.mess_new %} style="color: #900;" {% endif %}>{{ user.name }}</a><br />
                     <span style="font-size: 8pt; color: #999;">
                         {% if user.mess_new %}<span id="new_mess_{{ user.id }}" class="new_flag" ><span style="color: #900; border: 1px solid #900; border-width: 0 0 1px 0; padding: 1px 0;">{{ user.mess_new }} new</span> <span style="color: transparent;">|</span></span>{% endif %} 
-                        <span class="tm" title=" Total Messages " style="cursor: default;">{{ user.mess_all }}m</span> <span style="color: transparent;">|</span> 
+						Message Preview<br />
+                        Time - <span class="tm" title=" Total Messages " style="cursor: default;">{{ user.mess_all }}m</span> <span style="color: transparent;">|</span> 
                         <span class="ms" title=" Messages Sent " style="cursor: default;">{{ user.mess_sent }}s</span> <span style="color: transparent;">|</span> 
-                        <span class="mr" title=" Messages Received " style="cursor: default;">{{ user.mess_recv }}r</span></span>
+                        <span class="mr" title=" Messages Received " style="cursor: default;">{{ user.mess_recv }}r</span></span> 
 
                 </div>
             </div>

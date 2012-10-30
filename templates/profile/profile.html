@@ -25,17 +25,40 @@
 {% elif profile_user|in_followers:request.user %}
     {% if profile_user|check_friend_request:request.user %} 
 	<span  class="subtitle_username" style="position: relative; top: -3px;">{{ profile_user.username }}</span>
-	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_friend'); return false;" onMouseOut="HideContent('add_friend'); return false;">+ Add</a>
     {% endif %}
 	<a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
 {% else %}
     {% if profile_user|check_friend_request:request.user %} 
 	<span  class="subtitle_username" style="position: relative; top: -3px;">{{ profile_user.username }}</span>
-	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_friend'); return false;" onMouseOut="HideContent('add_friend'); return false;">+ Add</a>
     {% endif %}
     {% if profile_user|check_following:request.user %} 
-	<a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >+ Follow</a>
+	<a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_follow'); return false;" onMouseOut="HideContent('add_follow'); return false;" >+ Follow</a>
     {% endif %}
+<div class="add_filter" id="add_follow" style="display: none;">
+	<select>
+		<option></option>
+	</select><br /><br />
+	<a href="#" style="padding: 5px;">+ Add Custom Filter</a>
+</div>
+<div class="add_filter" id="add_friend" style="display: none;">
+<table width="300"><tr><td>
+Put {{ profile_user.first_name }} into one of your filters.<br /><br />
+	<select>
+		<option></option>
+		<option>Family</option>
+	</select><br /><br />
+	<a href="#" style="padding: 5px;">+ Add Custom Filter</a>
+</td><td>
+Pick a filter from {{ profile_user.first_name }} that you think you best fit in.<br /><br />
+	<select>
+		<option></option>
+		<option>Family</option>
+	</select><br /><br />
+	<span style="padding: 5px; color: transparent;">Hello World</span>
+</td></tr></table>
+</div>
 {% endif %}
 {% endblock %}
 

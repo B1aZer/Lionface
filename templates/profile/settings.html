@@ -125,7 +125,13 @@
     <td>Friends Only</td>
 </tr>
 <tr>
-    <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Commenting and sharing inherit the privacy settings of their parent post. If your post is public then  commenting and sharing is also available to the public. You may, however, disable these functions by default, or manually on individual posts.</span></td>
+    <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Loving, commenting and sharing inherit the privacy settings of their parent post. If your post is public then loving, commenting and sharing is also available to the public.</span></td>
+</tr>
+<tr>
+    <td width="200">Love Default<br></td>
+    <td> 
+        <select><option selected>Enalbed</option><option>Disabled</option></select>
+    </td>
 </tr>
 <tr>
     <td width="200">Comment Default<br></td>
@@ -145,6 +151,17 @@
 </tr>
 <tr>
     <td width="200">Profile Pictures Album</td>
+    <td>
+        <select>
+			<option selected>Public</option>
+			<option>Friend's Friends</option>
+			<option>Friends</option>
+			<option>Just Me</option>
+		</select>
+    </td>
+</tr>
+<tr>
+    <td width="200">Relationship, Bio,<br />Birthday, Website</td>
     <td>
         <select>
 			<option selected>Public</option>
@@ -177,6 +194,12 @@
     </td>
 </tr>
 <tr>
+    <td>When Being Added</td>
+    <td>
+        <select><option selected>Allow users to place themselves into one of my filters.</option><option>Keep my filters private. I will sort friends on my own.</option><select>
+    </td>
+</tr>
+<tr>
     <td>Follow</td>
     <td>
         {{ form.option_follow }}
@@ -193,6 +216,9 @@
     </td>
 </tr>
 <tr>
+    <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Posts that announce new friendship connections inherit the privacy setting of your friend list.</span></td>
+</tr>
+<tr>
     <td>Follower List</td>
     <td>
         {{ form.option_follower_list }}
@@ -205,6 +231,10 @@
     </td>
 </tr>
 <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+</tr>
+<tr>
     <td>Loves</td>
     <td>
 	<span style="color: #AAA;">On Your Profile:</span> Public<br />
@@ -212,6 +242,17 @@
 		<select>
 			<option selected>Public</option>
 			<option>Private</option>
+		</select>
+	</td>
+</tr>
+<tr>
+    <td>Volunteer, Intership and Employment Connections</td>
+    <td>
+	<span style="color: #AAA;">On Your Profile:</span> Public<br />
+	<span style="color: #AAA;">On Pages:</span>
+		<select>
+			<option>Public</option>
+			<option selected>Private</option>
 		</select>
 	</td>
 </tr>

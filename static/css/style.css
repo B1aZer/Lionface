@@ -840,6 +840,18 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 	padding: 10px;
 }
 
+.add_filter {
+	position: absolute; 
+	background: #FAFAFA; 
+	z-index: 9999; 
+	right: 0px; 
+	text-align: right; 
+	padding: 5px; 
+	-moz-box-shadow: 0 4px 8px -4px #333; 
+	box-shadow: 0 4px 8px -4px #333; 
+	border: 1px solid #DDD;'
+}
+
 /* Base */
 
 .content_area { 
@@ -1194,7 +1206,7 @@ a.nav_notifications:hover {
 
 .notifications_list { list-style: none; }
 .notifications_list .separator { background-color: #EEE; border: 1px; height: 1px; width: 200px; margin: auto; margin-top: 6px; margin-bottom: 6px; }
-.notifications_list .friend_request { background-color: #F5F5F5; height: 48px; }
+.notifications_list .friend_request { background-color: #F5F5F5;}
 .notifications .left_col { width: 200px; border-width: 1px 0 0 0; }
 .notifications .right_col { width: 700px; margin-left: 200px; padding: 0px; }
 
@@ -1841,11 +1853,57 @@ a.school_nav:link, a.school_nav:active, a.school_nav:visited {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	border-right: 3px solid transparent;
+	margin: 5px 0;
 }
 
-a.school_nav:hover {
+a.school_nav:hover, a.school_navON:link {
 	background: #FFF;
 	color: #000;
 	text-decoration: none;
-	border-color: #A70;
+	display: block;
+	padding: 12px 7px 8px 7px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border-right: 3px solid #A70;
+	margin: 5px 0;
+}
+
+a.school_nav:hover {
+	border-color: #333;
+}
+
+.student {
+	padding: 5px; text-align: center; display: inline-block; border: 1px solid #CCC; margin: 4px; color: #777;
+}
+
+.student:hover {
+	cursor: pointer;
+	border-color: #49C;
+	color: #49C;
+}
+
+.student img {
+	padding: 1px;
+	border: 1px solid #DDD;
+}
+
+.student:hover img {
+	border-color: #49C;
+}
+
+.location {
+	font-size: 8pt; color: #777;
+}
+
+.school_count {
+	font-size: 8pt; color: #999; margin-left: 10px;
+}
+
+#add_school {
+	background: #FAFAFA;
+	padding: 5px;
+}
+
+#add_school td {
+	padding: 5px 0;
 }
