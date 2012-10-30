@@ -92,7 +92,7 @@ def profile(request, username='admin'):
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
                 instance = UserProfile.objects.get(id=request.user.id)
-                instance.photo = request.FILES['photo']
+                instance.photo = form.cleaned_data['photo']
                 instance.save()
                 return HttpResponseRedirect(request.path)
 
