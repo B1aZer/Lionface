@@ -13,6 +13,11 @@
     LionFace.user = {
             username: "{{ request.user.username }}",
     }
+    {% if request.user.is_anonymous %}
+         LionFace.user.is_anonymous = true;
+    {% else %}
+         LionFace.user.is_anonymous = false;
+    {% endif %}
     </script>
 
     {% include_media 'main.js' %}

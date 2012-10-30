@@ -8,7 +8,9 @@ $.extend(LionFace.user,{'album_count':'{{ profile_user.get_album_count }}'});
 {% endblock %}
 
 {% block body %}
-{% include '_header.html' %}
+    {% block header  %}
+        {% include '_header.html' %}
+    {% endblock %}
 
   {% block content %}
   <div class="content_area">

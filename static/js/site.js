@@ -525,10 +525,12 @@ $(document).ready(function() {
     }); 
 
     //checking for new nofifications
-    setInterval(function() {
-        check_for_messages();
-        check_for_notifications();
-    }, 20000);
+    if (!LionFace.user.is_anonymous) {
+        setInterval(function() {
+            check_for_messages();
+            check_for_notifications();
+        }, 20000);
+    }
 
     /** Change privacy settings for content posts */
     $(document).on('click','.toggle_privacy', function() {

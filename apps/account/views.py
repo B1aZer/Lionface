@@ -46,7 +46,11 @@ def login(request, template_name='public/home.html'):
         if form.is_valid():
             user = form.login(request)
             if user is not None:
-                return redirect('home')
+                path = request.POST.get('next',None)
+                if path:
+                    return redirect(path)
+                else:
+                    return redirect('home')
         form.error_message = "Invalid e-mail address and password provided."
     else: form = LoginForm(prefix='login')
 

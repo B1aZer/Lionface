@@ -6,7 +6,6 @@ from .forms import *
 from .models import *
 from itertools import chain
 
-@login_required
 def main(request, username=None):
 
     form = PageForm()
@@ -51,7 +50,6 @@ def main(request, username=None):
         RequestContext(request)
     )
 
-@login_required
 def page(request, slug=None, username=None):
 
     if not slug:
@@ -70,7 +68,6 @@ def page(request, slug=None, username=None):
         RequestContext(request)
     )
 
-@login_required
 def leaderboard(request, username=None):
 
     return render_to_response(
@@ -80,7 +77,6 @@ def leaderboard(request, username=None):
         RequestContext(request)
     )
 
-@login_required
 def nonprofit(request, username=None):
 
     pages = Pages.objects.filter(type='NP')

@@ -12,6 +12,7 @@
 		</td>
 	    {{ login_form.tzone }}
         <td align="right" width="175"><span style="font-size: 8pt; margin-right: 12px;">{{ login_form.preserve }} <label for="id_login-preserve">{{ login_form.preserve.label }}</label></span>
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
 			<input type="submit" class="login_button" value="Sign In"/> 
 			</td>
       </tr>

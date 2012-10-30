@@ -1,5 +1,9 @@
 {% extends "profile/base.html" %}
-{% load media %} 
+{% load media header %} 
+
+{% block header  %}
+    {% header request.user %}
+{% endblock %}  
 
 {% block additional_js %}
     {% include_media 'pages.js' %}
