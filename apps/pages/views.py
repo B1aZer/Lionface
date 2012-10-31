@@ -13,15 +13,19 @@ except ImportError:
 
 def main(request, username=None):
 
-    form = PageForm()
+    form_busn = BusinessForm()
+    form_nonp = NonprofitForm()
     active = None
 
-    if request.method == 'POST':
-        form = PageForm(data = request.POST)
+    if request.method == 'POST' and request.POST.get('type',None):
         if request.POST.get('type',None) == 'NP':
             active = 'Nonprofit'
+            form = NonprofitForm(data = request.POST)
+            form_nonp = form
         else:
             active = "Business"
+            form = BusinessForm(data = request.POST)
+            form_busn = form
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
@@ -29,6 +33,8 @@ def main(request, username=None):
             # nullify form
             active = None
             form = PageForm()
+            form_busn = BusinessForm()
+            form_nonp = NonprofitForm()
 
     pages = Pages.objects.filter(type='BS')
 
@@ -48,7 +54,8 @@ def main(request, username=None):
     return render_to_response(
         'pages/business.html',
         {
-            'form': form,
+            'form_busn': form_busn,
+            'form_nonp': form_nonp,
             'pages': pages,
             'active': active,
         },
