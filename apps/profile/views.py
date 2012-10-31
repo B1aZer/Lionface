@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from account.models import UserProfile
+from account.models import UserProfile, UserImage
 from messaging.models import Messaging
 from post.models import Albums
 from notification.models import Notification
@@ -49,7 +49,6 @@ def timeline(request):
 @login_required
 @unblocked_users
 def profile_image(request, username=None):
-
     if username != None:
         try:
             profile_user = UserProfile.objects.get(username=username)
@@ -57,6 +56,10 @@ def profile_image(request, username=None):
             raise Http404
     else:
         profile_user = request.user
+    is_visible = profile_user.check_visiblity('profile_image', request.user)
+    if not is_visible:
+        raise Http404
+
 
     return render_to_response(
         'profile/image.html',
@@ -87,9 +90,15 @@ def profile(request, username='admin'):
         if 'image' in request.POST:
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
-                instance = UserProfile.objects.get(id=request.user.id)
-                instance.photo = form.cleaned_data['photo']
-                instance.save()
+                profile = UserProfile.objects.get(id=request.user.id)
+                profile.photo = form.cleaned_data['photo']
+                profile.save()
+                image = UserImage.objects.create(
+                    image=profile.photo,
+                    owner=profile,
+                    activity=True
+                )
+                profile.all_images.add(image)
                 return HttpResponseRedirect(request.path)
 
         if 'message' in request.POST:
@@ -396,6 +405,9 @@ def related_users(request,username=None):
 
 @login_required
 def reset_picture(request, username=None):
-    request.user.photo = 'images/noProfilePhoto.png'
+    request.user.all_images.filter(activity=True).update(activity=False)
+    request.user.photo = [field.default
+        for field in UserProfile._meta.fields if field.name == 'photo'
+    ][0]
     request.user.save()
     return redirect('profile.views.profile', username=request.user.username)

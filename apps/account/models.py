@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.db.models.signals import post_save, post_delete, pre_save
+from django.db.models.signals import post_save, pre_delete, pre_save
 from django.db.models.query import Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
 
@@ -252,29 +252,28 @@ class UserProfile(User):
         except ObjectDoesNotExist:
             return False
 
-    def check_visiblity(self,option,user):
+    def check_visiblity(self, option, user):
         if not option:
             return
+        elif self == user:
+            visible = True
         else:
             visible = False
 
-            if self.check_option(option,"Public"):
+            if self.check_option(option, "Public"):
                 visible = True
-            elif self.check_option(option,"Friend's Friends"):
+            elif self.check_option(option, "Friend's Friends"):
                 if self.has_friends_friend(user):
                     visible = True
-            elif self.check_option(option,"Friends"):
+            elif self.check_option(option, "Friends"):
                 if self.has_friend(user):
                     visible = True
-            elif self.check_option(option,"Just Me"):
+            elif self.check_option(option, "Just Me"):
                 visible = False
-            elif self.check_option(option,"Off"):
+            elif self.check_option(option, "Off"):
                 visible = False
             else:
                 visible = True
-
-        if self == user:
-            visible = True
 
         return visible
 
@@ -406,6 +405,7 @@ class UserProfile(User):
         "Returns the person's full name."
         return self.full_name
 
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         uprofile = UserProfile(user_ptr_id=instance.pk)
@@ -413,14 +413,30 @@ def create_user_profile(sender, instance, created, **kwargs):
         uprofile.save()
 post_save.connect(create_user_profile, sender=User)
 
-def update_user_profile(sender, instance, raw, using, **kwargs):
-    try:
-        current = sender.objects.get(id=instance.id)
-    except sender.DoesNotExist:
-        return
-    if current.photo != instance.photo and current.photo.name != 'images/noProfilePhoto.png':
-        current.photo.delete(save=False)
-pre_save.connect(update_user_profile, sender=UserProfile)
+
+class UserImage(models.Model):
+    image = models.ImageField(upload_to="uploads/images")
+    owner = models.ForeignKey('UserProfile', related_name='my_images')
+    rating = models.PositiveIntegerField(default=0)
+    profiles = models.ManyToManyField('UserProfile', related_name='all_images')
+    activity = models.BooleanField(default=False)
+
+    LENGTH_ROW = 4
+
+    def __unicode__(self):
+        return self.image.name
+
+
+def delete_user_image(sender, instance, **kwargs):
+    profile = instance.owner
+    profile.all_images.remove(instance)
+    if instance.activity:
+        profile.photo = [field.default
+            for field in UserProfile._meta.fields if field.name == 'photo'
+        ][0]
+        profile.save()
+    instance.image.delete(save=False)
+pre_delete.connect(delete_user_image, sender=UserImage)
 
 
 class Relationship(models.Model):
