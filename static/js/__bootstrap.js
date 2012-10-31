@@ -16,5 +16,5 @@ LionFace.Pages.prototype = {
 }
 
 $(function() {         
-    profile_page = new LionFace.Pages()
+    LionFace.Pages = new LionFace.Pages()
 });

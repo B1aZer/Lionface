@@ -6,9 +6,11 @@ LionFace.Profile = function() {
 LionFace.Profile.prototype = {
 
     runner : function() {
-        this.bind_upload_form();
-        this.bind_postbox();
-        this.bind_albums();
+        if (!LionFace.User.is_anonymous) {
+            this.bind_upload_form();
+            this.bind_postbox();
+            this.bind_albums();
+        }
 
     },
 
@@ -140,7 +142,7 @@ LionFace.Profile.prototype = {
         /** Create album */
         $(document).on('submit','#create_album_form',function(e) {    
             e.preventDefault();
-            var albums = parseInt(LionFace.user.album_count);
+            var albums = parseInt(LionFace.User.album_count);
             var url = 'album_create/';
             make_request({
                 url:url,
@@ -151,7 +153,7 @@ LionFace.Profile.prototype = {
                         $('#album_name').val('');
                         $('.albums').show();
                         albums = albums + 1;
-                        LionFace.user.album_count = albums;
+                        LionFace.User.album_count = albums;
                         self_class.hide_album_hint();
                     }
                 },
@@ -165,7 +167,7 @@ LionFace.Profile.prototype = {
         $(document).on('click','.albums_edit',function(e) {    
             var self = $(this);
             var url = 'delete_album/';
-            var albums = parseInt(LionFace.user.album_count);
+            var albums = parseInt(LionFace.User.album_count);
             var album_id = get_int(self.parent().attr('id'));
             make_request({
                 url:url,
@@ -176,7 +178,7 @@ LionFace.Profile.prototype = {
                     if (data.status == 'OK') {
                         self.parent().slideUp();
                         albums = albums - 1;
-                        LionFace.user.album_count = albums;
+                        LionFace.User.album_count = albums;
                         self_class.hide_album_hint();
                     }
                 },
@@ -257,7 +259,7 @@ LionFace.Profile.prototype = {
     },
 
     hide_album_hint : function() {
-        if ($('#albums_hint').length && parseInt(LionFace.user.album_count) < 2) {
+        if ($('#albums_hint').length && parseInt(LionFace.User.album_count) < 2) {
             $('#albums_hint').hide();
         }
         else {
@@ -268,6 +270,6 @@ LionFace.Profile.prototype = {
 }
 
 $(function() {         
-    profile_page = new LionFace.Profile()
-    profile_page.hide_album_hint();
+    LionFace.Profile = new LionFace.Profile()
+    LionFace.Profile.hide_album_hint();
 });

@@ -10,13 +10,13 @@
     {% block css %}{% endblock %}
     <script>
     var LionFace = {};
-    LionFace.user = {
+    LionFace.User = {
             username: "{{ request.user.username }}",
     }
     {% if request.user.is_anonymous %}
-         LionFace.user.is_anonymous = true;
+         LionFace.User.is_anonymous = true;
     {% else %}
-         LionFace.user.is_anonymous = false;
+         LionFace.User.is_anonymous = false;
     {% endif %}
     </script>
 
