@@ -6,6 +6,11 @@ from .forms import *
 from .models import *
 from itertools import chain
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 def main(request, username=None):
 
     form = PageForm()
@@ -101,3 +106,25 @@ def nonprofit(request, username=None):
         },
         RequestContext(request)
     )
+
+def love_count(request):
+    data = {'status':'FAIL'}
+    if request.method == 'POST':
+        page_id = request.POST.get('page_id')
+        vote = request.POST.get('vote')
+        if page_id:
+            try:
+                page = Pages.objects.get(id=int(page_id))
+                if vote == 'up':
+                    page.loves += 1
+                    page.users_loved.add(request.user)
+                    page.save()
+                    data['status'] = 'OK'
+                if vote == 'down':
+                    page.loves -= 1
+                    page.users_loved.remove(request.user)
+                    page.save()
+                    data['status'] = 'OK'
+            except Pages.DoesNotExist:
+                pass
+    return HttpResponse(json.dumps(data), "application/json")

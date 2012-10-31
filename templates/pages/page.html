@@ -1,6 +1,12 @@
 {% extends "pages/base.html" %}
 {% load media %}
 
+{% block js %}
+<script>
+LionFace.User.page_id = '{{ page.id }}';
+</script>
+{% endblock %}  
+
 
 
 {% block content %}
@@ -31,7 +37,13 @@
 				<div style="padding: 10px 7px 10px 0px; line-height: 14pt;">Lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na  <a href="#" style="font-size: 8pt; color: #AAA;">Edit</a></div>
 			<td/>
 			<td width="250" class="love_container" align="center"><div class="sponsored"></div><div style="padding: 10px 20px;">
-				 <a href="#" class="love">Love</a><br /><br /><span style="color: #FFF; font-size: 9pt;">(love count)</span>
+                    {% if request.user in page.get_lovers %}
+                        <a href="#" class="love love_button loved">Loved</a>
+                    {% else %}
+                        <a href="#" class="love love_button">Love</a>
+                    {% endif %}
+                    <br /><br />
+                    <span class="love_count" style="color: #FFF; font-size: 9pt;">{{ page.loves }}</span>
 			</div></td>
 			</tr>
 		</table>
