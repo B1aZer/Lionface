@@ -25,10 +25,8 @@ try:
 except ImportError:
     import simplejson as json
 
-@login_required
 def feed(request, user_id = None):
     data = {}
-    items = request.user.get_news()
     news_feed_flag = False
     #news feed
     if not user_id:
@@ -53,12 +51,15 @@ def feed(request, user_id = None):
             items = list(set(items))
             items = sorted(items,key=lambda post: post.date, reverse=True)
     else:
+        items = NewsItem.objects.filter(hidden=False).order_by('date').reverse()
         # show messages adressed to user
         items = items.filter(user=user_id)
         # remove blocked
-        if request.user.get_blocked():
-            items = items.filter_blocked(user=request.user)
-        if int(request.user.id) <> int(user_id):
+        if not request.user.is_anonymous:
+            if request.user.get_blocked():
+                items = items.filter_blocked(user=request.user)
+        # privacy
+        if request.user.id <> int(user_id):
             items = items.get_public_posts(request.user)
     #import pdb;pdb.set_trace()
     #if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) <> int(user_id):

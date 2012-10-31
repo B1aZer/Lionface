@@ -567,6 +567,18 @@ $(document).ready(function() {
         }
     });
 
+    function decorate(callback) {
+        return function(foobar) {
+            if (LionFace.user.is_anonymous) {
+                return
+                }
+            else {
+                callback(foobar);
+            }
+        };
+    };
+    
+
     /** Follow post. */
     $(document).on('click','.follow_post', function(e) {
         
