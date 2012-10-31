@@ -26,10 +26,12 @@ class ImageForm(forms.ModelForm):
             raise forms.ValidationError("Sorry! Gif is prohibited.")
         if image._size > 1*1024*1024:
             raise forms.ValidationError("Image file too large ( > 1mb )")
-        im = Image.open(image)
+        pil_object = Image.open(image)
+        minsz = min(pil_object.size)
+        new_pil_object = pil_object.resize((minsz, minsz))
         image.seek(0)
         image.truncate()
-        im.resize((min(im.size), min(im.size))).save(image)
+        new_pil_object.save(image)
         return image
 
 
@@ -43,6 +45,8 @@ SEARCH = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friend
 SEND_MESSAGE = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Off","Off"),]
 FRIEND_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
 FOLLOWING_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
+PROFILE_IMAGE = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
+
 
 class UserInfoForm(forms.ModelForm):
     full_name = forms.CharField(required=False, label="Full Name" , widget=forms.TextInput(attrs={'style': 'border: 1px solid #DDD; padding: 7px; width: 300px;'}))
@@ -57,6 +61,7 @@ class UserInfoForm(forms.ModelForm):
     option_send_message = forms.ChoiceField(required=False, choices=( SEND_MESSAGE ))
     option_friend_list = forms.ChoiceField(required=False, choices=( FRIEND_LIST ))
     option_following_list = forms.ChoiceField(required=False, choices=( FOLLOWING_LIST ))
+    option_profile_image = forms.ChoiceField(required=False, choices=( PROFILE_IMAGE ))
 
     class Meta:
         model = UserProfile
