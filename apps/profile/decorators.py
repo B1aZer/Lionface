@@ -9,6 +9,8 @@ def unblocked_users(func):
     """ Restrict access for blocked users"""
     @wraps(func, assigned=available_attrs(func))
     def decorator(request, *args, **kwargs):
+        if request.user.is_anonymous():
+            return func(request, *args, **kwargs)
         if request.user.get_blocked():
             username = kwargs.get('username',None)
             if username != None:

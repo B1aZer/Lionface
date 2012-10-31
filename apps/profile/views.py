@@ -42,7 +42,6 @@ def timeline(request):
     return render_to_response(
         'profile/timeline.html',
         {
-            'not_count': Notification.objects.filter(user=request.user,read=False).count()
         },
         RequestContext(request)
     )
@@ -66,17 +65,14 @@ def profile_image(request, username=None):
         'profile/image.html',
         {
             'profile_user': profile_user,
-            'not_count': Notification.objects.filter(user=request.user,read=False).count(),
         },
         RequestContext(request)
     )
 
-@login_required
+#@login_required
 @unblocked_users
 #@default_user
 def profile(request, username='admin'):
-    # TODO: Logic here needs to see what relation the current user is to the profile user
-    # and compare this against their privacy settings to see what can be seen.
     form = ImageForm()
     form_mess = MessageForm()
     form_mess.fields['content'].widget.attrs['rows'] = 7
@@ -121,7 +117,6 @@ def profile(request, username='admin'):
             'profile/albums.html',
             {
                 'profile_user': profile_user,
-                'not_count': Notification.objects.filter(user=request.user,read=False).count(),
                 'form_mess' : form_mess,
                 'albums' : request.user.albums_set.all().order_by('position'),
             },
@@ -132,7 +127,6 @@ def profile(request, username='admin'):
         'profile/profile.html',
         {
             'profile_user': profile_user,
-            'not_count': Notification.objects.filter(user=request.user,read=False).count(),
             'form' : form,
             'form_mess' : form_mess,
         },
@@ -157,7 +151,6 @@ def albums(request, username=None):
         'profile/albums.html',
         {
             'profile_user': profile_user,
-            'not_count': Notification.objects.filter(user=request.user,read=False).count(),
             'albums' : profile_user.albums_set.all().order_by('position'),
         },
         RequestContext(request)
@@ -190,7 +183,6 @@ def album_posts(request, username=None, album_id=None):
         'profile/album_posts.html',
         {
             'profile_user': profile_user,
-            'not_count': Notification.objects.filter(user=request.user,read=False).count(),
             'items' : items,
         },
         RequestContext(request)
