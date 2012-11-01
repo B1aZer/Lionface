@@ -10,6 +10,7 @@ LionFace.Profile.prototype = {
             this.bind_upload_form();
             this.bind_postbox();
             this.bind_albums();
+            this.bind_image_container();
         }
 
     },
@@ -68,7 +69,8 @@ LionFace.Profile.prototype = {
 
         $('.noPhoto').hover(
                 function(){$('.upload').show();},
-                function(){$('.upload').hide();});
+                function(){$('.upload').hide();}
+        );
     },
 
     bind_postbox : function() {
@@ -258,6 +260,23 @@ LionFace.Profile.prototype = {
         $( ".sortable" ).disableSelection();
     },
 
+    bind_image_container : function() {
+        $('div.image_container td').each(function(index, elem) {
+            $(elem).find('div:first').hover(
+                function () {
+                    $(this).find('#image_settings').show();
+                },
+                function () {
+                    $(this).find('#image_settings').hide();
+                }
+            );
+        });
+        //alert(LionFace.Profile.link);
+        $('div.image_container div.view_more a').click(function() {
+            
+        });
+    },
+
     hide_album_hint : function() {
         if ($('#albums_hint').length && parseInt(LionFace.User.album_count) < 2) {
             $('#albums_hint').hide();
@@ -270,6 +289,6 @@ LionFace.Profile.prototype = {
 }
 
 $(function() {         
-    LionFace.Profile = new LionFace.Profile()
+    LionFace.Profile = new LionFace.Profile();
     LionFace.Profile.hide_album_hint();
 });

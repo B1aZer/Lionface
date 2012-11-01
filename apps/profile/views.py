@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from account.models import UserProfile, UserImage
+from account.models import UserProfile, UserImage, UserImages
 from messaging.models import Messaging
 from post.models import Albums
 from notification.models import Notification
@@ -56,18 +56,35 @@ def profile_image(request, username=None):
             raise Http404
     else:
         profile_user = request.user
+
     is_visible = profile_user.check_visiblity('profile_image', request.user)
     if not is_visible:
         raise Http404
 
+    ROWS_SHOW = 1
+    image_rows = UserImages.objects.filter(profile=profile_user) \
+        .select_related('image').get_rows(0, ROWS_SHOW)
+    avail_rows = 1 + \
+        UserImages.objects.filter(profile=profile_user).count() // UserImages.objects.DEFAULT_ROW_SIZE
 
     return render_to_response(
         'profile/image.html',
         {
             'profile_user': profile_user,
+            'image_rows': image_rows,
+            'avail_rows': avail_rows,
         },
         RequestContext(request)
     )
+
+
+@login_required
+@unblocked_users
+def profile_image_more(request, username):
+    
+    
+    return HttpResponse(json.dumps({}), "application/json")
+
 
 #@login_required
 @unblocked_users
@@ -95,10 +112,15 @@ def profile(request, username='admin'):
                 profile.save()
                 image = UserImage.objects.create(
                     image=profile.photo,
-                    owner=profile,
+                    owner=profile
+                )
+                image.save()
+                image_profile_m2m = UserImages.objects.create(
+                    image=image,
+                    profile=profile,
                     activity=True
                 )
-                profile.all_images.add(image)
+                image_profile_m2m.save()
                 return HttpResponseRedirect(request.path)
 
         if 'message' in request.POST:
@@ -403,11 +425,16 @@ def related_users(request,username=None):
         RequestContext(request)
     )
 
+
 @login_required
 def reset_picture(request, username=None):
-    request.user.all_images.filter(activity=True).update(activity=False)
-    request.user.photo = [field.default
+    profile = request.user
+    if profile != request.user:
+        raise Http404
+    UserImages.objects.filter(profile=profile).filter(activity=True) \
+        .update(activity=False)
+    profile.photo = [field.default
         for field in UserProfile._meta.fields if field.name == 'photo'
     ][0]
-    request.user.save()
-    return redirect('profile.views.profile', username=request.user.username)
+    profile.save()
+    return redirect('profile.views.profile', username=profile.username)
