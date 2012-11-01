@@ -125,16 +125,16 @@ function fix_embed() {
 
 LionFace.Site = function() {
     this.runner();
-    this.bind_public();
-    if (!LionFace.User.is_anonymous) {
-        this.bind_private();
-    }
 }
 
 LionFace.Site.prototype = {
 
     runner: function() {
         this.initialistaion();
+        this.bind_public();
+        if (!LionFace.User.is_anonymous) {
+            this.bind_private();
+        }
     },
      
     hookLinks: function() {
