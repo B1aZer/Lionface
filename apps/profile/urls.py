@@ -16,6 +16,8 @@ urlpatterns = patterns('profile.views',
     url(r'^(?P<username>\w+)/albums/change_position/$', 'album_postion'),
     url(r'^(?P<username>\w+)/albums/delete_album/$', 'delete_album'),
 
+    url(r'^(?P<username>\w+)/loves/$', 'loves', name="user-loves"),
+
     url(r'^(?P<username>\w+)/$', 'profile', name="provile-view"),
 
 )

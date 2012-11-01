@@ -9,7 +9,11 @@
         <tr>
         {% for page in row %}
             <td>
-                {{ page.name }}<br />
+                {% if page.type == 'BS' %}
+                    <span style="color:#3082B1">{{ page.name }}</span><br />
+                {% else %}   
+                    <span style="color:#909E4A">{{ page.name }}</span><br />
+                {% endif %}
                 <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span>
             </td>
         {% endfor %}

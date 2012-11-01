@@ -393,6 +393,9 @@ class UserProfile(User):
         following.update(status = 1)
         return
 
+    def get_loved(self):
+        return self.pages_loved.all()
+
     @models.permalink
     def get_absolute_url(self):
         return ('profile.views.profile', [str(self.username)])

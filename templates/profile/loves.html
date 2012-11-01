@@ -1,0 +1,63 @@
+{% extends 'profile/base.html' %}
+{% load media friends format_results %}
+
+{% block content_title %} <a href="{{ profile_user.get_absolute_url }}" class="name_link">{{ profile_user.full_name }}</a> | Community{% endblock %}
+{% block content_middle %}
+{% endblock %}
+{% block content_subtitle %}
+{% if request.user == profile_user %}
+<span class="subtitle_username">{{ profile_user.username }}</span>
+{% elif profile_user|has_friend:request.user %}
+	<span class="subtitle_username">{{ profile_user.username }}</span>
+	<a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px; font-size: 8pt;">- Remove</a>
+{% elif profile_user|has_friend_request:request.user %}
+	<span class="subtitle_username">{{ profile_user.username }}</span>
+	<span class="subtitle_username">Friend request pending.</span>
+{% elif profile_user|in_followers:request.user %}
+    {% if profile_user|check_friend_request:request.user %} 
+	<span  class="subtitle_username" style="position: relative; top: -3px;">{{ profile_user.username }}</span>
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+    {% endif %}
+	<a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
+{% else %}
+    {% if profile_user|check_friend_request:request.user %} 
+	<span  class="subtitle_username" style="position: relative; top: -3px;">{{ profile_user.username }}</span>
+	<a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>
+    {% endif %}
+    {% if profile_user|check_following:request.user %} 
+	<a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >+ Follow</a>
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+{% block left_col %}
+<div  onclick="window.location.href = '{% url profile.views.profile profile_user.username %}';return false;" 
+    class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;"></div>
+
+    <div style="position: relative; left: 0px; z-index: 100;">
+
+    <a href="javascript:;" id="business" class="feed_type filterON loving" >Business</a>
+    <a href="javascript:;" id="nonprofit" class="feed_type filterON loving" >Nonprofit</a>
+
+	</div>   
+
+{% endblock %}
+
+{% block right_col %}
+<div id="loved_pages" style="padding: 10px; position: relative; left: 40px;">
+
+    <div style="padding: 15px 0 25px 0px;">
+        <a href="{% url profile.views.profile username=profile_user.username %}" id="posts_link" class="profile_nav">Posts</a>
+        <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="profile_nav">Albums</a>
+        <a href="." id="loves_link" class="profile_nav">Loves</a>
+    </div>
+
+    <table id="result_table" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
+        {% include "pages/pages.html" %}
+    </table>
+
+</div>
+
+  {% include_media 'profile.js' %}
+{% endblock %}
+

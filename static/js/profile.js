@@ -10,6 +10,7 @@ LionFace.Profile.prototype = {
             this.bind_upload_form();
             this.bind_postbox();
             this.bind_albums();
+            this.bind_love_list();
         }
 
     },
@@ -265,6 +266,41 @@ LionFace.Profile.prototype = {
         else {
             $('#albums_hint').show();
         }
+    },
+
+    bind_love_list : function() {
+        // multiple filters for loves
+        $(document).on('click', '.loving', function(){
+            $(this).toggleClass('filterON');
+            $(this).toggleClass('filter');
+
+            params = [];
+
+            $('.filterON').each(function () {
+                params.push("&"+$(this).attr('id'));
+            });
+            if (params) {
+                params = "?"+params.join("").slice(1)+"&ajax";
+                if (params == "?&ajax") {
+                    params = [];
+                }
+            }
+            var url = params;
+            if (params.length) {
+                make_request({
+                    url:url, 
+                    callback:function (data) {
+                        if (data.html) {
+                            $('#result_table').html(data.html);
+                        }
+                    }
+                });
+            }
+            else {
+                $('#result_table').html(''); 
+            }
+
+        });   
     },
 
 }

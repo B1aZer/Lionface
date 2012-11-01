@@ -411,3 +411,54 @@ def reset_picture(request, username=None):
     ][0]
     request.user.save()
     return redirect('profile.views.profile', username=request.user.username)
+
+@login_required
+@unblocked_users
+def loves(request, username=None):
+    data = {}
+    if not username:
+        profile_user = request.user
+    else:
+        try:
+            profile_user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            raise Http404()
+
+    pages = profile_user.get_loved()
+
+    if request.method == 'GET' and 'ajax' in request.GET:
+        if 'business' in request.GET and not 'nonprofit' in request.GET:
+            pages = pages.filter(type='BS')
+        if 'nonprofit' in request.GET and not 'business' in request.GET:
+            pages = pages.filter(type='NP')
+
+    # grouping by rows for template [4 in row]
+    n=0
+    group = 2
+    grouped_pages = []
+    row = []
+    for page in pages:
+        n += 1
+        row.append(page)
+        if n%group == 0 or n == pages.count():
+            grouped_pages.append(row)
+            row = []
+
+    pages = grouped_pages
+
+    if request.method == 'GET' and 'ajax' in request.GET:
+        data['html'] = render_to_string('pages/pages.html',
+                {
+                    'pages' : pages,
+                }, context_instance=RequestContext(request))
+        return HttpResponse(json.dumps(data), "application/json")
+
+    return render_to_response(
+        'profile/loves.html',
+        {
+            'profile_user' : profile_user,
+            'current_user' : profile_user,
+            'pages' : pages,
+        },
+        RequestContext(request)
+    )

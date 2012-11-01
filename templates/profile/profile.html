@@ -137,7 +137,7 @@ Website<br /><br />
     <div style="padding: 15px 0 25px 0px;">
         <a href="." id="posts_link" class="profile_nav">Posts</a>
         <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="profile_nav">Albums</a>
-        <a href="#" id="loves_link" class="profile_nav">Loves</a>
+        <a href="{% url user-loves username=profile_user.username %}" id="loves_link" class="profile_nav">Loves</a>
     </div>
 
     {% if profile_user|has_friend:request.user or request.user == profile_user %}
