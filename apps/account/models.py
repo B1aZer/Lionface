@@ -5,6 +5,8 @@ from django.db.models.signals import post_save, pre_delete, pre_save
 from django.db.models.query import Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
 
+from django.utils import simplejson as json
+
 from itertools import chain
 
 FILTER_TYPE = (
@@ -421,15 +423,13 @@ class UserImage(models.Model):
     image = models.ImageField(upload_to="uploads/images")
     owner = models.ForeignKey('UserProfile', related_name='my_images')
     rating = models.PositiveIntegerField(default=0)
-    profiles = models.ManyToManyField('UserProfile', related_name='all_images')
-    activity = models.BooleanField(default=False)
-
-    LENGTH_ROW = 4
+    profiles = models.ManyToManyField('UserProfile', related_name='all_images',
+        through='UserImages')
 
     def __unicode__(self):
         return self.image.name
 
-
+'''
 def delete_user_image(sender, instance, **kwargs):
     profile = instance.owner
     profile.all_images.remove(instance)
@@ -440,6 +440,70 @@ def delete_user_image(sender, instance, **kwargs):
         profile.save()
     instance.image.delete(save=False)
 pre_delete.connect(delete_user_image, sender=UserImage)
+'''
+
+import post.models
+class UserImagesQuerySet(post.models.QuerySet):
+    DEFAULT_ROW_SIZE = 4
+
+    def get_rows(self, start, count, size=DEFAULT_ROW_SIZE):
+        qs = self.order_by('-activity', '-image__rating')
+        images = qs[start*size:(start+count)*size]
+        rows = []
+        for i in xrange(0, len(images), size):
+            rows.append({
+                'index': start + i/size,
+                'rows': images[i:i+size],
+            })
+        return rows
+
+
+class UserImages(models.Model):
+    image = models.ForeignKey('UserImage')
+    profile = models.ForeignKey('UserProfile')
+    activity = models.BooleanField(default=False)
+
+    objects = UserImagesQuerySet.as_manager()
+
+    def __unicode__(self):
+        return '%s link to %s' % (self.image, self.profile)
+
+
+class CoordsField(models.TextField):
+    __metaclass__ = models.SubfieldBase
+
+    def to_python(self, value):
+        if value is None:
+            return
+        try:
+            if isinstance(value, basestring):
+                value = json.loads(value)
+        except ValueError:
+            pass
+        return value
+
+    def get_db_prep_save(self, value):
+        if value is None:
+            return
+        value = json.dumps(value)
+        return super(CoordsField, self).get_db_prep_save(value)
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^account\.models\.CoordsField"])
+except:
+    pass
+
+
+class UserImageTag(models.Model):
+    image = models.ForeignKey('UserImage')
+    profile = models.ForeignKey('UserProfile', blank=True, null=True)
+    page = models.CharField(max_length='100', blank=True, null=True)
+    coords = CoordsField()
+    is_delete = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return '%s in %s' % (self.image, self.profile)
 
 
 class Relationship(models.Model):
