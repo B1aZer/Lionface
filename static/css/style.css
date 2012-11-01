@@ -1531,6 +1531,14 @@ a.love:hover {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a2dfef', endColorstr='#3082b1',GradientType=0 ); /* IE6-9 */
 }
 
+.love_business {
+	background: #a2dfef; /* Old browsers */
+}
+
+.love_nonprofit {
+	background: #bcc966; /* Old browsers */
+}
+
 .cover_photo {
 	width: 900px; 
 	height: 300px; 

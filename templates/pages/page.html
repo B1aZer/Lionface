@@ -36,7 +36,13 @@ LionFace.User.page_id = '{{ page.id }}';
                     {% endif %}
 				<div style="padding: 10px 7px 10px 0px; line-height: 14pt;">Lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na  <a href="#" style="font-size: 8pt; color: #AAA;">Edit</a></div>
 			<td/>
-			<td width="250" class="love_container" align="center"><div class="sponsored"></div><div style="padding: 10px 20px;">
+            {% if page.type == 'BS' %}
+			<td width="250" class="love_container love_business" align="center"> 
+                <div class="sponsored"></div>
+            {% else %}
+			<td width="250" class="love_container love_nonprofit" align="center"> 
+            {% endif %}
+                <div style="padding: 10px 20px;">
                     {% if request.user in page.get_lovers %}
                         <a href="#" class="love love_button loved">Loved</a>
                     {% else %}
@@ -48,57 +54,24 @@ LionFace.User.page_id = '{{ page.id }}';
 			</tr>
 		</table>
 	</div>
+    {% block page_micro %}
 	<div class="pages_nav_area" id="pages_nav_page">
-		<a href="#" class="nonprofit_on">Updates</a><a href="#" class="nonprofit_btn">Discussions</a><a href="#" class="nonprofit_btn">Reviews</a><a href="#" class="nonprofit_btn">Calendar</a><a href="#" class="nonprofit_btn">Comunnity</a>
+		<a href="#" id="updates" class="page_btn business_on">Updates</a>
+        <a href="#" id="discussions" class="page_btn business_btn">Discussions</a>
+        <a href="#" id="reviews" class="page_btn business_btn">Reviews</a>
+        <a href="#" id="calendar" class="page_btn business_btn">Calendar</a>
+        <a href="#" id="comunnity" class="page_btn business_btn">Comunnity</a>
 	</div>
 	
 
 
-<div align="center">
-<div class="page_container">
-	
-<div class="float_left">
-	<div class="friend_container">
-		<div class="friend_title" style="color: #909e4a;">Nonprofit Friends</div> <div class="see_all">see all</div><br />
-			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
-			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
-			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
-			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
-		<br /><br />
-		<div class="friend_title" style="color: #3082b1;">Business Friends</div> <div class="see_all">see all</div><br />
-			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
-			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
-			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
-			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
-	</div>
-</div>
-
-	<div class="page_center">
-			<div style="padding: 15px;">
-
-<div id="postbox">
-            <div style="padding: 10px;" align="center">
-
-                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
-
-                <br />
-                <div class="postoptions_container" >
-                    <table width="100%"><tr>
-                            <td align="left" style="color: #999; font-size: 8pt;" width="50%">          
-                            </td>
-                                    <td align="right">
-									<div class="attach">Attach</div> <a href="#" class="post" id="postboxbutton">Update</a>
-                                    </td>
-                </tr></table>
-                </div>
+        <div align="center">
+            <div class="page_container">
+                {% include 'pages/micro/updates.html' %}
             </div>
+        </div>
+    {% endblock %}
     </div>
-
-    </div>
-			</div>
-	</div>
-</div>
-</div>
 
 
   </div>

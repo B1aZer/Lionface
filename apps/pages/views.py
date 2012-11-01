@@ -1,6 +1,7 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
+from django.template import RequestContext, TemplateDoesNotExist
+from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
 from .forms import *
 from .models import *
@@ -72,8 +73,25 @@ def page(request, slug=None, username=None):
     except Pages.DoesNotExist:
         raise Http404
 
+    if request.method == 'GET' and 'ajax' in request.GET:
+        data = {}
+        template_name = request.GET.get('template_name',None)
+        if template_name:
+            try:
+                data['html'] = render_to_string('pages/micro/%s.html' % template_name,
+                {
+                }, context_instance=RequestContext(request))
+            except TemplateDoesNotExist:
+                data['html'] = "Sorry! Wrong template."
+            return HttpResponse(json.dumps(data), "application/json")
+
+    if page.type == 'BS':
+        template = 'pages/page.html'
+    else:
+        template = 'pages/page_nonprofit.html'
+
     return render_to_response(
-        'pages/page.html',
+        template,
         {
             'page': page,
         },
@@ -104,7 +122,7 @@ def nonprofit(request, username=None):
             grouped_pages.append(row)
             row = []
 
-    pages = grouped_pages  
+    pages = grouped_pages
 
     return render_to_response(
         'pages/nonprofit.html',

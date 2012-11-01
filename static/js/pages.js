@@ -7,7 +7,7 @@ LionFace.Pages.prototype = {
 
     runner : function() {
         this.bind_functions();
-
+        this.bind_page_functions();
     },
 
     //Binding
@@ -78,6 +78,26 @@ LionFace.Pages.prototype = {
                         }
                     }
                 });
+        });
+    },
+
+    bind_page_functions : function() {
+        $(document).on('click','.page_btn',function(e) {
+            e.preventDefault();
+            var name = $(this).attr('id');
+            var url = "?ajax"
+            make_request({
+                url:url,
+                type:'GET',
+                data: {
+                    'template_name': name,
+                },
+                callback: function(data) {
+                    if (data.html) {
+                        $('.page_container').html(data.html);
+                    }
+                }
+            });
         });
     },
 }

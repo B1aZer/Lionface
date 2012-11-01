@@ -1,0 +1,20 @@
+{% extends "pages/page.html" %}
+{% load media %}
+
+    {% block page_micro %}
+	<div class="pages_nav_area" id="pages_nav_page">
+		<a href="#" id="updates" class="page_btn nonprofit_on">Updates</a>
+        <a href="#" id="discussions" class="page_btn nonprofit_btn">Discussions</a>
+        <a href="#" id="reviews" class="page_btn nonprofit_btn">Reviews</a>
+        <a href="#" id="calendar" class="page_btn nonprofit_btn">Calendar</a>
+        <a href="#" id="comunnity" class="page_btn nonprofit_btn">Comunnity</a>
+	</div>
+	
+
+
+        <div align="center">
+            <div class="page_container">
+                {% include 'pages/micro/updates.html' %}
+            </div>
+        </div>
+    {% endblock %}

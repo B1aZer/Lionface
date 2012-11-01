@@ -43,6 +43,7 @@ function make_request(input) {
     var data = input.data || false;
     var callback = input.callback;
     var error_call = input.errorback || false;
+    var type = input.type || false;
 
     /*
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
@@ -56,6 +57,10 @@ function make_request(input) {
         }
     else {
         request_type = 'GET';
+    }
+
+    if (type) {
+        request_type = type;
     }
 
     $.ajax(url,
@@ -400,7 +405,7 @@ LionFace.Site.prototype = {
     },
 
     check_for_notifications: function (){
-        url = '/check/notifications/'
+        var url = '/check/notifications/'
 
         make_request(
             {url:url, callback:function (data) {
