@@ -44,10 +44,12 @@ function make_request(input) {
     var callback = input.callback;
     var error_call = input.errorback || false;
 
+    /*
     if (window.location.pathname.indexOf('/lionface/') >= 0) 
     { 
         url = '/lionface' +  url;
     }   
+    */
 
     if (data) {
         request_type = 'POST';
