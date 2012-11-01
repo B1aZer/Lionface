@@ -386,4 +386,4 @@ a.create:hover {
 
 .help_text { font-size: 8pt; color: #DDD; }
 
-.dark_box .errorlist { font-weight: normal; background: url(../images/fade.png); padding: 2px; font-size: 10pt; }
+.dark_box .errorlist { font-weight: normal; padding: 2px; font-size: 10pt; }
