@@ -26,9 +26,16 @@ class ImageForm(forms.ModelForm):
             raise forms.ValidationError("Sorry! Gif is prohibited.")
         if image._size > 1*1024*1024:
             raise forms.ValidationError("Image file too large ( > 1mb )")
+        # make square image
         pil_object = Image.open(image)
-        minsz = min(pil_object.size)
-        new_pil_object = pil_object.resize((minsz, minsz))
+        w, h = pil_object.size
+        x, y = 0, 0
+        if w > h:
+            x, y, w, h = int((w-h)/2), 0, h, h
+        elif h > w:
+            x, y, w, h = 0, int((h-w)/2), w, w
+        new_pil_object = pil_object.crop((x, y, x+w, y+h))
+        # save new image to UploadedFile
         image.seek(0)
         image.truncate()
         new_pil_object.save(image)
