@@ -7,7 +7,9 @@
 {% endif %}
 <div id="post_{{ item.get_post.id }}" class="result post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}' }">
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
+    {% block thumbnai %}
     <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.get_owner.photo|format_image:request.get_full_path }}'); background-size: 50px 50px;"></div></a>
+    {% endblock %}
     {{ item.render|smileys|excerpt|linebreaks|color_tags }}
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
