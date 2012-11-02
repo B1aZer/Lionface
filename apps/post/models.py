@@ -1,6 +1,7 @@
 from django.db import models
 from account.models import UserProfile
 from tags.models import Tag
+from pages.models import Pages
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -47,7 +48,7 @@ class CustomQuerySet(QuerySet):
 
 class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
-    user_to = models.ForeignKey(UserProfile,  related_name='user_to')
+    user_to = models.ForeignKey(UserProfile,  related_name='user_to', null=True, blank=True)
     following = models.ManyToManyField(UserProfile,  related_name='follows', null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
@@ -64,6 +65,8 @@ class Post(models.Model):
         try: return self.contentpost
         except Exception: pass
         try: return self.sharepost
+        except Exception: pass
+        try: return self.pagepost
         except Exception: pass
         return self
 
@@ -131,6 +134,14 @@ class Post(models.Model):
         else:
             super(Post, self).delete(*args, **kwargs)
 
+    def get_comment_counter(self, user=None):
+        value = comments.get_model().objects.filter(
+        content_type = ContentType.objects.get_for_model(self),
+        object_pk = self.pk,
+        site__pk = settings.SITE_ID,
+        is_removed = False,
+        ).exclude(user__in=user.get_blocked()).count()
+        return value
 
 class FriendPost(Post):
     friend = models.ForeignKey(UserProfile)
@@ -148,6 +159,50 @@ class FriendPost(Post):
         return ""
 
 
+class PagePost(Post):
+    content = models.CharField(max_length=5000)
+    page = models.ForeignKey(Pages, related_name='posts')
+
+    def render(self):
+        import bleach
+        from oembed.core import replace
+        def add_http(url):
+            if re.search('http://',url):
+                pass
+            else:
+                url = u"".join([u'http://', url])
+            return url
+        # Clean
+        self.content = bleach.clean(self.content)
+        # Embed videos
+        self.content = replace(self.content,max_width=535,fixed_width=535)
+        # Linkify
+        self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
+
+        return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
+
+    def name(self):
+        return self._meta.verbose_name
+
+    @property
+    def timestamp(self):
+        return self.date
+
+    @property
+    def post(self):
+        return self
+
+    def get_post(self):
+        return self.post_ptr
+
+    def get_type(self):
+        return self._meta.verbose_name
+
+    def get_owner(self):
+        return self.user
+
+    def privacy(self):
+        return 'P'
 
 class ContentPost(Post):
     content = models.CharField(max_length=5000)
@@ -159,19 +214,15 @@ class ContentPost(Post):
         return self.user.friends.all() | UserProfile.objects.filter(id=self.user.id)
 
     def render(self):
-        #from django.utils.html import escape
         import bleach
         from oembed.core import replace
-        #import pdb;pdb.set_trace()
         def add_http(url):
             if re.search('http://',url):
                 pass
             else:
                 url = u"".join([u'http://', url])
             return url
-
         # Clean
-        #self.content = bleach.clean(self.content,attributes={'a': ['href', 'rel', 'name'],})
         self.content = bleach.clean(self.content)
         # Embed videos
         self.content = replace(self.content,max_width=535,fixed_width=535)
@@ -204,7 +255,7 @@ class ContentPost(Post):
         return self.user
 
     def get_wall_user(self):
-        return self.user_to   
+        return self.user_to
 
     def privacy(self):
         return self.type
@@ -389,6 +440,7 @@ def update_news_feeds(sender, instance, created, **kwargs):
 post_save.connect(update_news_feeds, sender=FriendPost)
 post_save.connect(update_news_feeds, sender=ContentPost)
 post_save.connect(update_news_feeds, sender=SharePost)
+post_save.connect(update_news_feeds, sender=PagePost)
 
 def delete_news_feeds(sender, instance, **kwargs):
     """Deletes original post"""

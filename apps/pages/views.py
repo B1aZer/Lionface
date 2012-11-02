@@ -90,10 +90,13 @@ def page(request, slug=None, username=None):
     else:
         template = 'pages/page_nonprofit.html'
 
+    items = page.get_posts()
+
     return render_to_response(
         template,
         {
             'page': page,
+            'items':items,
         },
         RequestContext(request)
     )
@@ -152,4 +155,18 @@ def love_count(request):
                     data['status'] = 'OK'
             except Pages.DoesNotExist:
                 pass
+    return HttpResponse(json.dumps(data), "application/json")
+
+@login_required
+def update(request):
+    data = {'status':'FAIL'}
+    if request.method == 'POST' and 'page_id' in request.POST:
+        page_id = request.POST.get('page_id')
+        content = request.POST.get('content')
+        try:
+            page = Pages.objects.get(id=int(page_id))
+            page.posts.create(user=request.user, content=content)
+            data['status'] = 'OK'
+        except Pages.DoesNotExist:
+            pass
     return HttpResponse(json.dumps(data), "application/json")

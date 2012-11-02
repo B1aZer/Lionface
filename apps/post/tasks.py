@@ -4,7 +4,7 @@ from celery.contrib import rdb
 
 class UpdateNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
-        from models import NewsItem, FriendPost, SharePost, ContentPost
+        from models import NewsItem, FriendPost, SharePost, ContentPost, PagePost
         #rdb.set_trace()
         if isinstance(post, FriendPost):
             ni, created = NewsItem.objects.get_or_create(user=post.user, post=post)
@@ -13,6 +13,10 @@ class UpdateNewsFeeds(Task):
             ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
         elif isinstance(post, SharePost):
             ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
+        elif isinstance(post, PagePost):
+            users = post.page.get_lovers()
+            for user in users:
+                ni, created = NewsItem.objects.get_or_create(user=user, post=post)
         else:
             ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
 

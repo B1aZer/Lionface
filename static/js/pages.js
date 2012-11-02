@@ -82,6 +82,8 @@ LionFace.Pages.prototype = {
     },
 
     bind_page_functions : function() {
+
+        /** micro templates */
         $(document).on('click','.page_btn',function(e) {
             e.preventDefault();
             var name = $(this).attr('id');
@@ -98,6 +100,27 @@ LionFace.Pages.prototype = {
                     }
                 }
             });
+        });
+
+        /** update button */
+        $(document).on('click','#postboxbutton',function(e) {
+            e.preventDefault();
+            var url = "/pages/update/";
+            var content = $('.postbox_textarea').val();
+            if (content) {
+                make_request({
+                    url:url,
+                    data: {
+                        'page_id': LionFace.User.page_id,
+                        'content': content,
+                    },
+                    callback:function(data) {
+                        if (data.status == 'OK') {
+
+                        }
+                    }
+                });
+            }
         });
     },
 }

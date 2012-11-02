@@ -22,3 +22,6 @@ class Pages(models.Model):
 
     def get_lovers(self):
         return self.users_loved.all()
+
+    def get_posts(self):
+        return self.posts.all()
