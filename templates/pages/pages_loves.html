@@ -1,0 +1,25 @@
+    {% for row in pages %}
+
+        {% for page in row %}
+
+				<div style="display: block; padding: 12px 0 8px 0; border-top: 1px solid #EEE; width: 600px;">
+				<table><tr><td>
+                <a href="{% url pages.views.page slug=page.username %}"> <img src="" alt="{{page.id}}" width="75" height="75"  /></a>
+					</td><td align="left" style="padding: 10px;">
+                {% if page.type == 'BS' %}
+                    <a href="{% url pages.views.page slug=page.username %}" style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</a> 
+                {% else %}   
+                    <a href="{% url pages.views.page slug=page.username %}" style="color:#909E4A; font-size: 16pt;">{{ page.name }}</a> 
+                {% endif %}
+                    {% if page.category == 'undefined' %}
+                    {% else %}
+                    <span style="color: #999; padding: 3px;">{{ page.category }}</span>
+                    {% endif %}
+                <div style="padding: 5px 0;"><span style="font-size: 8pt; color: #BBB;">Loves:</span> <span style="font-size: 12px; color: #E39; padding: 3px;">{{ page.loves }}</span></div>
+				</td></tr></table>
+				</div>
+
+        {% endfor %}
+
+
+    {% endfor %}

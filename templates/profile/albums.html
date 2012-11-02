@@ -1,13 +1,15 @@
 {% extends 'profile/profile.html' %}
 {% load media friends format_results %}
-{% block content_title %} <a href="{{ profile_user.get_absolute_url }}" class="name_link">{{ profile_user.full_name }}</a> | Albums {% endblock %}
-{% block content_middle %}{% endblock %}
-{% block content_subtitle %}
-	<span style="color: #AAA; font-size: 8pt; margin: 5px;">{{ profile_user.username }}</span>
+{% block content_title %} {% endblock %}
+{% block content_middle %}
+
+{% include "profile/dashboard.html" %}
+
 {% endblock %}
+{% block content_subtitle %}{% endblock %}
 
 {% block left_col %}
-<div  onclick="window.location.href = '{% url profile.views.profile profile_user.username %}';return false;" 
+<div  onclick="window.location.href = '{% url profile.views.profile_image profile_user.username %}';return false;" 
     class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;"></div>
 
 {% endblock %}
@@ -15,11 +17,6 @@
 {% block right_col %}
 
 <div style="padding: 10px; position: relative; left: 40px;">
-    <div style="padding: 15px 0 25px 0px;">
-        <a href="{% url profile.views.profile username=profile_user.username %}" id="posts_link" class="profile_nav">Posts</a>
-        <a href="." id="albums_link" class="profile_nav">Albums</a>
-        <a href="{% url user-loves username=profile_user.username %}" id="loves_link" class="profile_nav">Loves</a>
-    </div>  
 
     {% if profile_user == request.user %}
     <div id="create_album_link" style="cursor:pointer">+ Create Album</div>

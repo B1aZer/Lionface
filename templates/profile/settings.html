@@ -1,16 +1,15 @@
 {% extends 'profile/base.html' %}
 {% load i18n static media %}
 
-{% block content_title %}
-<a href="{{ request.user.get_absolute_url }}" class="name_link">{{ user.full_name }}</a> | Account
-{% endblock %}
-
+{% block content_title %}{% endblock %}
 {% block content_middle %}
+	<table width="100%"><tr><td align="left" style="color: #999;">
+		<a href="{{ request.user.get_absolute_url }}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | Account
+	</td><td align="right">
+		<a href="{{ request.user.get_absolute_url }}" style="color: #AAA;">Cancel</a>
+	</td></tr></table>
 {% endblock %}
-
-{% block content_subtitle %}
-<a href="{{ request.user.get_absolute_url }}" style="color: #AAA;">Cancel</a>
-{% endblock %}
+{% block content_subtitle %}{% endblock %}
 
 <div class="left_col">
     {% block left_col %}
