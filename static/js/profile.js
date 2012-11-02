@@ -272,10 +272,13 @@ LionFace.Profile.prototype = {
                 }
             );
         });
-        //alert(LionFace.Profile.link);
-        $('div.image_container div.view_more a').click(function() {
-            
-        });
+        if ( LionFace.User['now_rows'] < LionFace.User['total_rows'] ) {
+            var view_more = $('div.image_container div.view_more');
+            $(view_more).show();
+            $(view_more).find('a').click(function() {
+                
+            });
+        }
     },
 
     hide_album_hint : function() {
