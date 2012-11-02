@@ -1,13 +1,13 @@
 {% extends 'profile/base.html' %}
 {% load media friends format_results %}
 
-{% block content_title %} <a href="{{ profile_user.get_absolute_url }}" class="name_link">{{ profile_user.full_name }}</a> | Photos{% endblock %}
+{% block content_title %} {% endblock %}
 {% block content_middle %}
-{% endblock %}
-{% block content_subtitle %}
-	<span class="subtitle_username">{{ profile_user.username }}</span>
+
+{% include "profile/dashboard.html" %}
 
 {% endblock %}
+{% block content_subtitle %}{% endblock %}
 
 {% block left_col %}
 <div style="position: relative; top: -1px; background: #FFF;">
@@ -22,7 +22,7 @@
 </div>
 
         <div class="photos_count" align="center">
-		# Photos ({{ profile_user.all_images.count }})
+		{{ profile_user.all_images.count }} Photos
 		</div>
 
 <div style="position: relative;">
@@ -39,11 +39,7 @@
 
 {% block right_col %}
 	<div style="padding: 10px; position: relative; left: 40px; height: 45px;">
-    <div style="padding: 15px 0 25px 0px;">
-        <a href="{{ profile_user.get_absolute_url }}" class="profile_nav">Posts</a>
-        <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="profile_nav">Albums</a>
-        <a href="#" class="profile_nav">Loves</a>
-    </div>
+
 	</div>
 {% endblock %}
 
@@ -58,11 +54,13 @@
 {% block center_col %}
 <div align="center">
 <div class="image_container" align="center">
-	<table align="center" width="900">
+	<table align="center" width="100%">
+	<tr><td colspan="4">a</td></tr>
 	{% for image_row in image_rows %}
 		<tr id="images_row_{{ image_row.index }}">
 		{% for row in image_row.rows %}
-			<td width="25%"><div style="background-image: url('/{{ row.image.image|format_image:request.get_full_path }}'); background-size: 200px 200px; width: 200px; height: 200px; margin-bottom: 25px;">
+			<td width="25%" align="center">
+				<div style="background-image: url('/{{ row.image.image|format_image:request.get_full_path }}'); background-size: 200px 200px; width: 200px; height: 200px; margin-bottom: 25px;">
 				<div id="image_settings">
 					<a href="#" style="float: left;" title="Make Primary Photo">+</a>
 					<a href="#" style="float: right;" title="Delete Photo">x</a>
@@ -73,7 +71,7 @@
 	{% endfor %}
 		<tr>
 			<td colspan="4" align="center"><div class="view_more" style="display: none;">
-				<a href="#">view more</a>
+				<a href="#">View more</a>
 			</div></td>
 		</tr>
 	</table>

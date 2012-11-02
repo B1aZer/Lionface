@@ -29,7 +29,11 @@ LionFace.User.page_id = '{{ page.id }}';
 			<tr>
 			<td width="100"><div class="page_image"></div><td>
 			<td><div style="padding: 10px 0px; position: relative; top: 10px;">
-                    <span style="font-size: 14pt; color: #909e4a;">{{ page.name }}</span> 
+				{% if page.type == 'BS' %}
+                    <span style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</span> 
+                {% else %}   
+                    <span style="color:#909E4A; font-size: 16pt;">{{ page.name }}</span> 
+                {% endif %}
                     {% if page.category == 'undefined' %}
                     {% else %}
                     <span style="color: #999;">{{ page.category }}</span>

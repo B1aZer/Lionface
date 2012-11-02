@@ -1,68 +1,13 @@
 {% extends 'profile/base.html' %}
 {% load media friends format_results %}
 
-{% block content_title %} <a href="{{ profile_user.get_absolute_url }}" class="name_link">{{ profile_user.full_name }}</a> | Profile {% endblock %}
+{% block content_title %} {% endblock %}
 {% block content_middle %}
-{% if profile_user|check_friends_visibility:request.user %}
-<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_friend_count:request.user }}</a>
-{% endif %}
-{% if profile_user|check_follower_visibility:request.user %}
-<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Followers"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_followers_count:request.user }} Follower{{ profile_user.get_followers_count|pluralize }}</a>
-{% endif %}
-{% if profile_user|check_following_visibility:request.user %}
-<span style="color: transparent;">| |</span> <a href="{% url profile.views.related_users username=profile_user.username %}?Following"  class="profile_nav" style="color: #777; font-size: 8pt;">{{ profile_user|show_following_count:request.user }} Following</a>
-{% endif %}
+
+{% include "profile/dashboard.html" %}
+
 {% endblock %}
-{% block content_subtitle %}
-{% if not request.user.is_anonymous %}
-    {% if request.user == profile_user %}
-    <span class="subtitle_username">{{ profile_user.username }}</span>
-    {% elif profile_user|has_friend:request.user %}
-        <span class="subtitle_username">{{ profile_user.username }}</span>
-        <a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="color: #999; margin: 0px; font-size: 8pt;">- Remove</a>
-    {% elif profile_user|has_friend_request:request.user %}
-        <span class="subtitle_username">{{ profile_user.username }}</span>
-        <span class="subtitle_username">Friend request pending.</span>
-    {% elif profile_user|in_followers:request.user %}
-        {% if profile_user|check_friend_request:request.user %} 
-        <span  class="subtitle_username" style="position: relative; top: -3px;">{{ profile_user.username }}</span>
-        <a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_friend'); return false;" onMouseOut="HideContent('add_friend'); return false;">+ Add</a>
-        {% endif %}
-        <a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
-    {% else %}
-        {% if profile_user|check_friend_request:request.user %} 
-        <span  class="subtitle_username" style="position: relative; top: -3px;">{{ profile_user.username }}</span>
-        <a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_friend'); return false;" onMouseOut="HideContent('add_friend'); return false;">+ Add</a>
-        {% endif %}
-        {% if profile_user|check_following:request.user %} 
-        <a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_follow'); return false;" onMouseOut="HideContent('add_follow'); return false;" >+ Follow</a>
-        {% endif %}
-    <div class="add_filter" id="add_follow" style="display: none;">
-        <select>
-            <option></option>
-        </select><br /><br />
-        <a href="#" style="padding: 5px;">+ Add Custom Filter</a>
-    </div>
-    <div class="add_filter" id="add_friend" style="display: none;">
-    <table width="300"><tr><td>
-    Put {{ profile_user.first_name }} into one of your filters.<br /><br />
-        <select>
-            <option></option>
-            <option>Family</option>
-        </select><br /><br />
-        <a href="#" style="padding: 5px;">+ Add Custom Filter</a>
-    </td><td>
-    Pick a filter from {{ profile_user.first_name }} that you think you best fit in.<br /><br />
-        <select>
-            <option></option>
-            <option>Family</option>
-        </select><br /><br />
-        <span style="padding: 5px; color: transparent;">Hello World</span>
-    </td></tr></table>
-    </div>
-    {% endif %}
-{% endif %}
-{% endblock %}
+{% block content_subtitle %}{% endblock %}
 
 {% block left_col %}
 <!--onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;"-->
@@ -95,34 +40,12 @@
     {% else %}
     <div class="DoS_profile">Degree of Separation: <span title="Unknown">--</span></div>
     {% endif %}
-<div style="margin: 10px 0; display: inline-block;" id="send_message"><a href="#" class="profile_nav" style="font-size: 10pt;">Send Message</a></div>
 
 {% endif %}
-
-
-<div style="position: relative;">
-<form action="." method="post" class="send_message_form" style="display:none;" id="message_form">
-    {% csrf_token %}
-
-    {% if form_mess.non_field_errors %}
-    <div>{{ form_mess.non_field_errors }}</div>
-    {% endif %}
-    
-    To: <input id="id_user_to" style="width: 150px !important; padding: 7px; border: 0px; background: transparent;" type="text" name="user_to" maxlength="100" value="{{ profile_user.full_name }}" readonly>
-
-    <input type="hidden" name="user_id" id="id_user_id" value="{{ profile_user.id }}">
-
-    {% if form_mess.content.errors %}
-    <div>{{ form_mess.content.errors }}</div>
-    {% endif %}
-    {{ form_mess.content }} 
-
-    <p><input name="message" type="submit" class="blue_btn" style="font-size: 8pt;" value="Send" /> <a href="#" onClick="HideContent('message_form'); return false;" style="font-size: 7pt; color: #999; margin-left: 10px;">Cancel</a></p>
-</form> 
-</div>
- {% endif %}
+{% endif %}
 
 <div class="bio">
+Favorite Pages<br /><br />
 Relationship<br /><br />
 Bio<br /><br />
 Birthday<br />
@@ -134,15 +57,10 @@ Website<br /><br />
 {% block right_col %}
 {% include_media 'feed.js' %}
 <div style="padding: 10px; position: relative; left: 40px;">
-    <div style="padding: 15px 0 25px 0px;">
-        <a href="." id="posts_link" class="profile_nav">Posts</a>
-        <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="profile_nav">Albums</a>
-        <a href="{% url user-loves username=profile_user.username %}" id="loves_link" class="profile_nav">Loves</a>
-    </div>
 
     {% if profile_user|has_friend:request.user or request.user == profile_user %}
 
-    <div id="postbox">
+    <div id="postbox" style="margin-top: 25px;">
         <form id="postform">{% csrf_token %}
             <div style="padding: 10px;" align="center">
 

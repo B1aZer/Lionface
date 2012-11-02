@@ -1,0 +1,119 @@
+{% load media friends format_results %}
+
+<div id="dashboard">
+	<table width="100%" height="100%"><tr>
+		<td align="Left" width="192" style="padding: 4px;"> 
+			<a href="{{ profile_user.get_absolute_url }}" class="name_link"><table><tr><td>
+			<div style="background: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 34px 34px; width: 34px; height: 34px; display: block;"></div>
+				</td><td style="padding: 3px 0 0 7px;">
+			<div class="dashboard_name">{{ profile_user.full_name }}</div><br />
+			<div class="subtitle_username">{{ profile_user.username }}</div>
+			</td></tr></table></a>
+		</td>
+		<td align="left">
+			<table><tr><td>
+        <a href="{{ profile_user.get_absolute_url }}" id="posts_link" class="dashboard_nav">
+		<table><tr><td><img src="{% media_url 'images/iconPost.png' %}" height="20" width="20" /></td><td>Posts</td></tr></table></a>
+			</td><td>
+        <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="dashboard_nav">
+		<table><tr><td><img src="{% media_url 'images/iconAlbum.png' %}" height="20" width="20" /></td><td>Albums</td></tr></table></a>
+			</td><td>
+        <a href="{% url user-loves username=profile_user.username %}" id="loves_link" class="dashboard_nav">
+		<table><tr><td><img src="{% media_url 'images/iconLoves.png' %}" height="20" width="20" /></td><td>Loves</td></tr></table></a>
+			</td><td>
+			{% if request.user == profile_user %}
+			{% else %}
+				{% if profile_user|check_message_sending:request.user %}
+					<div style="margin: 10px 0; display: inline-block;" id="send_message"><a href="#" class="send_message">Send Message</a></div>
+				{% endif %}
+			{% endif %}
+			</td></tr></table>
+		</td>
+		<td class="db_addfriend">
+
+{% if not request.user.is_anonymous %}
+    {% if request.user == profile_user %}
+    {% elif profile_user|has_friend:request.user %}
+        <a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }">- Remove</a>
+    {% elif profile_user|has_friend_request:request.user %}
+        <span class="subtitle_username">Friend request pending.</span>
+    {% elif profile_user|in_followers:request.user %}
+        {% if profile_user|check_friend_request:request.user %} 
+        <a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_friend'); return false;" onMouseOut="HideContent('add_friend'); return false;">+ Add</a>
+        {% endif %}
+        <a class="profile_btn link-unfollow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" >- Unfollow</a>
+    {% else %}
+        {% if profile_user|check_friend_request:request.user %} 
+        <a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_friend'); return false;" onMouseOut="HideContent('add_friend'); return false;">+ Add</a>
+        {% endif %}
+        {% if profile_user|check_following:request.user %} 
+        <a class="profile_btn link-follow { user: '{{ profile_user.id }}' }" style="cursor: pointer;" onMouseOver="ShowContent('add_follow'); return false;" onMouseOut="HideContent('add_follow'); return false;" >+ Follow</a>
+        {% endif %}
+
+    <div class="add_filter" id="add_follow" style="display: none;">
+        <select>
+            <option></option>
+        </select><br /><br />
+        <a href="#" style="padding: 5px;">+ Add Custom Filter</a>
+    </div>
+    <div class="add_filter" id="add_friend" style="display: none;">
+    <table width="300"><tr><td>
+    Put {{ profile_user.first_name }} into one of your filters.<br /><br />
+        <select>
+            <option></option>
+            <option>Family</option>
+        </select><br /><br />
+        <a href="#" style="padding: 5px;">+ Add Custom Filter</a>
+    </td><td>
+    Pick a filter from {{ profile_user.first_name }} that you think you best fit in.<br /><br />
+        <select>
+            <option></option>
+            <option>Family</option>
+        </select><br /><br />
+        <span style="padding: 5px; color: transparent;">Hello World</span>
+    </td></tr></table>
+    </div>
+    {% endif %}
+{% endif %}
+
+		</td>
+		<td width="120">
+<div class="dashboard_related">
+<table width="100%" height="100%"><tr><td>
+{% if profile_user|check_friends_visibility:request.user %}
+<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="db_related">{{ profile_user|show_friend_count:request.user }}</a>
+{% endif %}
+<br />
+{% if profile_user|check_follower_visibility:request.user %}
+<a href="{% url profile.views.related_users username=profile_user.username %}?Followers" class="db_related">{{ profile_user|show_followers_count:request.user }} Follower{{ profile_user.get_followers_count|pluralize }}</a>
+{% endif %}
+<br />
+{% if profile_user|check_following_visibility:request.user %}
+<a href="{% url profile.views.related_users username=profile_user.username %}?Following" class="db_related">{{ profile_user|show_following_count:request.user }} Following</a>
+{% endif %}
+</td></tr></table>
+</div>
+		</td>
+	</tr></table>
+</div>
+
+<div style="position: relative;">
+<form action="." method="post" class="send_message_form" style="display:none; text-align: left;" id="message_form">
+    {% csrf_token %}
+
+    {% if form_mess.non_field_errors %}
+    <div>{{ form_mess.non_field_errors }}</div>
+    {% endif %}
+    
+    To: <input id="id_user_to" style="width: 150px !important; padding: 7px; border: 0px; background: transparent;" type="text" name="user_to" maxlength="100" value="{{ profile_user.full_name }}" readonly>
+
+    <input type="hidden" name="user_id" id="id_user_id" value="{{ profile_user.id }}">
+
+    {% if form_mess.content.errors %}
+    <div>{{ form_mess.content.errors }}</div>
+    {% endif %}
+    {{ form_mess.content }} 
+
+    <p><input name="message" type="submit" class="blue_btn" style="font-size: 8pt;" value="Send" /> <a href="#" onClick="HideContent('message_form'); return false;" style="font-size: 7pt; color: #999; margin-left: 10px;">Cancel</a></p>
+</form> 
+</div>

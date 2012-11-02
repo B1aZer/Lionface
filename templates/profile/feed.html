@@ -2,13 +2,21 @@
 {% load media %}
 
 
-{% block content_title %} <a href="{% url profile.views.profile request.user.username %}" class="name_link">{{ user.full_name }}</a> | News Feed{% endblock %}
-{% block content_middle %}<a href="{% url schools.views.home %}" class="find_friends">Find Friends from School ></a>{% endblock %}
-{% block content_subtitle %}<span style="color: #DDD;">share your heart</span>{% endblock %}
+{% block content_title %}{% endblock %}
+{% block content_middle %}
+	<table width="100%"><tr><td align="left" width="200" style="color: #999;">
+		<a href="{% url profile.views.profile request.user.username %}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | News Feed
+	</td><td align="center">
+		<a href="{% url schools.views.home %}" class="find_friends">Find Friends from School ></a>
+	</td><td align="right" width="200">
+		<span style="color: #DDD;">share your heart</span>
+	</td></tr></table>
+{% endblock %}
+{% block content_subtitle %}{% endblock %}
+
 {% block left_col %}
 
     <div style="position: relative; left: 0px; z-index: 100;">
-		<div style="text-align: center; color: #DDD; font-size: 8pt;">Shift+click to select just one filter.</div>
         <a href="javascript:;" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'F' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}>Friends</a>
         <a href="javascript:;" class="feed_type {% if 'W' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'W' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}>Following</a>
         <a href="javascript:;" class="feed_type {% if 'P' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'P' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}>Businesses</a>
@@ -22,8 +30,6 @@
         {% empty %}
         {% endfor %}
         <a href="javascript:;" class="filter tags" ><span class="add_tag" >Add +</span></a>
-
-		<table id="load_more"><tr><td><input type="checkbox" /></td><td>Automatically load more posts on scroll.</td></tr></table>
 {% endblock %}
 
 {% block right_col %}
