@@ -5,7 +5,7 @@
 {% if not notification %}
 	<hr style="position: relative; left: 50px; background-color: #E7E7E7; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
-<div id="post_{{ item.get_id }}" class="result post_{{ item.id }} {{item.get_type_class}} {type: '{{item.get_type}}', user: '{{ item.user.id }}', postid: '{{ item.id }}' }">
+<div id="post_{{ item.get_post.id }}" class="result post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}' }">
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.get_owner.photo|format_image:request.get_full_path }}'); background-size: 50px 50px;"></div></a>
     {{ item.render|smileys|excerpt|linebreaks|color_tags }}
@@ -93,11 +93,14 @@
         <div class="post_bottom">
             {% if not del_false %}
             <!--This will fire on news feed-->
-                {% if item.get_owner.id == request.user.id  or item.user_to.id == request.user.id or item.user.id == request.user.id %}
+                {% if item.get_owner.id == request.user.id  or item.get_post.user_to.id == request.user.id %}
                     {% if item.get_type != 'friend post' and item.get_owner == request.user %}
                     <a href="#" class="toggle_settings" >Settings</a> 
                     {% endif %}
+                    {% if item.get_type == 'friend post' and item.user != request.user %}
+                    {% else %}
 				<a href="javascript:LionFace.Site.del_post({{item.id}});">Delete</a> 
+                    {% endif %}
                 {% endif %}
                 {% if item.get_privacy == "P" %}
                 <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>

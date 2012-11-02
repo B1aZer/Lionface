@@ -299,7 +299,7 @@ LionFace.Site.prototype = {
             return
         }
         var data = $('.post_'+elem).metadata();
-        url = "/posts/del/" + elem + "?user="+data.user+"&type="+data.type;
+        url = "/posts/del/" + elem + "?user="+data.user+"&type="+data.type+"&model="+data.model;
         make_request({
             url:url,
             callback:function(post_data) 

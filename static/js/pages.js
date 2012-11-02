@@ -108,7 +108,7 @@ LionFace.Pages.prototype = {
 
         /** update button */
         $(document).on('click','#postboxbutton',function(e) {
-            e.preventDefault();
+            e.preventDefault();     
             var url = "/pages/update/";
             var content = $('.postbox_textarea').val();
             if (content) {
@@ -120,29 +120,55 @@ LionFace.Pages.prototype = {
                     },
                     callback:function(data) {
                         if (data.status == 'OK') {
+                            $('.postbox_textarea').val('');
                             self_class.load_page_feed();
                         }
                     }
                 });
             }
         });
+
+        /** Load more post in pagefeed */
+        $(document).on('click','#see_more_feed',function(e){
+            e.preventDefault();
+            var self = $(this)
+            var page = get_int(self.attr('href'));
+            if ($("#page_feed").length) {
+                $("#page_feed").append("<div id='new_posts'></div>");
+                $("#new_posts").addClass($("#page_feed").attr('class'));
+            }
+            self.remove();
+            self_class.load_page_feed($("#new_posts"), page);
+        }) 
     },
-    load_page_feed : function() {
+    load_page_feed : function(elem, page) {
+        var elem = elem || $('#page_feed');
+        var page = page || 1;
+        console.log(page);
         var url = 'list_posts/'
         var loading = $('<div class="large_loader"></div>');
-        $('#page_feed').html(loading);
+        elem.html(loading);
         make_request({
             url:url,
+            type:'GET',
+            data:{
+                'page':page,
+            },
             callback : function(data) {
                 if (data.status == 'OK') {
-                    $('#page_feed').html(data.html);
+                    if (page > 1) {
+                        elem.replaceWith(data.html);
+                    }
+                    else {
+                        elem.html(data.html);
+                    }
                 }
                 else {
-                    $('#page_feed').html('');
+                    elem.html('');
                 }
             },
             errorback : function() {
-                $('#page_feed').html('');
+                elem.html('');
             }
         })
     }

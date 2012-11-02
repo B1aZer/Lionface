@@ -281,6 +281,12 @@ def delete(request, post_id = None):
                 if original.content_object.shared != 0:
                     original.content_object.shared -= 1
                     original.content_object.save()
+        if post_type == 'page post' and request.GET.get('model',None) == 'post_pagepost':
+            obj = Post.objects.get(id=post_id)
+            obj.newsitem_set.delete()
+            obj.delete()
+            data['status'] = 'OK'
+            return HttpResponse(json.dumps(data), "application/json")
         data['status'] = 'OK'
         DeleteNewsFeeds.delay(post,user=owner)
     return HttpResponse(json.dumps(data), "application/json")

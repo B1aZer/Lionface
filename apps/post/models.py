@@ -94,6 +94,9 @@ class Post(models.Model):
             return False
         return original._meta.verbose_name
 
+    def get_type_class(self):
+        return self._meta.db_table
+
     def get_post(self):
         return self
 
@@ -205,9 +208,6 @@ class PagePost(Post):
 
     def get_post(self):
         return self.post_ptr
-
-    def get_type(self):
-        return self._meta.verbose_name
 
     def get_owner(self):
         return self.user
@@ -434,11 +434,7 @@ class NewsItem(models.Model):
         return original._meta.verbose_name
 
     def get_type_class(self):
-        try:
-            original = self.post.get_inherited()
-        except:
-            return False
-        return original._meta.db_table
+        return self._meta.db_table
 
     def get_owner(self):
         try:
@@ -508,7 +504,6 @@ def delete_news_feeds(sender, instance, **kwargs):
     except ObjectDoesNotExist:
         pass
 post_delete.connect(delete_news_feeds, sender=NewsItem)
-#post_delete.connect(delete_news_feeds, sender=ContentPost)
 
 def change_default_settings(sender, instance, created, **kwargs):
     if created:

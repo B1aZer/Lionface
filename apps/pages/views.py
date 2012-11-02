@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from .forms import *
 from .models import *
 from itertools import chain
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 try:
     import json
@@ -162,8 +163,9 @@ def update(request):
         content = request.POST.get('content')
         try:
             page = Pages.objects.get(id=int(page_id))
-            page.posts.create(user=request.user, content=content)
-            data['status'] = 'OK'
+            if page.user == request.user:
+                page.posts.create(user=request.user, content=content)
+                data['status'] = 'OK'
         except Pages.DoesNotExist:
             pass
     return HttpResponse(json.dumps(data), "application/json")
@@ -175,12 +177,31 @@ def list_posts(request, slug=None):
     if slug:
         try:
             page = Pages.objects.get(username=slug)
-            posts = page.get_posts().order_by('-date')
-            data['html'] = render_to_string('post/_feed.html',
-                    {
-                        'items':posts,
-                    }, context_instance=RequestContext(request))
-            data['status'] = 'OK'
+            items = page.get_posts().order_by('-date')
         except Pages.DoesNotExist:
             raise Http404
+
+    # PAGINATION #
+    paginator = Paginator(items, 7)
+    items = paginator.page(1)
+
+    if request.method == 'GET':
+        page = request.GET.get('page', None)
+        if page:
+            try:
+                items = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                items = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                items = paginator.page(paginator.num_pages)
+        else:
+            page = 1
+
+    data['html'] = render_to_string('post/_feed.html',
+            {
+                'items':items,
+            }, context_instance=RequestContext(request))
+    data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")

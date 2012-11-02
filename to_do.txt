@@ -1,4 +1,6 @@
 ##next###
+redirect after create!!
+
 deleting sharing origin wont delete children
 wrong privacy on deleted
 ###later###

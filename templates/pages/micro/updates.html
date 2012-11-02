@@ -18,6 +18,8 @@
 <div class="page_center">
     <div style="padding: 15px;">
 
+        {% if page.user == request.user %}
+
         <div id="postbox">
             <div style="padding: 10px;" align="center">
 
@@ -35,6 +37,8 @@
                 </div>
             </div>
         </div>
+
+        {% endif %}
 
         <div id="page_feed">
         </div>
