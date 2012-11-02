@@ -147,6 +147,7 @@ class Post(models.Model):
         ).exclude(user__in=user.get_blocked()).count()
         return value
 
+
 class FriendPost(Post):
     friend = models.ForeignKey(UserProfile)
 
@@ -161,6 +162,7 @@ class FriendPost(Post):
 
     def privacy(self):
         return ""
+
 
 
 class PagePost(Post):
@@ -214,6 +216,8 @@ class PagePost(Post):
 
     def privacy(self):
         return 'P'
+
+
 
 class ContentPost(Post):
     content = models.CharField(max_length=5000)
@@ -474,6 +478,11 @@ class NewsItem(models.Model):
 
     def get_album(self):
         return self.post.album
+
+    def get_page_url(self):
+        post = self.post.get_inherited()
+        if hasattr(post,'page'):
+            return post.page.get_absolute_url()
 
     def get_comment_counter(self, user=None):
         value = comments.get_model().objects.filter(
