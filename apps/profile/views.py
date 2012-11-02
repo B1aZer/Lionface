@@ -64,7 +64,7 @@ def profile_image(request, username=None):
     ROWS_SHOW = 1
     image_rows = UserImages.objects.filter(profile=profile_user) \
         .select_related('image').get_rows(0, ROWS_SHOW)
-    avail_rows = 1 + \
+    total_rows = 1 + \
         UserImages.objects.filter(profile=profile_user).count() // UserImages.objects.DEFAULT_ROW_SIZE
 
     return render_to_response(
@@ -72,7 +72,7 @@ def profile_image(request, username=None):
         {
             'profile_user': profile_user,
             'image_rows': image_rows,
-            'avail_rows': avail_rows,
+            'total_rows': total_rows,
         },
         RequestContext(request)
     )
@@ -115,6 +115,9 @@ def profile(request, username='admin'):
                     owner=profile
                 )
                 image.save()
+                UserImages.objects.filter(profile=profile) \
+                    .filter(activity=True) \
+                    .update(activity=False)
                 image_profile_m2m = UserImages.objects.create(
                     image=image,
                     profile=profile,

@@ -50,7 +50,9 @@
 {% block js %}
 <script type="text/javascript">
 	$(function() {
-		LionFace.Profile.link = "{% url profile-image-more profile_user.username %}";
+		LionFace.User['profile-image-more'] = "{% url profile-image-more profile_user.username %}";
+		LionFace.User['total_rows'] = {{ total_rows }};
+		LionFace.User['now_rows'] = {{ image_rows|length }};
 	});
 </script>
 {% endblock %}
