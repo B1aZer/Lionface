@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import comments
 from django.conf import settings
+from django.template.loader import render_to_string
 
 import re
 from .utils import QuerySetManager
@@ -179,10 +180,20 @@ class PagePost(Post):
         # Linkify
         self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
 
-        return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
+        post_template = render_to_string('post/_pagepost.html',
+                { 'user':self.user,
+                    'page':self.page,
+                    'content':self.content,
+                })
+        post_template = post_template.replace("\n","")
+
+        return post_template
 
     def name(self):
         return self._meta.verbose_name
+
+    def get_page_type(self):
+        return self.page.type
 
     @property
     def timestamp(self):
@@ -302,9 +313,16 @@ class SharePost(Post):
 class CustomQuerySet(QuerySet):
     def get_public_posts(self, user=None):
         if not user:
-            return [x for x in self if x.get_privacy == 'P']
+            post_ids = [x.id for x in self if x.get_privacy == 'P']
+            return self.filter(id__in=post_ids)
         else:
-            return [x for x in self if x.get_privacy == 'P' or (x.get_privacy == 'F' and x.get_owner().has_friend(user)) or (x.get_privacy == 'F' and x.get_owner() == user) or x.get_privacy == '']
+            post_ids = [x.id
+                    for x in self
+                    if x.get_privacy == 'P' or
+                    (x.get_privacy == 'F' and x.get_owner().has_friend(user)) or
+                    (x.get_privacy == 'F' and x.get_owner() == user) or
+                    x.get_privacy == '']
+            return self.filter(id__in=post_ids)
     def get_tagged_posts(self,tags):
         #import pdb;pdb.set_trace()
         tagged_posts = [x for x in self if x.post.tags.filter(name__in=tags)]
@@ -312,6 +330,7 @@ class CustomQuerySet(QuerySet):
             self = list(chain(self, tagged_posts))
         return self
     def remove_similar(self):
+        """ remove duplicates by Post.id"""
         duplicates = []
         ids = []
         items = []
@@ -325,6 +344,8 @@ class CustomQuerySet(QuerySet):
                 self = self.exclude(id=id_item)
         return self
     def remove_to_other(self):
+        """ Remove post from friends
+        show only own posts"""
         for item in self:
             if isinstance(item.post.get_inherited(), ContentPost):
                 if item.post.user <> item.post.user_to:
@@ -336,7 +357,44 @@ class CustomQuerySet(QuerySet):
                 if item.get_owner() in user.get_blocked():
                     self = self.exclude(id=item.id)
         return self
-
+    def get_profile_wall(self, users):
+        """ test method """
+        return self.filter(post__user_to__in=[users])
+    def remove_page_posts(self):
+        for item in self:
+            if isinstance(item.post.get_inherited(), PagePost):
+                self = self.exclude(id = item.id)
+        return self
+    def get_business_feed(self, user):
+        """
+        pages = user.get_loved()
+        post_ids = []
+        for page in pages:
+            ids = [x.id for x in page.get_posts()]
+            post_ids.extend(ids)
+        self = self.filter(post__id__in=post_ids)
+        """
+        self = self.filter(user=user)
+        for item in self:
+            if isinstance(item.post.get_inherited(), PagePost):
+                if item.post.get_inherited().get_page_type() == 'BS':
+                    pass
+                else:
+                    self = self.exclude(id=item.id)
+            else:
+                self = self.exclude(id=item.id)
+        return self
+    def get_nonprofit_feed(self, user):
+        self = self.filter(user=user)
+        for item in self:
+            if isinstance(item.post.get_inherited(), PagePost):
+                if item.post.get_inherited().get_page_type() == 'NP':
+                    pass
+                else:
+                    self = self.exclude(id=item.id)
+            else:
+                self = self.exclude(id=item.id)
+        return self
 
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)

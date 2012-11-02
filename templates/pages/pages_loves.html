@@ -11,7 +11,7 @@
                 {% else %}   
                     <a href="{% url pages.views.page slug=page.username %}" style="color:#909E4A; font-size: 16pt;">{{ page.name }}</a> 
                 {% endif %}
-                    {% if page.category == 'undefined' %}
+                    {% if page.category == 'Undefined' %}
                     {% else %}
                     <span style="color: #999; padding: 3px;">{{ page.category }}</span>
                     {% endif %}

@@ -77,14 +77,12 @@ def profile_image(request, username=None):
         RequestContext(request)
     )
 
-
 @login_required
 @unblocked_users
 def profile_image_more(request, username):
     
     
     return HttpResponse(json.dumps({}), "application/json")
-
 
 #@login_required
 @unblocked_users
@@ -425,7 +423,6 @@ def related_users(request,username=None):
         RequestContext(request)
     )
 
-
 @login_required
 def reset_picture(request, username=None):
     profile = request.user
@@ -438,7 +435,6 @@ def reset_picture(request, username=None):
     ][0]
     profile.save()
     return redirect('profile.views.profile', username=profile.username)
-
 
 @login_required
 @unblocked_users
@@ -475,7 +471,7 @@ def loves(request, username=None):
     pages = grouped_pages
 
     if request.method == 'GET' and 'ajax' in request.GET:
-        data['html'] = render_to_string('pages/pages.html',
+        data['html'] = render_to_string('pages/pages_loves.html',
                 {
                     'pages' : pages,
                 }, context_instance=RequestContext(request))

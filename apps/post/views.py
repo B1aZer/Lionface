@@ -32,7 +32,9 @@ def feed(request, user_id = None):
     if not user_id:
         news_feed_flag = True
         user_id = request.user.id
+        filters = request.user.filters.split(',')
         items = request.user.get_messages() \
+                .remove_page_posts() \
                 .remove_similar() \
                 .remove_to_other() \
                 .filter_blocked(user=request.user) \
@@ -50,10 +52,24 @@ def feed(request, user_id = None):
             items = list(chain(items, tagged_posts))
             items = list(set(items))
             items = sorted(items,key=lambda post: post.date, reverse=True)
+        # adding page filter here, since we need to extend the query
+        if 'B' in filters:
+            business_pages = NewsItem.objects.get_business_feed(request.user)
+            items = list(chain(items, business_pages))
+            items = list(set(items))
+            items = sorted(items,key=lambda post: post.date, reverse=True)
+        if 'N' in filters:
+            nonprofit_pages = NewsItem.objects.get_nonprofit_feed(request.user)
+            items = list(chain(items, nonprofit_pages))
+            items = list(set(items))
+            items = sorted(items,key=lambda post: post.date, reverse=True)
     else:
+        #items = NewsItem.objects.get_profile_wall(request.user).order_by('-date')
         items = NewsItem.objects.filter(hidden=False).order_by('date').reverse()
         # show messages adressed to user
         items = items.filter(user=user_id)
+        # remove page posts
+        items = items.remove_page_posts()
         # remove blocked
         if not request.user.is_anonymous:
             if request.user.get_blocked():

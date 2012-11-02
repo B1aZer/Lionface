@@ -1,0 +1,8 @@
+<a href='{{ user.get_absolute_url }}'>{{ user.get_full_name }}</a> on page
+                {% if page.type == 'BS' %}
+                    <a href="{{ page.get_absolute_url }}" style="color:#3ea8d2;">{{ page.name }}</a> 
+                {% else %}   
+                    <a href="{{ page.get_absolute_url }}" style="color:#909E4A;">{{ page.name }}</a> 
+                {% endif %}
+<br />
+<div class='post_content'>{{ content }}</div>

@@ -168,9 +168,15 @@ def filter_add(request):
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
-        if filter_name == 'Pages':
-                if 'P' not in filters:
-                    filters.append('P')
+        if filter_name == 'Businesses':
+                if 'B' not in filters:
+                    filters.append('B')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Nonprofits':
+                if 'N' not in filters:
+                    filters.append('N')
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
@@ -194,9 +200,15 @@ def filter_remove(request):
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
-        if filter_name == 'Pages':
-                if 'P' in filters:
-                    filters.remove('P')
+        if filter_name == 'Businesses':
+                if 'B' in filters:
+                    filters.remove('B')
+                    filters = ','.join(filters)
+                    request.user.filters = filters
+                    request.user.save()
+        if filter_name == 'Nonprofits':
+                if 'N' in filters:
+                    filters.remove('N')
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()

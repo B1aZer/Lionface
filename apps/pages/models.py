@@ -25,3 +25,7 @@ class Pages(models.Model):
 
     def get_posts(self):
         return self.posts.all()
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('pages.views.page', [str(self.username)])
