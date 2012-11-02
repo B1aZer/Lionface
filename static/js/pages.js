@@ -6,8 +6,12 @@ LionFace.Pages = function() {
 LionFace.Pages.prototype = {
 
     runner : function() {
+        self_class = this;
         this.bind_functions();
         this.bind_page_functions();
+        if (LionFace.User.page_id) {
+            this.load_page_feed(); 
+        }
     },
 
     //Binding
@@ -116,13 +120,32 @@ LionFace.Pages.prototype = {
                     },
                     callback:function(data) {
                         if (data.status == 'OK') {
-
+                            self_class.load_page_feed();
                         }
                     }
                 });
             }
         });
     },
+    load_page_feed : function() {
+        var url = 'list_posts/'
+        var loading = $('<div class="large_loader"></div>');
+        $('#page_feed').html(loading);
+        make_request({
+            url:url,
+            callback : function(data) {
+                if (data.status == 'OK') {
+                    $('#page_feed').html(data.html);
+                }
+                else {
+                    $('#page_feed').html('');
+                }
+            },
+            errorback : function() {
+                $('#page_feed').html('');
+            }
+        })
+    }
 }
 
 $(function() {         

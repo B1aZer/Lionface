@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     url(r'^love_count/$', views.love_count),
     url(r'^nonprofit/$', views.nonprofit),
     url(r'^page/(?P<slug>\w+)/$', views.page),
+    url(r'^page/(?P<slug>\w+)/list_posts/$', views.list_posts),
     url(r'^update/$', views.update),
 )
 

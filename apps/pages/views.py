@@ -90,13 +90,10 @@ def page(request, slug=None, username=None):
     else:
         template = 'pages/page_nonprofit.html'
 
-    items = page.get_posts()
-
     return render_to_response(
         template,
         {
             'page': page,
-            'items':items,
         },
         RequestContext(request)
     )
@@ -169,4 +166,21 @@ def update(request):
             data['status'] = 'OK'
         except Pages.DoesNotExist:
             pass
+    return HttpResponse(json.dumps(data), "application/json")
+
+def list_posts(request, slug=None):
+    data = {'status':'FAIL'}
+    if not slug:
+        HttpResponse(json.dumps(data), "application/json")
+    if slug:
+        try:
+            page = Pages.objects.get(username=slug)
+            posts = page.get_posts().order_by('-date')
+            data['html'] = render_to_string('post/_feed.html',
+                    {
+                        'items':posts,
+                    }, context_instance=RequestContext(request))
+            data['status'] = 'OK'
+        except Pages.DoesNotExist:
+            raise Http404
     return HttpResponse(json.dumps(data), "application/json")
