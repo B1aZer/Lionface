@@ -3,10 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext,loader
 
-from models import *
+from .models import *
 from account.models import UserProfile
 from tags.models import Tag
-from post.models import NewsItem, Post
 
 from tasks import DeleteNewsFeeds
 
@@ -345,6 +344,8 @@ def change_settings(request):
             post = get_object_or_404(ContentPost, id=int(request.POST['post_id']))
         elif post_type == 'share post':
             post = get_object_or_404(SharePost, id=int(request.POST['post_id']))
+        elif post_type == 'page post':
+            post = get_object_or_404(PagePost, id=int(request.POST['post_id']))
         else:
             raise Http404
         data = {'status': 'OK'}
@@ -385,7 +386,8 @@ def change_settings(request):
                     post.album.posts.remove(post)
                 data['album'] = ""
         else:
-            post.albums_set.clear()
+            if hasattr(post,'albums_set'):
+                post.albums_set.clear()
     return  HttpResponse(json.dumps(data), "application/json")
 
 @login_required

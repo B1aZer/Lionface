@@ -176,8 +176,8 @@ def list_posts(request, slug=None):
         HttpResponse(json.dumps(data), "application/json")
     if slug:
         try:
-            page = Pages.objects.get(username=slug)
-            items = page.get_posts().order_by('-date')
+            page_obj = Pages.objects.get(username=slug)
+            items = page_obj.get_posts().order_by('-date')
         except Pages.DoesNotExist:
             raise Http404
 
@@ -199,9 +199,10 @@ def list_posts(request, slug=None):
         else:
             page = 1
 
-    data['html'] = render_to_string('post/_feed.html',
+    data['html'] = render_to_string('post/_page_feed.html',
             {
                 'items':items,
+                'page':page_obj,
             }, context_instance=RequestContext(request))
     data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")

@@ -12,11 +12,11 @@
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>
-            <span id="hide_comment_link_{{ item.get_id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
+            <span id="hide_comment_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                 <a class="toggle_comments" href="">Comment</a>{% ifequal item.get_post|get_comment_counter:request.user 0 %} {% else %} 
 					<span style="color: #555; padding: 2px;">{{ item.get_post|get_comment_counter:request.user }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
             </span>
-            <span id="hide_share_{{ item.get_id }}" {% if not item.get_share_settings %} style="display: none;" {% endif %}>
+            <span id="hide_share_{{ item.get_post.id }}" {% if not item.get_share_settings %} style="display: none;" {% endif %}>
                 <a href="javascript:LionFace.Site.share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} 
 					<span style="color: #555; padding: 2px;">{{ item.shared }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
             </span>
@@ -31,6 +31,7 @@
         </div>
         {% if item.get_owner == request.user %}
         <div class="post_settings" style="display:none">
+            {% block post_settings %}
             <form>
                 <input type="checkbox" name="comment_settings" value="on" 
                     {% if item.get_owner != item.get_wall_user %}
@@ -61,10 +62,11 @@
                 </select>
                 {% endif %}
             </form>
+            {% endblock %}
         </div>
         {% endif %}
         <br />
-        <div id="hide_comment_{{ item.get_id }}" {% if not item.get_comment_settings %}  style="display:none" {% endif %} >
+        <div id="hide_comment_{{ item.get_post.id }}" {% if not item.get_comment_settings %}  style="display:none" {% endif %} >
             <div class="comments comment_{{ item.id }}" style="display: none;">
                 <div class="comment_container">
                 {% render_comment_list for item.get_post %}
@@ -78,7 +80,7 @@
 
         <div class="post_timestamp">
             {% if item.get_type != 'friend post' %}
-                <span id="hide_follow_link_{{ item.get_id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
+                <span id="hide_follow_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                     {% if item|follows:request.user %}
                     <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %} 
 						<span style="color: #555; padding: 2px;">{{ item|following }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span> 

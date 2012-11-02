@@ -630,6 +630,7 @@ LionFace.Site.prototype = {
                             this.toggle_privacy(post_id, data_back.privacy);
                         }
                         if (data_back.commenting) {
+                            console.log(post_id);
                             $('#hide_comment_link_'+post_id).hide();
                             $('#hide_follow_link_'+post_id).hide();
                             $('#hide_comment_'+post_id).hide();
