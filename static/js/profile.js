@@ -10,7 +10,7 @@ LionFace.Profile.prototype = {
             this.bind_upload_form();
             this.bind_postbox();
             this.bind_albums();
-            this.bind_image_container();
+            this.bind_profile_pictures();
             this.bind_love_list();
         }
 
@@ -261,22 +261,59 @@ LionFace.Profile.prototype = {
         $( ".sortable" ).disableSelection();
     },
 
-    bind_image_container : function() {
-        $('div.image_container td').each(function(index, elem) {
+    bind_profile_pictures : function() {
+        
+        /* Function for init actions on image */
+        function image_setting(index, elem) {
             $(elem).find('div:first').hover(
-                function () {
+                function() {
                     $(this).find('#image_settings').show();
                 },
-                function () {
+                function() {
                     $(this).find('#image_settings').hide();
                 }
             );
-        });
-        if ( LionFace.User['now_rows'] < LionFace.User['total_rows'] ) {
+        }
+        $('div.image_container td').each(image_setting);
+        /* View more button */
+        if ( LionFace.User['profile_images_now_rows'] < LionFace.User['profile_images_total_rows'] ) {
             var view_more = $('div.image_container div.view_more');
             $(view_more).show();
             $(view_more).find('a').click(function() {
-                
+                /* XHR request with events */
+                $.ajax({
+                    url: LionFace.User['profile_images_url_more'],
+                    type: 'POST',
+                    data: {
+                        'row': LionFace.User['profile_images_now_rows'] + 1,
+                    },
+                    beforeSend: function(jqXHR, settings) {
+                        $(view_more).find('div.view_more_loader').show(250);
+                    },
+                    success: function(data, textStatus, jqXHR) {
+                        LionFace.User['profile_images_now_rows']++;
+                        LionFace.User['profile_images_total_rows'] = data.total_rows;
+                        if ( LionFace.User['profile_images_now_rows'] >= LionFace.User['profile_images_total_rows'] ) {
+                            $(view_more).hide(500);
+                        }
+                        var item = $(data.html);
+                        $(item).find('td').each(image_setting);
+                        $(item).insertBefore($('div.image_container tr:last'));
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $(view_more).prepend('<div class="error" style="font-size: 20px;">' + errorThrown + '</div>');
+                        setTimeout(function() {
+                            setTimeout(function() {
+                                $(view_more).find('div.error').remove();
+                            }, 500);
+                            $(view_more).find('div.error').hide(500);
+                        }, 5000);
+                    },
+                    complete: function(jqXHR, textStatus) {
+                        $(view_more).find('div.view_more_loader').hide(500);
+                    },
+                });
+                return false;
             });
         }
     },
