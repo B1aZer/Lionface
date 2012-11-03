@@ -1,0 +1,14 @@
+{% load media friends format_results %}
+
+<tr id="images_row_{{ image_row.index }}">
+{% for row in image_row.rows %}
+	<td width="25%" align="center">
+		<div style="background-image: url('/{{ row.image.image|format_thumb:request.get_full_path }}'); background-size: 200px 200px; width: 200px; height: 200px; margin-bottom: 25px;">
+			<div id="image_settings">
+				<a href="#" style="float: left;" title="Make Primary Photo">+</a>
+				<a href="#" style="float: right;" title="Delete Photo">x</a>
+			</div>
+		</div>
+	</td>
+{% endfor %}
+</tr>

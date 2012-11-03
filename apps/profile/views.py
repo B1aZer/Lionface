@@ -28,6 +28,7 @@ try:
 except ImportError:
     import simplejson as json
 
+
 @login_required
 def feed(request, username=None):
     return render_to_response(
@@ -45,6 +46,7 @@ def timeline(request):
         },
         RequestContext(request)
     )
+
 
 @login_required
 @unblocked_users
@@ -64,8 +66,7 @@ def profile_image(request, username=None):
     ROWS_SHOW = 1
     image_rows = UserImages.objects.filter(profile=profile_user) \
         .select_related('image').get_rows(0, ROWS_SHOW)
-    total_rows = 1 + \
-        UserImages.objects.filter(profile=profile_user).count() // UserImages.objects.DEFAULT_ROW_SIZE
+    total_rows = UserImages.objects.filter(profile=profile_user).total_rows()
 
     return render_to_response(
         'profile/image.html',
@@ -77,12 +78,38 @@ def profile_image(request, username=None):
         RequestContext(request)
     )
 
+
 @login_required
 @unblocked_users
 def profile_image_more(request, username):
-    
-    
-    return HttpResponse(json.dumps({}), "application/json")
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Method must be POST.')
+    row = request.POST.get('row', None)
+    try:
+        row = int(row) - 1
+    except (TypeError, ValueError), e:
+        return HttpResponseBadRequest('Bad row was received.')
+
+    if username != None:
+        try:
+            profile_user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            raise Http404
+    else:
+        profile_user = request.user
+
+    total_rows = UserImages.objects.filter(profile=profile_user).total_rows()
+    image_row = UserImages.objects.filter(profile=profile_user) \
+        .select_related('image').get_row(row)
+
+    data = {}
+    data['total_rows'] = total_rows
+    data['html'] = render_to_string('profile/image_tr.html', {
+        'image_row' : image_row,
+    }, context_instance=RequestContext(request))
+
+    return HttpResponse(json.dumps(data), "application/json")
+
 
 #@login_required
 @unblocked_users
@@ -106,13 +133,12 @@ def profile(request, username='admin'):
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
                 profile = UserProfile.objects.get(id=request.user.id)
-                profile.photo = form.cleaned_data['photo']
-                profile.save()
                 image = UserImage.objects.create(
-                    image=profile.photo,
+                    image=form.cleaned_data['photo'],
                     owner=profile
                 )
-                image.save()
+                profile.photo = image.image
+                profile.save()
                 UserImages.objects.filter(profile=profile) \
                     .filter(activity=True) \
                     .update(activity=False)
@@ -121,7 +147,6 @@ def profile(request, username='admin'):
                     profile=profile,
                     activity=True
                 )
-                image_profile_m2m.save()
                 return HttpResponseRedirect(request.path)
 
         if 'message' in request.POST:
