@@ -1,1 +1,60 @@
-<span>Comunnity</span>
+{% load media %}
+<div class="float_left">
+	<div class="friend_container">
+		<div class="friend_title" style="color: #909e4a;">Nonprofit Friends</div> <div class="see_all">see all</div><br />
+			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+		<br /><br />
+		<div class="friend_title" style="color: #3ea8d2;">Business Friends</div> <div class="see_all">see all</div><br />
+			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+			<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></div>
+	</div>
+</div>
+
+<div class="page_center">
+    <div style="padding: 15px;">
+
+       			{% if page.type == 'BS' %}
+                    <span style="color:#3ea8d2; font-size: 16pt;">Loves</span> (page_loves) (public_loves) <br />
+                {% else %}   
+                    <span style="color:#909E4A; font-size: 16pt;">Loves</span> (page_loves) (public_loves)  <br />
+                {% endif %}
+				<div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div><br /><br />
+					<a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
+				</div>
+					<br /><br />
+
+
+       			{% if page.type == 'BS' %}
+                {% else %}   
+                    <span style="color:#909E4A; font-size: 16pt;">Volunteers</span> (page_volunteers) (public_volunteers) <br /><br />
+                {% endif %}
+
+       			{% if page.type == 'BS' %}
+                    <span style="color:#3ea8d2; font-size: 16pt;">Interns</span> (page_interns) (public_interns) <br /><br />
+                {% else %}   
+                    <span style="color:#909E4A; font-size: 16pt;">Interns</span> (page_interns) (public_interns)  <br /><br />
+                {% endif %}
+
+       			{% if page.type == 'BS' %}
+                    <span style="color:#3ea8d2; font-size: 16pt;">Employees</span> (page_employees) (public_employees)  <br /><br />
+                {% else %}   
+                    <span style="color:#909E4A; font-size: 16pt;">Employees</span> (page_employees) (public_employees)  <br /><br />
+                {% endif %}
+
+    </div>
+</div>

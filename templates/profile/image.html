@@ -10,37 +10,37 @@
 {% block content_subtitle %}{% endblock %}
 
 {% block left_col %}
-<div style="position: relative; top: -1px; background: #FFF;">
 <div onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
-	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px;">
+	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 66px 66px; height: 66px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px; margin-bottom: 10px;" onMouseOver="ShowContent('show_upload'); return false;" onMouseOut="HideContent('show_upload'); return false;">
 		{% if request.user == profile_user %}
-        <div style="position: relative; top: 4px; left: 72px; display: block; width: 126px; background: #FFF; z-index: 997;" align="center">
-            <a id="upload_picture" class="upload" style="display:none;">Upload</a><br /><a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
+        <div class="image_upload_container" align="center" id="show_upload">
+            <a id="upload_picture" class="upload" style="display:none;position:relative;top:4px;">Upload</a><br /><a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
         </div>
         {% endif %}
- 
-</div>
-
         <div class="photos_count" align="center">
+			<div style="padding-top: 26px;">
 		{{ profile_user.all_images.count }} Photos
+			</div>
 		</div>
-
-<div style="position: relative;">
-<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -92px;">
-    {% csrf_token %}
-    {{ form.photo.errors }}
-    <p><label for="id_photo">Upload</label></p>
-    {{ form.photo }}
-    <p><input name="image" type="submit" class="blue_btn" value="Upload" /></p>
-</form>
-</div>
 </div>
 {% endblock %}
 
 {% block right_col %}
-	<div style="padding: 10px; position: relative; left: 40px; height: 45px;">
-
+	<div style="padding: 10px; height: 45px;">
+		<div style="position: relative; top: 18px; left: 25px; color: #DDD;">
+		Whose woods these are I think I know, his house is in the village though. <i>- Robert Frost</i>
+		</div>
 	</div>
+
+<div style="position: relative;">
+<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -65px; height: 28px; padding: 18px; width: 662px;">
+    {% csrf_token %}
+    {{ form.photo.errors }}
+    <label for="id_photo">Upload</label>
+    {{ form.photo }}
+    <input name="image" type="submit" class="blue_btn" value="Upload" />
+</form>
+</div>
 {% endblock %}
 
 {% block js %}
@@ -62,18 +62,21 @@
 		<tr id="images_row_{{ image_row.index }}">
 		{% for row in image_row.rows %}
 			<td width="25%" align="center">
-				<div style="background-image: url('/{{ row.image.image|format_image:request.get_full_path }}'); background-size: 200px 200px; width: 200px; height: 200px; margin-bottom: 25px;">
-				<div id="image_settings">
-					<a href="#" style="float: left;" title="Make Primary Photo">+</a>
-					<a href="#" style="float: right;" title="Delete Photo">x</a>
-				</div>
+				<div style="background-image: url('/{{ row.image.image|format_image:request.get_full_path }}');" class="image_album">
+				{% if request.user == profile_user %}
+					<div id="image_settings">
+						<a href="#" style="float: left;" title="Make Primary Photo">+</a>
+						<a href="#" style="float: right;" title="Delete Photo">x</a>
+					</div>
+				{% else %}
+				{% endif %}
 			</div></td>
 		{% endfor %}
 		</tr>
 	{% endfor %}
 		<tr>
 			<td colspan="4" align="center"><div class="view_more" style="display: none;">
-				<a href="#">View more</a>
+				<a href="#">View More</a>
 			</div></td>
 		</tr>
 	</table>
