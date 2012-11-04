@@ -262,17 +262,42 @@ LionFace.Profile.prototype = {
     },
 
     bind_profile_pictures : function() {
-        
         /* Function for init actions on image */
         function image_setting(index, elem) {
-            $(elem).find('div:first').hover(
-                function() {
-                    $(this).find('#image_settings').show();
-                },
-                function() {
-                    $(this).find('#image_settings').hide();
-                }
-            );
+            var image_settings = $(elem).find('div:first #image_settings');
+            if ( $(image_settings).length == 1 ) {
+                $(elem).find('div:first').hover(
+                    function() {
+                        $(image_settings).show();
+                    },
+                    function() {
+                        $(image_settings).hide();
+                    }
+                );
+                /* Make primary photo */
+                $(image_settings).find('#make_primary').click(function() {
+                    $.ajax({
+                        url: LionFace.User['profile_images_url_primary'],
+                        type: 'POST',
+                        data: {
+                            'pk': $(image_settings).attr('pk'),
+                        },
+                        beforeSend: function(jqXHR, settings) {
+                            
+                        },
+                        success: function(data, textStatus, jqXHR) {
+                            
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            
+                        },
+                        complete: function(jqXHR, textStatus) {
+                            
+                        },
+                    });
+                    return false;
+                });
+            }
         }
         $('div.image_container td').each(image_setting);
         /* View more button */
