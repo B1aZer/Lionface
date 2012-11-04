@@ -12,16 +12,15 @@
 {% block left_col %}
 <div style="position: relative; top: -1px; background: #FFF;">
 <div onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
-	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_thumb:request.get_full_path }}'); background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px;">
+	class="noPhoto" thumb="1" style="background-image: url('/{{ profile_user.photo|format_thumb:request.get_full_path }}'); background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px;">
 	{% if request.user == profile_user %}
 	<div style="position: relative; top: 4px; left: 72px; display: block; width: 126px; background: #FFF; z-index: 997;" align="center">
 		<a id="upload_picture" class="upload" style="display:none;">Upload</a><br /><a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
 	</div>
 	{% endif %}
- 
 </div>
 
-        <div class="photos_count" align="center">
+	<div class="photos_count" align="center">
 		{{ profile_user.all_images.count }} Photos
 		</div>
 
@@ -49,6 +48,7 @@
 		LionFace.User['profile_images_total_rows'] = {{ total_rows }};
 		LionFace.User['profile_images_now_rows'] = {{ image_rows|length }};
 		LionFace.User['profile_images_url_primary'] = "{% url profile-image-primary profile_user.username %}";
+		LionFace.User['profile_images_url_delete'] = "{% url profile-image-delete profile_user.username %}";
 	});
 </script>
 {% endblock %}
