@@ -11,12 +11,12 @@
 
 {% block left_col %}
 <div onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;" 
-	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 66px 66px; height: 66px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px; margin-bottom: 10px;" onMouseOver="ShowContent('show_upload'); return false;" onMouseOut="HideContent('show_upload'); return false;">
-		{% if request.user == profile_user %}
-        <div class="image_upload_container" align="center" id="show_upload">
-            <a id="upload_picture" class="upload" style="display:none;position:relative;top:4px;">Upload</a><br /><a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
-        </div>
-        {% endif %}
+	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_thumb:request.get_full_path }}'); background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px;">
+	{% if request.user == profile_user %}
+	<div style="position: relative; top: 4px; left: 72px; display: block; width: 126px; background: #FFF; z-index: 997;" align="center">
+		<a id="upload_picture" class="upload" style="display:none;">Upload</a><br /><a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
+	</div>
+	{% endif %}
         <div class="photos_count" align="center">
 			<div style="padding-top: 26px;">
 		{{ profile_user.all_images.count }} Photos
@@ -41,46 +41,40 @@
     <input name="image" type="submit" class="blue_btn" value="Upload" />
 </form>
 </div>
+</div>
+{% endblock %}
+
+{% block right_col %}
+	<div style="padding: 10px; position: relative; left: 40px; height: 45px;">
+	</div>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
 	$(function() {
-		LionFace.User['profile-image-more'] = "{% url profile-image-more profile_user.username %}";
-		LionFace.User['total_rows'] = {{ total_rows }};
-		LionFace.User['now_rows'] = {{ image_rows|length }};
+		LionFace.User['profile_images_url_more'] = "{% url profile-image-more profile_user.username %}";
+		LionFace.User['profile_images_total_rows'] = {{ total_rows }};
+		LionFace.User['profile_images_now_rows'] = {{ image_rows|length }};
+		LionFace.User['profile_images_url_primary'] = "{% url profile-image-primary profile_user.username %}";
 	});
 </script>
 {% endblock %}
 
 {% block center_col %}
+{% include_media 'profile.js' %}
 <div align="center">
 <div class="image_container" align="center">
 	<table align="center" width="100%">
-	<tr><td colspan="4">a</td></tr>
-	{% for image_row in image_rows %}
-		<tr id="images_row_{{ image_row.index }}">
-		{% for row in image_row.rows %}
-			<td width="25%" align="center">
-				<div style="background-image: url('/{{ row.image.image|format_image:request.get_full_path }}');" class="image_album">
-				{% if request.user == profile_user %}
-					<div id="image_settings">
-						<a href="#" style="float: left;" title="Make Primary Photo">+</a>
-						<a href="#" style="float: right;" title="Delete Photo">x</a>
-					</div>
-				{% else %}
-				{% endif %}
-			</div></td>
+		{% for image_row in image_rows %}
+			{% include "profile/image_tr.html" %}
 		{% endfor %}
-		</tr>
-	{% endfor %}
 		<tr>
 			<td colspan="4" align="center"><div class="view_more" style="display: none;">
-				<a href="#">View More</a>
+				<div class="view_more_loader" style="display: none;"><image src="{% media_url 'images/loader.gif' %}"></div>
+				<a href="#">View more</a>
 			</div></td>
 		</tr>
 	</table>
 </div>
 </div>
-  {% include_media 'profile.js' %}
 {% endblock %}

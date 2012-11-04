@@ -1,13 +1,18 @@
+import os
+from itertools import chain
+
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.db.models.signals import post_save, pre_delete, pre_save
+from django.db.models.signals import pre_save, post_save, pre_delete
 from django.db.models.query import Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
 
 from django.utils import simplejson as json
 
-from itertools import chain
+from .fields import ImageWithThumbField
+from .storage import ImageStorage
+
 
 FILTER_TYPE = (
     ('F', 'Friend Feed'),
@@ -72,7 +77,7 @@ class UserProfile(User):
     friends = models.ManyToManyField('self', related_name='friends')
     hidden = models.ManyToManyField('self', symmetrical=False, related_name='hidden_from')
     blocked = models.ManyToManyField('self', symmetrical=False, related_name='blocked_from')
-    photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
+    photo = ImageWithThumbField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
     filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
@@ -420,7 +425,8 @@ post_save.connect(create_user_profile, sender=User)
 
 
 class UserImage(models.Model):
-    image = models.ImageField(upload_to="uploads/images")
+    image = ImageWithThumbField(upload_to="uploads/images",
+        storage=ImageStorage())
     owner = models.ForeignKey('UserProfile', related_name='my_images')
     rating = models.PositiveIntegerField(default=0)
     profiles = models.ManyToManyField('UserProfile', related_name='all_images',
@@ -429,22 +435,53 @@ class UserImage(models.Model):
     def __unicode__(self):
         return self.image.name
 
-'''
+
+# Need argument update_fields for thumb, New in Django 1.5
+def create_user_image(sender, instance, created, **kwargs):
+    if created:
+        from PIL import Image
+        
+        try:
+            pil_object = Image.open(instance.image.path)
+            w, h = pil_object.size
+            x, y = 0, 0
+            if w > h:
+                x, y, w, h = int((w-h)/2), 0, h, h
+            elif h > w:
+                x, y, w, h = 0, int((h-w)/2), w, w
+            new_pil_object = pil_object.crop((x, y, x+w, y+h))
+            new_pil_object.save(instance.image.thumb_path)
+            # The best way definition content_type is magic, may be use her?
+            # http://pypi.python.org/pypi/python-magic/
+            #new_pil_object.save(instance.image.thumb_path,
+            #    format=Image.EXTENSION.get(os.path.splitext(instance.image.path)[1], 'JPEG'))
+        except:
+            pass
+post_save.connect(create_user_image, sender=UserImage)
+
+
 def delete_user_image(sender, instance, **kwargs):
-    profile = instance.owner
-    profile.all_images.remove(instance)
+    image = instance.image
+    UserImages.objects.filter(image=image).delete()
+    UserImageTag.objects.filter(image=image).delete()
     if instance.activity:
+        profile = instance.owner
         profile.photo = [field.default
             for field in UserProfile._meta.fields if field.name == 'photo'
         ][0]
         profile.save()
-    instance.image.delete(save=False)
+    image.storage.delete(instance.image.thumb_path)
+    image.delete(save=False)
 pre_delete.connect(delete_user_image, sender=UserImage)
-'''
+
 
 import post.models
 class UserImagesQuerySet(post.models.QuerySet):
     DEFAULT_ROW_SIZE = 4
+
+    def total_rows(self):
+        from math import ceil
+        return int(ceil(self.count() / float(self.DEFAULT_ROW_SIZE)))
 
     def get_rows(self, start, count, size=DEFAULT_ROW_SIZE):
         qs = self.order_by('-activity', '-image__rating')
@@ -456,6 +493,9 @@ class UserImagesQuerySet(post.models.QuerySet):
                 'rows': images[i:i+size],
             })
         return rows
+
+    def get_row(self, start, size=DEFAULT_ROW_SIZE):
+        return self.get_rows(start, 1)[0]
 
 
 class UserImages(models.Model):

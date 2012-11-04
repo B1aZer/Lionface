@@ -48,6 +48,18 @@ def format_image(photo, path=""):
         photo = "lionface/%s" % photo
     return photo
 
+
+@register.filter(name='format_thumb')
+def format_thumb(image, path=''):
+    if hasattr(image, 'thumb_name'):
+        image = getattr(image, 'thumb_name')
+    if 'noProfilePhoto.thumb.png' in image:
+        image = 'uploads/images/noProfilePhoto.thumb.png'
+    if '/lionface/' in path:
+        image = "lionface/%s" % image
+    return image
+
+
 # Function for stripping tags.
 @register.filter(name='strip_comment')
 def strip_comment(comment):
