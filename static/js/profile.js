@@ -266,6 +266,7 @@ LionFace.Profile.prototype = {
         function image_setting(index, elem) {
             var image_settings = $(elem).find('div:first #image_settings');
             if ( $(image_settings).length == 1 ) {
+                $(image_settings).hide();
                 $(elem).find('div:first').hover(
                     function() {
                         $(image_settings).show();
@@ -282,17 +283,67 @@ LionFace.Profile.prototype = {
                         data: {
                             'pk': $(image_settings).attr('pk'),
                         },
-                        beforeSend: function(jqXHR, settings) {
-                            
+                        success: function(data, textStatus, jqXHR) {
+                            if ( data.backgroundImage != undefined ) {
+                                /* Set thumb */
+                                $('div[thumb]').each(function(index, elem) {
+                                    $(elem).animate({
+                                        'opacity': 0,
+                                    }, 1000, '', function() {
+                                        $(this).css({
+                                            'backgroundImage': data.backgroundImage,
+                                        }).animate({
+                                            'opacity': 1,
+                                        }, 1000);
+                                    });
+                                });
+                                /* Exchange first image and new photo */
+                                var td1 = $(image_settings).parent().parent();
+                                var td2 = $('div.image_container td:first');
+                                var ntd1 = $(td1).clone().css({
+                                    'opacity': 0,
+                                });
+                                var ntd2 = $(td2).clone().css({
+                                    'opacity': 0,
+                                });
+                                $(td1).animate({
+                                    'opacity': 0,
+                                }, 1000);
+                                $(td2).animate({
+                                    'opacity': 0,
+                                }, 1000);
+                                /* After hided tds, we change their */
+                                setTimeout(function() {
+                                    $(td2).after( $(ntd1) );
+                                    $(td1).after( $(ntd2) );
+                                    $(td1).remove();
+                                    $(td2).remove();
+                                    image_setting(undefined, $(ntd1) );
+                                    image_setting(undefined,  $(ntd2) );
+                                    /* And show their */
+                                    $(ntd1).animate({
+                                        'opacity': 1,
+                                    }, 1000);
+                                    $(ntd2).animate({
+                                        'opacity': 1,
+                                    }, 1000);
+                                }, 1000);
+                            }
+                        },
+                    });
+                    return false;
+                });
+                /* Delete photo */
+                $(image_settings).find('#delete').click(function() {
+                    $.ajax({
+                        url: LionFace.User['profile_images_url_delete'],
+                        type: 'POST',
+                        data: {
+                            'pk': $(image_settings).attr('pk'),
+                            'row': LionFace.User['profile_images_now_rows'],
                         },
                         success: function(data, textStatus, jqXHR) {
-                            
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            
-                        },
-                        complete: function(jqXHR, textStatus) {
-                            
+                            alert( data );
                         },
                     });
                     return false;
@@ -341,6 +392,7 @@ LionFace.Profile.prototype = {
                 return false;
             });
         }
+        /*  */
     },
 
     hide_album_hint : function() {

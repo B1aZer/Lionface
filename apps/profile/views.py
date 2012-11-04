@@ -50,7 +50,7 @@ def timeline(request):
 
 @login_required
 @unblocked_users
-def profile_image(request, username=None):
+def profile_image(request, username=None, rows_show=4):
     if username != None:
         try:
             profile_user = UserProfile.objects.get(username=username)
@@ -63,9 +63,8 @@ def profile_image(request, username=None):
     if not is_visible:
         raise Http404
 
-    ROWS_SHOW = 1
     image_rows = UserImages.objects.filter(profile=profile_user) \
-        .select_related('image').get_rows(0, ROWS_SHOW)
+        .select_related('image').get_rows(0, rows_show)
     total_rows = UserImages.objects.filter(profile=profile_user).total_rows()
 
     return render_to_response(
@@ -131,7 +130,7 @@ def profile_image_primary(request, username):
     try:
         image = UserImages.objects.filter(profile=profile_user).get(pk=pk)
     except UserImages.DoesNotExist:
-        return HttpResponseBadRequest('Method must be POST.')
+        return HttpResponseBadRequest('Bad PK was received.')
 
     UserImages.objects.filter(profile=profile_user) \
         .filter(activity=True).update(activity=False)
@@ -139,6 +138,35 @@ def profile_image_primary(request, username):
     image.save()
     profile_user.photo = image.image.image
     profile_user.save()
+
+    data = {}
+    data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
+        'profile_user': profile_user,
+    }, context_instance=RequestContext(request))
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+@unblocked_users
+def profile_image_delete(request, username):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Method must be POST.')
+
+    if request.user.username != username:
+        raise Http404
+    profile_user = request.user
+
+    row = request.POST.get('row', None)
+    try:
+        row = int(row) - 1
+    except (TypeError, ValueError), e:
+        return HttpResponseBadRequest('Bad row was received.')
+    pk = request.POST.get('pk')
+    try:
+        image = UserImages.objects.filter(profile=profile_user).get(pk=pk)
+    except UserImages.DoesNotExist:
+        return HttpResponseBadRequest('Bad PK was received.')
+
 
     data = {}
     return HttpResponse(json.dumps(data), "application/json")
