@@ -17,20 +17,20 @@
 		<a id="upload_picture" class="upload" style="display:none;">Upload</a><br /><a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
 	</div>
 	{% endif %}
-        <div class="photos_count" align="center">
-			<div style="padding-top: 26px;">
-		{{ profile_user.all_images.count }} Photos
-			</div>
+	<div class="photos_count" align="center">
+		<div style="padding-top: 26px;">
+			{{ profile_user.all_images.count }} Photos
 		</div>
+	</div>
 </div>
 {% endblock %}
 
 {% block right_col %}
-	<div style="padding: 10px; height: 45px;">
-		<div style="position: relative; top: 18px; left: 25px; color: #DDD;">
-		Whose woods these are I think I know, his house is in the village though. <i>- Robert Frost</i>
-		</div>
+<div style="padding: 10px; height: 45px;">
+	<div style="position: relative; top: 18px; left: 25px; color: #DDD;">
+	Whose woods these are I think I know, his house is in the village though. <i>- Robert Frost</i>
 	</div>
+</div>
 
 <div style="position: relative;">
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -65px; height: 28px; padding: 18px; width: 662px;">
@@ -42,11 +42,6 @@
 </form>
 </div>
 </div>
-{% endblock %}
-
-{% block right_col %}
-	<div style="padding: 10px; position: relative; left: 40px; height: 45px;">
-	</div>
 {% endblock %}
 
 {% block js %}
