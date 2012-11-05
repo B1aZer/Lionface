@@ -11,10 +11,11 @@
 
 {% block left_col %}
 <div onclick="window.open('/{{ profile_user.photo }}');return false;" 
-	class="noPhoto" thumb="1" style="background-image: url('/{{ profile_user.photo|format_thumb:request.get_full_path }}'); background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px; margin-bottom: 12px;">
+	class="noPhoto" thumb="1" style="background-image: url('/{{ profile_user.photo.thumb_name }}'); background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px; margin-bottom: 12px;">
 	{% if request.user == profile_user %}
 	<div style="position: relative; top: 4px; left: 72px; display: block; width: 126px; background: #FFF; z-index: 997;" align="center">
-		<a id="upload_picture" class="upload" style="display:none;">Upload</a><br /><a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
+		<a id="upload_picture" class="upload" style="display:none;">Upload</a><br />
+		<a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
 	</div>
 	{% endif %}
 	<div class="photos_count" align="center">
@@ -60,6 +61,30 @@
 {% include_media 'profile.js' %}
 <div align="center">
 <div class="image_container" align="center">
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+<style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; width: 900px; }
+    #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 200px; height: 200px; font-size: 4em; text-align: center; }
+</style>
+<script>
+    $(function() {
+        $( "#sortable" ).sortable();
+        $( "#sortable" ).disableSelection();
+    });
+</script>
+
+<ul id="sortable">
+{% for image_row in image_rows %}
+{% for row in image_row.rows %}
+<li class="ui-state-default">
+<div style="background-image: url('/{{ row.image.image.thumb_name }}');" class="image_album">
+</li>
+{% endfor %}
+{% endfor %}
+</ul>
+
+	<!--
 	<table align="center" width="100%">
 		{% for image_row in image_rows %}
 			{% include "profile/image_tr.html" %}
@@ -71,6 +96,7 @@
 			</div></td>
 		</tr>
 	</table>
+	-->
 </div>
 </div>
 {% endblock %}
