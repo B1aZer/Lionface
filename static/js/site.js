@@ -135,6 +135,7 @@ LionFace.Site = function() {
 LionFace.Site.prototype = {
 
     runner: function() {
+        self_class = this;
         this.initialistaion();
         this.bind_public();
         if (!LionFace.User.is_anonymous) {
@@ -281,9 +282,15 @@ LionFace.Site.prototype = {
         if (LionFace.User.is_anonymous) {
             return
         }
-        url = "/posts/share/" + elem + "/";
+        var url = "/posts/share/" + elem + "/";
+        var meta = $('.post_'+elem).metadata(); 
+
         make_request({
             url:url,
+            data:{
+                'post_type':meta.type,
+                'post_model':meta.model,
+            },
             callback: function(data) {
                 if (data.status == 'OK') {
                     $('.post_'+elem).find('.share_text').html('<span class="shared"> Shared </span>');
@@ -556,12 +563,12 @@ LionFace.Site.prototype = {
                             if (post_type == 'F') {
                                 self.html('Public');
                                 self.attr('title','Privacy Settings: Public');
-                                this.toggle_privacy(post_id,'Public')
+                                self_class.toggle_privacy(post_id,'Public')
                             }
                             else {
                                 self.html('Friends');
                                 self.attr('title','Privacy Settings: Friends Only');
-                                this.toggle_privacy(post_id,'Friends')
+                                self_class.toggle_privacy(post_id,'Friends')
                             }
                         }
                     }

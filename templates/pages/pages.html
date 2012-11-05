@@ -2,7 +2,11 @@
         <tr>
         {% for page in row %}
             <td>
-                <a href="{% url pages.views.page slug=page.username %}"> <img src="" alt="{{page.id}}" width="200" height="200"  /></a>
+                {% if page.type == 'BS' %}
+                <a href="{% url business-page slug=page.username %}"> <img src="" alt="{{page.id}}" width="200" height="200"  /></a>
+                {% else %}   
+                <a href="{% url nonprofit-page slug=page.username %}"> <img src="" alt="{{page.id}}" width="200" height="200"  /></a>
+                {% endif %}
             </td>
         {% endfor %}
         </tr> 

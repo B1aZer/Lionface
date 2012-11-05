@@ -41,7 +41,7 @@
             {% block post_settings %}
             <form>
                 <input type="checkbox" name="comment_settings" value="on" 
-                    {% if item.get_owner != item.get_wall_user %}
+                    {% if item.get_owner != item.get_wall_user and page_type != 'news_feed' %}
                         checked="checked" disabled="disabled"
                     {% else %}
                         {% if item.get_comment_settings %}
@@ -54,7 +54,7 @@
                 <span style="color: transparent;"> -- -- -- - </span>
                 {% if item.get_type == 'content post' %}
                 <select name="privacy_settings">
-                    {% if item.get_owner == item.get_wall_user %}
+                    {% if item.get_owner == item.get_wall_user or page_type == 'news_feed' %}
                         <option value="Public" {% if item.get_privacy == "P" %} selected="selected" {% endif %}>Public</option>
                     {% endif %}
                     <option value="Friends" {% if item.get_privacy == "F" %} selected="selected" {% endif %}>Friends</option>
@@ -140,11 +140,13 @@
 </div>
 </div>
 {% empty %}
-{% if request.user.get_filters or request.user.get_active_tags %}
-<p class="no_posts">There is nothing to share.</p>
-{% else %}
-<p class="no_posts">No filters have been selected.</p>
-{% endif %}
+{% block empty %}
+    {% if request.user.get_filters or request.user.get_active_tags %}
+    <p class="no_posts">There is nothing to share.</p>
+    {% else %}
+    <p class="no_posts">No filters have been selected.</p>
+    {% endif %}
+{% endblock %}
 {% endfor %}
 
 {% if items.has_next %}

@@ -27,8 +27,16 @@
 </form>
 {% endblock %}
 
+{% block empty %}
+    {% if request.user.get_filters or request.user.get_active_tags %}
+    <p class="no_posts page_feed">There is nothing to share.</p>
+    {% else %}
+    <p class="no_posts page_feed">No filters have been selected.</p>
+    {% endif %}
+{% endblock %}
+
 {% block see_more %}
 
-<a id="see_more_feed" href="?page={{ items.next_page_number }}"> See More </a>
+<a id="see_more_feed" class="page_feed" href="?page={{ items.next_page_number }}"> See More </a>
 
 {% endblock %}

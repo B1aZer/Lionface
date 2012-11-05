@@ -10,7 +10,7 @@ PAGE_TYPE = (
 class Pages(models.Model):
     name = models.CharField(max_length='200')
     loves = models.IntegerField(default=0)
-    username = models.CharField(max_length='200',validators=[validate_slug], unique=True)
+    username = models.CharField(max_length='200', validators=[validate_slug], unique=True)
     user = models.ForeignKey(UserProfile, related_name='pages')
     users_loved = models.ManyToManyField(UserProfile, related_name='pages_loved', null=True, blank=True)
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
