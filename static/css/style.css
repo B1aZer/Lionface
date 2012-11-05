@@ -550,7 +550,7 @@ a.profile_btn:hover {
 }
 
 .photos_count { 
-	position: relative; top: 0px; left: 70px; display: block; width: 128px; height: 65px; font-size: 8pt; color: #999; background: #FFF;
+	position: absolute; top: 0px; left: 70px; display: block; width: 128px; height: 65px; font-size: 8pt; color: #999; background: #FFF;
 }
 
 .image_upload_container {
@@ -558,7 +558,7 @@ a.profile_btn:hover {
 }
 
 .image_album {
-	background-size: 200px 200px; width: 200px; height: 200px; margin-bottom: 25px; border: 1px solid #E7E7E7;
+	background-size: 200px 200px; width: 200px; height: 200px; margin: 10px 0 10px 0; border: 1px solid #E7E7E7;
 }
 
 .image_album:hover {
