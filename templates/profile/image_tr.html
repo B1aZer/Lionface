@@ -3,7 +3,7 @@
 <tr id="images_row_{{ image_row.index }}">
 {% for row in image_row.rows %}
 	<td width="25%" align="center">
-		<div style="background-image: url('/{{ row.image.image|format_thumb:request.get_full_path }}');" class="image_album">
+		<div style="background-image: url('/{{ row.image.image.thumb_name }}');" class="image_album">
 			{% if profile_user == request.user %}
 			<div id="image_settings" pk="{{ row.pk }}">
 				<a href="#" id="make_primary" style="float: left;" title="Make Primary Photo">+</a>
