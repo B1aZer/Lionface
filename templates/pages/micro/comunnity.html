@@ -19,11 +19,12 @@
     <div style="padding: 15px;">
 
        			{% if page.type == 'BS' %}
-                    <span style="color:#3ea8d2; font-size: 16pt;">Loves</span> (page_loves) (public_loves) <br />
+                    <span style="color:#3ea8d2; font-size: 16pt;">Loves</span><span style="color: #999; font-size: 9pt;"> Total: (page_loves) Public: (public_loves) Private: (private_loves)</span><br />
                 {% else %}   
-                    <span style="color:#909E4A; font-size: 16pt;">Loves</span> (page_loves) (public_loves)  <br />
+                    <span style="color:#909E4A; font-size: 16pt;">Loves</span><span style="color: #999; font-size: 9pt;"> Total: (page_loves) Public: (public_loves) Private: (private_loves)</span><br />
                 {% endif %}
 				<div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+					<div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Public Loves: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
 					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
 					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
 					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
@@ -38,22 +39,35 @@
 				</div>
 					<br /><br />
 
+       			{% if page.type == 'BS' %}
+                    <span style="color:#3ea8d2; font-size: 16pt;">Employees</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: (total_confirmed)</span><br />
+                {% else %}   
+                    <span style="color:#909E4A; font-size: 16pt;">Employees</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: (total_confirmed)</span><br />
+                {% endif %}
+				<div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+					<div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Public Employees: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div><br /><br />
+					<a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
+				</div>
+					<br /><br />
+       			{% if page.type == 'BS' %}
+                    <span style="color:#3ea8d2; font-size: 16pt;">Interns</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: (total_confirmed)</span><br /><br />
+                {% else %}   
+                    <span style="color:#909E4A; font-size: 16pt;">Interns</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Einterns: (total_confirmed)</span><br /><br />
+                {% endif %}
 
        			{% if page.type == 'BS' %}
                 {% else %}   
                     <span style="color:#909E4A; font-size: 16pt;">Volunteers</span> (page_volunteers) (public_volunteers) <br /><br />
-                {% endif %}
-
-       			{% if page.type == 'BS' %}
-                    <span style="color:#3ea8d2; font-size: 16pt;">Interns</span> (page_interns) (public_interns) <br /><br />
-                {% else %}   
-                    <span style="color:#909E4A; font-size: 16pt;">Interns</span> (page_interns) (public_interns)  <br /><br />
-                {% endif %}
-
-       			{% if page.type == 'BS' %}
-                    <span style="color:#3ea8d2; font-size: 16pt;">Employees</span> (page_employees) (public_employees)  <br /><br />
-                {% else %}   
-                    <span style="color:#909E4A; font-size: 16pt;">Employees</span> (page_employees) (public_employees)  <br /><br />
                 {% endif %}
 
     </div>
