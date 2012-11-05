@@ -10,9 +10,9 @@
 {% block content_subtitle %}{% endblock %}
 
 {% block left_col %}
-<!--onclick="window.open('/{{ profile_user.photo|format_image:request.get_full_path }}');return false;"-->
+<!--onclick="window.open('/{{ profile_user.photo }}');return false;"-->
 <div  onclick="window.location.href = '{% url profile.views.profile_image profile_user.username %}';return false;" 
-	class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_image:request.get_full_path }}'); background-size: 200px 200px;">
+	class="noPhoto" style="background-image: url('/{{ profile_user.photo }}'); background-size: 200px 200px;">
 		{% if request.user == profile_user %}
         <div style="position: relative; top: 165px; display: block; width: 200px;" align="center">
             <a id="upload_picture" class="upload" style="display:none;">Upload</a><a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
