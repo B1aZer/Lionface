@@ -103,6 +103,8 @@ def profile_image_more(request, username):
         raise Http404
 
     total_rows = UserImages.objects.filter(profile=profile_user).total_rows()
+    if row >= total_rows:
+        return HttpResponseBadRequest('Row larger than total_rows.')
     image_row = UserImages.objects.filter(profile=profile_user) \
         .select_related('image').get_row(row)
 
@@ -112,6 +114,7 @@ def profile_image_more(request, username):
         'image_row' : image_row,
         'profile_user': profile_user,
     }, context_instance=RequestContext(request))
+    data['status'] = 'ok'
 
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -132,17 +135,23 @@ def profile_image_primary(request, username):
     except UserImages.DoesNotExist:
         return HttpResponseBadRequest('Bad PK was received.')
 
-    UserImages.objects.filter(profile=profile_user) \
-        .filter(activity=True).update(activity=False)
-    image.activity = True
-    image.save()
-    profile_user.photo = image.image.image
-    profile_user.save()
-
     data = {}
-    data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
-        'profile_user': profile_user,
-    }, context_instance=RequestContext(request))
+    try:
+        UserImages.objects.filter(profile=profile_user) \
+            .filter(activity=True).update(activity=False)
+        image.activity = True
+        image.save()
+        profile_user.photo = image.image.image
+        profile_user.save()
+
+        data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
+            'profile_user': profile_user,
+        }, context_instance=RequestContext(request))
+    except Exception as e:
+        data['status'] = 'fail'
+        data['errmsg'] = str(e)
+    else:
+        data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
 
 
@@ -167,8 +176,32 @@ def profile_image_delete(request, username):
     except UserImages.DoesNotExist:
         return HttpResponseBadRequest('Bad PK was received.')
 
-
     data = {}
+    try:
+        image.delete()
+        if image.activity == True:
+            profile_user = UserProfile.objects.get(pk=profile_user.pk)
+            data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
+                'profile_user': profile_user,
+            }, context_instance=RequestContext(request))
+        if row < UserImages.objects.filter(profile=profile_user).total_rows():
+            image_row = UserImages.objects.filter(profile=profile_user) \
+                .select_related('image').get_row(row)
+            image_row['rows'] = image_row['rows'][-1:]
+            data['html'] = render_to_string('profile/image_tr.html', {
+                'image_row' : image_row,
+                'profile_user': profile_user,
+            }, context_instance=RequestContext(request))
+        data['photos_count'] = profile_user.all_images.count()
+        if image.activity == True:
+            data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
+                'profile_user': profile_user,
+            }, context_instance=RequestContext(request))
+    except Exception as e:
+        data['status'] = 'fail'
+        data['errmsg'] = str(e)
+    else:
+        data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
 
 

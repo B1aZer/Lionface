@@ -235,7 +235,7 @@ LionFace.Profile.prototype = {
         // Making sortable
         var post_bgn = 0;
 
-        $( ".sortable" ).sortable({
+        $( ".albums, .sortable" ).sortable({
             start: function(event, ui) { 
                 post_bgn = ui.item.index();
             },
@@ -261,8 +261,23 @@ LionFace.Profile.prototype = {
         $( ".sortable" ).disableSelection();
     },
 
+    set_backgroundImage: function(backgroundImage) {
+        /** Set thumb as backgroundImage for all div elements have attr thumb */
+        $('div[thumb]').each(function(index, elem) {
+            $(elem).animate({
+                'opacity': 0,
+            }, 1000, '', function() {
+                $(this).css({
+                    'backgroundImage': backgroundImage,
+                }).animate({
+                    'opacity': 1,
+                }, 1000);
+            });
+        });
+    },
+
     bind_profile_pictures : function() {
-        /* Function for init actions on image */
+        /** Function for init actions on image */
         function image_setting(index, elem) {
             var image_settings = $(elem).find('div:first #image_settings');
             if ( $(image_settings).length == 1 ) {
@@ -275,7 +290,7 @@ LionFace.Profile.prototype = {
                         $(image_settings).hide();
                     }
                 );
-                /* Make primary photo */
+                /** Make primary photo */
                 $(image_settings).find('#make_primary').click(function() {
                     $.ajax({
                         url: LionFace.User['profile_images_url_primary'],
@@ -284,56 +299,50 @@ LionFace.Profile.prototype = {
                             'pk': $(image_settings).attr('pk'),
                         },
                         success: function(data, textStatus, jqXHR) {
-                            if ( data.backgroundImage != undefined ) {
-                                /* Set thumb */
-                                $('div[thumb]').each(function(index, elem) {
-                                    $(elem).animate({
-                                        'opacity': 0,
-                                    }, 1000, '', function() {
-                                        $(this).css({
-                                            'backgroundImage': data.backgroundImage,
-                                        }).animate({
-                                            'opacity': 1,
-                                        }, 1000);
-                                    });
-                                });
-                                /* Exchange first image and new photo */
+                            if ( data.status == 'ok' ) {
+                                if ( data.backgroundImage != undefined )
+                                    LionFace.Profile.set_backgroundImage( data.backgroundImage );
+                                /** Exchange first image and new photo */
                                 var td1 = $(image_settings).parent().parent();
                                 var td2 = $('div.image_container td:first');
-                                var ntd1 = $(td1).clone().css({
-                                    'opacity': 0,
-                                });
-                                var ntd2 = $(td2).clone().css({
-                                    'opacity': 0,
-                                });
-                                $(td1).animate({
-                                    'opacity': 0,
-                                }, 1000);
-                                $(td2).animate({
-                                    'opacity': 0,
-                                }, 1000);
-                                /* After hided tds, we change their */
-                                setTimeout(function() {
-                                    $(td2).after( $(ntd1) );
-                                    $(td1).after( $(ntd2) );
-                                    $(td1).remove();
-                                    $(td2).remove();
-                                    image_setting(undefined, $(ntd1) );
-                                    image_setting(undefined,  $(ntd2) );
-                                    /* And show their */
-                                    $(ntd1).animate({
-                                        'opacity': 1,
+                                if ( !$(td1).is($(td2)) ) {
+                                    var ntd1 = $(td1).clone().css({
+                                        'opacity': 0,
+                                    });
+                                    var ntd2 = $(td2).clone().css({
+                                        'opacity': 0,
+                                    });
+                                    $(td1).animate({
+                                        'opacity': 0,
                                     }, 1000);
-                                    $(ntd2).animate({
-                                        'opacity': 1,
+                                    $(td2).animate({
+                                        'opacity': 0,
                                     }, 1000);
-                                }, 1000);
+                                    /** After hided tds, we change their */
+                                    setTimeout(function() {
+                                        $(td2).after( $(ntd1) );
+                                        $(td1).after( $(ntd2) );
+                                        $(td1).remove();
+                                        $(td2).remove();
+                                        image_setting(undefined, $(ntd1));
+                                        image_setting(undefined,  $(ntd2));
+                                        /** And show their */
+                                        $(ntd1).animate({
+                                            'opacity': 1,
+                                        }, 1000);
+                                        $(ntd2).animate({
+                                            'opacity': 1,
+                                        }, 1000);
+                                    }, 1000);
+                                }
+                            } else if ( data.status == 'fail' ) {
+                                /**  */
                             }
                         },
                     });
                     return false;
                 });
-                /* Delete photo */
+                /** Delete photo */
                 $(image_settings).find('#delete').click(function() {
                     $.ajax({
                         url: LionFace.User['profile_images_url_delete'],
@@ -343,7 +352,48 @@ LionFace.Profile.prototype = {
                             'row': LionFace.User['profile_images_now_rows'],
                         },
                         success: function(data, textStatus, jqXHR) {
-                            alert( data );
+                            if ( data.status == 'ok' ) {
+                                /** Now we delete current image and shift all images */
+                                var tr = $(image_settings).parent().parent().parent();
+                                $(tr).parent().animate({
+                                    'opacity': 0,
+                                }, 500);
+                                setTimeout(function() {
+                                    $(image_settings).parent().parent().remove();
+                                    while ( true ) {
+                                        ntr = $(tr).next();
+                                        if ( $(ntr).next().prop('tagName') == undefined ) {
+                                            if ( data.html != undefined ) {
+                                                var item = $(data.html).find('td:first');
+                                                if ( $(item).length == 1 ) {
+                                                    var td = $(tr).find('td:last');
+                                                    if ( $(td).length == 0 && $(tr).prev().prop('tagName') != undefined) {
+                                                        td = $(tr).prev().find('td:last');
+                                                    }
+                                                    if ( $(td).length == 0 || $(td).html() != $(item).html() ) {
+                                                        image_setting(undefined, $(item));
+                                                        $(tr).find('td:last').after( $(item) );
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        }
+                                        $(tr).find('td:last').after( $(ntr).find('td:first') );
+                                        tr = ntr;
+                                    }
+                                    $(tr).parent().animate({
+                                        'opacity': 1,
+                                    }, 500);
+                                }, 500);
+                                /** Change number of photos */
+                                if ( data.photos_count != undefined )
+                                    $('#photos_count').html( data.photos_count );
+                                /** Change primary photo */
+                                if ( data.backgroundImage != undefined )
+                                    LionFace.Profile.set_backgroundImage( data.backgroundImage );
+                            } else if ( data.status == 'fail' ) {
+                                /**  */
+                            }
                         },
                     });
                     return false;
@@ -351,12 +401,12 @@ LionFace.Profile.prototype = {
             }
         }
         $('div.image_container td').each(image_setting);
-        /* View more button */
+        /** View more button */
         if ( LionFace.User['profile_images_now_rows'] < LionFace.User['profile_images_total_rows'] ) {
             var view_more = $('div.image_container div.view_more');
             $(view_more).show();
             $(view_more).find('a').click(function() {
-                /* XHR request with events */
+                /** XHR request for show more pictures */
                 $.ajax({
                     url: LionFace.User['profile_images_url_more'],
                     type: 'POST',
@@ -367,14 +417,16 @@ LionFace.Profile.prototype = {
                         $(view_more).find('div.view_more_loader').show(250);
                     },
                     success: function(data, textStatus, jqXHR) {
-                        LionFace.User['profile_images_now_rows']++;
-                        LionFace.User['profile_images_total_rows'] = data.total_rows;
-                        if ( LionFace.User['profile_images_now_rows'] >= LionFace.User['profile_images_total_rows'] ) {
-                            $(view_more).hide(500);
+                        if ( data.status == 'ok' ) {
+                            LionFace.User['profile_images_now_rows']++;
+                            LionFace.User['profile_images_total_rows'] = data.total_rows;
+                            if ( LionFace.User['profile_images_now_rows'] >= LionFace.User['profile_images_total_rows'] ) {
+                                $(view_more).hide(500);
+                            }
+                            var item = $(data.html);
+                            $(item).find('td').each(image_setting);
+                            $(item).insertBefore($('div.image_container tr:last'));
                         }
-                        var item = $(data.html);
-                        $(item).find('td').each(image_setting);
-                        $(item).insertBefore($('div.image_container tr:last'));
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         $(view_more).prepend('<div class="error" style="font-size: 20px;">' + errorThrown + '</div>');
@@ -392,7 +444,6 @@ LionFace.Profile.prototype = {
                 return false;
             });
         }
-        /*  */
     },
 
     hide_album_hint : function() {

@@ -4,13 +4,13 @@ from itertools import chain
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.db.models.signals import pre_save, post_save, pre_delete
+from django.db.models.signals import pre_save, post_save, pre_delete, post_delete
 from django.db.models.query import Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
 
 from django.utils import simplejson as json
 
-from .fields import ImageWithThumbField
+from .fields import ImageWithThumbField, CoordsField
 from .storage import ImageStorage
 
 
@@ -428,7 +428,6 @@ class UserImage(models.Model):
     image = ImageWithThumbField(upload_to="uploads/images",
         storage=ImageStorage())
     owner = models.ForeignKey('UserProfile', related_name='my_images')
-    rating = models.PositiveIntegerField(default=0)
     profiles = models.ManyToManyField('UserProfile', related_name='all_images',
         through='UserImages')
 
@@ -461,17 +460,12 @@ post_save.connect(create_user_image, sender=UserImage)
 
 
 def delete_user_image(sender, instance, **kwargs):
-    image = instance.image
-    UserImages.objects.filter(image=image).delete()
-    UserImageTag.objects.filter(image=image).delete()
-    if instance.activity:
-        profile = instance.owner
-        profile.photo = [field.default
-            for field in UserProfile._meta.fields if field.name == 'photo'
-        ][0]
-        profile.save()
-    image.storage.delete(instance.image.thumb_path)
-    image.delete(save=False)
+    # remove all user_image_tag linked with current image
+    UserImageTag.objects.filter(image=instance).delete()
+    # remove image files from fs
+    picture = instance.image
+    picture.storage.delete(picture.thumb_path)
+    picture.delete(save=False)
 pre_delete.connect(delete_user_image, sender=UserImage)
 
 
@@ -484,7 +478,7 @@ class UserImagesQuerySet(post.models.QuerySet):
         return int(ceil(self.count() / float(self.DEFAULT_ROW_SIZE)))
 
     def get_rows(self, start, count, size=DEFAULT_ROW_SIZE):
-        qs = self.order_by('-activity', '-image__rating')
+        qs = self.order_by('-activity', '-rating')
         images = qs[start*size:(start+count)*size]
         rows = []
         for i in xrange(0, len(images), size):
@@ -501,6 +495,7 @@ class UserImagesQuerySet(post.models.QuerySet):
 class UserImages(models.Model):
     image = models.ForeignKey('UserImage')
     profile = models.ForeignKey('UserProfile')
+    rating = models.IntegerField(blank=True, null=True)
     activity = models.BooleanField(default=False)
 
     objects = UserImagesQuerySet.as_manager()
@@ -509,30 +504,25 @@ class UserImages(models.Model):
         return '%s link to %s' % (self.image, self.profile)
 
 
-class CoordsField(models.TextField):
-    __metaclass__ = models.SubfieldBase
+def create_user_images(sender, instance, created, **kwargs):
+    if created:
+        instance.rating = instance.id
+        instance.save()
+post_save.connect(create_user_images, sender=UserImages)
 
-    def to_python(self, value):
-        if value is None:
-            return
-        try:
-            if isinstance(value, basestring):
-                value = json.loads(value)
-        except ValueError:
-            pass
-        return value
 
-    def get_db_prep_save(self, value):
-        if value is None:
-            return
-        value = json.dumps(value)
-        return super(CoordsField, self).get_db_prep_save(value)
-
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^account\.models\.CoordsField"])
-except:
-    pass
+def delete_user_images(sender, instance, **kwargs):
+    # set default photo if current image activity
+    if instance.activity:
+        profile = instance.profile
+        profile.photo = [field.default
+            for field in UserProfile._meta.fields if field.name == 'photo'
+        ][0]
+        profile.save()
+    # check count link to this image, and remove it if link count is 0
+    if UserImages.objects.filter(image=instance.image).count() == 0:
+        instance.image.delete()
+post_delete.connect(delete_user_images, sender=UserImages)
 
 
 class UserImageTag(models.Model):
@@ -566,6 +556,7 @@ class Relationship(models.Model):
         if (follow):
             super(Relationship, self).save(*args, **kwargs)
         return follow
+
 
 class UserOptions(models.Model):
     name = models.CharField(max_length='100')
