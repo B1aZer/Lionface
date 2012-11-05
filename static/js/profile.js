@@ -258,7 +258,7 @@ LionFace.Profile.prototype = {
                 }
             }
         });
-        $( ".sortable" ).disableSelection();
+        $( ".albums, .sortable" ).disableSelection();
     },
 
     set_backgroundImage: function(backgroundImage) {
@@ -277,6 +277,12 @@ LionFace.Profile.prototype = {
     },
 
     bind_profile_pictures : function() {
+        $( "div.image_container table" ).sortable({
+            items: 'td',
+            start: function(event, ui) {
+                
+            },
+        }).disableSelection();
         /** Function for init actions on image */
         function image_setting(index, elem) {
             var image_settings = $(elem).find('div:first #image_settings');

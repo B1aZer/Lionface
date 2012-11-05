@@ -11,7 +11,7 @@
 
 {% block left_col %}
 <div  onclick="window.location.href = '{% url profile.views.profile_image profile_user.username %}';return false;" 
-    class="noPhoto" style="background-image: url('/{{ profile_user.photo|format_thumb:request.get_full_path }}'); background-size: 200px 200px;"></div>
+    class="noPhoto" style="background-image: url('/{{ profile_user.photo.thumb_name }}'); background-size: 200px 200px;"></div>
 
     <div style="position: relative; left: 0px; z-index: 100;">
 

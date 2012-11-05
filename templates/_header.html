@@ -4,7 +4,7 @@
     <div class="left_links" style="position: relative; top: -25px; left: 0pt;">
       <ul>
         <li><a href="{% url profile.views.profile username=request.user.username %}" style="font-size: 12pt;" class="header_profile_image">
-			<div thumb="1" style="background: url('/{{ request.user.photo }}'); background-size: 34px 34px;"></div>
+			<div thumb="1" style="background: url('/{{ request.user.photo.thumb_name }}'); background-size: 34px 34px;"></div>
 			 {{ request.user.first_name }}</a></li>
         <li><a href="{% url profile.views.feed username=request.user.username %}">News Feed</a></li>
         <li><a href="{% url pages.views.main %}">Pages</a></li>
@@ -42,7 +42,9 @@
 	<div style="position: relative; left: -42px; top: 31px; width: 35px; z-index: 9999;">
 		<div onMouseOver="ShowContent('page'); return false;" onMouseOut="HideContent('page'); return false;" style="position: relative;">
 			<div id="page" class="page" style="display: none;"><a href="#">Settings</a> 
-			<div style="display: block; color: #F58; padding: 4px 0;">(love count)</div></div> <a href="{% url pages.views.main %}" class="nav_page"></a>
+			<div style="display: block; color: #F58; padding: 4px 0;">(love count)</div></div>
+			<!-- need set thumb in a tag -->
+			<a href="{% url pages.views.main %}" class="nav_page"></a>
 		</div>
 	</div>
 </div>
