@@ -24,3 +24,29 @@ class ImageWithThumbField(models.ImageField):
     """
     attr_class = ImageWithThumbFieldFile
 
+
+class CoordsField(models.TextField):
+    __metaclass__ = models.SubfieldBase
+
+    def to_python(self, value):
+        if value is None:
+            return
+        try:
+            if isinstance(value, basestring):
+                value = json.loads(value)
+        except ValueError:
+            pass
+        return value
+
+    def get_db_prep_save(self, value):
+        if value is None:
+            return
+        value = json.dumps(value)
+        return super(CoordsField, self).get_db_prep_save(value)
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^account\.fields\.CoordsField"])
+    add_introspection_rules([], ["^account\.fields\.ImageWithThumbField"])
+except:
+    pass
