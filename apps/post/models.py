@@ -179,6 +179,9 @@ class PagePost(Post):
             else:
                 url = u"".join([u'http://', url])
             return url
+        def rreplace(s, old, new, occurrence):
+            li = s.rsplit(old, occurrence)
+            return new.join(li)
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
@@ -189,10 +192,11 @@ class PagePost(Post):
         post_template = render_to_string('post/_pagepost.html',
                 { 'user':self.user,
                     'page':self.page,
-                    'content':self.content,
+                    'content':mark_safe(self.content),
                 })
 
-        post_template = post_template.replace("\n","")
+        # replace last linebreak
+        post_template = rreplace(post_template,"\n","",1)
 
         return post_template
 

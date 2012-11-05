@@ -169,6 +169,7 @@ LionFace.Pages.prototype = {
                     else {
                         elem.html(data.html);
                     }
+                    make_excerpts();
                 }
                 else {
                     elem.html('');
