@@ -3,8 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.shortcuts import render_to_response
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .forms import *
 from .models import *
+from post.models import PagePost
+from tags.models import Tag
 from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -12,6 +15,7 @@ try:
     import json
 except ImportError:
     import simplejson as json
+
 
 def main(request):
 
@@ -64,6 +68,7 @@ def main(request):
         RequestContext(request)
     )
 
+
 def page(request, slug=None):
 
     if not slug:
@@ -100,6 +105,7 @@ def page(request, slug=None):
         RequestContext(request)
     )
 
+
 def leaderboard(request):
 
     return render_to_response(
@@ -108,6 +114,7 @@ def leaderboard(request):
         },
         RequestContext(request)
     )
+
 
 def nonprofit(request):
 
@@ -134,6 +141,7 @@ def nonprofit(request):
         RequestContext(request)
     )
 
+
 def love_count(request):
     data = {'status':'FAIL'}
     if request.method == 'POST':
@@ -156,6 +164,7 @@ def love_count(request):
                 pass
     return HttpResponse(json.dumps(data), "application/json")
 
+
 @login_required
 def update(request):
     data = {'status':'FAIL'}
@@ -165,11 +174,29 @@ def update(request):
         try:
             page = Pages.objects.get(id=int(page_id))
             if page.user == request.user:
-                page.posts.create(user=request.user, content=content)
+                post = PagePost(user=request.user, content=content, page = page)
+                post.save()
+
+                #Tags
+                hashtags = [word[1:] for word in content.split() if word.startswith('#')]
+
+                for hashtag in hashtags:
+                    try:
+                        tag = Tag.objects.get(name__iexact=hashtag)
+                        post.tags.add(tag)
+                    except ObjectDoesNotExist:
+                        post.tags.create(name=hashtag)
+                    except MultipleObjectsReturned:
+                        tags = Tag.objects.filter(name__iexact=hashtag)
+                        tag = [p for p in tags if not hasattr(p, 'user_tag')]
+                        if tag:
+                            post.tags.add(tag[0])
+
                 data['status'] = 'OK'
         except Pages.DoesNotExist:
             pass
     return HttpResponse(json.dumps(data), "application/json")
+
 
 def list_posts(request, slug=None):
     data = {'status':'FAIL'}

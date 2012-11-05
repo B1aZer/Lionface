@@ -110,6 +110,12 @@ class PageForm(forms.ModelForm):
         model = Pages
         fields = ('name','username','category','type')
 
+    def clean_username(self):
+        data = self.cleaned_data['username']
+        if '-' in data:
+            raise forms.ValidationError('Sorry, you can\'t use \'-\'')
+        return data
+
 class BusinessForm(PageForm):
     class Meta:
         model = Pages
@@ -117,6 +123,7 @@ class BusinessForm(PageForm):
         widgets = {
                 'category': forms.Select(choices=BUSINESS_CATEGORY),
         }
+
 
 class NonprofitForm(PageForm):
     class Meta:

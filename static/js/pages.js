@@ -151,7 +151,6 @@ LionFace.Pages.prototype = {
     load_page_feed : function(elem, page) {
         var elem = elem || $('#page_feed');
         var page = page || 1;
-        console.log(page);
         var url = 'list_posts/'
         var loading = $('<div class="large_loader"></div>');
         elem.html(loading);

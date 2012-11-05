@@ -4,12 +4,20 @@
 
 				<div style="display: block; padding: 20px 0 0px 0; border-top: 1px solid #EEE; width: 600px;">
 				<table width="100%"><tr><td width="85">
-                <a href="{% url pages.views.page slug=page.username %}"> <img src="" alt="{{page.id}}" width="75" height="75"  /></a>
+                {% if page.type == 'BS' %}
+                <a href="{% url business-page slug=page.username %}">
+                     <img src="" alt="{{page.id}}" width="75" height="75"  />
+                </a> 
+                {% else %}   
+                 <a href="{% url nonprofit-page slug=page.username %}">
+                     <img src="" alt="{{page.id}}" width="75" height="75"  />
+                </a>
+                {% endif %}
 					</td><td align="left" style="padding: 10px;">
                 {% if page.type == 'BS' %}
-                    <a href="{% url pages.views.page slug=page.username %}" style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</a> 
+                    <a href="{% url business-page slug=page.username %}" style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</a> 
                 {% else %}   
-                    <a href="{% url pages.views.page slug=page.username %}" style="color:#909E4A; font-size: 16pt;">{{ page.name }}</a> 
+                    <a href="{% url nonprofit-page slug=page.username %}" style="color:#909E4A; font-size: 16pt;">{{ page.name }}</a> 
                 {% endif %}
                     {% if page.category == 'Undefined' %}
                     {% else %}

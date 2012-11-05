@@ -13,7 +13,11 @@ LionFace.User.page_id = '{{ page.id }}';
 
   <div class="content_area">
     <div id="profile_top">
-        <div class="left">{{page.username}} {% url pages.views.page slug=page.username %}</div>
+        {% if page.type == 'BS' %}
+        <div class="left">{{page.username}} {% url business-page slug=page.username %}</div>
+        {% else %}   
+        <div class="left">{{page.username}} {% url nonprofit-page slug=page.username %}</div>
+        {% endif %}
       <div class="right" style="position: relative;">
 		<div>
 			<a class="profile_btn" style="cursor: pointer;">+ Add</a>

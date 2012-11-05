@@ -29,6 +29,7 @@ def feed(request, user_id = None):
     news_feed_flag = False
     #news feed
     if not user_id:
+        page_type = 'news_feed'
         news_feed_flag = True
         user_id = request.user.id
         filters = request.user.filters.split(',')
@@ -41,9 +42,12 @@ def feed(request, user_id = None):
         tags = request.user.user_tag_set.all()
         if tags:
             tags = [x.name.upper() for x in tags if x.active]
-            tagged_posts = NewsItem.objects.all()
+            tagged_posts = Post.objects.all()
             try:
-                tagged_posts = [x for x in tagged_posts for y in x.post.tags.all() if y.name.upper() in tags ]
+                tagged_posts = [x
+                        for x in tagged_posts
+                            for y in x.tags.all()
+                                if y.name.upper() in tags]
             except Post.DoesNotExist:
                 import logging
                 logger = logging.getLogger(__name__)
@@ -63,6 +67,7 @@ def feed(request, user_id = None):
             items = list(set(items))
             items = sorted(items,key=lambda post: post.date, reverse=True)
     else:
+        page_type = 'profile_feed'
         #items = NewsItem.objects.get_profile_wall(request.user).order_by('-date')
         items = NewsItem.objects.filter(hidden=False).order_by('date').reverse()
         # show messages adressed to user
@@ -104,6 +109,7 @@ def feed(request, user_id = None):
             'items': items,
             'news_feed': news_feed_flag,
             'page': page,
+            'page_type': page_type,
         },
         RequestContext(request)
     )
@@ -262,25 +268,27 @@ def delete(request, post_id = None):
             data['status'] = 'OK'
             return HttpResponse(json.dumps(data), "application/json")
     if post_id:
+        post_type = request.GET.get('type')
+        post_model = request.GET.get('model',None)
         #this is news feed delete
         if 'user' in request.GET:
             owner = UserProfile.objects.get(id=int(request.GET['user']))
         else:
             owner = request.user
         #ownership is defined using template
-        try:
-            post = NewsItem.objects.get(id=post_id)
-        except NewsItem.DoesNotExist:
-            return HttpResponse(json.dumps(data), "application/json")
+        if post_model == 'post_newsitem':
+            try:
+                post = NewsItem.objects.get(id=post_id)
+            except NewsItem.DoesNotExist:
+                return HttpResponse(json.dumps(data), "application/json")
         #restore original count of shares
-        post_type = request.GET.get('type')
         if post_type == 'share post':
             original = post.post.get_inherited()
             if original.content_object:
                 if original.content_object.shared != 0:
                     original.content_object.shared -= 1
                     original.content_object.save()
-        if post_type == 'page post' and request.GET.get('model',None) == 'post_pagepost':
+        if (post_type == 'page post' and post_model == 'post_pagepost') or post_model == 'post_post':
             obj = Post.objects.get(id=post_id)
             obj.newsitem_set.delete()
             obj.delete()
@@ -294,8 +302,12 @@ def delete(request, post_id = None):
 def share(request, post_id = None):
     data = {'status': 'OK'}
     if post_id:
-        post = NewsItem.objects.get(id=post_id)
-        post_type = post.post.get_inherited()
+        post_model = request.POST.get('post_model')
+        if post_model == 'post_post':
+            post = Post.objects.get(id=post_id)
+        else:
+            post = NewsItem.objects.get(id=post_id)
+        post_type = post.get_post().get_inherited()
         #if post already shared before
         if isinstance(post_type, SharePost):
             #post = post_type.get_original_post().post.get_inherited()
