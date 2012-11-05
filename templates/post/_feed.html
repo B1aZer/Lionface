@@ -86,7 +86,7 @@
     <div id="{{item.id}}" {% if item.get_type != 'friend post' %} style="display: none;" {% endif %}>
 
         <div class="post_timestamp">
-            {% if item.get_type != 'friend post' %}
+            {% if item.get_type != 'friend post' and item.get_type != 'page post' %}
                 <span id="hide_follow_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                     {% if item|follows:request.user %}
                     <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %} 
