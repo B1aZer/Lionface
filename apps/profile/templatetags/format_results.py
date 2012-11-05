@@ -44,8 +44,10 @@ def format_image(photo, path=""):
         photo = photo
     if 'noProfilePhoto.png' in photo:
         photo = 'uploads/images/noProfilePhoto.png'
+    """
     if '/lionface/' in path:
         photo = "lionface/%s" % photo
+    """
     return photo
 
 # Function for stripping tags.

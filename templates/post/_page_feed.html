@@ -2,27 +2,33 @@
 {% load media comments format_results friends %}
 {% load oembed_tags %}
 
-            {% block post_settings %}
-            <form>
-                <input type="checkbox" name="comment_settings" value="on" 
-                    {% if request.user != page.user %}
-                        checked="checked" disabled="disabled"
-                    {% else %}
-                        {% if item.get_comment_settings %}
-                            checked="checked" 
-                        {% endif %} 
-                    {% endif %} >
-                    Comments
-                <span style="color: transparent;"> -- -- -- </span>
-                <input type="checkbox" name="sharing_settings" value="on"
-                {% if request.user != page.user %}
-                        checked="checked" disabled="disabled"
-                    {% else %}
-                    {% if item.get_share_settings %}
-                    checked="checked"
-                    {% endif %}
-                {% endif %}> 
-                Share
-                <span style="color: transparent;"> -- </span>
-            </form>
-            {% endblock %}
+{% block post_settings %}
+<form>
+    <input type="checkbox" name="comment_settings" value="on" 
+        {% if request.user != page.user %}
+            checked="checked" disabled="disabled"
+        {% else %}
+            {% if item.get_comment_settings %}
+                checked="checked" 
+            {% endif %} 
+        {% endif %} >
+        Comments
+    <span style="color: transparent;"> -- -- -- </span>
+    <input type="checkbox" name="sharing_settings" value="on"
+    {% if request.user != page.user %}
+            checked="checked" disabled="disabled"
+        {% else %}
+        {% if item.get_share_settings %}
+        checked="checked"
+        {% endif %}
+    {% endif %}> 
+    Share
+    <span style="color: transparent;"> -- </span>
+</form>
+{% endblock %}
+
+{% block see_more %}
+
+<a id="see_more_feed" href="?page={{ items.next_page_number }}"> See More </a>
+
+{% endblock %}

@@ -13,7 +13,7 @@ try:
 except ImportError:
     import simplejson as json
 
-def main(request, username=None):
+def main(request):
 
     form_busn = BusinessForm()
     form_nonp = NonprofitForm()
@@ -64,7 +64,7 @@ def main(request, username=None):
         RequestContext(request)
     )
 
-def page(request, slug=None, username=None):
+def page(request, slug=None):
 
     if not slug:
         raise Http404
@@ -81,6 +81,7 @@ def page(request, slug=None, username=None):
             try:
                 data['html'] = render_to_string('pages/micro/%s.html' % template_name,
                 {
+                    'page': page,
                 }, context_instance=RequestContext(request))
             except TemplateDoesNotExist:
                 data['html'] = "Sorry! Wrong template."
@@ -99,7 +100,7 @@ def page(request, slug=None, username=None):
         RequestContext(request)
     )
 
-def leaderboard(request, username=None):
+def leaderboard(request):
 
     return render_to_response(
         'pages/leaderboard.html',
@@ -108,7 +109,7 @@ def leaderboard(request, username=None):
         RequestContext(request)
     )
 
-def nonprofit(request, username=None):
+def nonprofit(request):
 
     pages = Pages.objects.filter(type='NP')
 
@@ -202,7 +203,7 @@ def list_posts(request, slug=None):
     data['html'] = render_to_string('post/_page_feed.html',
             {
                 'items':items,
-                'page':page_obj,
+                'page':page,
             }, context_instance=RequestContext(request))
     data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")

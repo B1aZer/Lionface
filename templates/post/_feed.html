@@ -140,7 +140,7 @@
 </div>
 </div>
 {% empty %}
-{% if request.user.get_filters or request.user.get_active_tags%}
+{% if request.user.get_filters or request.user.get_active_tags %}
 <p class="no_posts">There is nothing to share.</p>
 {% else %}
 <p class="no_posts">No filters have been selected.</p>
@@ -148,7 +148,9 @@
 {% endfor %}
 
 {% if items.has_next %}
+{% block see_more %}
 
 <a id="see_more_feed" href="?page={{ items.next_page_number }}"> See More </a>
 
+{% endblock %}
 {% endif %}

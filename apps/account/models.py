@@ -72,7 +72,7 @@ class UserProfile(User):
     friends = models.ManyToManyField('self', related_name='friends')
     hidden = models.ManyToManyField('self', symmetrical=False, related_name='hidden_from')
     blocked = models.ManyToManyField('self', symmetrical=False, related_name='blocked_from')
-    photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='images/noProfilePhoto.png')
+    photo = models.ImageField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='uploads/images/noProfilePhoto.png')
     filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")

@@ -92,6 +92,7 @@ LionFace.Pages.prototype = {
             e.preventDefault();
             var name = $(this).attr('id');
             var url = "?ajax"
+            var self = $(this);
             make_request({
                 url:url,
                 type:'GET',
@@ -101,6 +102,12 @@ LionFace.Pages.prototype = {
                 callback: function(data) {
                     if (data.html) {
                         $('.page_container').html(data.html);
+                        $('.business_on').removeClass('business_on');
+                        self.removeClass('business_btn');
+                        self.addClass('business_on');
+                        if (name == 'updates') {
+                             self_class.load_page_feed();
+                        }
                     }
                 }
             });
