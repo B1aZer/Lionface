@@ -13,7 +13,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import comments
 from django.conf import settings
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template
+from django.template import Context
 
 import re
 from .utils import QuerySetManager
@@ -190,6 +191,7 @@ class PagePost(Post):
                     'page':self.page,
                     'content':self.content,
                 })
+
         post_template = post_template.replace("\n","")
 
         return post_template
@@ -400,6 +402,7 @@ class CustomQuerySet(QuerySet):
                 self = self.exclude(id=item.id)
         return self
 
+
 class NewsItem(models.Model):
     user = models.ForeignKey(UserProfile)
     date = models.DateTimeField(auto_now_add=True)
@@ -497,6 +500,8 @@ class NewsItem(models.Model):
     def timestamp(self):
         return self.date
 
+
+
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
         UpdateNewsFeeds.delay(instance.get_inherited())
@@ -504,6 +509,7 @@ post_save.connect(update_news_feeds, sender=FriendPost)
 post_save.connect(update_news_feeds, sender=ContentPost)
 post_save.connect(update_news_feeds, sender=SharePost)
 post_save.connect(update_news_feeds, sender=PagePost)
+
 
 def delete_news_feeds(sender, instance, **kwargs):
     """Deletes original post"""
@@ -514,6 +520,7 @@ def delete_news_feeds(sender, instance, **kwargs):
         pass
 post_delete.connect(delete_news_feeds, sender=NewsItem)
 
+
 def change_default_settings(sender, instance, created, **kwargs):
     if created:
         instance.allow_commenting = not instance.user.check_option('comment_default','Disabled')
@@ -521,6 +528,7 @@ def change_default_settings(sender, instance, created, **kwargs):
         instance.save()
 post_save.connect(change_default_settings, sender=ContentPost)
 post_save.connect(change_default_settings, sender=SharePost)
+
 
 class Albums(models.Model):
     name = models.CharField(max_length=200)
@@ -534,6 +542,7 @@ class Albums(models.Model):
         except:
             return 0
 
+
 def change_album_postion(sender, instance, created, **kwargs):
     if created:
         #getting max position
@@ -545,6 +554,7 @@ def change_album_postion(sender, instance, created, **kwargs):
             instance.position = 0
             instance.save()
 post_save.connect(change_album_postion, sender=Albums)
+
 
 def change_album_postion_ondelete(sender, instance, **kwargs):
     albums = Albums.objects.filter(position__gt=instance.position,user=instance.user)

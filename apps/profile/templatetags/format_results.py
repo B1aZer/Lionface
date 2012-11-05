@@ -10,12 +10,14 @@ import re
 
 register = template.Library()
 
+
 # Function to format a search result.
 @register.filter(name='format_result')
 def format_result(object, current_user):
     if isinstance(object, User):
         return render_to_string('search/_result_user.html', { 'user': object, 'current_user': current_user })
     return ""
+
 
 @register.filter(name='format_tag')
 def format_tag(object,request):
@@ -32,6 +34,7 @@ def format_tag(object,request):
             result = sorted(result,key=lambda post: post.date, reverse=True)
         return render_to_string('search/_feed.html', { 'items': result },RequestContext(request))
     return ""
+
 
 # Function to format a search result.
 @register.filter(name='format_image')
@@ -70,6 +73,7 @@ def strip_comment(comment):
     comment = bleach.linkify(comment,target='_top',title=True)
     return comment
 
+
 @register.filter(name='get_comment_counter')
 def get_comment_counter(item, user):
     try:
@@ -78,12 +82,14 @@ def get_comment_counter(item, user):
         counter = 0
     return counter
 
+
 # Function for stripping tags.
 @register.filter(name='color_tags',is_safe=True)
 def color_tags(text):
     # Has problems with urls(#) (?<!http)
     text = re.sub(r'((?:\A|\s)#([\w]+))',r'<a href="/tag/?models=tags_tag&q=\2" class="colored_tag">\1</a>',text)
     return text
+
 
 @register.filter(name='smileys',is_safe=True)
 def smileys(value):
@@ -108,6 +114,7 @@ def smileys(value):
     #value = value.replace("<", "&lt;").replace(">","&gt;")
 
     return value
+
 
 @register.filter(name='check_option')
 def check_option(user,name):
