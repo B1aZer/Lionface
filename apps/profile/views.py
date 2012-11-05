@@ -28,6 +28,7 @@ try:
 except ImportError:
     import simplejson as json
 
+
 @login_required
 def feed(request, username=None):
     return render_to_response(
@@ -46,9 +47,10 @@ def timeline(request):
         RequestContext(request)
     )
 
+
 @login_required
 @unblocked_users
-def profile_image(request, username=None):
+def profile_image(request, username=None, rows_show=4):
     if username != None:
         try:
             profile_user = UserProfile.objects.get(username=username)
@@ -61,11 +63,9 @@ def profile_image(request, username=None):
     if not is_visible:
         raise Http404
 
-    ROWS_SHOW = 1
     image_rows = UserImages.objects.filter(profile=profile_user) \
-        .select_related('image').get_rows(0, ROWS_SHOW)
-    total_rows = 1 + \
-        UserImages.objects.filter(profile=profile_user).count() // UserImages.objects.DEFAULT_ROW_SIZE
+        .select_related('image').get_rows(0, rows_show)
+    total_rows = UserImages.objects.filter(profile=profile_user).total_rows()
 
     return render_to_response(
         'profile/image.html',
@@ -77,12 +77,133 @@ def profile_image(request, username=None):
         RequestContext(request)
     )
 
+
 @login_required
 @unblocked_users
 def profile_image_more(request, username):
-    
-    
-    return HttpResponse(json.dumps({}), "application/json")
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Method must be POST.')
+
+    row = request.POST.get('row', None)
+    try:
+        row = int(row) - 1
+    except (TypeError, ValueError), e:
+        return HttpResponseBadRequest('Bad row was received.')
+
+    if username != None:
+        try:
+            profile_user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            raise Http404
+    else:
+        profile_user = request.user
+
+    is_visible = profile_user.check_visiblity('profile_image', request.user)
+    if not is_visible:
+        raise Http404
+
+    total_rows = UserImages.objects.filter(profile=profile_user).total_rows()
+    if row >= total_rows:
+        return HttpResponseBadRequest('Row larger than total_rows.')
+    image_row = UserImages.objects.filter(profile=profile_user) \
+        .select_related('image').get_row(row)
+
+    data = {}
+    data['total_rows'] = total_rows
+    data['html'] = render_to_string('profile/image_tr.html', {
+        'image_row' : image_row,
+        'profile_user': profile_user,
+    }, context_instance=RequestContext(request))
+    data['status'] = 'ok'
+
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+@unblocked_users
+def profile_image_primary(request, username):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Method must be POST.')
+
+    if request.user.username != username:
+        raise Http404
+    profile_user = request.user
+
+    pk = request.POST.get('pk')
+    try:
+        image = UserImages.objects.filter(profile=profile_user).get(pk=pk)
+    except UserImages.DoesNotExist:
+        return HttpResponseBadRequest('Bad PK was received.')
+
+    data = {}
+    try:
+        UserImages.objects.filter(profile=profile_user) \
+            .filter(activity=True).update(activity=False)
+        image.activity = True
+        image.save()
+        profile_user.photo = image.image.image
+        profile_user.save()
+
+        data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
+            'profile_user': profile_user,
+        }, context_instance=RequestContext(request))
+    except Exception as e:
+        data['status'] = 'fail'
+        data['errmsg'] = str(e)
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+@unblocked_users
+def profile_image_delete(request, username):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Method must be POST.')
+
+    if request.user.username != username:
+        raise Http404
+    profile_user = request.user
+
+    row = request.POST.get('row', None)
+    try:
+        row = int(row) - 1
+    except (TypeError, ValueError), e:
+        return HttpResponseBadRequest('Bad row was received.')
+    pk = request.POST.get('pk')
+    try:
+        image = UserImages.objects.filter(profile=profile_user).get(pk=pk)
+    except UserImages.DoesNotExist:
+        return HttpResponseBadRequest('Bad PK was received.')
+
+    data = {}
+    try:
+        image.delete()
+        if image.activity == True:
+            profile_user = UserProfile.objects.get(pk=profile_user.pk)
+            data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
+                'profile_user': profile_user,
+            }, context_instance=RequestContext(request))
+        if row < UserImages.objects.filter(profile=profile_user).total_rows():
+            image_row = UserImages.objects.filter(profile=profile_user) \
+                .select_related('image').get_row(row)
+            image_row['rows'] = image_row['rows'][-1:]
+            data['html'] = render_to_string('profile/image_tr.html', {
+                'image_row' : image_row,
+                'profile_user': profile_user,
+            }, context_instance=RequestContext(request))
+        data['photos_count'] = profile_user.all_images.count()
+        if image.activity == True:
+            data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
+                'profile_user': profile_user,
+            }, context_instance=RequestContext(request))
+    except Exception as e:
+        data['status'] = 'fail'
+        data['errmsg'] = str(e)
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
 
 #@login_required
 @unblocked_users
@@ -106,13 +227,12 @@ def profile(request, username='admin'):
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
                 profile = UserProfile.objects.get(id=request.user.id)
-                profile.photo = form.cleaned_data['photo']
-                profile.save()
                 image = UserImage.objects.create(
-                    image=profile.photo,
+                    image=form.cleaned_data['photo'],
                     owner=profile
                 )
-                image.save()
+                profile.photo = image.image
+                profile.save()
                 UserImages.objects.filter(profile=profile) \
                     .filter(activity=True) \
                     .update(activity=False)
@@ -121,7 +241,6 @@ def profile(request, username='admin'):
                     profile=profile,
                     activity=True
                 )
-                image_profile_m2m.save()
                 return HttpResponseRedirect(request.path)
 
         if 'message' in request.POST:

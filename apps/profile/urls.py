@@ -9,6 +9,8 @@ urlpatterns = patterns('profile.views',
     url(r'^(?P<username>\w+)/related/$', 'related_users'),
     url(r'^(?P<username>\w+)/image/$', 'profile_image'),
     url(r'^(?P<username>\w+)/image/more/$', 'profile_image_more', name='profile-image-more'),
+    url(r'^(?P<username>\w+)/image/primary/$', 'profile_image_primary', name='profile-image-primary'),
+    url(r'^(?P<username>\w+)/image/delete/$', 'profile_image_delete', name='profile-image-delete'),
     url(r'^(?P<username>\w+)/albums/$', 'albums', name="users-albums"),
     url(r'^(?P<username>\w+)/albums/(?P<album_id>\d+)/$', 'album_posts', name="users-albums-posts"),
 
