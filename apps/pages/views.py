@@ -79,6 +79,9 @@ def page(request, slug=None):
     except Pages.DoesNotExist:
         raise Http404
 
+    form = ImageUploadForm()
+    data_uri = ''
+
     if request.method == 'GET' and 'ajax' in request.GET:
         data = {}
         template_name = request.GET.get('template_name',None)
@@ -92,6 +95,34 @@ def page(request, slug=None):
                 data['html'] = "Sorry! Wrong template."
             return HttpResponse(json.dumps(data), "application/json")
 
+    from django.core.files.uploadedfile import InMemoryUploadedFile
+    from PIL import Image
+    from StringIO import StringIO
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            image = form.cleaned_data['cover_photo']
+            # save to memory
+            f = StringIO(image.read())
+            # PIL image
+            img = Image.open(f)
+            ( width, height) = img.size
+            target_width = 900
+            target_height = int(height * (1.0 * target_width / width))
+            img = img.resize( (target_width, target_height) )
+            # save to memory
+            thumb = StringIO()
+            img.save(thumb, 'JPEG')
+            thumb.seek(0)
+            thumb_file = InMemoryUploadedFile(thumb, image.field_name, image.name, image.content_type, thumb.len, image.charset)
+
+            # we can save it 
+            #page.cover_photo = thumb_file
+            #page.save()
+            # or we can return it to template
+            data_uri = 'data:image/jpg;base64,'
+            data_uri += thumb.getvalue().encode('base64').replace('\n', '')
+
     if page.type == 'BS':
         template = 'pages/page.html'
     else:
@@ -101,6 +132,8 @@ def page(request, slug=None):
         template,
         {
             'page': page,
+            'form': form,
+            'image': data_uri, 
         },
         RequestContext(request)
     )

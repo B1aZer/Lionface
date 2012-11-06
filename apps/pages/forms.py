@@ -116,6 +116,7 @@ class PageForm(forms.ModelForm):
             raise forms.ValidationError('Sorry, you can\'t use \'-\'')
         return data
 
+
 class BusinessForm(PageForm):
     class Meta:
         model = Pages
@@ -133,3 +134,9 @@ class NonprofitForm(PageForm):
                 'category': forms.Select(choices=NONPROFIT_CATEGORY),
         }
 
+
+class ImageUploadForm(forms.ModelForm):
+
+    class Meta:
+        model = Pages
+        fields = ('cover_photo',)

@@ -536,6 +536,7 @@ class UserImageTag(models.Model):
         return '%s in %s' % (self.image, self.profile)
 
 
+
 class Relationship(models.Model):
     from_user = models.ForeignKey(UserProfile, related_name='from_people')
     to_user = models.ForeignKey(UserProfile, related_name='to_people')

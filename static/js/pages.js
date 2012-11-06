@@ -102,9 +102,14 @@ LionFace.Pages.prototype = {
                 callback: function(data) {
                     if (data.html) {
                         $('.page_container').html(data.html);
-                        $('.business_on').removeClass('business_on');
-                        self.removeClass('business_btn');
-                        self.addClass('business_on');
+                        if ($('.business_on').length) {
+                            $('.business_on').removeClass('business_on');
+                            self.addClass('business_on');
+                        }
+                        if ($('.nonprofit_on').length) {
+                            $('.nonprofit_on').removeClass('nonprofit_on');
+                            self.addClass('nonprofit_on');
+                        } 
                         if (name == 'updates') {
                              self_class.load_page_feed();
                         }

@@ -15,6 +15,7 @@ class Pages(models.Model):
     users_loved = models.ManyToManyField(UserProfile, related_name='pages_loved', null=True, blank=True)
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
     category = models.CharField(max_length=100, default='undefined')
+    cover_photo = models.ImageField(upload_to="uploads/images", null=True, blank=True)
 
     class Meta:
         verbose_name = "Page"

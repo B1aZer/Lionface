@@ -11,6 +11,25 @@ LionFace.User.page_id = '{{ page.id }}';
 
 {% block content %}
 
+        <style type="text/css">
+    	  .cover_photo {
+    		overflow:hidden;
+    	  }
+    	  #cover_image {
+              height:200px;
+              width:900px;
+              background: blue;
+    	  }
+    	</style>
+
+        <script>
+            $(document).ready(function() {
+            $('#img_cover').draggable({ axis: "y", containment:[0,45,0,95]});
+            console.log('width-con: ' + {{ page.cover_photo.height|add:'-300' }});
+            console.log('width-org: ' + {{ page.cover_photo.height }});
+            });
+        </script>
+
   <div class="content_area">
     <div id="profile_top">
         {% if page.type == 'BS' %}
@@ -25,9 +44,22 @@ LionFace.User.page_id = '{{ page.id }}';
     </div>
 	</div>
 	<div style="position: relative; z-index: 1;">
-		<div class="cover_photo">
-			<div style="padding: 100px; font-size: 20pt; color: #EEE;" align="center">Cover Photo: 900x300 Pixels</div>
+        <div class="cover_photo" >
+            <div id="cover_image"><img id="img_cover" src="/{{ page.cover_photo.url }}" alt="Timeline" width="250" height="250"/></div>
+            <!--<p id="cover_image"><img src="/{{ page.cover_photo.url }}" alt="Timeline" width="{{ page.cover_photo.width }}" height="{{ page.cover_photo.height }}"/></p>-->
 		</div>
+            <!--<div class="cover_photo" style="background: url({{ image }})">-->
+            <!--<div style="padding: 100px; font-size: 20pt; color: #EEE;" align="center">Cover Photo: 900x300 Pixels</div>-->
+
+        <div style="position: relative;">
+<form action="." method="post" class="upload_form" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.cover_photo.errors }}
+	<p><label for="id_photo">Upload</label></p>
+	{{ form.cover_photo }}
+	<p><input id="submit_img_btn" name="image" type="submit" class="blue_btn" value="Upload" /></p>
+</form>
+</div> 
 
 		<table width="900">
 			<tr>

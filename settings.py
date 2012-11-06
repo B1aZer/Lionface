@@ -205,7 +205,7 @@ MEDIA_BUNDLES = (
         'js/jquery-1.8.0.min.js',
         'js/jquery.metadata.js',
         'js/jquery.autosize-min.js',
-        'js/jquery-ui-1.8.24.custom.min.js',
+        'js/jquery-ui-1.9.1.custom.min.js',
     ),
     ('common.js',
         'js/site.js',
