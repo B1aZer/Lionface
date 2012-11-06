@@ -7,7 +7,7 @@
 	<table width="100%"><tr><td align="left" width="200" style="color: #999;">
 		<a href="{% url profile.views.profile request.user.username %}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | News Feed
 	</td><td align="center">
-		<a href="{% url schools.views.home %}" class="find_friends">Find Friends from School ></a>
+		<a href="{% url schools.views.home %}" class="find_friends" style="display: none;">Find Friends from School ></a>
 	</td><td align="right" width="200">
 		<span style="color: #DDD;">share your heart</span>
 	</td></tr></table>
@@ -33,9 +33,7 @@
 {% endblock %}
 
 {% block right_col %}
-  <div style="padding: 0px 50px;">
-	<a href="javascript:;" class="sub_filter_feedON">Family</a> <a href="javascript:;" class="sub_filter_feed">High School</a>
-  </div>
+
   <div id="news_feed" class="{type: 'personal'}" style="position: relative; top: -7px;"></div>
 
   {% include_media 'feed.js' %}

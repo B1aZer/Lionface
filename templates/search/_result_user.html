@@ -13,7 +13,7 @@ $(document).on('click','.mutual_friends',function() {
 });
 </script>
 
-<a href="{{ user.get_absolute_url }}"><div class="user_thumbnail" style="background-image: url('/{{ user.photo }}'); background-size: 50px 50px;"></div></a>
+<a href="{{ user.get_absolute_url }}"><div class="user_thumbnail" style="background-image: url('/{{ user.photo.thumb_name }}'); background-size: 50px 50px;"></div></a>
 
 <table height="55"><tr><td>
 <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a> <div class="username"> {{ user.username }}  </div><br/>

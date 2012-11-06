@@ -53,8 +53,7 @@ h3 { text-align: center; font-size: 16px; }
 	color: #777;
 }
 
-a.filter:link, a.filter:active, a.filter:visited,
-a.sub_filter:link, a.sub_filter:active, a.sub_filter:visited { 
+a.filter:link, a.filter:active, a.filter:visited { 
 	color: #AAA; 
 	position: relative; 
 	display: block; 
@@ -71,11 +70,6 @@ a.filter:hover, a.sub_filter:hover {
 	border-color: #CCC;
 }
 
-a.sub_filter:link, a.sub_filter:active, a.sub_filter:visited {
-	width: 160px;
-	padding: 7px 5px 4px 10px;
-	left: 20px;
-}
 
 a.filterON:link, a.filterON:active, a.filterON:visited { 
 	position: relative; 
@@ -90,46 +84,10 @@ a.filterON:link, a.filterON:active, a.filterON:visited {
 	background: #EEE;
 }
 
-a.sub_filterON:link, a._subfilterON:active, a._subfilterON:visited { 
-	position: relative; 
-	display: block; 
-	text-decoration: none;
-	width: 160px;
-	padding: 7px 5px 4px 10px;
-	left: 20px;
-	font-size: 10pt; 
-	color: #000; 
-	margin: 5px 0px;
-	border-right: 5px solid #333;
-	background: #EEE;
-}
-
 a.filterON:hover, a.sub_filterON:hover { 
 	color: #777;
 	background: #F5F5F5;
 	border-color: #CCC;
-}
-
-a.sub_filter_feed:link, a.sub_filter_feed:active, a.sub_filter_feed:visited {
-	display: inline-block;
-	color: #AAA;
-	padding: 5px 7px 1px 7px;
-	border-bottom: 3px solid #EEE;
-}
-
-a.sub_filter_feed:hover {
-	background: #F5F5F5;
-	color: #777;
-	text-decoration: none;
-	border-color: #CCC;
-}
-
-a.sub_filter_feedON:link, a.sub_filter_feedON:active, a.sub_filter_feedON:visited, a.sub_filter_feedON:hover {
-	display: inline-block;
-	color: #000;
-	padding: 4px 7px 1px 7px;
-	border-bottom: 3px solid #333;
-	text-decoration: none;
 }
 
 .remove_tag {
@@ -159,6 +117,18 @@ a.hide_feed:hover, a.unfollow_feed:hover {
 	font-size: 18pt;
 	line-height: 22pt;
 	color: #BBB;
+}
+
+.no_posts_feed {
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 100px 0;
+	font-size: 18pt;
+	line-height: 22pt;
+	color: #BBB;
+	position: relative;
+	left: 50px;
 }
 
 .add_tag {
@@ -201,6 +171,7 @@ a.colored_tag:hover {
 	top: 45px;
 	width: 250px;
 }
+
 
 /* Profile */
 
@@ -799,9 +770,13 @@ a.profile_btn:hover {
 }
 
 .album_name_others {
-	color: #3ea8d2;
+	color: #333;
 	font-size: 14pt;
 	padding: 4px 12px;
+}
+
+.album_name_others:hover {
+	color: #3ea8d2;
 }
 
 .album_name_list:hover {
@@ -1689,6 +1664,53 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	cursor: default;
 }
 
+.add_community_info {
+	font-size: 10pt; color: #999; padding: 4px 0;
+}
+
+.add_community_info:hover {
+	color: #333;
+	cursor: pointer;
+}
+
+.community_checkbox {
+	margin: 3px;
+	position: relative;
+	top: -2px;
+}
+
+.review {
+	display: inline-block;
+	width: 25px;
+	height: 17px;
+	padding-top: 7px;
+	border: 1px solid #CCC;
+	text-align: center;
+	margin: 5px;
+}
+
+.review:hover {
+	background: #2ab4ea;
+	cursor: pointer;
+	color: #FFF;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border-color: #DDD;
+}
+
+.reviewON {
+	display: inline-block;
+	width: 25px;
+	height: 17px;
+	padding-top: 7px;
+	border: 1px solid #DDD;
+	text-align: center;
+	margin: 5px;
+	background: #3ea8d2;
+	color: #FFF;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
 .create_options {
 	position: absolute; 
 	right: -16px; 
@@ -1884,19 +1906,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', end
 .friend_icon img {
 	border: 1px solid #DDD;
 }
-	
-.see_all, .view_more {
-	display: inline-block;
-	font-size: 8pt;
-	color: #AAA;
-	padding: 3px;
-}
-
-.see_all:hover {
-	text-decoration: underline;
-	cursor: pointer;
-}
-
 
 /* Schools */
 
