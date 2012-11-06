@@ -10,26 +10,6 @@ LionFace.User.page_id = '{{ page.id }}';
 
 
 {% block content %}
-
-        <style type="text/css">
-    	  .cover_photo {
-    		overflow:hidden;
-    	  }
-    	  #cover_image {
-              height:200px;
-              width:900px;
-              background: blue;
-    	  }
-    	</style>
-
-        <script>
-            $(document).ready(function() {
-            $('#img_cover').draggable({ axis: "y", containment:[0,45,0,95]});
-            console.log('width-con: ' + {{ page.cover_photo.height|add:'-300' }});
-            console.log('width-org: ' + {{ page.cover_photo.height }});
-            });
-        </script>
-
   <div class="content_area">
     <div id="profile_top">
         {% if page.type == 'BS' %}
@@ -44,22 +24,32 @@ LionFace.User.page_id = '{{ page.id }}';
     </div>
 	</div>
 	<div style="position: relative; z-index: 1;">
-        <div class="cover_photo" >
-            <div id="cover_image"><img id="img_cover" src="/{{ page.cover_photo.url }}" alt="Timeline" width="250" height="250"/></div>
-            <!--<p id="cover_image"><img src="/{{ page.cover_photo.url }}" alt="Timeline" width="{{ page.cover_photo.width }}" height="{{ page.cover_photo.height }}"/></p>-->
+        <div class="cover_photo" style="overflow:hidden; background: blue ">
+            <div id="cover_image" style="height:{{ page.cover_photo.height }}px; width:{{ page.cover_photo.width }}px; background: url(/{{ page.cover_photo.url }})">
+                {% block inpicture %}
+                <div style="padding: 100px; font-size: 20pt; color: #EEE;" align="center">Cover Photo: 900x300 Pixels</div>
+                    {% if request.user == page.user %} 
+                        <div style="position: relative; top: 0; display: block; width: 200px;" align="center">
+                            <a id="upload_cover_picture" class="upload upload_page" style="display:none;">Upload</a>
+                            <a href="javacript:;" id="reset_picture" class="upload upload_page" style="display:none; color:#555;">Clear</a>
+                        </div>
+                    {% endif %}
+                {% endblock %}
+            </div>
 		</div>
-            <!--<div class="cover_photo" style="background: url({{ image }})">-->
-            <!--<div style="padding: 100px; font-size: 20pt; color: #EEE;" align="center">Cover Photo: 900x300 Pixels</div>-->
-
+        {% block form %}
         <div style="position: relative;">
-<form action="." method="post" class="upload_form" enctype="multipart/form-data">
-	{% csrf_token %}
-	{{ form.cover_photo.errors }}
-	<p><label for="id_photo">Upload</label></p>
-	{{ form.cover_photo }}
-	<p><input id="submit_img_btn" name="image" type="submit" class="blue_btn" value="Upload" /></p>
-</form>
-</div> 
+            <form action="." method="post" class="upload_cover_form" enctype="multipart/form-data" style="display:none;">
+                {% csrf_token %}
+                {{ form.cover_photo.errors }}
+                <p><label for="id_photo">Upload</label></p>
+                {{ form.cover_photo }}
+                <p><input id="submit_cover_btn" name="image" type="submit" class="blue_btn" value="Upload" /></p>
+            </form>
+        </div> 
+
+        {% endblock %}
+        {% block page_footer %}
 
 		<table width="900">
 			<tr>
@@ -94,6 +84,7 @@ LionFace.User.page_id = '{{ page.id }}';
 			</tr>
 		</table>
 	</div>
+    {% endblock %}
     {% block page_micro %}
 	<div class="pages_nav_area" id="pages_nav_page">
 		<a href="#" id="updates" class="page_btn business_btn business_on">Updates</a>

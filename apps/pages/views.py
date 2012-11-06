@@ -11,6 +11,10 @@ from tags.models import Tag
 from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image
+from StringIO import StringIO
+
 try:
     import json
 except ImportError:
@@ -81,6 +85,9 @@ def page(request, slug=None):
 
     form = ImageUploadForm()
     data_uri = ''
+    restrict_height = 300
+    target_width = 900
+    resize = False
 
     if request.method == 'GET' and 'ajax' in request.GET:
         data = {}
@@ -95,9 +102,6 @@ def page(request, slug=None):
                 data['html'] = "Sorry! Wrong template."
             return HttpResponse(json.dumps(data), "application/json")
 
-    from django.core.files.uploadedfile import InMemoryUploadedFile
-    from PIL import Image
-    from StringIO import StringIO
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -107,37 +111,84 @@ def page(request, slug=None):
             # PIL image
             img = Image.open(f)
             ( width, height) = img.size
-            target_width = 900
-            target_height = int(height * (1.0 * target_width / width))
-            img = img.resize( (target_width, target_height) )
+            if width < target_width:
+                target_height = int(height * (1.0 * target_width / width))
+                img = img.resize( (target_width, target_height) )
+            elif width > target_width:
+                target_height = int(height * (1.0 * target_width / width))
+                img.thumbnail((target_width,target_height), Image.ANTIALIAS)
+            else:
+                pass
+            ( new_width, new_height) = img.size
+            if new_height != restrict_height:
+                resize= True
             # save to memory
             thumb = StringIO()
             img.save(thumb, 'JPEG')
             thumb.seek(0)
-            thumb_file = InMemoryUploadedFile(thumb, image.field_name, image.name, image.content_type, thumb.len, image.charset)
+            thumb_file = InMemoryUploadedFile(thumb, None, image.name, image.content_type, thumb.len, image.charset)
 
-            # we can save it 
-            #page.cover_photo = thumb_file
-            #page.save()
+            # we can save it
+            if page.cover_photo:
+                page.cover_photo.delete()
+            page.cover_photo = thumb_file
+            page.save()
             # or we can return it to template
-            data_uri = 'data:image/jpg;base64,'
-            data_uri += thumb.getvalue().encode('base64').replace('\n', '')
+            #data_uri = 'data:image/jpg;base64,'
+            #data_uri += thumb.getvalue().encode('base64').replace('\n', '')
 
     if page.type == 'BS':
         template = 'pages/page.html'
     else:
         template = 'pages/page_nonprofit.html'
 
-    return render_to_response(
-        template,
-        {
-            'page': page,
-            'form': form,
-            'image': data_uri, 
-        },
-        RequestContext(request)
-    )
+    cover_offset = (page.cover_photo.height - restrict_height - 95) * -1
+    if resize:
+        return render_to_response(
+            "pages/page_cover.html",
+            {
+                'page': page,
+                'form': form,
+                'cover_offset': cover_offset,
+            },
+            RequestContext(request)
+        )
+    else:
+        return render_to_response(
+            template,
+            {
+                'page': page,
+                'form': form,
+                'image': data_uri,
+            },
+            RequestContext(request)
+        )
 
+def reposition(request, slug=None):
+    data={'status':'FAIL'}
+    if not slug:
+        raise Http404
+
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST' and 'top' in request.POST:
+        top_pos = abs(int(request.POST['top']))
+        image = page.cover_photo
+        img = Image.open(image)
+        box = (0, top_pos, 900, top_pos+300)
+        img = img.crop(box)
+
+        cropped = StringIO()
+        img.save(cropped, 'JPEG')
+        cropped.seek(0)
+        cropped_file = InMemoryUploadedFile(cropped, image.field, image.name, 'image/jpeg', cropped.len, None)
+        page.cover_photo.delete()
+        page.cover_photo = cropped_file
+        page.save()
+    return HttpResponse(json.dumps(data), "application/json")
 
 def leaderboard(request):
 

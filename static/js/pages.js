@@ -151,7 +151,70 @@ LionFace.Pages.prototype = {
             }
             self.remove();
             self_class.load_page_feed($("#new_posts"), page);
-        }) 
+        });
+
+        /** reposition page cover image */
+        $(document).on('click','#save_image',function(e){
+            e.preventDefault();
+            var post = $('#cover_image').position();
+            var url = 'reposition/';
+            if (post.top) {
+                make_request({
+                    url:url,
+                    data:{
+                        'top':post.top,
+                    },
+                    callback:function(data) {
+                        location.reload();
+                    }
+                });
+            }
+        });
+
+        /** upload form */
+        $('.cover_photo').hover(
+                function(){$('.upload_page').show();},
+                function(){$('.upload_page').hide();}
+        );
+
+        $(document).on('click','#upload_cover_picture',function(e){ 
+            $('.upload_cover_form').show();
+        });
+
+        /** restrict image uploads */
+         $(document).on('change','#id_cover_photo',function() {
+                if(this.files[0].size > 3145728) {  
+                    $('#submit_cover_btn').hide();
+                    if ($('.errorlist').length) {
+                        $('.errorlist').html('<li>Image file too large ( &gt; 3mb )</li>');
+                    }
+                    else {
+                        $('.upload_cover_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 3mb )</li></ul>');
+                    } 
+                }
+                else if(this.files[0].type == 'image/gif') {
+                    $('#submit_cover_btn').hide();
+                    if ($('.errorlist').length) {
+                        $('.errorlist').html('<li>Gif images are not allowed</li>');
+                    }
+                    else {
+                        $('.upload_cover_form').prepend('<ul class="errorlist"><li>Gif images are not allowed</li></ul>');
+                    }      
+                }
+                else if(this.files[0].type.indexOf("image") == -1) {
+                    $('#submit_cover_btn').hide();
+                    if ($('.errorlist').length) {
+                        $('.errorlist').html('<li>Please upload a valid image</li>');
+                    }
+                    else {
+                        $('.upload_cover_form').prepend('<ul class="errorlist"><li>Please upload a valid image</li></ul>');
+                    }      
+                }       
+                else{
+                    $('#submit_cover_btn').show();
+                    $('.errorlist').html(''); 
+                }        
+        });
     },
     load_page_feed : function(elem, page) {
         var elem = elem || $('#page_feed');

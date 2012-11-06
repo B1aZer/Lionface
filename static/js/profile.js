@@ -21,7 +21,7 @@ LionFace.Profile.prototype = {
         $('#id_photo').bind('change', function() {
                 console.log(this.files[0].type);
                 console.log(this.files[0].size);
-                if(this.files[0].size > 1000141) {
+                if(this.files[0].size > 1048576) {
                     $('#submit_img_btn').hide();
                     if ($('.errorlist').length) {
                         $('.errorlist').html('<li>Image file too large ( &gt; 1mb )</li>');

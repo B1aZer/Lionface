@@ -1,0 +1,28 @@
+{% extends "pages/page.html" %}
+{% load media %}
+
+{% block inpicture %}
+{% endblock %}
+
+{% block form %}
+{% endblock %}
+
+{% block page_footer %}
+<script>
+            $(document).ready(function() {
+                    $('#cover_image').draggable({ axis: "y", containment:[0,{{ cover_offset }},0,95]});
+            });
+        </script>
+
+        <p>Your image height is larger than 300 px.
+        Please adjust this.</p>
+
+    <div>
+        <a id="save_image" class="profile_btn" href="javacript:;">save</a>
+        <a class="profile_btn" href=".">cancel</a>
+    </div>
+{% endblock %}
+
+{% block page_micro %}
+{% endblock %}
+

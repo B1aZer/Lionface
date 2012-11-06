@@ -275,7 +275,6 @@ def profile(request, username='admin'):
         RequestContext(request)
     )
 
-    return
 
 @login_required
 @unblocked_users

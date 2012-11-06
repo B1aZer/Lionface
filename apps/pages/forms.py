@@ -140,3 +140,15 @@ class ImageUploadForm(forms.ModelForm):
     class Meta:
         model = Pages
         fields = ('cover_photo',)
+
+    # Add some custom validation to our image field and cropped our image
+    def clean_cover_photo(self):
+        try:
+            image = self.cleaned_data['cover_photo']
+        except KeyError:
+            raise forms.ValidationError("Couldn't read uploaded image")
+        if image.content_type == 'image/gif':
+            raise forms.ValidationError("Sorry! Gif is prohibited.")
+        if image._size > 3*1024*1024:
+            raise forms.ValidationError("Image file too large ( > 3mb )")
+        return image
