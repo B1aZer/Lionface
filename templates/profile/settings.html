@@ -188,12 +188,6 @@
     </td>
 </tr>
 <tr>
-    <td>When Being Added</td>
-    <td>
-        <select><option selected>Allow users to place themselves into one of my filters.</option><option>Keep my filters private. I will sort friends on my own.</option><select>
-    </td>
-</tr>
-<tr>
     <td>Follow</td>
     <td>
         {{ form.option_follow }}
@@ -242,7 +236,14 @@
 <tr>
     <td>Volunteer, Intership and Employment Connections</td>
     <td>
-	<span style="color: #AAA;">On Your Profile:</span> Public<br />
+	<span style="color: #AAA;">On Your Profile:</span>
+		<select>
+			<option>Public</option>
+			<option selected>Friend's Friends</option>
+			<option>Friends</option>
+			<option>Just Me</option>
+		</select>
+		<br />
 	<span style="color: #AAA;">On Pages:</span>
 		<select>
 			<option>Public</option>
