@@ -24,14 +24,14 @@ LionFace.User.page_id = '{{ page.id }}';
     </div>
 	</div>
 	<div style="position: relative; z-index: 1;">
-        <div class="cover_photo" style="overflow:hidden; background: blue ">
+        <div class="cover_photo" style="overflow:hidden;">
             <div id="cover_image" style="height:{{ page.cover_photo.height }}px; width:{{ page.cover_photo.width }}px; background: url(/{{ page.cover_photo.url }})">
                 {% block inpicture %}
                 <div style="padding: 100px; font-size: 20pt; color: #EEE;" align="center">Cover Photo: 900x300 Pixels</div>
                     {% if request.user == page.user %} 
                         <div style="position: relative; top: 0; display: block; width: 200px;" align="center">
                             <a id="upload_cover_picture" class="upload upload_page" style="display:none;">Upload</a>
-                            <a href="javacript:;" id="reset_picture" class="upload upload_page" style="display:none; color:#555;">Clear</a>
+                            <a href="{% url pages.views.reset_picture slug=page.username %}" id="reset_picture" class="upload upload_page" style="display:none; color:#555;">Clear</a>
                         </div>
                     {% endif %}
                 {% endblock %}

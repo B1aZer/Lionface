@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Pages.cover_photo'
         db.add_column('pages_pages', 'cover_photo',
-                      self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True),
+                      self.gf('django.db.models.fields.files.ImageField')(default='uploads/images/noCoverImage.png', max_length=100),
                       keep_default=False)
 
 
@@ -78,7 +78,7 @@ class Migration(SchemaMigration):
         'pages.pages': {
             'Meta': {'object_name': 'Pages'},
             'category': ('django.db.models.fields.CharField', [], {'default': "'undefined'", 'max_length': '100'}),
-            'cover_photo': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'cover_photo': ('django.db.models.fields.files.ImageField', [], {'default': "'uploads/images/noCoverImage.png'", 'max_length': '100'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'loves': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': "'200'"}),

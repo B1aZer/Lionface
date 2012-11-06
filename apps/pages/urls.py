@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^nonprofit/(?P<slug>\w+)/reposition/$', views.reposition),
     url(r'^page/(?P<slug>\w+)/$', views.page),
     url(r'^page/(?P<slug>\w+)/list_posts/$', views.list_posts),
+    url(r'^page/(?P<slug>\w+)/reset_picture/$', views.reset_picture),
     url(r'^update/$', views.update),
 )
 

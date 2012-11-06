@@ -2,7 +2,7 @@ from django.http import *
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template.loader import render_to_string
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .forms import *
 from .models import *
@@ -129,7 +129,7 @@ def page(request, slug=None):
             thumb_file = InMemoryUploadedFile(thumb, None, image.name, image.content_type, thumb.len, image.charset)
 
             # we can save it
-            if page.cover_photo:
+            if page.cover_photo and page.cover_photo.name != page.cover_photo.field.default:
                 page.cover_photo.delete()
             page.cover_photo = thumb_file
             page.save()
@@ -189,6 +189,27 @@ def reposition(request, slug=None):
         page.cover_photo = cropped_file
         page.save()
     return HttpResponse(json.dumps(data), "application/json")
+
+
+def reset_picture(request, slug=None):
+    data={'status':'FAIL'}
+    if not slug:
+        raise Http404
+
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+
+    if page.user == request.user:
+        page.cover_photo = page.cover_photo.field.default
+        page.save()
+    if page.type == 'BS':
+        redrct = redirect('business-page', slug=page.username)
+    else:
+        redrct = redirect('nonprofit-page', slug=page.username)
+    return redrct
+
 
 def leaderboard(request):
 
