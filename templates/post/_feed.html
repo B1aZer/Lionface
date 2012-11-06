@@ -3,7 +3,7 @@
 
 {% for item in items %}
 {% if not notification %}
-	<hr style="position: relative; left: 50px; background-color: #E7E7E7; layer-background-color: #EEE; border: 1px solid #EEE; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
+	<hr style="position: relative; left: 50px; border: 1px solid #E7E7E7; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
 <div id="post_{{ item.get_post.id }}" class="result post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}' }">
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">

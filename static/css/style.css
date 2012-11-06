@@ -161,6 +161,18 @@ a.hide_feed:hover, a.unfollow_feed:hover {
 	color: #BBB;
 }
 
+.no_posts_feed {
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 100px 0;
+	font-size: 18pt;
+	line-height: 22pt;
+	color: #BBB;
+	position: relative;
+	left: 50px;
+}
+
 .add_tag {
     display:inline-block;
     width:100%;
@@ -201,6 +213,7 @@ a.colored_tag:hover {
 	top: 45px;
 	width: 250px;
 }
+
 
 /* Profile */
 
@@ -1689,6 +1702,53 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	cursor: default;
 }
 
+.add_community_info {
+	font-size: 10pt; color: #999; padding: 4px 0;
+}
+
+.add_community_info:hover {
+	color: #333;
+	cursor: pointer;
+}
+
+.community_checkbox {
+	margin: 3px;
+	position: relative;
+	top: -2px;
+}
+
+.review {
+	display: inline-block;
+	width: 25px;
+	height: 17px;
+	padding-top: 7px;
+	border: 1px solid #CCC;
+	text-align: center;
+	margin: 5px;
+}
+
+.review:hover {
+	background: #2ab4ea;
+	cursor: pointer;
+	color: #FFF;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border-color: #DDD;
+}
+
+.reviewON {
+	display: inline-block;
+	width: 25px;
+	height: 17px;
+	padding-top: 7px;
+	border: 1px solid #DDD;
+	text-align: center;
+	margin: 5px;
+	background: #3ea8d2;
+	color: #FFF;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
 .create_options {
 	position: absolute; 
 	right: -16px; 
@@ -1884,19 +1944,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', end
 .friend_icon img {
 	border: 1px solid #DDD;
 }
-	
-.see_all, .view_more {
-	display: inline-block;
-	font-size: 8pt;
-	color: #AAA;
-	padding: 3px;
-}
-
-.see_all:hover {
-	text-decoration: underline;
-	cursor: pointer;
-}
-
 
 /* Schools */
 
