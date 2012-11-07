@@ -470,10 +470,10 @@ LionFace.Profile.prototype = {
                             var li1 = $(image_settings).parent().parent();
                             var li2 = $('.image_container li:first');
                             $(li1).find('#make_primary').attr('activity', '1');
-                            $(li1).find('#make_primary').show();
+                            $(li1).find('#make_primary').hide();
                             if ( !$(li1).is($(li2)) ) {
-                                $(li1).find('#make_primary').attr('activity', '0');
-                                $(li1).find('#make_primary').hide();
+                                $(li2).find('#make_primary').attr('activity', '0');
+                                $(li2).find('#make_primary').show();
                             }
                             LionFace.Profile.set_positions_images( data.positions, false );
                             LionFace.Profile.swap_images(li1, li2).then(function() {
