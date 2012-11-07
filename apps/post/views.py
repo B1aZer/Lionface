@@ -192,6 +192,16 @@ def follow(request):
             except ObjectDoesNotExist:
                 data['status'] = "FAIL"
                 data['html'] = "Sorry no such post"
+        if post_type == 'page post':
+            try:
+                post = Post.objects.get(id=int(post_id))
+                if request.POST['value'] == 'Follow':
+                    request.user.follows.add(post)
+                else:
+                    request.user.follows.remove(post)
+            except ObjectDoesNotExist:
+                data['status'] = "FAIL"
+                data['html'] = "Sorry no such post"
     return HttpResponse(json.dumps(data), "application/json")
 
 def show(request):

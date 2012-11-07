@@ -1,4 +1,4 @@
-<li class="follow_comment notification {type: 'comment post', id: '{{ notification.content_object.id }}'}">
+<li class="follow_comment notification {type: 'comment post', id: '{{ notification.content_object.id }}',  model: '{{ notification.content_object.get_type_class }}' }">
 <div style="padding: 15px;" class="link-output">
       <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}>
           {% if notification.people_counter == 1 %}
