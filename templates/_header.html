@@ -1,5 +1,4 @@
 {% load media format_results %}
-<div id="header">
   <div class="content_area">
     <div class="left_links" style="position: relative; top: -25px; left: 0pt;">
       <ul>
@@ -17,11 +16,8 @@
       </ul>
     </div>
 
-    {% if '/lionface/' in request.get_full_path %}
-        <form id="quick_search" method="GET" action="/lionface/search/">
-    {% else %}
         <form id="quick_search" method="GET" action="/search/">
-    {% endif %}
+
     <div id="search_bar">
         <input name="models" type="hidden" value="account.userprofile">
         <input id="search_input" name="q" type="text">
@@ -36,18 +32,6 @@
 </div>
 
 <div align="center">
-
-<div style="position: relative; width: 900px; height: 1px; text-align: left;">
-
-	<div style="position: relative; left: -42px; top: 31px; width: 35px; z-index: 9999;">
-		<div onMouseOver="ShowContent('page'); return false;" onMouseOut="HideContent('page'); return false;" style="position: relative;">
-			<div id="page" class="page" style="display: none;"><a href="#">Settings</a> 
-			<div style="display: block; color: #F58; padding: 4px 0;">(love count)</div></div>
-			<!-- need set thumb in a tag -->
-			<a href="{% url pages.views.main %}" class="nav_page"></a>
-		</div>
-	</div>
-</div>
 
 <div style="position: relative; width: 900px; height: 1px; text-align: right;">
 
@@ -68,5 +52,4 @@
 	</div>
 </div>
 
-</div>
 

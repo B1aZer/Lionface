@@ -16,6 +16,8 @@ from PIL import Image
 from StringIO import StringIO
 import base64
 
+from django.contrib import messages
+
 try:
     import json
 except ImportError:
@@ -27,8 +29,11 @@ def main(request):
     form_busn = BusinessForm()
     form_nonp = NonprofitForm()
     active = None
+    max_pages = 12
 
-    if request.method == 'POST' and request.POST.get('type',None):
+    if request.method == 'POST' and request.user.get_pages().count() == max_pages:
+        messages.warning(request, 'Sorry only 12 pages are allowed')
+    if request.method == 'POST' and request.POST.get('type',None) and request.user.get_pages().count() <= max_pages:
         if request.POST.get('type',None) == 'NP':
             active = 'Nonprofit'
             form = NonprofitForm(data = request.POST)
@@ -159,8 +164,8 @@ def page(request, slug=None):
     else:
         template = 'pages/page_nonprofit.html'
 
-    cover_offset = (image_height - restrict_height - 95) * -1
     if resize:
+        cover_offset = (image_height - restrict_height - 95) * -1
         return render_to_response(
             "pages/page_cover.html",
             {
@@ -177,7 +182,6 @@ def page(request, slug=None):
             {
                 'page': page,
                 'form': form,
-                'image': data_uri,
             },
             RequestContext(request)
         )
@@ -366,3 +370,24 @@ def list_posts(request, slug=None):
             }, context_instance=RequestContext(request))
     data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def settings(request, slug=None):
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    form = PageSettingsForm(instance=page)
+    if request.method == 'POST':
+        form = PageSettingsForm(data=request.POST, instance=page)
+        if form.is_valid():
+            form.save()
+    return render_to_response(
+            "pages/settings.html",
+                {
+                    'page': page,
+                    'form': form,
+                },
+                RequestContext(request)
+            )

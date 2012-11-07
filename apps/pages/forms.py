@@ -141,7 +141,6 @@ class ImageUploadForm(forms.ModelForm):
         model = Pages
         fields = ('cover_photo',)
 
-    # Add some custom validation to our image field and cropped our image
     def clean_cover_photo(self):
         try:
             image = self.cleaned_data['cover_photo']
@@ -152,3 +151,26 @@ class ImageUploadForm(forms.ModelForm):
         if image._size > 3*1024*1024:
             raise forms.ValidationError("Image file too large ( > 3mb )")
         return image
+
+class PageSettingsForm(forms.ModelForm):
+
+    class Meta:
+        model = Pages
+        exclude = ('type','user','loves')
+        widgets = {
+            'username' : forms.TextInput(attrs={'readonly':'readonly'}),
+        }
+
+
+    def __init__(self, *args, **kwargs):
+        super(PageSettingsForm, self).__init__(*args, **kwargs)
+        # if we are using model in form
+        if 'instance' in kwargs:
+            # use appropriate catogory
+            if kwargs['instance'].type == 'BS':
+                self.fields['category'].widget = forms.Select(choices=BUSINESS_CATEGORY)
+            else:
+                self.fields['category'].widget = forms.Select(choices=NONPROFIT_CATEGORY)
+
+
+

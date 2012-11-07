@@ -1,0 +1,89 @@
+{% extends 'pages/base.html' %}
+{% load i18n static media %}
+
+
+<div class="left_col">
+    {% block left_col %}
+    <div class="settings_nav">
+        <ul>
+            <li id="basics_settings" {% if active == 'basics' %} class="active" {% endif %} onClick="show_basics()">Basics</li>
+        </ul>
+    </div>
+    {% endblock %}
+</div>
+
+<div class="right_col">
+    {% block right_col %}
+
+    <div id="basics_header">
+        <span style="font-size: 18px;">Basics</span></strong>
+</div>
+
+<form action="" method="post">{% csrf_token %}
+<div align="center">
+    <table id="basics">
+        <tr>
+            <td width="150" align="right">&nbsp;</td>
+            <td width="405">&nbsp;</td>
+        </tr>
+        <tr>
+            <td align="right">Name</td>
+            <td>
+                {{ form.name.errors }}
+                {{ form.name }}
+            </td>
+        </tr>
+        <tr>
+            <td align="right">URL<br></td>
+            <td>        
+                {{ form.url.errors }}
+                {{ form.url }}
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Username<br></td>
+            <td class="username">        
+                {{ form.username }}
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Category</td>
+            <td class="category">        
+                {{ form.category }}
+            </td>    
+        </tr>
+        <tr>
+            <td align="right">Content</td>
+            <td class="content">        
+                {{ form.content }}
+            </td>    
+        </tr>
+        <tr>
+            <td align="right">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+
+
+    <td>&nbsp;</td>
+</tr>
+   </table>
+
+</div>
+
+<div class="save_container">
+<input type="hidden" name="form_name" id="form_name">
+<input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> 
+</form>
+<a href="#" id="delete_page" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Page</a>
+<form id="delete_account_form" action="{% url profile.views.delete_profile username=request.user.username %}" method="post" style="display:none">{% csrf_token %}
+<input id="submit_delete" type="submit" class="blue_btn" name="delete_account" value="Delete">
+<label for="id_confirm_pass">Confirm Password:</label>
+<input type="password" name="confirm_password" id="id_confirm_pass">
+<span class="confirm_errors"></span>
+</form>
+</div>
+
+
+{% endblock %}
+</div>

@@ -404,6 +404,9 @@ class UserProfile(User):
     def get_loved(self):
         return self.pages_loved.all()
 
+    def get_pages(self):
+        return self.pages.all()
+
     @models.permalink
     def get_absolute_url(self):
         return ('profile.views.profile', [str(self.username)])
