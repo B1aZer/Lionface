@@ -1528,32 +1528,25 @@ a.older_mess:hover {
 a.love:link, a.love:active, a.love:visited { 
 	display: inline-block; 
 	padding: 8px 12px 6px 12px; 
-	color: #F58; 
+	color: #777; 
 	font-size: 12pt;
 	text-decoration: none; 
 	border: 1px solid #FFF;
-	background: #e7e7e7; /* Old browsers */
-	background: -moz-linear-gradient(top, #e7e7e7 0%, #ffffff 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e7e7e7), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #e7e7e7 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #e7e7e7 0%,#ffffff 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #e7e7e7 0%,#ffffff 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #e7e7e7 0%,#ffffff 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e7e7e7', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+	background: #FFF;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	-moz-box-shadow: 0 4px 6px -4px #555;
-	box-shadow: 0 4px 6px -4px #555; 
+	-moz-box-shadow: inset 0 4px 6px -4px #777;
+	box-shadow: inset 0 4px 6px -4px #777; 
 }
 
-a.love:hover, a.loved:link, a.loved:active, a.loved:visited, a.loved:hover { 
-	color: #D92; 
-	-moz-box-shadow: 0 4px 8px -4px #333;
-	box-shadow: 0 4px 8px -4px #333; 
-	border: 1px solid #FFF;
-	background: #FFF;
+a.love:hover, a.loved:link, a.loved:active, a.loved:visited { 
+	-moz-box-shadow: insent 0 4px 8px -4px #999;
+	box-shadow: inset 0 4px 8px -4px #999; 
 }
-
+a.loved:hover {
+	-moz-box-shadow: inset 0 4px 6px -4px #777;
+	box-shadow: inset 0 4px 6px -4px #777; 
+}
 .love_container {
 	position: relative;
 	-moz-border-radius: 0 0 5px 5px; 
@@ -1582,9 +1575,11 @@ a.love:hover, a.loved:link, a.loved:active, a.loved:visited, a.loved:hover {
 	height: 300px; 
 	background: #DDD; 
 	position: relative;
-	-moz-box-shadow: 0 4px 10px -6px #333;
-	box-shadow: 0 4px 10px -6px #333;
+	-moz-box-shadow: 0 4px 8px -4px #333;
+	box-shadow: 0 4px 8px -4px #333;
 	z-index: 500;
+	border-bottom: 7px solid #EEE;
+	border-top: 7px solid #EEE;
 }
 
 .content_area_pages {
