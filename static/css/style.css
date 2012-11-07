@@ -537,6 +537,18 @@ a.profile_btn:hover {
 	cursor: pointer;
 }
 
+.image_container ul {
+	display: inline-block;
+	list-style-type: none;
+	width: 900px;
+}
+
+.image_container ul li {
+	float: left;
+	width: 210px;
+	height: 200px;
+}
+
 #image_settings {
 	display: block;
 	height: 25px; width: 200px;

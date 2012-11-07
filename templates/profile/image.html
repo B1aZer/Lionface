@@ -53,6 +53,7 @@
 		LionFace.User['profile_images_now_rows'] = {{ image_rows|length }};
 		LionFace.User['profile_images_url_primary'] = "{% url profile-image-primary profile_user.username %}";
 		LionFace.User['profile_images_url_delete'] = "{% url profile-image-delete profile_user.username %}";
+		LionFace.User['profile_images_url_change_position'] = "{% url profile-image-change_position profile_user.username %}";
 	});
 </script>
 {% endblock %}
@@ -61,17 +62,15 @@
 {% include_media 'profile.js' %}
 <div align="center">
 <div class="image_container" align="center">
-	<table align="center" width="100%">
-		{% for image_row in image_rows %}
-			{% include "profile/image_tr.html" %}
-		{% endfor %}
-		<tr>
-			<td colspan="4" align="center"><div class="view_more" style="display: none;">
-				<div class="view_more_loader" style="display: none;"><image src="{% media_url 'images/loader.gif' %}"></div>
-				<a href="#">View more</a>
-			</div></td>
-		</tr>
-	</table>
+	<ul>
+	{% for rows in image_rows %}
+		{% include "profile/image_li.html" %}
+	{% endfor %}
+	</ul>
+	<div class="view_more" style="display: block; text-align: center; margin-top: 25px;">
+		<div class="view_more_loader" style="display: none;"><image src="{% media_url 'images/loader.gif' %}"></div>
+		<a href="#">View more</a>
+	</div>
 </div>
 </div>
 {% endblock %}
