@@ -492,6 +492,7 @@ class UserImagesQuerySet(post.models.QuerySet):
         return self.get_rows(start, 1)[0]
 
 
+
 class UserImages(models.Model):
     image = models.ForeignKey('UserImage')
     profile = models.ForeignKey('UserProfile')
@@ -502,6 +503,7 @@ class UserImages(models.Model):
 
     def __unicode__(self):
         return '%s link to %s' % (self.image, self.profile)
+
 
 
 def create_user_images(sender, instance, created, **kwargs):

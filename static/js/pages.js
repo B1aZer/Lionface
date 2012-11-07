@@ -158,17 +158,17 @@ LionFace.Pages.prototype = {
             e.preventDefault();
             var post = $('#cover_image').position();
             var url = 'reposition/';
-            if (post.top) {
-                make_request({
-                    url:url,
-                    data:{
-                        'top':post.top,
-                    },
-                    callback:function(data) {
-                        location.reload();
-                    }
-                });
-            }
+            var pattern = /url\(|\)|"|'/g;
+            make_request({
+                url:url,
+                data:{
+                    'top':post.top,
+                    'image':$('#cover_image').css('backgroundImage').replace(pattern,""),
+                },
+                callback:function(data) {
+                    location.reload();
+                }
+            });
         });
 
         /** upload form */

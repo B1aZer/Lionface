@@ -25,7 +25,17 @@ LionFace.User.page_id = '{{ page.id }}';
 	</div>
 	<div style="position: relative; z-index: 1;">
         <div class="cover_photo" style="overflow:hidden;">
-            <div id="cover_image" style="height:{{ page.cover_photo.height }}px; width:{{ page.cover_photo.width }}px; background: url(/{{ page.cover_photo.url }})">
+            <div id="cover_image" 
+                {% if data_uri %}
+                style="height:{{ data_uri.height }}px; 
+                width:{{ data_uri.width }}px; 
+                background: url({{ data_uri }})"
+                {% else %}
+                style="height:{{ page.cover_photo.height }}px; 
+                width:{{ page.cover_photo.width }}px; 
+                background: url(/{{ page.cover_photo.url }})"
+                {% endif %}
+                >
                 {% block inpicture %}
                     {% if request.user == page.user %} 
                         <div style="position: relative; top: 270px; left: -10px; display: block; width: 200px;" align="center">

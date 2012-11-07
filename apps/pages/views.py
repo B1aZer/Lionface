@@ -14,6 +14,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
 from StringIO import StringIO
+import base64
 
 try:
     import json
@@ -102,6 +103,8 @@ def page(request, slug=None):
                 data['html'] = "Sorry! Wrong template."
             return HttpResponse(json.dumps(data), "application/json")
 
+    image_height = page.cover_photo.height
+
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -129,20 +132,34 @@ def page(request, slug=None):
             thumb_file = InMemoryUploadedFile(thumb, None, image.name, image.content_type, thumb.len, image.charset)
 
             # we can save it
-            if page.cover_photo and page.cover_photo.name != page.cover_photo.field.default:
-                page.cover_photo.delete()
-            page.cover_photo = thumb_file
-            page.save()
+            #if page.cover_photo and page.cover_photo.name != page.cover_photo.field.default:
+                #page.cover_photo.delete()
+            #page.cover_photo = thumb_file
+            #page.save()
             # or we can return it to template
-            #data_uri = 'data:image/jpg;base64,'
-            #data_uri += thumb.getvalue().encode('base64').replace('\n', '')
+
+            class DataURI:
+                def __init__(self):
+                    self.width = 0
+                    self.height = 0
+                    self.data_uri = None
+                def __repr__(self):
+                    return self.data_uri
+
+            data_uri = DataURI()
+            data_uri.data_uri = 'data:image/jpg;base64,'
+            data_uri.data_uri += thumb.getvalue().encode('base64').replace('\n', '')
+            data_uri.width = new_width
+            data_uri.height = new_height
+
+            image_height = data_uri.height
 
     if page.type == 'BS':
         template = 'pages/page.html'
     else:
         template = 'pages/page_nonprofit.html'
 
-    cover_offset = (page.cover_photo.height - restrict_height - 95) * -1
+    cover_offset = (image_height - restrict_height - 95) * -1
     if resize:
         return render_to_response(
             "pages/page_cover.html",
@@ -150,6 +167,7 @@ def page(request, slug=None):
                 'page': page,
                 'form': form,
                 'cover_offset': cover_offset,
+                'data_uri': data_uri,
             },
             RequestContext(request)
         )
@@ -164,6 +182,7 @@ def page(request, slug=None):
             RequestContext(request)
         )
 
+
 def reposition(request, slug=None):
     data={'status':'FAIL'}
     if not slug:
@@ -176,23 +195,29 @@ def reposition(request, slug=None):
 
     if request.method == 'POST' and 'top' in request.POST:
         top_pos = abs(int(request.POST['top']))
-        image = page.cover_photo
-        img = Image.open(image)
+        b64image = request.POST.get('image',None)
+        #decoded_image = base64.b64decode(b64image + '=' * (-len(b64image) % 4))
+        imgstr = re.search(r'base64,(.*)', b64image).group(1)
+        mem_image = StringIO(imgstr.decode('base64'))
+        #image = page.cover_photo
+        img = Image.open(mem_image)
         box = (0, top_pos, 900, top_pos+300)
         img = img.crop(box)
 
         cropped = StringIO()
         img.save(cropped, 'JPEG')
         cropped.seek(0)
-        cropped_file = InMemoryUploadedFile(cropped, image.field, image.name, 'image/jpeg', cropped.len, None)
-        page.cover_photo.delete()
+        image_name = "%s_cover_image.jpg" % page.username
+        cropped_file = InMemoryUploadedFile(cropped, None, image_name, 'image/jpeg', cropped.len, None)
+        #cropped_file = InMemoryUploadedFile(cropped, image.field, image.name, 'image/jpeg', cropped.len, None)
+        if page.cover_photo.name != page.cover_photo.field.default:
+            page.cover_photo.delete()
         page.cover_photo = cropped_file
         page.save()
     return HttpResponse(json.dumps(data), "application/json")
 
 
 def reset_picture(request, slug=None):
-    data={'status':'FAIL'}
     if not slug:
         raise Http404
 
@@ -202,6 +227,8 @@ def reset_picture(request, slug=None):
         raise Http404
 
     if page.user == request.user:
+        if page.cover_photo.name != page.cover_photo.field.default:
+            page.cover_photo.delete()
         page.cover_photo = page.cover_photo.field.default
         page.save()
     if page.type == 'BS':
