@@ -35,11 +35,7 @@ LionFace.User.page_id = '{{ page.id }}';
 {% block content %}
   <div class="content_area">
     <div id="profile_top">
-        {% if page.type == 'BS' %}
-        <div class="left">{{page.username}} {% url business-page slug=page.username %}</div>
-        {% else %}   
-        <div class="left">{{page.username}} {% url nonprofit-page slug=page.username %}</div>
-        {% endif %}
+        <div class="left">{{page.username}} {% firstof page.url %}</div>
       <div class="right" style="position: relative;">
 		<div>
 			<a class="profile_btn" style="cursor: pointer;">+ Add</a>
@@ -98,7 +94,8 @@ LionFace.User.page_id = '{{ page.id }}';
                     {% else %}
                     <span style="color: #999;">{{ page.category }}</span>
                     {% endif %}
-				<div style="padding: 10px 7px 10px 0px; line-height: 14pt;">Lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na lorem ipsum na  <a href="#" style="font-size: 8pt; color: #AAA;">Edit</a></div>
+                    <div style="padding: 10px 7px 10px 0px; line-height: 14pt;">{% firstof page.content %}
+                        <a href="#" style="font-size: 8pt; color: #AAA;">Edit</a></div>
 			<td/>
             {% if page.type == 'BS' %}
 			<td width="250" class="love_container love_business" align="center"> 

@@ -1,6 +1,6 @@
 from django.db import models
 from account.models import UserProfile
-from django.core.validators import validate_slug
+from django.core.validators import validate_slug, URLValidator
 
 PAGE_TYPE = (
         ('BS','Business Page'),
@@ -11,6 +11,8 @@ class Pages(models.Model):
     name = models.CharField(max_length='200')
     loves = models.IntegerField(default=0)
     username = models.CharField(max_length='200', validators=[validate_slug], unique=True)
+    url = models.URLField(max_length='2000', null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
     user = models.ForeignKey(UserProfile, related_name='pages')
     users_loved = models.ManyToManyField(UserProfile, related_name='pages_loved', null=True, blank=True)
     type = models.CharField(max_length='2', choices=PAGE_TYPE)

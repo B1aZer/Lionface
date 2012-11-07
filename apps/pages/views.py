@@ -391,3 +391,13 @@ def settings(request, slug=None):
                 },
                 RequestContext(request)
             )
+
+@login_required
+def delete_page(request, slug=None):
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    if page.user == request.user:
+        page.delete()
+    return redirect('pages.views.main')

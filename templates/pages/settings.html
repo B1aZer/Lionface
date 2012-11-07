@@ -49,12 +49,14 @@
         <tr>
             <td align="right">Category</td>
             <td class="category">        
+                {{ form.category.errors }}
                 {{ form.category }}
             </td>    
         </tr>
         <tr>
             <td align="right">Content</td>
             <td class="content">        
+                {{ form.content.errors }}
                 {{ form.content }}
             </td>    
         </tr>
@@ -75,8 +77,8 @@
 <input type="hidden" name="form_name" id="form_name">
 <input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> 
 </form>
-<a href="#" id="delete_page" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Page</a>
-<form id="delete_account_form" action="{% url profile.views.delete_profile username=request.user.username %}" method="post" style="display:none">{% csrf_token %}
+<a href="{% url pages.views.delete_page slug=page.username %}" id="delete_page" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Page</a>
+<form id="delete_page_form" action="{% url pages.views.delete_page slug=page.username %}" method="post" style="display:none">{% csrf_token %}
 <input id="submit_delete" type="submit" class="blue_btn" name="delete_account" value="Delete">
 <label for="id_confirm_pass">Confirm Password:</label>
 <input type="password" name="confirm_password" id="id_confirm_pass">
@@ -87,3 +89,8 @@
 
 {% endblock %}
 </div>
+
+{% block additional_js %}
+    {% include_media 'pages.js' %}
+    {% include_media 'page_settings.js' %}
+{% endblock %} 
