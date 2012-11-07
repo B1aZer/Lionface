@@ -86,7 +86,7 @@ def profile_image_more(request, username):
 
     row = request.POST.get('row', None)
     try:
-        row = int(row) - 1
+        row = int(row)
     except (TypeError, ValueError), e:
         return HttpResponseBadRequest('Bad row was received.')
 
@@ -110,10 +110,12 @@ def profile_image_more(request, username):
 
     data = {}
     data['total_rows'] = total_rows
-    data['html'] = render_to_string('profile/image_tr.html', {
-        'image_row' : image_row,
+    data['html'] = render_to_string('profile/image_li.html', {
+        'rows' : image_row,
         'profile_user': profile_user,
     }, context_instance=RequestContext(request))
+    data['positions'] = UserImages.objects.filter(profile=profile_user) \
+        .get_positions()
     data['status'] = 'ok'
 
     return HttpResponse(json.dumps(data), "application/json")
@@ -137,19 +139,17 @@ def profile_image_primary(request, username):
 
     data = {}
     try:
-        UserImages.objects.filter(profile=profile_user) \
-            .filter(activity=True).update(activity=False)
-        image.activity = True
-        image.save()
-        profile_user.photo = image.image.image
-        profile_user.save()
-
+        image.make_activity()
+        profile_user = UserProfile.objects.get(pk=profile_user.pk)
         data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
             'profile_user': profile_user,
         }, context_instance=RequestContext(request))
+        data['positions'] = UserImages.objects.filter(profile=profile_user) \
+            .get_positions()
     except Exception as e:
         data['status'] = 'fail'
-        data['errmsg'] = str(e)
+        #data['errmsg'] = str(e)
+        print e
     else:
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
@@ -186,20 +186,55 @@ def profile_image_delete(request, username):
             }, context_instance=RequestContext(request))
         if row < UserImages.objects.filter(profile=profile_user).total_rows():
             image_row = UserImages.objects.filter(profile=profile_user) \
-                .select_related('image').get_row(row)
-            image_row['rows'] = image_row['rows'][-1:]
-            data['html'] = render_to_string('profile/image_tr.html', {
-                'image_row' : image_row,
+                .select_related('image').get_row(row)[-1:]
+            data['html'] = render_to_string('profile/image_li.html', {
+                'rows' : image_row,
                 'profile_user': profile_user,
             }, context_instance=RequestContext(request))
         data['photos_count'] = profile_user.all_images.count()
-        if image.activity == True:
-            data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
-                'profile_user': profile_user,
-            }, context_instance=RequestContext(request))
+        data['positions'] = UserImages.objects.filter(profile=profile_user) \
+            .get_positions()
     except Exception as e:
         data['status'] = 'fail'
-        data['errmsg'] = str(e)
+        #data['errmsg'] = str(e)
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+@unblocked_users
+def profile_image_change_position(request, username):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Method must be POST.')
+
+    if request.user.username != username:
+        raise Http404
+    profile_user = request.user
+
+    try:
+        obj = UserImages.objects.filter(profile=profile_user) \
+            .get(pk=request.POST.get('pk', None))
+        if obj.activity:
+            return HttpResponseBadRequest('Image with pk is actively')
+    except UserImages.DoesNotExist as e:
+        return HttpResponseBadRequest('Bad pk was received.')
+    try:
+        instead = UserImages.objects.filter(profile=profile_user) \
+            .get(pk=request.POST.get('instead', None))
+        if instead.activity:
+            return HttpResponseBadRequest('Image with instead is actively')
+    except UserImages.DoesNotExist as e:
+        return HttpResponseBadRequest('Bad instead was received.')
+
+    data = {}
+    try:
+        obj.change_position(obj.rating, instead.rating)
+        data['positions'] = UserImages.objects.filter(profile=profile_user) \
+            .get_positions()
+    except Exception as e:
+        data['status'] = 'fail'
+        #data['errmsg'] = str(e)
     else:
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
@@ -226,21 +261,15 @@ def profile(request, username='admin'):
         if 'image' in request.POST:
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
-                profile = UserProfile.objects.get(id=request.user.id)
                 image = UserImage.objects.create(
                     image=form.cleaned_data['photo'],
-                    owner=profile
+                    owner=profile_user
                 )
-                profile.photo = image.image
-                profile.save()
-                UserImages.objects.filter(profile=profile) \
-                    .filter(activity=True) \
-                    .update(activity=False)
                 image_profile_m2m = UserImages.objects.create(
                     image=image,
-                    profile=profile,
-                    activity=True
+                    profile=profile_user,
                 )
+                image_profile_m2m.make_activity()
                 return HttpResponseRedirect(request.path)
 
         if 'message' in request.POST:
@@ -556,6 +585,8 @@ def reset_picture(request, username=None):
         for field in UserProfile._meta.fields if field.name == 'photo'
     ][0]
     profile.save()
+    if request.META['HTTP_REFERER']:
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
     return redirect('profile.views.profile', username=profile.username)
 
 @login_required

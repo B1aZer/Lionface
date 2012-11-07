@@ -478,18 +478,22 @@ class UserImagesQuerySet(post.models.QuerySet):
         return int(ceil(self.count() / float(self.DEFAULT_ROW_SIZE)))
 
     def get_rows(self, start, count, size=DEFAULT_ROW_SIZE):
-        qs = self.order_by('-activity', '-rating')
+        qs = self.order_by('rating')
         images = qs[start*size:(start+count)*size]
         rows = []
         for i in xrange(0, len(images), size):
-            rows.append({
-                'index': start + i/size,
-                'rows': images[i:i+size],
-            })
+            rows.append(images[i:i+size])
         return rows
 
     def get_row(self, start, size=DEFAULT_ROW_SIZE):
         return self.get_rows(start, 1)[0]
+
+    def get_positions(self, profile=None):
+        if profile is not None:
+            self = self.filter(profile=profile)
+        return dict(
+            [(d['pk'], d['rating']) for d in self.values('pk', 'rating')]
+        )
 
 
 class UserImages(models.Model):
@@ -500,12 +504,57 @@ class UserImages(models.Model):
 
     objects = UserImagesQuerySet.as_manager()
 
+    def change_position(self, old, new):
+        if old == new:
+            return False
+        qs = UserImages.objects.filter(profile=self.profile)
+        if old > new:
+            qs.filter(rating__gte=new, rating__lte=old) \
+                .update(rating=models.F('rating') + 1)
+        elif new > old:
+            qs.filter(rating__gte=old, rating__lte=new) \
+                .update(rating=models.F('rating') - 1)
+        self.rating = new
+        self.save()
+
+    def make_activity(self):
+        position = UserImages.objects \
+            .filter(profile=self.profile) \
+            .aggregate(models.Min('rating')).get('rating__min')
+        if position is None:
+            return False
+        self.change_position(self.rating, position)
+        UserImages.objects \
+            .filter(profile=self.profile) \
+            .update(activity=False)
+        self.activity = True
+        self.save()
+        self.profile.photo = self.image.image
+        self.profile.save()
+        return True
+
     def __unicode__(self):
         return '%s link to %s' % (self.image, self.profile)
 
 
 def create_user_images(sender, instance, created, **kwargs):
     if created:
+        '''
+        # UPDATE account_images SET rating = (SELECT MAX(rating) FROM account_images WHERE profile_id = id)+1
+        #    WHERE id = id;
+        from django.db import connection, transaction
+        
+        cursor = connection.cursor()
+        sql = """UPDATE %s SET rating = (SELECT MAX(rating) FROM %s WHERE profile_id = %d)+1 \
+WHERE id = %d""" % (
+            instance._meta.db_table,
+            instance._meta.db_table,
+            instance.profile.id,
+            instance.id
+        )
+        cursor.execute(sql)
+        transaction.commit_unless_managed()
+        '''
         instance.rating = instance.id
         instance.save()
 post_save.connect(create_user_images, sender=UserImages)
