@@ -1,7 +1,9 @@
 
 
-function load_post(post, type) { 
-    url = "/posts/show/";
+function load_post(post, type, model) { 
+    var url = "/posts/show/";
+
+    var model = model || '';
 
     var $elem = $('.right_content');
     $elem.html("");
@@ -11,7 +13,8 @@ function load_post(post, type) {
       url: url,
       data: {
           post_id : post,
-          post_type : type
+          post_type : type,
+          post_model : model,
       },
       callback: function(data) {
         //alert(data.html);
@@ -42,7 +45,7 @@ $(document).ready(function(){
             }
         var meta = $(this).metadata();
         if (meta.id) {
-            load_post(meta.id, meta.type)
+            load_post(meta.id, meta.type, meta.model)
             }
         else {
             $('.right_content').html("");

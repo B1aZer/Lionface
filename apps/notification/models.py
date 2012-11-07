@@ -24,6 +24,7 @@ NOTIFICATION_TYPES = (
     ('MP', 'Multiple Profile Post'),
 )
 
+
 class Notification(models.Model):
     user = models.ForeignKey(UserProfile)
     date = models.DateTimeField(auto_now_add=True)
@@ -98,11 +99,13 @@ class Notification(models.Model):
             if original_notfs.count():
                 original_notfs.update(read=True)
 
+
 def create_friend_request_notification(sender, instance, created, **kwargs):
     #import pdb;pdb.set_trace()
     if created:
         Notification(user=instance.to_user, type='FR', friend_request=instance, content_object=instance).save()
 post_save.connect(create_friend_request_notification, sender=FriendRequest)
+
 
 def create_profile_post_notification(sender, instance, created, **kwargs):
     if created:
@@ -110,11 +113,6 @@ def create_profile_post_notification(sender, instance, created, **kwargs):
             Notification(user=instance.user_to, type='PP', other_user=instance.user, content_object=instance).save()
 post_save.connect(create_profile_post_notification, sender=ContentPost)
 
-def add_post_to_followings(sender, instance, created, **kwargs):
-    """Follow own posts"""
-    if created:
-        instance.user.follows.add(instance)
-post_save.connect(add_post_to_followings, sender=ContentPost)
 
 def create_share_notifiaction(sender, instance, created, **kwargs):
     if created:
@@ -139,6 +137,7 @@ def create_share_notifiaction(sender, instance, created, **kwargs):
     instance.user_to.follows.add(instance)
 post_save.connect(create_share_notifiaction, sender=SharePost)
 
+
 def create_comment_notifiaction(sender, comment, request, **kwargs):
     news_post = comment.content_object
     #creating notification for owner if following
@@ -161,11 +160,13 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
     comment.user.follows.add(comment.content_object.get_post())
 comment_was_posted.connect(create_comment_notifiaction)
 
+
 def create_follow_notification(sender, instance, created, **kwargs):
     if created:
         if instance.from_user <> instance.to_user:
             Notification(user=instance.from_user, type='FF', other_user=instance.to_user, content_object=instance).save()
 post_save.connect(create_follow_notification, sender=Relationship)
+
 
 def delete_dated_notifications(sender, instance, using, **kwargs):
     """Deleting for posts and comments [through newsitem object]"""
@@ -178,6 +179,7 @@ def delete_dated_notifications(sender, instance, using, **kwargs):
     notf.delete()
 pre_delete.connect(delete_dated_notifications, sender=Post)
 pre_delete.connect(delete_dated_notifications, sender=NewsItem)
+
 
 def update_notification_count(sender, instance, created, **kwargs):
     """ merge unread notifications to one """
@@ -273,6 +275,7 @@ def update_notification_count(sender, instance, created, **kwargs):
             if original_notfs.count():
                 original_notfs.update(hidden=True)
 post_save.connect(update_notification_count, sender=Notification)
+
 
 class Extra(models.Model):
     notification = models.ForeignKey(Notification)

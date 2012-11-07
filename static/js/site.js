@@ -350,19 +350,10 @@ LionFace.Site.prototype = {
         }
         $('#comment_form_'+form_id+' form input.submit-preview').remove();
         url = '/posts/test/'
-
-
-        if (window.location.pathname.indexOf('lionface') >= 0) 
-        { 
-            url = '/lionface' +  url;
-        }     
-
-        $.ajax({
-            type: "POST",
-            data: $('#comment_form_'+form_id+' form').serialize(),
+        make_request({
             url: url,
-            success: function(html, textStatus) {
-                /*$('#comment_form_'+form_id+' form').replaceWith(html.html);*/
+            data: $('#comment_form_'+form_id+' form').serialize(),
+            callback: function(html) {
                 if ($('#comment_form_'+form_id).closest('.comment_container').find('.comment_list:last').length) {
                     $('#comment_form_'+form_id).closest('.comment_container').find('.comment_list:last').after(html.html);
                 }
@@ -374,7 +365,7 @@ LionFace.Site.prototype = {
                 $('#comment_form_'+form_id).closest('.result').find('.follow_post').html('Unfollow');
 
             },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            errorback: function () {
                 $('#comment_form_'+form_id+' form').replaceWith('Your comment was unable to be posted at this time.  We apologise for the inconvenience.');
             }
 

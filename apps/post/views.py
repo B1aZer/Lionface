@@ -200,6 +200,7 @@ def show(request):
     if request.method == 'POST' and 'post_id' in request.POST:
         post_type = request.POST['post_type']
         post_id = request.POST['post_id']
+        post_model = request.POST.get('post_model',None)
 
         if post_type == 'content post':
             try :
@@ -218,11 +219,18 @@ def show(request):
             items = NewsItem.objects.filter(post=share_post)
 
         if post_type == 'comment post':
-            try:
-                items = NewsItem.objects.filter(id=int(post_id))
-            except ObjectDoesNotExist:
-                data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json")
+            if post_model == 'post_post':
+                try:
+                    items = Post.objects.filter(id=int(post_id))
+                except ObjectDoesNotExist:
+                    data['html'] = "Sorry no such post"
+                    return HttpResponse(json.dumps(data), "application/json")
+            else:
+                try:
+                    items = NewsItem.objects.filter(id=int(post_id))
+                except ObjectDoesNotExist:
+                    data['html'] = "Sorry no such post"
+                    return HttpResponse(json.dumps(data), "application/json")
 
         if post_type in ('shared_multiple','profile_multiple'):
             from notification.models import Extra
@@ -404,7 +412,6 @@ def change_settings(request):
 
 @login_required
 def test(request):
-    #import pdb;pdb.set_trace()
     data = {'status': 'OK'}
     from django.contrib.comments.views.comments import post_comment
     commented = post_comment(request)

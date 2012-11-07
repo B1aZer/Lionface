@@ -71,6 +71,7 @@ class FriendRequest(models.Model):
             super(FriendRequest, self).save(*args, **kwargs)
         return send
 
+
 class UserProfile(User):
     # Logic is if a friend is in the 'friends' collection then they are verified.
     # If there is an active FriendRequest then it's still pending.

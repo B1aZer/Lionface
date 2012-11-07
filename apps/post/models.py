@@ -506,6 +506,14 @@ class NewsItem(models.Model):
 
 
 
+def add_post_to_followings(sender, instance, created, **kwargs):
+    """Follow own posts"""
+    if created:
+        instance.user.follows.add(instance)
+post_save.connect(add_post_to_followings, sender=ContentPost)
+post_save.connect(add_post_to_followings, sender=PagePost)
+
+
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
         UpdateNewsFeeds.delay(instance.get_inherited())

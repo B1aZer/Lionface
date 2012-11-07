@@ -146,7 +146,7 @@ def escaping(value):
 
 @register.filter(name='follows')
 def follows(item,user):
-    if item.get_type() in ['content post','share post'] and not user.is_anonymous() :
+    if item.get_type() in ['content post','share post', 'page post'] and not user.is_anonymous() :
         return item.get_post() in user.follows.all()
     return False
 
