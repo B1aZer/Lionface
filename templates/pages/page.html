@@ -7,33 +7,6 @@ LionFace.User.page_id = '{{ page.id }}';
 </script>
 {% endblock %}  
 
-{% block pages_header %}
-{% for one_page in request.user.get_pages %}
-{% cycle -42 as left_offset silent %}
-{% cycle 31 71 111 151 191 231 271 311 351 391 431 471 as top_offset silent %}
-<div align="center" style="position: relative; width: 900px; height: 1px; text-align: left; display: block;">
-    <div style="position: relative; left: {{ left_offset }}px; top: {{ top_offset }}px; width: 30px; z-index: 9999;">
-		<div onMouseOver="ShowContent('{{ one_page.id }}'); return false;" 
-            onMouseOut="HideContent('{{ one_page.id }}'); return false;" style="position: relative;">
-			<!-- need set thumb in a tag -->
-            {% if one_page.type == 'BS' %}
-                <a href="{% url business-page slug=one_page.username %}" class="nav_page"></a>
-            {% else %}
-                <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page"></a>
-            {% endif %}
-			<div class="page_settings" style="display: none;" id="{{ one_page.id }}">
-			<div class="page">
-				<div class="one_page_name">{{ one_page.name }}</div>
-                <a href="{% url pages.views.settings slug=one_page.username %}">Settings</a> 
-                <div style="display: inline-block; color: #F58; padding: 4px;">{{ one_page.loves }}</div>
-            </div></div>
-		</div>
-	</div>
-</div>
-{% endfor %}
-{% endblock %}
-
-
 {% block content %}
   <div class="content_area">
     <div id="profile_top">

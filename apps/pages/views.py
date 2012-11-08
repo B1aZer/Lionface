@@ -139,8 +139,9 @@ def page(request, slug=None):
             # we can save it
             #if page.cover_photo and page.cover_photo.name != page.cover_photo.field.default:
                 #page.cover_photo.delete()
-            #page.cover_photo = thumb_file
-            #page.save()
+            if not resize:
+                page.cover_photo = thumb_file
+                page.save()
             # or we can return it to template
 
             class DataURI:
