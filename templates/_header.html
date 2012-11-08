@@ -17,11 +17,7 @@
       </ul>
     </div>
 
-    {% if '/lionface/' in request.get_full_path %}
-        <form id="quick_search" method="GET" action="/lionface/search/">
-    {% else %}
         <form id="quick_search" method="GET" action="/search/">
-    {% endif %}
     <div id="search_bar">
         <input name="models" type="hidden" value="account.userprofile">
         <input id="search_input" name="q" type="text">
@@ -37,7 +33,7 @@
 
 <div align="center">
 
-{% for one_page in request.user.get_pages %}
+{% for one_page in request.user.get_admin_pages %}
 {% cycle -42 as left_offset silent %}
 {% cycle 31 71 111 151 191 231 271 311 351 391 431 471 as top_offset silent %}
 <div align="center" style="position: relative; width: 900px; height: 1px; text-align: left; display: block;">

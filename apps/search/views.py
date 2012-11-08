@@ -5,6 +5,7 @@ from notification.models import Notification
 from django.contrib.auth.decorators import login_required
 from haystack.query import SearchQuerySet
 from account.models import UserProfile
+from pages.models import Pages
 from django.db.models import Q
 
 try:
@@ -36,5 +37,24 @@ def auto_complete(request):
     for user in friends:
         dic = {'label':user._get_full_name(),'value':user.username,'id':user.id}
         dics.append(dic)
+    return HttpResponse(json.dumps(dics), "application/json")
+
+@login_required
+def auto_pages(request, slug=None):
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    admins = page.get_admins()
+    term = request.GET.get('term',None)
+    if term:
+        friends = request.user.get_friends().filter(Q(username__icontains=term) | Q(first_name__icontains=term) | Q(last_name__icontains=term))
+    else:
+        friends = request.user.get_friends()
+    dics = []
+    for user in friends:
+        if user not in admins:
+            dic = {'label':user._get_full_name(),'value':user.username,'id':user.id}
+            dics.append(dic)
     return HttpResponse(json.dumps(dics), "application/json")
 

@@ -173,4 +173,3 @@ class PageSettingsForm(forms.ModelForm):
                 self.fields['category'].widget = forms.Select(choices=NONPROFIT_CATEGORY)
 
 
-

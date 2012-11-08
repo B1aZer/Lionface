@@ -1,12 +1,20 @@
 {% extends 'pages/base.html' %}
-{% load i18n static media %}
+{% load i18n static media format_results %}
 
+{% block js %}
+<script>
+LionFace.User.page_slug = '{{ page.username }}';
+</script>
+{% endblock %} 
 
 <div class="left_col">
     {% block left_col %}
     <div class="settings_nav">
         <ul>
-            <li id="basics_settings" {% if active == 'basics' %} class="active" {% endif %} onClick="show_basics()">Basics</li>
+            <li id="basics_settings" {% if active == 'basics' %} class="active" {% endif %}>Basics</li>
+            {% if request.user|check_pages_admins:page %}
+            <li id="admins_settings" {% if active == 'admins' %} class="active" {% endif %}>Admins</li>
+            {% endif %}
         </ul>
     </div>
     {% endblock %}
@@ -17,6 +25,10 @@
 
     <div id="basics_header">
         <span style="font-size: 18px;">Basics</span></strong>
+</div>
+
+<div id="privacy_header">
+    <span style="font-size: 18px;">Admins</span></strong>
 </div>
 
 <form action="" method="post">{% csrf_token %}
@@ -71,15 +83,44 @@
 </tr>
    </table>
 
+   <table id="privacy">
+        <tr>
+            <td width="150" align="right">&nbsp;</td>
+            <td width="405">&nbsp;</td>
+        </tr>
+        <tr>
+            <td align="right" >Admins</td>
+            <td>
+                <input id="id_admins" type="text" name="admins" value="" maxlength="200">
+                <a id="add_admin" href="{% url pages.views.settings_admins slug=page.username %}" style="display:none" >add</a>
+            </td>
+        </tr>
+        <tr class="admins_list">
+            {% include 'pages/settings_admins.html' %}
+        </tr>
+        <tr>
+            <td align="right">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+
+
+    <td>&nbsp;</td>
+</tr>               
+
 </div>
 
 <div class="save_container">
 <input type="hidden" name="form_name" id="form_name">
+{% if request.user|check_pages_basics:page %}
 <input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> 
+{% endif %}
 </form>
-<a href="{% url pages.views.delete_page slug=page.username %}" id="delete_page" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Page</a>
+{% if request.user|check_pages_delete:page %} 
+<a href="#" id="delete_page" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Page</a>
+{% endif %} 
 <form id="delete_page_form" action="{% url pages.views.delete_page slug=page.username %}" method="post" style="display:none">{% csrf_token %}
-<input id="submit_delete" type="submit" class="blue_btn" name="delete_account" value="Delete">
+<input id="submit_delete" type="submit" class="blue_btn" name="delete_page" value="Delete">
 <label for="id_confirm_pass">Confirm Password:</label>
 <input type="password" name="confirm_password" id="id_confirm_pass">
 <span class="confirm_errors"></span>

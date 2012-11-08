@@ -492,11 +492,6 @@ LionFace.Site.prototype = {
         /** Autocomplete for search input */
         var url_auto = '/auto/';
         var url_user = '/';
-        if (window.location.pathname.indexOf('/lionface/') >= 0) 
-        { 
-            url_auto = '/lionface' +  url_auto;
-            url_user = '/lionface' +  url_user;
-        }     
         if ($("#search_input").length) {
             $( "#search_input" ).autocomplete({
                 source: url_auto,
@@ -515,10 +510,6 @@ LionFace.Site.prototype = {
 
         /** Autocomplete for blocking users */
         var url_auto = '/auto/';
-        if (window.location.pathname.indexOf('/lionface/') >= 0) 
-        { 
-            url_auto = '/lionface' +  url_auto;
-        }     
         $( "#block_user" ).autocomplete({
             source: url_auto,
         }); 

@@ -15,6 +15,7 @@ class Pages(models.Model):
     content = models.TextField(null=True, blank=True)
     user = models.ForeignKey(UserProfile, related_name='pages')
     users_loved = models.ManyToManyField(UserProfile, related_name='pages_loved', null=True, blank=True)
+    admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
     category = models.CharField(max_length=100, default='undefined')
     cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/noCoverImage.png')
@@ -29,6 +30,20 @@ class Pages(models.Model):
     def get_posts(self):
         return self.posts.all()
 
+    def get_admins(self):
+        return self.admins.all()
+
     @models.permalink
     def get_absolute_url(self):
         return ('pages.views.page', [str(self.username)])
+
+    def save(self, *args, **kwargs):
+        """ Adding user to admins """
+        super(Pages, self).save(*args, **kwargs)
+        self.admins.add(self.user)
+        self.user.set_option('pages_basics__%s' % self.id,True)
+        self.user.set_option('pages_delete__%s' % self.id,True)
+        self.user.set_option('pages_admins__%s' % self.id,True)
+        self.user.set_option('pages_photos__%s' % self.id,True)
+        self.user.set_option('pages_updates__%s' % self.id,True)
+

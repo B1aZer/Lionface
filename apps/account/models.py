@@ -256,7 +256,12 @@ class UserProfile(User):
                 else:
                     return False
             else:
-                return option.value
+                if option.value == 'True':
+                    return True
+                elif option.value == 'False':
+                    return False
+                else:
+                    return option.value
         except ObjectDoesNotExist:
             return False
 
@@ -406,6 +411,9 @@ class UserProfile(User):
 
     def get_pages(self):
         return self.pages.all()
+
+    def get_admin_pages(self):
+        return self.pages_admin.all()
 
     @models.permalink
     def get_absolute_url(self):

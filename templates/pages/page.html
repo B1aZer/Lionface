@@ -1,5 +1,5 @@
 {% extends "pages/base.html" %}
-{% load media %}
+{% load media format_results %}
 
 {% block js %}
 <script>
@@ -10,7 +10,11 @@ LionFace.User.page_id = '{{ page.id }}';
 {% block content %}
   <div class="content_area">
     <div id="profile_top">
-        <div class="left">{{page.username}} {% firstof page.url %}</div>
+        <div class="left">{{page.username}} 
+            {% if page.url %}
+            <a href="{{ page.url }}">{{ page.url }}</a>
+            {% endif %}
+        </div>
       <div class="right" style="position: relative;">
 		<div>
 			<a class="profile_btn" style="cursor: pointer;">+ Add</a>
@@ -31,7 +35,7 @@ LionFace.User.page_id = '{{ page.id }}';
                 {% endif %}
                 >
                 {% block inpicture %}
-                    {% if request.user == page.user %} 
+                    {% if request.user in page.get_admins and request.user|check_pages_photos:page %} 
                         <div style="position: relative; top: 270px; left: -10px; display: block; width: 200px;" align="center">
                             <a id="upload_cover_picture" class="upload upload_page" style="display:none; cursor: pointer;">Upload</a>
                             <a href="{% url pages.views.reset_picture slug=page.username %}" id="reset_picture" class="upload upload_page" style="display:none; color:#555;">Clear</a>

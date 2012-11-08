@@ -17,6 +17,7 @@ from StringIO import StringIO
 import base64
 
 from django.contrib import messages
+from django.contrib.auth.hashers import check_password
 
 try:
     import json
@@ -310,7 +311,7 @@ def update(request):
         content = request.POST.get('content')
         try:
             page = Pages.objects.get(id=int(page_id))
-            if page.user == request.user:
+            if request.user in page.get_admins():
                 post = PagePost(user=request.user, content=content, page = page)
                 post.save()
 
@@ -393,12 +394,57 @@ def settings(request, slug=None):
                 RequestContext(request)
             )
 
+
+@login_required
+def settings_admins(request, slug=None):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    if request.method == 'POST':
+        admin_username = request.POST.get('admin_username',None)
+        removing = request.POST.get('remove',None)
+        adding = request.POST.get('add',None)
+        option = request.POST.get('option',None)
+        if option:
+            option, admin_username = option.split('__')
+        try:
+            admin = UserProfile.objects.get(username=admin_username)
+            if adding:
+                page.admins.add(admin)
+            if removing:
+                page.admins.remove(admin)
+            if option:
+                if admin.check_option("%s__%s" % (option,page.id)):
+                    admin.set_option("%s__%s" % (option,page.id),False)
+                else:
+                    admin.set_option("%s__%s" % (option,page.id),True)
+            data['status'] = 'OK'
+            data['html'] = render_to_string("pages/settings_admins.html",
+                    {
+                        'page':page,
+                    }, RequestContext(request))
+        except:
+            HttpResponse(json.dumps(data), "application/json")
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 @login_required
 def delete_page(request, slug=None):
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    if page.user == request.user:
-        page.delete()
+    if 'delete_page' in request.POST:
+        password = request.POST.get('confirm_password',None)
+        if check_password(password, request.user.password):
+            if page.user == request.user and request.user.check_option('pages_delete__%s' % page.id):
+                page.delete()
+            else:
+                messages.error(request, 'You don\'t have sufficient permissions.')
+                return redirect('pages.views.settings', slug=page.username)
+        else:
+            messages.error(request, 'Wrong password.')
+            return redirect('pages.views.settings', slug=page.username)
     return redirect('pages.views.main')

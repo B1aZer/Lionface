@@ -1,4 +1,4 @@
-{% load media %}
+{% load media format_results %}
 <div class="float_left">
 	<div class="friend_container">
 		<div class="friend_title" style="color: #909e4a;">Nonprofit Friends</div><br />
@@ -18,7 +18,7 @@
 <div class="page_center">
     <div style="padding: 15px;">
 
-        {% if page.user == request.user %}
+        {% if request.user in page.get_admins and request.user|check_pages_updates:page %}
 
         <div id="postbox">
             <div style="padding: 10px;" align="center">
