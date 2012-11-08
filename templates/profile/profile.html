@@ -20,15 +20,20 @@
 		</div>
 		{% endif %}
 </div>
+{% if request.user == profile_user %}
 <div style="position: relative;">
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
 	{% csrf_token %}
 	{{ form.photo.errors }}
 	<p><label for="id_photo">Upload</label></p>
 	{{ form.photo }}
-	<p><input id="submit_img_btn" name="image" type="submit" class="blue_btn" value="Upload" /></p>
+	<p>
+		<input id="submit_img_btn" name="image" type="submit" class="blue_btn" value="Upload" />
+		<input id="upload_cancel" type="button" class="blue_btn" value="Cancel" />
+	</p>
 </form>
 </div>
+{% endif %}
 
 {% if request.user == profile_user %}
 <div class="DoS_profile">This is you.</div>

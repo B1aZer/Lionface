@@ -55,22 +55,30 @@ LionFace.Profile.prototype = {
             });
 
         $("#upload_picture").click(function(event){
-          event.stopPropagation();
-          $('.upload_form').show(); 
+            event.stopPropagation();
+            $('.upload_form').show(); 
         });  
 
+        $('#upload_cancel').click(function(event) {
+            $('.upload_form').hide();
+        });
+
         $("#reset_picture").click(function(event){
-          event.stopPropagation();
+            event.stopPropagation();
         });
 
         $("#send_message").click(function(event){
-          event.stopPropagation();
-          $('.send_message_form').show(); 
+            event.stopPropagation();
+            $('.send_message_form').show(); 
         });
 
         $('.noPhoto').hover(
-                function(){$('.upload').show();},
-                function(){$('.upload').hide();}
+            function(){
+                $('.upload').show();
+            },
+            function(){
+                $('.upload').hide();
+            }
         );
     },
 
@@ -530,8 +538,10 @@ LionFace.Profile.prototype = {
         this.sort_images();
         $('.image_container li').each(image_setting);
         /** View more button */
-        if ( LionFace.User['profile_images_now_rows'] < LionFace.User['profile_images_total_rows'] ) {
-            var view_more = $('.image_container .view_more');
+        var view_more = $('.image_container .view_more');
+        if ( LionFace.User['profile_images_now_rows'] >= LionFace.User['profile_images_total_rows'] ) {
+            $(view_more).hide();
+        } else {
             $(view_more).show();
             $(view_more).find('a').click(function() {
                 $.ajax({
