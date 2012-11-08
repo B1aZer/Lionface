@@ -1,11 +1,9 @@
 {% extends 'profile/base.html' %}
 {% load media friends format_results %}
 
-{% block content_title %} {% endblock %}
+{% block content_title %}{% endblock %}
 {% block content_middle %}
-
-{% include "profile/dashboard.html" %}
-
+	{% include "profile/dashboard.html" %}
 {% endblock %}
 {% block content_subtitle %}{% endblock %}
 
@@ -63,6 +61,7 @@
 
 {% block center_col %}
 {% include_media 'profile.js' %}
+{% include "profile/image_popup.html" %}
 <div align="center">
 <div class="image_container" align="center">
 	<ul>
