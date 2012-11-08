@@ -59,6 +59,16 @@ def profile_image(request, username=None, rows_show=4):
     else:
         profile_user = request.user
 
+    if request.method == 'POST':
+        if 'image' in request.POST:
+            form = ImageForm(request.POST, request.FILES)
+            if form.is_valid():
+                image, image_m2m = form.save(profile_user)
+                image_m2m.make_activity()
+                return HttpResponseRedirect(request.path)
+    else:
+        form = ImageForm()
+
     is_visible = profile_user.check_visiblity('profile_image', request.user)
     if not is_visible:
         raise Http404
@@ -73,6 +83,7 @@ def profile_image(request, username=None, rows_show=4):
             'profile_user': profile_user,
             'image_rows': image_rows,
             'total_rows': total_rows,
+            'form': form,
         },
         RequestContext(request)
     )
@@ -244,10 +255,6 @@ def profile_image_change_position(request, username):
 @unblocked_users
 #@default_user
 def profile(request, username='admin'):
-    form = ImageForm()
-    form_mess = MessageForm()
-    form_mess.fields['content'].widget.attrs['rows'] = 7
-
     if username != None:
         try:
             profile_user = UserProfile.objects.get(username=username)
@@ -256,20 +263,17 @@ def profile(request, username='admin'):
     else:
         profile_user = request.user
 
+    form = ImageForm()
+    form_mess = MessageForm()
+    form_mess.fields['content'].widget.attrs['rows'] = 7
+
     if request.method == 'POST':
 
         if 'image' in request.POST:
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
-                image = UserImage.objects.create(
-                    image=form.cleaned_data['photo'],
-                    owner=profile_user
-                )
-                image_profile_m2m = UserImages.objects.create(
-                    image=image,
-                    profile=profile_user,
-                )
-                image_profile_m2m.make_activity()
+                image, image_m2m = form.save(profile_user)
+                image_m2m.make_activity()
                 return HttpResponseRedirect(request.path)
 
         if 'message' in request.POST:

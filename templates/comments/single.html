@@ -7,7 +7,7 @@
                 <tr>
                     <td align="left"> 
                     <div style="font-size: 9pt !important; position: relative;">
-                        <div id="p{{ comment.id }}" class="comment_thumbnail" style="background-image: url('/{{ comment.user.userprofile.photo }}'); background-size: 40px 40px;"></div>
+                        <div id="p{{ comment.id }}" class="comment_thumbnail" style="background-image: url('/{{ comment.user.userprofile.photo.thumb_name }}'); background-size: 40px 40px;"></div>
                         <a href='{{ comment.user.get_absolute_url }}'>{{comment.name}}</a>
                         <div style="display: inline-block; color: #CCC; font-size: 8pt !important; margin-left: 10px;">
                             <span title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00">{{ comment.submit_date }}</span>

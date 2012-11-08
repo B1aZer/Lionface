@@ -1,0 +1,27 @@
+<style type="text/css">
+#image_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: black;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=85);
+  opacity: 0.85;
+  display: none;
+}
+#image_popup {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
+  text-align: center;
+  line-height: 0;
+  font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
+  font-weight: normal;
+  display: none;
+}
+</style>
+<div id="image_overlay"></div>
+<div id="image_popup">
+    <img src="http://localhost:8000/uploads/images/5.thumb.jpg" style="display: inline-block;" />
+</div>

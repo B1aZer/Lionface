@@ -35,7 +35,7 @@
 
 {% for one_page in request.user.get_admin_pages %}
 {% cycle -42 as left_offset silent %}
-{% cycle 31 71 111 151 191 231 271 311 351 391 431 471 as top_offset silent %}
+{% cycle 55 95 135 175 215 255 295 335 375 415 455 495 as top_offset silent %}
 <div align="center" style="position: relative; width: 900px; height: 1px; text-align: left; display: block;">
     <div style="position: relative; left: {{ left_offset }}px; top: {{ top_offset }}px; width: 30px; z-index: 9999;">
 		<div onMouseOver="ShowContent('{{ one_page.id }}'); return false;" 
@@ -63,15 +63,13 @@
         
 		<a href="{% url messaging.views.messages request.user.username %}" id="messages_id_notif" class="nav_messages" title=" Messages ">
             {% if request.user.new_messages > 0 %} <span class="count">{{request.user.new_messages}}</span> {% endif %}
-        </a><br />
+        </a>
         {% if request.user.new_notifcations > 0 %}
         <a href="{% url notification.views.notifications request.user.username %}" id="notifications_id_notif" class="nav_notifications" title=" Notifications " target="_top">
             <span class="count">{{request.user.new_notifcations}}</span></a>
         {% else %}
         <a href="{% url notification.views.notifications request.user.username %}" id="notifications_id_notif" class="nav_notifications" title=" Notifications " target="_top"></a>
         {% endif %}
-<image src="{% media_url 'images/IconMessages.png' %}" width="1" height="1" border="0">
-<image src="{% media_url 'images/IconNotifications.png' %}" width="1" height="1" border="0">
 
 	</div>
 </div>
