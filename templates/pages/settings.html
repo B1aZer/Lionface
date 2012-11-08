@@ -27,34 +27,34 @@
             <td width="405">&nbsp;</td>
         </tr>
         <tr>
-            <td align="right">Name</td>
+            <td align="right">Page Name</td>
             <td>
                 {{ form.name.errors }}
                 {{ form.name }}
             </td>
         </tr>
         <tr>
-            <td align="right">URL<br></td>
+            <td align="right">External URL<br></td>
             <td>        
                 {{ form.url.errors }}
                 {{ form.url }}
             </td>
         </tr>
         <tr>
-            <td align="right">Username<br></td>
+            <td align="right">Page Username<br></td>
             <td class="username">        
                 {{ form.username }}
             </td>
         </tr>
         <tr>
-            <td align="right">Category</td>
+            <td align="right">Page Category</td>
             <td class="category">        
                 {{ form.category.errors }}
                 {{ form.category }}
             </td>    
         </tr>
         <tr>
-            <td align="right">Content</td>
+            <td align="right">About<br />{{ page.name }}</td>
             <td class="content">        
                 {{ form.content.errors }}
                 {{ form.content }}

@@ -9,22 +9,24 @@ LionFace.User.page_id = '{{ page.id }}';
 
 {% block pages_header %}
 {% for one_page in request.user.get_pages %}
-{% cycle -42 -78 -114 -150 -186 -222 as left_offset silent %}
-{% cycle 31 31 31 31 31 31 71 71 71 71 71 71 as top_offset silent %}
-<div align="center" style="position: relative; width: 900px; height: 1px; text-align: left;">
-    <div style="position: relative; left: {{ left_offset }}px; top: {{ top_offset }}px; width: 35px; z-index: 9999;">
+{% cycle -42 as left_offset silent %}
+{% cycle 31 71 111 151 191 231 271 311 351 391 431 471 as top_offset silent %}
+<div align="center" style="position: relative; width: 900px; height: 1px; text-align: left; display: block;">
+    <div style="position: relative; left: {{ left_offset }}px; top: {{ top_offset }}px; width: 30px; z-index: 9999;">
 		<div onMouseOver="ShowContent('{{ one_page.id }}'); return false;" 
             onMouseOut="HideContent('{{ one_page.id }}'); return false;" style="position: relative;">
-			<div id="{{ one_page.id }}" class="page" style="display: none;">
-                <a href="{% url pages.views.settings slug=one_page.username %}">Settings</a> 
-                <div style="display: block; color: #F58; padding: 4px 0;">{{ one_page.loves }}</div>
-            </div>
 			<!-- need set thumb in a tag -->
             {% if one_page.type == 'BS' %}
-                <a title="{{ one_page.name }}" href="{% url business-page slug=one_page.username %}" class="nav_page"></a>
+                <a href="{% url business-page slug=one_page.username %}" class="nav_page"></a>
             {% else %}
-                <a title="{{ one_page.name }}" href="{% url nonprofit-page slug=one_page.username %}" class="nav_page"></a>
+                <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page"></a>
             {% endif %}
+			<div class="page_settings" style="display: none;" id="{{ one_page.id }}">
+			<div class="page">
+				<div class="one_page_name">{{ one_page.name }}</div>
+                <a href="{% url pages.views.settings slug=one_page.username %}">Settings</a> 
+                <div style="display: inline-block; color: #F58; padding: 4px;">{{ one_page.loves }}</div>
+            </div></div>
 		</div>
 	</div>
 </div>
@@ -84,7 +86,7 @@ LionFace.User.page_id = '{{ page.id }}';
 		<table width="900">
 			<tr>
 			<td width="100"><div class="page_image"></div><td>
-			<td><div style="padding: 10px 0px; position: relative; top: 10px;">
+			<td valign="top"><div style="padding: 10px 0px; position: relative; top: 10px;">
 				{% if page.type == 'BS' %}
                     <span style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</span> 
                 {% else %}   
@@ -92,7 +94,7 @@ LionFace.User.page_id = '{{ page.id }}';
                 {% endif %}
                     {% if page.category == 'Undefined' %}
                     {% else %}
-                    <span style="color: #999;">{{ page.category }}</span>
+                    <span style="color: #999; margin: 0 8px;">{{ page.category }}</span>
                     {% endif %}
                     <div style="padding: 10px 7px 10px 0px; line-height: 14pt;">{% firstof page.content %}
                         <a href="#" style="font-size: 8pt; color: #AAA;">Edit</a></div>
@@ -120,7 +122,7 @@ LionFace.User.page_id = '{{ page.id }}';
 	<div class="pages_nav_area" id="pages_nav_page">
 		<a href="#" id="updates" class="page_btn business_btn business_on">Updates</a>
         <a href="#" id="discussions" class="page_btn business_btn">Discussions</a>
-        <a href="#" id="reviews" class="page_btn business_btn">Reviews</a>
+        <a href="#" id="reviews" class="page_btn business_btn">Feedback</a>
         <a href="#" id="calendar" class="page_btn business_btn">Calendar</a>
         <a href="#" id="comunnity" class="page_btn business_btn">Comunnity</a>
 	</div>
