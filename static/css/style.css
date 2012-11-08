@@ -893,7 +893,7 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 	-moz-box-shadow: 0 4px 8px -4px #AAA;
 	box-shadow: 0 4px 8px -4px #AAA;
 	margin-bottom: 10px;
-	margin-top: 27px;
+	margin-top: 25px;
 }
 
 .dashboard_related {
@@ -1121,12 +1121,11 @@ a.nav_page:link, a.nav_page:active, a.nav_page:visited {
 	border-radius: 3px;
 	background: url(../images/noThumb.png) #FAFAFA;
 	background-size: 30px 30px;
-	-moz-box-shadow: 0 4px 8px -4px #555;
-	box-shadow: 0 4px 8px -4px #555; 
+
 }
 
 .page_settings {
-	position: absolute; left: 32px; top: 18px; min-width: 150px; padding: 4px; 
+	position: absolute; left: 32px; top: -4px; min-width: 150px; padding: 4px; 
 }
 
 .page {
