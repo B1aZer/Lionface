@@ -1113,7 +1113,7 @@ a.header_profile_image:hover {
 }
 
 a.nav_page:link, a.nav_page:active, a.nav_page:visited {
-	display: inline-block;
+	display: block;
 	width: 30px;
 	height: 30px;
 	border: 1px solid #EEE;
