@@ -9,9 +9,9 @@
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     {% block thumbnail %}
     {% if item.get_type == 'page post' %}
-    <a href="{{item.get_page_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.get_owner.photo }}'); background-size: 50px 50px;"></div></a>
+    <a href="{{item.get_page_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.get_owner.photo.thumb_name }}'); background-size: 50px 50px;"></div></a>
     {% else %}
-    <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.get_owner.photo }}'); background-size: 50px 50px;"></div></a>
+    <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background-image: url('/{{ item.get_owner.photo.thumb_name }}'); background-size: 50px 50px;"></div></a>
     {% endif %}
         
     {% endblock %}

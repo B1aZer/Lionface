@@ -28,6 +28,17 @@ class ImageForm(forms.ModelForm):
             raise forms.ValidationError("Image file too large ( > 1mb )")
         return image
 
+    def save(self, user):
+        image = UserImage.objects.create(
+            image=self.cleaned_data['photo'],
+            owner=user
+        )
+        image_m2m = UserImages.objects.create(
+            image=image,
+            profile=user,
+        )
+        return (image, image_m2m)
+
 
 POSTING_DEFAULT = [('Public','Public'), ('Friends Only','Friends Only'),]
 SHARE_DEFAULT = [('Enabled','Enabled'), ('Disabled','Disabled'),]
