@@ -61,16 +61,16 @@
 
 {% block center_col %}
 {% include_media 'profile.js' %}
-{% include "profile/image_popup.html" %}
 <div align="center">
 <div class="image_container" align="center">
+	{% include "profile/image_popup.html" %}
 	<ul>
 	{% for rows in image_rows %}
 		{% include "profile/image_li.html" %}
 	{% endfor %}
 	</ul>
 	<div class="view_more" style="display: none; text-align: center; margin-top: 25px;">
-		<div class="view_more_loader" style="display: none;"><image src="{% media_url 'images/loader.gif' %}"></div>
+		<div class="view_more_loader" style="display: none;"><img src="{% media_url 'images/loader.gif' %}"></div>
 		<a href="#">View more</a>
 	</div>
 </div>

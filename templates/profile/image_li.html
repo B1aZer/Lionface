@@ -1,6 +1,6 @@
 {% for row in rows %}
 <li class="ui-state-default" pk="{{ row.pk }}" position="{{ row.rating }}">
-	<div style="background-image: url('/{{ row.image.image.thumb_name }}');" class="image_album">
+	<div style="background-image: url('/{{ row.image.image.thumb_name }}');" data-original-url="/{{ row.image.image }}" class="image_album">
 		{% if profile_user == request.user %}
 		<div id="image_settings">
 			<a href="#" activity="{% if row.activity %}1{% else %}0{% endif %}" id="make_primary" style="float: left;" title="Make Primary Photo">+</a>
