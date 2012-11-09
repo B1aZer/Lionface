@@ -242,19 +242,17 @@ LionFace.Pages.prototype = {
         $(document).on('blur','#edit_input',function() {
             var edit_input = $(this);
             var content = edit_input.val(); 
-            if (content) {
-                make_request({
-                    url:edit_url,
-                    data:{
-                        'content':content,
-                    },
-                    callback: function(data) {
-                        if (data.status == 'OK') {
-                            edit_input.replaceWith(data.html);
-                        }
+            make_request({
+                url:edit_url,
+                data:{
+                    'content':content,
+                },
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        edit_input.replaceWith(data.html);
                     }
-                });
-            }
+                }
+            });
         })
     },
     load_page_feed : function(elem, page) {
