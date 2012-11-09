@@ -457,16 +457,14 @@ def delete_page(request, slug=None):
 
 @login_required
 def page_content(request, slug=None):
-    data = {'status':'FAIL'}
+    data = {'status':'OK'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    content = request.POST.get('content',None)
-    if content:
-        page.content = content
-        page.save()
-        data = {'status':'OK'}
+    content = request.POST.get('content','')
+    page.content = content
+    page.save()
     data['html'] = render_to_string("pages/page_content.html",
                     {
                         'page':page,
