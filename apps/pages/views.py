@@ -53,7 +53,7 @@ def main(request):
             form_busn = BusinessForm()
             form_nonp = NonprofitForm()
 
-    pages = Pages.objects.filter(type='BS')
+    pages = Pages.objects.filter(type='BS').order_by('?')[:8]
 
     # grouping by rows for template [4 in row]
     n=0
@@ -303,6 +303,59 @@ def love_count(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+def page_browsing(request, page_type='business'):
+    data = {'status':'OK'}
+
+    if page_type == "nonprofit":
+        filter_labels = [filtr[0] for filtr in NONPROFIT_CATEGORY]
+        pages = Pages.objects.filter(type='NP').order_by('-loves')
+    else:
+        filter_labels = [filtr[0] for filtr in BUSINESS_CATEGORY]
+        pages = Pages.objects.filter(type='BS').order_by('-loves')
+
+    if request.method == 'GET':
+        filters = request.GET.getlist('filters[]',None)
+        if filters:
+            filter_cats = []
+            for filtr in filters:
+                filter_cats.append(filter_labels[int(filtr)])
+            pages = pages.filter(category__in=filter_cats).order_by('-loves')
+
+    # grouping by rows for template [4 in row]
+    n=0
+    col=2
+    grouped_pages = []
+    row = []
+    for page in pages:
+        n += 1
+        row.append(page)
+        if n%col == 0 or n == pages.count():
+            grouped_pages.append(row)
+            row = []
+
+    pages = grouped_pages
+
+    if filters:
+        data['html'] = render_to_string(
+                                'pages/pages.html',
+                                    {
+                                        'pages':pages,
+                                    },
+                                    RequestContext(request)
+                                )
+        return HttpResponse(json.dumps(data), "application/json")
+
+
+    return render_to_response(
+        'pages/browse.html',
+        {
+            'pages':pages,
+            'filters':filter_labels,
+        },
+        RequestContext(request)
+    )
+
+
 @login_required
 def update(request):
     data = {'status':'FAIL'}
@@ -470,4 +523,5 @@ def page_content(request, slug=None):
                         'page':page,
                     }, RequestContext(request))
     return HttpResponse(json.dumps(data), "application/json")
+
 

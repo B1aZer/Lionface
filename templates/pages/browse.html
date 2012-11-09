@@ -1,0 +1,30 @@
+{% extends 'profile/base.html' %}
+{% load media friends format_results %}
+
+{% block content_title %} {% endblock %}
+{% block content_middle %}
+
+<a href="{% url page-browse page_type='business' %}">business</a>
+<a href="{% url page-browse page_type='nonprofit' %}">nonprofits</a>
+
+{% endblock %}
+{% block content_subtitle %}{% endblock %}
+
+{% block left_col %}
+
+    <div style="position: relative; left: 0px; z-index: 100;">
+        {% for filtr in filters %}
+        <a id="filter_{{ forloop.counter0 }}" href="javascript:;" class="feed_type filter filterON" >{{filtr}}</a>
+        {% endfor %}
+	</div>   
+
+{% endblock %}
+
+{% block right_col %}
+    <table id="page_browser" width="680" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
+        {% include "pages/pages.html" %}
+    </table>
+
+  {% include_media 'profile.js' %}
+  {% include_media 'pages.browse.js' %}
+{% endblock %}  

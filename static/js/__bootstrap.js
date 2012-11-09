@@ -1,13 +1,13 @@
 LionFace.Pages = function() {
-    this.runner();
+    this.init();
 }
 
 
 LionFace.Pages.prototype = {
 
-    runner : function() {
-        this.bind_functions();
-
+    init : function() {
+        var self = this;
+        self.bind_functions();
     },
 
     //Binding

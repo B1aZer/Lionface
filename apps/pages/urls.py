@@ -2,6 +2,8 @@ from django.conf.urls.defaults import patterns, url
 import views
 
 urlpatterns = patterns('',
+    url(r'^browse/$', views.page_browsing),
+    url(r'^browse/(?P<page_type>\w+)/$', views.page_browsing, name="page-browse"),
     url(r'^business/$', views.main),
     url(r'^business/(?P<slug>\w+)/$', views.page, name="business-page"),
     url(r'^business/(?P<slug>\w+)/list_posts/$', views.list_posts),
