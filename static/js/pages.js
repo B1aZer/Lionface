@@ -9,7 +9,7 @@ LionFace.Pages.prototype = {
         self_class = this;
         this.bind_functions();
         this.bind_page_functions();
-        if (LionFace.User.page_id) {
+        if (LionFace.User.page_list) {
             this.load_page_feed(); 
         }
     },
@@ -215,6 +215,47 @@ LionFace.Pages.prototype = {
                     $('.errorlist').html(''); 
                 }        
         });
+
+        var edit_a = $('#edit_page_text').clone();
+        var edit_url = edit_a.attr('href');
+
+        //inline edit of the page's context
+        $(document).on('click','#edit_page_text',function(e){
+            e.preventDefault();
+            var content = $('#page_inner_context').html();
+                                        
+            var edit_btn = $(this);
+            var edit_input = $('<textarea>', {id: 'edit_input',
+                                            rows: '4',
+                                            cols: '65',
+                                            maxlength: '225'});
+            $('#page_content').html(edit_input);
+            //trim
+            content = String(content).replace(/^\s+|\s+$/g, '');
+            if (content) {
+                content = content.replace(/<br>/g,'\n');
+                edit_input.val(content);
+            }
+            edit_input.focus(); 
+        });
+
+        $(document).on('blur','#edit_input',function() {
+            var edit_input = $(this);
+            var content = edit_input.val(); 
+            if (content) {
+                make_request({
+                    url:edit_url,
+                    data:{
+                        'content':content,
+                    },
+                    callback: function(data) {
+                        if (data.status == 'OK') {
+                            edit_input.replaceWith(data.html);
+                        }
+                    }
+                });
+            }
+        })
     },
     load_page_feed : function(elem, page) {
         var elem = elem || $('#page_feed');

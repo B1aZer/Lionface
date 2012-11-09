@@ -49,7 +49,9 @@
 			<div class="page_settings" style="display: none;" id="{{ one_page.id }}">
 			<div class="page">
 				<div class="one_page_name">{{ one_page.name }}</div>
+                {% if request.user|check_pages_basics:one_page or request.user|check_pages_admins:one_page %}
                 <a href="{% url pages.views.settings slug=one_page.username %}">Settings</a> 
+                {% endif %}
                 <div style="display: inline-block; color: #F58; padding: 4px;">{{ one_page.loves }}</div>
             </div></div>
 		</div>

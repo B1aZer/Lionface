@@ -4,6 +4,7 @@
 {% block js %}
 <script>
 LionFace.User.page_id = '{{ page.id }}';
+LionFace.User.page_list = true;
 </script>
 {% endblock %}  
 
@@ -73,8 +74,9 @@ LionFace.User.page_id = '{{ page.id }}';
                     {% else %}
                     <span style="color: #999; margin: 0 8px;">{{ page.category }}</span>
                     {% endif %}
-                    <div style="padding: 10px 7px 10px 0px; line-height: 14pt;">{% firstof page.content %}
-                        <a href="#" style="font-size: 8pt; color: #AAA;">Edit</a></div>
+                    <div id="page_content" style="padding: 10px 7px 10px 0px; line-height: 14pt;">
+                        {% include 'pages/page_content.html' %}
+                    </div>
 			<td/>
             {% if page.type == 'BS' %}
 			<td width="250" class="love_container love_business" align="center"> 

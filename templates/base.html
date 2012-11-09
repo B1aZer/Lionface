@@ -18,9 +18,13 @@
     {% else %}
          LionFace.User.is_anonymous = false;
     {% endif %}
+
+    LionFace.User.options = {}
+    // user permissions
     </script>
 
     {% include_media 'main.js' %}
+    {% include_media 'user.js' %}
     {% block js %}{% endblock %}
 
 <meta name="description" content="Lionface is the next generation in social networking.">
@@ -94,7 +98,6 @@ var timezone = jstz.determine();
     {% endblock %}
 
     {% block footer_js %}
-        {% include_media 'common.js' %}
     {% endblock %}
     {% block additional_js %}
     {% endblock %} 

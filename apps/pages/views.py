@@ -380,6 +380,12 @@ def settings(request, slug=None):
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
+    # check permissions
+    if request.user.check_option('pages_admins__%s' % page.id) \
+            or request.user.check_option('pages_basics__%s' % page.id):
+                pass
+    else:
+        raise Http404
     form = PageSettingsForm(instance=page)
     if request.method == 'POST':
         form = PageSettingsForm(data=request.POST, instance=page)
@@ -448,3 +454,22 @@ def delete_page(request, slug=None):
             messages.error(request, 'Wrong password.')
             return redirect('pages.views.settings', slug=page.username)
     return redirect('pages.views.main')
+
+@login_required
+def page_content(request, slug=None):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    content = request.POST.get('content',None)
+    if content:
+        page.content = content
+        page.save()
+        data = {'status':'OK'}
+    data['html'] = render_to_string("pages/page_content.html",
+                    {
+                        'page':page,
+                    }, RequestContext(request))
+    return HttpResponse(json.dumps(data), "application/json")
+

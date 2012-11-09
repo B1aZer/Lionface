@@ -13,11 +13,12 @@ urlpatterns = patterns('',
     url(r'^nonprofit/(?P<slug>\w+)/list_posts/$', views.list_posts),
     url(r'^nonprofit/(?P<slug>\w+)/reposition/$', views.reposition),
     url(r'^page/(?P<slug>\w+)/$', views.page),
+    url(r'^page/(?P<slug>\w+)/delete_page/$', views.delete_page),
     url(r'^page/(?P<slug>\w+)/list_posts/$', views.list_posts),
     url(r'^page/(?P<slug>\w+)/reset_picture/$', views.reset_picture),
+    url(r'^page/(?P<slug>\w+)/page_content/$', views.page_content),
     url(r'^page/(?P<slug>\w+)/settings/$', views.settings),
     url(r'^page/(?P<slug>\w+)/settings_admins/$', views.settings_admins),
-    url(r'^page/(?P<slug>\w+)/delete_page/$', views.delete_page),
     url(r'^update/$', views.update),
 )
 
