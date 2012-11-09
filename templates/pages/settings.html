@@ -85,14 +85,9 @@ LionFace.User.page_slug = '{{ page.username }}';
 
    <table id="privacy">
         <tr>
-            <td width="150" align="right">&nbsp;</td>
-            <td width="405">&nbsp;</td>
-        </tr>
-        <tr>
-            <td align="right" >Admins</td>
-            <td>
+            <td colspan="2" align="left" style="padding: 4px 20px; border-bottom: 1px solid #CCC;"><span style="margin-right: 10px;">Add an Admin</span>
                 <input id="id_admins" type="text" name="admins" value="" maxlength="200">
-                <a id="add_admin" href="{% url pages.views.settings_admins slug=page.username %}" style="display:none" >add</a>
+                <a id="add_admin" href="{% url pages.views.settings_admins slug=page.username %}" style="display:none; position: relative; top: 0px; left: 5px;" class="profile_btn">+ Add</a>
             </td>
         </tr>
         <tr class="admins_list">

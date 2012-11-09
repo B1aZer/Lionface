@@ -1,47 +1,50 @@
 {% load media format_results %}
-<td width="100%">
-<table>
+<td width="100%" align="center">
+<table width="100%">
 {% for admin in page.admins.all %}
 <tr>
-    <td>
-    {{ admin.full_name }}
-    <a id="{{ admin.username }}" href="{% url pages.views.settings_admins slug=page.username %}" class="remove_admins" >remove</a>
+    <td rowspan="2" valign="top">
+    {{ admin.full_name }}<br />
+    <a id="{{ admin.username }}" href="{% url pages.views.settings_admins slug=page.username %}" class="remove_admins" >- remove</a>
     </td>
     <td>
-    <label for="pages_basics__{{ admin.username }}">page basics</label>
-    <input type="checkbox" 
-    {% if admin|check_pages_basics:page %} checked {% endif %}
-    {% if request.user != page.user and admin == page.user %} disabled {% endif %}
-    name="pages_basics" id="pages_basics__{{ admin.username }}" class="page_options">
-    </td>
-    <td>
-    <label for="pages_delete__{{ admin.username }}">page delete</label>
-    <input type="checkbox" 
-    {% if admin|check_pages_delete:page %} checked {% endif %}
-    {% if request.user != page.user and admin == page.user %} disabled {% endif %}
-    name="pages_delete" id="pages_delete__{{ admin.username }}" class="page_options">
-    </td>
-    <td>
-    <label for="pages_admins__{{ admin.username }}">pages admins</label>
-    <input type="checkbox"
-    {% if admin|check_pages_admins:page %} checked {% endif %}
-    {% if request.user != page.user and admin == page.user %} disabled {% endif %}
-    name="pages_admins" id="pages_admins__{{ admin.username }}" class="page_options">
-    </td>
-    <td>
-    <label for="pages_photos__{{ admin.username }}">pages photos</label>
-    <input type="checkbox"
-    {% if admin|check_pages_photos:page %} checked {% endif %}
-    {% if request.user != page.user and admin == page.user %} disabled {% endif %}
-    name="pages_photos" id="pages_photos__{{ admin.username }}" class="page_options">
-    </td>
-    <td>
-    <label for="pages_updates__{{ admin.username }}">pages updates</label>
     <input type="checkbox" 
     {% if admin|check_pages_updates:page %} checked {% endif %}
     {% if request.user != page.user and admin == page.user %} disabled {% endif %}
     name="pages_updates" id="pages_updates__{{ admin.username }}" class="page_options">
+    <label for="pages_updates__{{ admin.username }}">Post Updates</label>
     </td>
+    <td>
+    <input type="checkbox"
+    {% if admin|check_pages_photos:page %} checked {% endif %}
+    {% if request.user != page.user and admin == page.user %} disabled {% endif %}
+    name="pages_photos" id="pages_photos__{{ admin.username }}" class="page_options">
+    <label for="pages_photos__{{ admin.username }}">Manage Photos</label>
+    </td>
+    <td>
+    <input type="checkbox" 
+    {% if admin|check_pages_basics:page %} checked {% endif %}
+    {% if request.user != page.user and admin == page.user %} disabled {% endif %}
+    name="pages_basics" id="pages_basics__{{ admin.username }}" class="page_options">
+    <label for="pages_basics__{{ admin.username }}">Edit Basics</label>
+    </td>
+</tr>
+<tr style="border-bottom: 1px solid #FFF;">
+    <td>
+    <input type="checkbox"
+    {% if admin|check_pages_admins:page %} checked {% endif %}
+    {% if request.user != page.user and admin == page.user %} disabled {% endif %}
+    name="pages_admins" id="pages_admins__{{ admin.username }}" class="page_options">
+    <label for="pages_admins__{{ admin.username }}">Edit Admins</label>
+    </td>
+    <td>
+    <input type="checkbox" 
+    {% if admin|check_pages_delete:page %} checked {% endif %}
+    {% if request.user != page.user and admin == page.user %} disabled {% endif %}
+    name="pages_delete" id="pages_delete__{{ admin.username }}" class="page_options">
+    <label for="pages_delete__{{ admin.username }}">Delete Page</label>
+    </td>
+	<td></td>
 </tr>
 {% endfor %}
 </table>

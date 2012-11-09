@@ -893,7 +893,7 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 	-moz-box-shadow: 0 4px 8px -4px #AAA;
 	box-shadow: 0 4px 8px -4px #AAA;
 	margin-bottom: 10px;
-	margin-top: 25px;
+	margin-top: 26px;
 }
 
 .dashboard_related {
@@ -1121,7 +1121,6 @@ a.nav_page:link, a.nav_page:active, a.nav_page:visited {
 	border-radius: 3px;
 	background: url(../images/noThumb.png) #FAFAFA;
 	background-size: 30px 30px;
-
 }
 
 .page_settings {
@@ -1408,7 +1407,11 @@ a.older_mess:hover {
 
 /* Settings */
 
-#basics input, #basics textarea {
+a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_admins:hover {
+	font-size: 8pt;
+}
+
+#basics input, #basics textarea, #id_admins {
 	border: 1px solid #CCC;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
