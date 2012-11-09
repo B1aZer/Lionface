@@ -1,27 +1,83 @@
+{% load media %}
 <style type="text/css">
-#image_overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  background-color: black;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=85);
-  opacity: 0.85;
-  display: none;
+.image_popup {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
 }
-#image_popup {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  z-index: 10000;
-  text-align: center;
-  line-height: 0;
-  font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
-  font-weight: normal;
-  display: none;
+.image_overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background-color: black;
+	opacity: 0.85;
+}
+.image_zone {
+	position: absolute;
+	z-index: 10000;
+	top: 10%;
+	left: 10%;
+	width: 80%;
+	height: 80%;
+	background-color: black;
+}
+.image_zone_view {
+	float: left;
+	top: 0;
+	left: 0;
+	height: 100%;
+}
+.image_zone_info {
+	float: right;
+	margin: 0 0 0 auto;
+	width: 350px;
+	height: 100%;
+	background-color: white;
+	opacity: 0.95;
+}
+.image_zone_info #thumb {
+	float: left;
+	background-size: 50px, 50px;
+	width: 50px; height: 50px;
+	margin: 0 auto auto 10px;
+	border: 1px solid #AAA;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.image_zone_info #fullname {
+	position: absolute;
+	float: left;
+	margin: 10px auto auto 75px;
+	color: #777;
+}
+.image_zone_info #username {
+	color: #AAA; font-size: 8pt; padding: 3px 0;
+	position: absolute;
+	float: left;
+	margin: 5px auto auto 75px;
 }
 </style>
-<div id="image_overlay"></div>
-<div id="image_popup">
-    <img src="http://localhost:8000/uploads/images/5.thumb.jpg" style="display: inline-block;" />
+<div class="image_popup">
+	<div class="image_overlay"></div>
+	<div class="image_zone">
+		<div class="image_zone_view">
+			<div id="loader" style="display: none; height: 100%;"><img src="{% media_url 'images/loader.gif' %}" /></div>
+			<div id="image" style="display: none;"></div>
+		</div>
+		<div class="image_zone_info">
+			<div id="close"><a href="#" class="ui-icon ui-icon-closethick" style="margin: 0 0 0 auto;" title="Press Esc for exit"></a></div>
+			<a id="owner" href="{{ profile_user.get_absolute_url }}">
+				<div{% if request.user == profile_user %} thumb="1"{% endif %} id="thumb" style="background-image: url('/{{ profile_user.photo.thumb_name }}');"></div>
+				<div id="fullname">{{ profile_user.full_name }}</div><br />
+				<div id="username">{{ profile_user.username }}</div>
+			</a>
+		</div>
+	</div>
 </div>
+

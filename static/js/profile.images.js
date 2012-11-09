@@ -7,7 +7,7 @@ LionFace.Images.prototype = {
     options: {
         swap_images_default_delay: 1000,
         set_backgroundImage_default_delay: 1000,
-        overlay_fadeDuration: 500,
+        popup_fadeDuration: 500,
     },
 
     init: function() {
@@ -15,15 +15,12 @@ LionFace.Images.prototype = {
         $('.image_container li').each(function(index, elem) {
             _this.create_settings(elem);
         });
-        _this.sort_images();
-        _this.bind_view_more_button();
+        this.sort_images();
         if (!LionFace.User.is_anonymous) {
-            _this.bind_sorting();
+            this.bind_sorting();
         }
-        $('#image_overlay').click(function() {
-            _this.popup_end();
-            return false;
-        });
+        this.bind_view_more_button();
+        this.bind_popup();
     },
 
     set_backgroundImage: function(backgroundImage) {
@@ -155,6 +152,10 @@ LionFace.Images.prototype = {
 
     create_settings: function(elem) {
         var _this = this;
+        $(elem).click(function() {
+            _this.popup_start(elem);
+            return false;
+        });
         var image_settings = $(elem).find('#image_settings');
         if ( $(image_settings).length != 1 )
             return;
@@ -166,10 +167,7 @@ LionFace.Images.prototype = {
             function() {
                 $(image_settings).hide();
             }
-        ).click(function() {
-            _this.popup_start($(this));
-            return false;
-        });
+        );
         if ( $(image_settings).find('#make_primary').attr('activity') == 1) {
             $(image_settings).find('#make_primary').hide();
         } else {
@@ -244,25 +242,84 @@ LionFace.Images.prototype = {
         });
     },
 
-    popup_sizeOverlay: function() {
-        return $('#image_overlay').width($(document).width()).height($(document).height());
+    popup_enableKeyboard: function() {
+        var _this = this;
+        function keyboard(event) {
+            var KEYCODE_ESC = 27;
+            var keycode = event.keyCode;
+            if (keycode === KEYCODE_ESC) {
+                _this.popup_end();
+            }
+        }
+        $(document).on('keyup.keyboard', keyboard);
     },
 
-    popup_start: function(elem) {
-        $(window).on("resize", this.popup_sizeOverlay);
-        $('select, object, embed').css({
-            visibility: "hidden"
+    popup_disableKeyboard: function() {
+        $(document).off('.keyboard');
+    },
+
+    popup_window_resize: function() {
+        $('.image_popup').css({
+            top: $(window).scrollTop() + 'px',
+            left: $(window).scrollLeft() + 'px'
         });
-        $('#image_overlay').width($(document).width()).height($(document).height()).fadeIn(this.options.overlay_fadeDuration);
-        
+        $('.image_zone_view').width($('.image_zone').width() - 350);
+        $('.image_zone_view #loader').css({
+            'line-height': $('.image_zone').height() + 'px',
+        });
+        var image = $('.image_zone_view #image img');
+        if ( ($(image).width() < $('.image_zone_view').width() &&
+                $(image).height() < $('.image_zone_view').height()) ||
+                $(image).width() > $('.image_zone_view').width() ||
+                $(image).height() > $('.image_zone_view').height()
+        ) {
+            if ( ($(image).width() / $('.image_zone_view').width()) >
+                    ($(image).height() / $('.image_zone_view').height()) ) {
+                $(image).width($('.image_zone_view').width());
+            } else {
+                $(image).height($('.image_zone_view').height());
+            }
+        }
+    },
+
+    popup_change_item: function(item, is_change) {
+        var _this = this;
+        if (is_change == undefined)
+            is_change = true;
+        this.popup_window_resize();
+        $('.image_zone_view #loader').show();
+        var image = $('<img>');
+        $('.image_zone_view #image').hide().html('');
+        $(image).load(function() {
+            $('.image_zone_view #loader').hide();
+            $('.image_zone_view #image').append( $(image) ).show();
+            _this.popup_window_resize();
+        });
+        $(image).attr('src', $(item).find('div.image_album').attr('data-original-url'));
+    },
+
+    popup_start: function(item) {
+        $('.image_popup').fadeIn(this.options.popup_fadeDuration);
+        this.popup_enableKeyboard();
+        this.popup_change_item(item, false);
     },
 
     popup_end: function() {
-        $(window).off("resize", this.popup_sizeOverlay);
-        $('#image_overlay').fadeOut(this.options.overlay_fadeDuration);
-        $('select, object, embed').css({
-            visibility: "visible"
+        $('.image_popup').fadeOut(this.options.popup_fadeDuration);
+        this.popup_disableKeyboard();
+    },
+
+    bind_popup: function() {
+        var _this = this;
+        $('.image_overlay').click(function() {
+            _this.popup_end();
+            return false;
         });
+        $('.image_zone_info #close a').click(function() {
+            _this.popup_end();
+            return false;
+        });
+        $(window).on('resize', this.popup_window_resize);
     },
 
     bind_sorting: function() {
@@ -307,7 +364,6 @@ LionFace.Images.prototype = {
                             }
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            console.log( '1' );
                             _this.sort_images();
                         },
                     });
