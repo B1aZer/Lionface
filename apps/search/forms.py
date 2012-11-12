@@ -4,6 +4,7 @@ from haystack.query import SearchQuerySet, SQ
 from current_user.middleware import get_current_user
 from tags.models import Tag
 from pages.models import Pages
+from account.models import UserProfile
 
 class SearchForm(ModelSearchForm):
 
@@ -27,6 +28,10 @@ class SearchForm(ModelSearchForm):
             res = res.filter(page_type='BS')
         if filter_val == 'nonprofits':
             res = res.filter(page_type='NP')
+        if filter_val == 'people':
+            res = res.models(UserProfile)
+        else:
+            res = res.models(UserProfile, Pages)
         if 'account.userprofile' in self.cleaned_data['models']:
             user = get_current_user()
             for one_user in res:
@@ -41,12 +46,6 @@ class SearchForm(ModelSearchForm):
                     # Ensure the current user isn't in the results.
                     if user != None and one_user.object == user and not isinstance(one_user.object,Pages):
                         res = res.exclude(username=user.username)
-                elif isinstance(one_user.object,Pages):
-                    if filter_val == 'people':
-                        res = res.exclude(username=one_user.username)
-                else:
-                    # if object is tag
-                    res = res.exclude(username=one_user.username)
             # custom ordering (by DoS)
             #res = sorted(res,key = lambda s : s.object.get_degree_for(user))
             if filter_val in ('businesses','nonprofits'):
