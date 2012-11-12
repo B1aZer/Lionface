@@ -1,7 +1,8 @@
-import re
+import re, os.path
 
 from django import forms
 from django.forms import TextInput
+from django.db import IntegrityError
 
 from PIL import Image
 
@@ -29,6 +30,18 @@ class ImageForm(forms.ModelForm):
         return image
 
     def save(self, user):
+        try:
+            counter = UserImageCounter.objects.select_for_update().get(user=user)
+        except UserImageCounter.DoesNotExist as e:
+            try:
+                UserImageCounter.objects.create(user=user)
+                counter = UserImageCounter.objects.select_for_update().get(user=user)
+            except (IntegrityError, UserImageCounter.DoesNotExist) as e:
+                return None
+        counter.count += 1
+        number = counter.count
+        counter.save()
+        self.cleaned_data['photo'].name = str(number) + os.path.splitext(self.cleaned_data['photo'].name)[1]
         image = UserImage.objects.create(
             image=self.cleaned_data['photo'],
             owner=user

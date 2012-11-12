@@ -436,6 +436,14 @@ def create_user_profile(sender, instance, created, **kwargs):
 post_save.connect(create_user_profile, sender=User)
 
 
+class UserImageCounter(models.Model):
+    user = models.OneToOneField('UserProfile')
+    count = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return '%s: %d' % (self.user, self.count)
+
+
 class UserImage(models.Model):
     image = ImageWithThumbField(upload_to="uploads/images",
         storage=ImageStorage())
