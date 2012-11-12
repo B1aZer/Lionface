@@ -4,8 +4,8 @@
 {% block content_title %} {% endblock %}
 {% block content_middle %}
 
-<a href="{% url page-browse page_type='business' %}">business</a>
-<a href="{% url page-browse page_type='nonprofit' %}">nonprofits</a>
+<a href="{% url page-browse page_type='business' %}" class="blue_btn" style="color: #FFF;">Businesses</a>
+<a href="{% url page-browse page_type='nonprofit' %}" class="blue_btn" style="color: #FFF;">Nonprofits</a>
 
 {% endblock %}
 {% block content_subtitle %}{% endblock %}
