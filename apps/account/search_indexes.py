@@ -11,6 +11,7 @@ class UserIndex(SearchIndex):
     username_auto = EdgeNgramField(model_attr='username')
     first_auto = EdgeNgramField(model_attr='first_name')
     last_auto = EdgeNgramField(model_attr='last_name')
-    full_name = EdgeNgramField(model_attr='optional_name')
+    full_name = CharField(model_attr='optional_name')
+    full_name_auto = EdgeNgramField(model_attr='optional_name')
 
 site.register(UserProfile, UserIndex)

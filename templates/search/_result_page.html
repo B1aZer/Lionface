@@ -1,0 +1,11 @@
+{% extends 'pages/pages_loves_one.html' %}
+{% load media friends format_results %}
+
+{% block love_button %}
+    {% if current_user in page.get_lovers %}
+        <a href="#" class="love love_button loved">Loved</a>
+    {% else %}
+        <a href="#" class="love love_button">Love</a>
+    {% endif %}
+{% endblock %}
+

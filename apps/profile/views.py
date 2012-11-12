@@ -612,20 +612,6 @@ def loves(request, username=None):
         if 'nonprofit' in request.GET and not 'business' in request.GET:
             pages = pages.filter(type='NP')
 
-    # grouping by rows for template [4 in row]
-    n=0
-    group = 2
-    grouped_pages = []
-    row = []
-    for page in pages:
-        n += 1
-        row.append(page)
-        if n%group == 0 or n == pages.count():
-            grouped_pages.append(row)
-            row = []
-
-    pages = grouped_pages
-
     if request.method == 'GET' and 'ajax' in request.GET:
         data['html'] = render_to_string('pages/pages_loves.html',
                 {

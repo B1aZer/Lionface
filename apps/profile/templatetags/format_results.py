@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from tags.models import *
+from pages.models import Pages
 from smileys.models import Smiley
 import re
 
@@ -16,6 +17,8 @@ register = template.Library()
 def format_result(object, current_user):
     if isinstance(object, User):
         return render_to_string('search/_result_user.html', { 'user': object, 'current_user': current_user })
+    if isinstance(object, Pages):
+        return render_to_string('search/_result_page.html', { 'page': object, 'current_user': current_user })
     return ""
 
 

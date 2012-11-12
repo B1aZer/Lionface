@@ -35,7 +35,10 @@ class Pages(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('pages.views.page', [str(self.username)])
+        if self.type == 'BS':
+            return ('business-page', [str(self.username)])
+        else:
+            return ('nonprofit-page', [str(self.username)])
 
     def save(self, *args, **kwargs):
         """ Adding user to admins """
