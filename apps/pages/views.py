@@ -43,7 +43,7 @@ def main(request):
             active = "Business"
             form = BusinessForm(data = request.POST)
             form_busn = form
-        if form.is_valid():
+        if form.is_valid() and request.user.get_pages().count() < max_pages:
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()

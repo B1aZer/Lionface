@@ -16,11 +16,13 @@ LionFace.User.page_list = true;
             <a href="{{ page.url }}" target="_black">{{ page.url }}</a>
             {% endif %}
         </div>
-      <div class="right" style="position: relative;">
-		<div>
-			<a class="profile_btn" style="cursor: pointer;">+ Add</a>
-		</div>
-    </div>
+        {% if request.user|check_pages_community:page %}
+        <div class="right" style="position: relative;">
+            <div>
+                <a class="profile_btn" style="cursor: pointer;">+ Add</a>
+            </div>
+        </div>
+        {% endif %}
 	</div>
 	<div style="position: relative; z-index: 1;">
         <div class="cover_photo" style="overflow:hidden;">

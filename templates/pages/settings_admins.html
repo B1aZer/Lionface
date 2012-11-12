@@ -46,6 +46,13 @@
     name="pages_delete" id="pages_delete__{{ admin.username }}" class="page_options">
     <label class="admins_labels" for="pages_delete__{{ admin.username }}">Delete Page</label>
     </td>
+    <td>
+    <input type="checkbox" 
+    {% if admin|check_pages_community:page %} checked {% endif %}
+    {% if admin == page.user %} disabled {% endif %}
+    name="pages_community" id="pages_community__{{ admin.username }}" class="page_options">
+    <label class="admins_labels" for="pages_community__{{ admin.username }}">Community/Friends</label>
+    </td>
 	<td></td>
 </tr>
 {% endfor %}

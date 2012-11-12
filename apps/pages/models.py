@@ -49,4 +49,5 @@ class Pages(models.Model):
         self.user.set_option('pages_admins__%s' % self.id,True)
         self.user.set_option('pages_photos__%s' % self.id,True)
         self.user.set_option('pages_updates__%s' % self.id,True)
+        self.user.set_option('pages_community__%s' % self.id,True)
 

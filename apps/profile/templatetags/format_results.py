@@ -174,24 +174,42 @@ def mark_read(message):
     message.mark_read()
     return ""
 
+# Permission filters for pages
 @register.filter(name="check_pages_basics")
 def check_pages_basics(user,page):
+    if user.is_anonymous():
+        return False
     return user.check_option('pages_basics__%s' % page.id)
 
 @register.filter(name="check_pages_delete")
 def check_pages_delete(user,page):
+    if user.is_anonymous():
+        return False
     return user.check_option('pages_delete__%s' % page.id)
 
 @register.filter(name="check_pages_admins")
 def check_pages_admins(user,page):
+    if user.is_anonymous():
+        return False
     return user.check_option('pages_admins__%s' % page.id)
 
 @register.filter(name="check_pages_photos")
 def check_pages_photos(user,page):
+    if user.is_anonymous():
+        return False
     return user.check_option('pages_photos__%s' % page.id)
 
 @register.filter(name="check_pages_updates")
 def check_pages_updates(user,page):
+    if user.is_anonymous():
+        return False
     return user.check_option('pages_updates__%s' % page.id)
+
+@register.filter(name="check_pages_community")
+def check_pages_community(user,page):
+    if user.is_anonymous():
+        return False
+    return user.check_option('pages_community__%s' % page.id)
+
 
 
