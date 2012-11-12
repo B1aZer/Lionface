@@ -22,6 +22,11 @@ class SearchForm(ModelSearchForm):
             res = SearchQuerySet().filter(SQ(username_auto=self.cleaned_data['q']) | SQ(email=self.cleaned_data['q']) | SQ(full_name_auto=self.cleaned_data['q']))
         # ajax filter
         filter_val = self.data.get('filter')
+        # filtering
+        if filter_val == 'businesses':
+            res = res.filter(page_type='BS')
+        if filter_val == 'nonprofits':
+            res = res.filter(page_type='NP')
         if 'account.userprofile' in self.cleaned_data['models']:
             user = get_current_user()
             for one_user in res:
@@ -39,10 +44,6 @@ class SearchForm(ModelSearchForm):
                 elif isinstance(one_user.object,Pages):
                     if filter_val == 'people':
                         res = res.exclude(username=one_user.username)
-                    if filter_val == 'businesses':
-                        res = res.filter(page_type='BS')
-                    if filter_val == 'nonprofits':
-                        res = res.filter(page_type='NP')
                 else:
                     # if object is tag
                     res = res.exclude(username=one_user.username)
