@@ -63,7 +63,10 @@ def profile_image(request, username=None, rows_show=4):
         if 'image' in request.POST:
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
-                image, image_m2m = form.save(profile_user)
+                ret = form.save(profile_user)
+                if ret is None:
+                    return HttpResponseBadRequest()
+                image, image_m2m = ret
                 image_m2m.make_activity()
                 return HttpResponseRedirect(request.path)
     else:
@@ -272,7 +275,10 @@ def profile(request, username='admin'):
         if 'image' in request.POST:
             form = ImageForm(request.POST, request.FILES)
             if form.is_valid():
-                image, image_m2m = form.save(profile_user)
+                ret = form.save(profile_user)
+                if ret is None:
+                    return HttpResponseBadRequest()
+                image, image_m2m = ret
                 image_m2m.make_activity()
                 return HttpResponseRedirect(request.path)
 
