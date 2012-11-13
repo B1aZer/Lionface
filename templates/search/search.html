@@ -50,7 +50,8 @@ $(document).on('click','#search_next', function(e) {
 
             {% if page.has_next %}
                 <div id="search_navigation">
-                    {% if page.has_next %}<a id="search_next" href="?q={{ query }}&amp;models=account.userprofile&amp;page={{ page.next_page_number }}">{% endif %}See More{% if page.has_next %}</a>{% endif %}
+                    {% if page.has_next %}<a id="search_next" style="background: #EEE; padding: 6px 0 3px 50px; margin: 5px 0; color: #555; display: block;" href="?q={{ query }}&amp;models=account.userprofile&amp;page={{ page.next_page_number }}">{% endif %}
+					See More Results{% if page.has_next %}</a>{% endif %}
                 </div>
             {% endif %}
         {% else %}

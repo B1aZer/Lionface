@@ -28,10 +28,24 @@
 	background-color: black;
 }
 .image_zone_view {
+	position: relative;
 	float: left;
-	top: 0;
-	left: 0;
+	top: 1;
+	left: 1;
+	bottom: 1;
 	height: 100%;
+}
+.image_zone_view .prev_next {
+	position: absolute;
+	z-index: 10001;
+	height: 100%;
+	display: none;
+}
+.image_zone_view #prev img {
+	float: left;
+}
+.image_zone_view #next img {
+	float: right;
 }
 .image_zone_info {
 	float: right;
@@ -39,9 +53,9 @@
 	width: 350px;
 	height: 100%;
 	background-color: white;
-	opacity: 0.95;
+	opacity: 0.90;
 }
-.image_zone_info #thumb {
+.image_zone_info #scroll_area a #thumb {
 	float: left;
 	background-size: 50px, 50px;
 	width: 50px; height: 50px;
@@ -57,10 +71,44 @@
 	color: #777;
 }
 .image_zone_info #username {
-	color: #AAA; font-size: 8pt; padding: 3px 0;
 	position: absolute;
 	float: left;
 	margin: 5px auto auto 75px;
+	color: #AAA; font-size: 8pt; padding: 3px 0;
+}
+.image_zone_info #make_comment {
+	position: absolute;
+	bottom: 10px;
+	width: 350px;
+}
+.image_zone_info #make_comment #thumb {
+	float: left;
+	margin: 5px auto auto 15px;
+	background-size: 32px, 32px;
+	width: 32px; height: 32px;
+	border: 1px solid #AAA;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.image_zone_info #make_comment form {
+	float: right;
+	margin: 1px 10px auto auto;
+}
+.image_zone_info #make_comment textarea {
+	margin-top: 5px;
+	width: 275px;
+	height: 20px;
+	resize: none;
+	border-color: #777;
+	border-width: 1px;
+	border-style: solid;
+	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+	font-size: 12px;
+	line-height: 14px;
+	padding-top: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+	overflow: auto;
 }
 </style>
 <div class="image_popup">
@@ -68,15 +116,25 @@
 	<div class="image_zone">
 		<div class="image_zone_view">
 			<div id="loader" style="display: none; height: 100%;"><img src="{% media_url 'images/loader.gif' %}" /></div>
+			<div id="prev" class="prev_next"><img src="{% media_url 'images/prev.png' %}" /></div>
+			<div id="next" class="prev_next"><img src="{% media_url 'images/next.png' %}" /></div>
 			<div id="image" style="display: none;"></div>
 		</div>
 		<div class="image_zone_info">
 			<div id="close"><a href="#" class="ui-icon ui-icon-closethick" style="margin: 0 0 0 auto;" title="Press Esc for exit"></a></div>
-			<a id="owner" href="{{ profile_user.get_absolute_url }}">
-				<div{% if request.user == profile_user %} thumb="1"{% endif %} id="thumb" style="background-image: url('/{{ profile_user.photo.thumb_name }}');"></div>
-				<div id="fullname">{{ profile_user.full_name }}</div><br />
-				<div id="username">{{ profile_user.username }}</div>
-			</a>
+			<div id="scroll_area">
+				<a id="owner" href="{{ profile_user.get_absolute_url }}">
+					<div{% if request.user == profile_user %} thumb="1"{% endif %} id="thumb" style="background-image: url('/{{ profile_user.photo.thumb_name }}');"></div>
+					<div id="fullname">{{ profile_user.full_name }}</div><br />
+					<div id="username">{{ profile_user.username }}</div>
+				</a>
+			</div>
+			<div id="make_comment">
+				<div id="thumb" style="background-image: url('/{{ request.user.photo.thumb_name }}');"></div>
+				<form>
+					<textarea name="add_comment_text" placeholder="Add comment..."></textarea>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>
