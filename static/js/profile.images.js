@@ -340,6 +340,7 @@ LionFace.ProfileImages.prototype = {
         if (change == undefined)
             change = true;
         var _this = this;
+        this.popup_resize();
         $('.image_container li[popup=true]').attr('popup', false);
         $(item).attr('popup', true);
         $('.image_zone_view').find('#prev, #next').hide().find('img').hide();
