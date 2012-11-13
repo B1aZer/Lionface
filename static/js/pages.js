@@ -252,13 +252,15 @@ LionFace.Pages.prototype = {
                             }
                             else {
                                 if (self.hasClass('page_remove_friend')) {
+                                    self.html('Removed');
                                     if (!data.pages_count) {
                                         self.remove();
                                     }
                                     $('.page_add_friend').show();
                                 }
                                 else {
-                                    /*self.addClass('request_sent');*/
+                                    self.html('Sent');
+                                    self.addClass('request_sent');
                                     $('.page_remove_friend').show();
                                 }
                                 $('#page_choose_select').remove();

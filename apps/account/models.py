@@ -440,6 +440,8 @@ class UserProfile(User):
         pages = self.get_admin_pages()
         comm_pages = [one_page for one_page in pages if self.check_option('pages_community__%s' % one_page.id)]
         if page:
+            if page in comm_pages:
+                comm_pages.remove(page)
             topage_requests = [one_page.from_page for one_page in page.get_requests()]
             page_friends = page.get_friends()
             sum_pages = set(chain(page_friends,topage_requests))

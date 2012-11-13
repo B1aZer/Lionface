@@ -542,25 +542,28 @@ def send_friend_request(request, slug=None):
             except Pages.DoesNotExist:
                 raise Http404
     user_pages = request.user.get_community_pages()
+    if page in user_pages:
+        # remove current
+        user_pages.remove(page)
+    for one_page in user_pages[:]:
+        # remove friends
+        if one_page in page.get_friends():
+            user_pages.remove(one_page)
+    topage_requests = [one_page.from_page for one_page in page.get_requests()]
+    for one_page in topage_requests:
+        # remove already pending requests
+        if one_page in user_pages:
+            user_pages.remove(one_page)
     if len(user_pages) == 1 and not from_page:
         from_page = user_pages[0]
     if not from_page:
-        if page in user_pages:
-            # remove current
-            user_pages.remove(page)
-        for one_page in user_pages:
-            # remove friends
-            if one_page in page.get_friends():
-                user_pages.remove(one_page)
-        topage_requests = [one_page.from_page for one_page in page.get_requests()]
-        for one_page in topage_requests:
-            # remove already pending requests
-            if one_page in user_pages:
-                user_pages.remove(one_page)
-        data['pages'] = render_to_string("pages/page_choose.html",
-                {
-                    'pages' : user_pages,
-                }, RequestContext(request))
+        if user_pages:
+            data['pages'] = render_to_string("pages/page_choose.html",
+                    {
+                        'pages' : user_pages,
+                    }, RequestContext(request))
+        else:
+            data['status']='FAIL'
     else:
         # check if request exist or in friends
         topage_requests = [one_page.from_page for one_page in page.get_requests()]
