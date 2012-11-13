@@ -1,16 +1,16 @@
 
-                <div id="page_{{ page.id }}" style="display: block; padding: 20px 0 0px 0; border-top: 1px solid #EEE; width: 600px;">
-				<table width="100%"><tr><td width="85">
+                <div id="page_{{ page.id }}" style="display: block; width: 600px; position: relative; left: -95px;">
+				<table width="100%"><tr><td width="85" align="right"><div style="position: relative; top: -10px; left: -5px;">
                 {% if page.type == 'BS' %}
                 <a href="{% url business-page slug=page.username %}">
-                     <img src="" alt="{{page.id}}" width="75" height="75"  />
+                     <img src="" alt="{{page.id}}" width="50" height="50"  />
                 </a> 
                 {% else %}   
                  <a href="{% url nonprofit-page slug=page.username %}">
-                     <img src="" alt="{{page.id}}" width="75" height="75"  />
+                     <img src="" alt="{{page.id}}" width="50" height="50"  />
                 </a>
                 {% endif %}
-					</td><td align="left" style="padding: 10px;">
+					</div></td><td align="left" style="padding: 10px;">
                 {% if page.type == 'BS' %}
                     <a href="{% url business-page slug=page.username %}" style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</a> 
                 {% else %}   

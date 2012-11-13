@@ -3,9 +3,9 @@
 
 {% block love_button %}
     {% if current_user in page.get_lovers %}
-        <a href="#" class="love love_button loved">Loved</a>
+        <a href="#" class="love love_button loved" style="font-size: 8pt; border: 3px solid #FAFAFA; color: #F58;">Loved</a>
     {% else %}
-        <a href="#" class="love love_button">Love</a>
+        <a href="#" class="love love_button" style="font-size: 8pt; border: 3px solid #FAFAFA;">Love</a>
     {% endif %}
 {% endblock %}
 
