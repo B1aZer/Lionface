@@ -345,12 +345,16 @@ LionFace.ProfileImages.prototype = {
         $(item).attr('popup', true);
         $('.image_zone_view').find('#prev, #next').hide().find('img').hide();
         $('.image_zone_view #image').hide().html('');
+        $('.image_zone_info #make_comment').hide();
+        if (change)
+            $('.image_zone_info #make_comment textarea').val('');
         $('.image_zone_view #loader').show();
         var image = $('<img>');
         $(image).load(function() {
             $('.image_zone_view #loader').hide();
             $('.image_zone_view #image').show();
             $('.image_zone_view').find('#prev, #next').show();
+            $('.image_zone_info #make_comment').show();
             _this.popup_resize();
         });
         $('.image_zone_view #image').append( $(image) );
@@ -407,6 +411,21 @@ LionFace.ProfileImages.prototype = {
         });
         $('.image_zone_view #next').click(function(event) {
             _this.popup_to_next();
+        });
+        $('.image_zone_info #make_comment textarea').keyup(function(event) {
+            var KEYCODE_ENTER = 13;
+            if (event.keyCode == KEYCODE_ENTER) {
+                console.log( 'send comment' );
+            } else {
+                var diff = this.scrollHeight - this.clientHeight;
+                if (!isNaN(diff) && diff != 0) {
+                    if (diff > 0) {
+                        $(this).height($(this).height() + 14 + 'px');
+                    } else {
+                        $(this).height($(this).height() - 14 + 'px');
+                    }
+                }
+            }
         });
     },
 

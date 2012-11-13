@@ -559,22 +559,6 @@ class UserImages(models.Model):
 
 def create_user_images(sender, instance, created, **kwargs):
     if created:
-        '''
-        # UPDATE account_images SET rating = (SELECT MAX(rating) FROM account_images WHERE profile_id = id)+1
-        #    WHERE id = id;
-        from django.db import connection, transaction
-        
-        cursor = connection.cursor()
-        sql = """UPDATE %s SET rating = (SELECT MAX(rating) FROM %s WHERE profile_id = %d)+1 \
-WHERE id = %d""" % (
-            instance._meta.db_table,
-            instance._meta.db_table,
-            instance.profile.id,
-            instance.id
-        )
-        cursor.execute(sql)
-        transaction.commit_unless_managed()
-        '''
         instance.rating = instance.id
         instance.save()
 post_save.connect(create_user_images, sender=UserImages)
@@ -592,6 +576,9 @@ def delete_user_images(sender, instance, **kwargs):
     if UserImages.objects.filter(image=instance.image).count() == 0:
         instance.image.delete()
 post_delete.connect(delete_user_images, sender=UserImages)
+
+
+
 
 
 class UserImageTag(models.Model):
