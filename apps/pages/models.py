@@ -7,8 +7,31 @@ PAGE_TYPE = (
         ('NP','Nonprofit Page'),
 )
 
+class PageRequest(models.Model):
+    from_page = models.ForeignKey('Pages', related_name='from_page')
+    to_page = models.ForeignKey('Pages', related_name='to_page')
+    date = models.DateTimeField(auto_now_add=True)
+    is_hidden = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("from_page", "to_page")
+
+    def accept(self):
+        self.from_page.friends.add(self.to_page)
+        self.is_accepted = True
+        self.save()
+
+    def hide(self):
+        self.is_hidden = True
+        self.save()
+
+    def decline(self):
+        self.delete()
+
 class Pages(models.Model):
     name = models.CharField(max_length='200')
+    friends = models.ManyToManyField('self', related_name='friends')
     loves = models.IntegerField(default=0)
     username = models.CharField(max_length='200', validators=[validate_slug], unique=True)
     url = models.URLField(max_length='2000', null=True, blank=True)
@@ -32,6 +55,24 @@ class Pages(models.Model):
 
     def get_admins(self):
         return self.admins.all()
+
+    def get_community_admins(self):
+        comm_admins = [admin
+                for admin in self.admins.all()
+                    if admin.check_option('pages_community__%s' % self.id)]
+        return comm_admins
+
+    def get_requests(self):
+        return self.to_page.filter(is_hidden=False, is_accepted=False)
+
+    def get_accepted_requests(self):
+        return self.from_page.filter(is_hidden=False, is_accepted=True)
+
+    def get_friends(self):
+        return self.friends.all()
+
+    def get_friends_count(self):
+        return self.friends.count()
 
     @models.permalink
     def get_absolute_url(self):

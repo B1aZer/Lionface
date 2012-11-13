@@ -415,6 +415,32 @@ class UserProfile(User):
     def get_admin_pages(self):
         return self.pages_admin.all()
 
+    def get_community_pages(self):
+        pages = self.get_admin_pages()
+        comm_pages = [page for page in pages if self.check_option('pages_community__%s' % page.id)]
+        return comm_pages
+
+    def get_community_pages_friends(self, friendpage=None):
+        pages = self.get_admin_pages()
+        comm_pages = [page for page in pages if self.check_option('pages_community__%s' % page.id)]
+        if friendpage:
+            friends = []
+            for page in comm_pages:
+                if friendpage in page.get_friends():
+                    friends.append(page)
+        else:
+            friends = []
+            for page in comm_pages:
+                for friend in page.get_friends():
+                    if friend not in friends:
+                        friends.append(friend)
+        return friends
+
+    def get_community_pages_count(self):
+        pages = self.get_admin_pages()
+        comm_pages = [page for page in pages if self.check_option('pages_community__%s' % page.id)]
+        return len(comm_pages)
+
     @models.permalink
     def get_absolute_url(self):
         return ('profile.views.profile', [str(self.username)])

@@ -206,10 +206,17 @@ def check_pages_updates(user,page):
     return user.check_option('pages_updates__%s' % page.id)
 
 @register.filter(name="check_pages_community")
-def check_pages_community(user,page):
+def check_pages_community(user,page=None):
     if user.is_anonymous():
         return False
+    if not page:
+        return user.get_community_pages_count()
     return user.check_option('pages_community__%s' % page.id)
+
+@register.filter(name="get_community_pages_friends")
+def get_community_pages_friends(user,page):
+    return user.get_community_pages_friends(page)
+
 
 
 

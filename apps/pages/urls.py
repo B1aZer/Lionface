@@ -21,6 +21,11 @@ urlpatterns = patterns('',
     url(r'^page/(?P<slug>\w+)/page_content/$', views.page_content),
     url(r'^page/(?P<slug>\w+)/settings/$', views.settings),
     url(r'^page/(?P<slug>\w+)/settings_admins/$', views.settings_admins),
+    url(r'^page/(?P<slug>\w+)/send_request/$', views.send_friend_request),
+    url(r'^page/(?P<slug>\w+)/remove_friend/$', views.remove_friend_page),
+    url(r'^page/(?P<slug>\w+)/accept_request/(?P<request_id>\d+)/$', views.accept_friend_request),
+    url(r'^page/(?P<slug>\w+)/decline_request/(?P<request_id>\d+)/$', views.decline_friend_request),
+    url(r'^page/(?P<slug>\w+)/hide_request/(?P<request_id>\d+)/$', views.hide_friend_request),
     url(r'^update/$', views.update),
 )
 

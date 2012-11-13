@@ -508,6 +508,7 @@ def delete_page(request, slug=None):
             return redirect('pages.views.settings', slug=page.username)
     return redirect('pages.views.main')
 
+
 @login_required
 def page_content(request, slug=None):
     data = {'status':'OK'}
@@ -523,5 +524,122 @@ def page_content(request, slug=None):
                         'page':page,
                     }, RequestContext(request))
     return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def send_friend_request(request, slug=None):
+    data = {'status':'OK'}
+    from_page = None
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    if request.method == 'POST':
+        page_id = request.POST.get('page_id',None)
+        if page_id:
+            try:
+                from_page = Pages.objects.get(id=int(page_id))
+            except Pages.DoesNotExist:
+                raise Http404
+    user_pages = request.user.get_community_pages()
+    if len(user_pages) == 1 and not from_page:
+        from_page = user_pages[0]
+    if not from_page:
+        if page in user_pages:
+            # remove current
+            user_pages.remove(page)
+        for one_page in user_pages:
+            # remove friends
+            if one_page in page.get_friends():
+                user_pages.remove(one_page)
+        topage_requests = [one_page.from_page for one_page in page.get_requests()]
+        for one_page in topage_requests:
+            # remove already pending requests
+            if one_page in user_pages:
+                user_pages.remove(one_page)
+        data['pages'] = render_to_string("pages/page_choose.html",
+                {
+                    'pages' : user_pages,
+                }, RequestContext(request))
+    else:
+        # check if request exist or in friends
+        topage_requests = [one_page.from_page for one_page in page.get_requests()]
+        if from_page in page.get_friends() or from_page in topage_requests:
+            data['status']='FAIL'
+            return HttpResponse(json.dumps(data), "application/json")
+        page_request = page.to_page.create(from_page = from_page, \
+                                        to_page = page)
+
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def remove_friend_page(request, slug=None):
+    data = {'status':'OK'}
+    friend = None
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    if request.method == 'POST':
+        page_id = request.POST.get('page_id',None)
+        if page_id:
+            try:
+                friend = Pages.objects.get(id=int(page_id))
+            except Pages.DoesNotExist:
+                raise Http404
+    user_page_friends = request.user.get_community_pages_friends(page)
+    if len(user_page_friends) == 1 and not friend:
+        friend = user_page_friends[0]
+    if not friend:
+        data['pages'] = render_to_string("pages/page_choose.html",
+                    {
+                        'pages' : user_page_friends,
+                    }, RequestContext(request))
+    else:
+        page.friends.remove(friend)
+        PageRequest.objects.filter(to_page=page, from_page=friend).delete()
+        PageRequest.objects.filter(to_page=friend, from_page=page).delete()
+        data['pages_count'] = len(user_page_friends) - 1
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def accept_friend_request(request, slug=None, request_id=None):
+    data = {'status':'OK'}
+    if request_id:
+        try:
+            page_request = PageRequest.objects.get(id=int(request_id))
+            page_request.accept()
+        except PageRequest.DoesNotExist:
+            raise Http404
+    return redirect(page_request.to_page.get_absolute_url())
+
+
+@login_required
+def decline_friend_request(request, slug=None, request_id=None):
+    data = {'status':'OK'}
+    if request_id:
+        try:
+            page_request = PageRequest.objects.get(id=int(request_id))
+            page_request.decline()
+        except PageRequest.DoesNotExist:
+            raise Http404
+    return redirect(page_request.to_page.get_absolute_url())
+
+
+@login_required
+def hide_friend_request(request, slug=None, request_id=None):
+    data = {'status':'OK'}
+    if request_id:
+        try:
+            page_request = PageRequest.objects.get(id=int(request_id))
+            page_request.hide()
+        except PageRequest.DoesNotExist:
+            raise Http404
+    return redirect(page_request.from_page.get_absolute_url())
+
+
+
 
 

@@ -53,6 +53,7 @@
                 <a href="{% url pages.views.settings slug=one_page.username %}">Settings</a> 
                 {% endif %}
                 <div style="display: inline-block; color: #F58; padding: 4px;">{{ one_page.loves }}</div>
+                <div >friends: {{ one_page.get_friends_count }}</div>
             </div></div>
 		</div>
 	</div>

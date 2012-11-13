@@ -1,0 +1,5 @@
+<select id="page_choose_select">
+{% for page in pages %}
+        <option value="{{ page.id }}">{{ page.name }}</option>
+{% endfor %}
+</select>

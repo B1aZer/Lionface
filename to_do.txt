@@ -1,3 +1,5 @@
+#pages$
+not unique -> delete requests
 ##next###
 redirect after create!!
 

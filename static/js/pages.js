@@ -51,6 +51,7 @@ LionFace.Pages.prototype = {
 
         /** love counts */
         // moved to site.js
+
     },
 
     bind_page_functions : function() {
@@ -221,7 +222,57 @@ LionFace.Pages.prototype = {
                     }
                 }
             });
-        })
+        });
+
+        /** page friend request */
+        $(document).on('click','.page_add_friend, .page_remove_friend', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            var send_data = $('#page_choose_select').val();
+            if (!self.hasClass('request_sent')) {
+                make_request({
+                    url:url,
+                    data:{
+                        'page_id':send_data,
+                    },
+                    callback:function(data) {
+                        if (data.status == 'OK') {
+                            if (data.pages) {
+                                // if choosing from select
+                                $('#page_chooose_div').append(data.pages);
+                                $('#page_choose_select').focus();
+                                // hide other button
+                                if (self.hasClass('page_remove_friend')) {
+                                    $('.page_add_friend').hide();
+                                }
+                                else {
+                                    $('.page_remove_friend').hide();
+                                }
+                            }
+                            else {
+                                if (self.hasClass('page_remove_friend')) {
+                                    if (!data.pages_count) {
+                                        self.remove();
+                                    }
+                                    $('.page_add_friend').show();
+                                }
+                                else {
+                                    self.html('Page request sent');
+                                    self.addClass('request_sent');
+                                    $('.page_remove_friend').show();
+                                }
+                                $('#page_choose_select').remove();
+                            }
+                        }
+                        else {
+                            $('#page_choose_select').remove();
+                        }
+                    }
+                });
+            }
+        });
+
     },
     load_page_feed : function(elem, page) {
         var elem = elem || $('#page_feed');
