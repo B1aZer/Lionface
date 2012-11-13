@@ -272,42 +272,35 @@ LionFace.ProfileImages.prototype = {
             left: $(window).scrollLeft() + 'px'
         });
         $('.image_zone_view').width($('.image_zone').width() - 351);
-        $('.image_zone_view #image').mousemove();
-        $('.image_zone_view #next').css({
-            'margin-left': $('.image_zone').width() - 401,
+        $('.image_zone_view').find('#prev, #next').css({
+            'width': $('.image_zone').width()*0.2 + 'px',
+        }).find('img').css({
             'margin-top': ($('.image_zone').height()-45)/2,
         });
-        $('.image_zone_view #prev').css({
-            'margin-top': ($('.image_zone').height()-45)/2,
+        $('.image_zone_view #next').css({
+            'margin-left': $('.image_zone').width()*(1 - 0.2) - 351,
         });
         $('.image_zone_view #loader').css({
             'line-height': $('.image_zone').height() + 'px',
         });
         var image = $('.image_zone_view #image img');
         if ($(image).length) {
-            if ($(image).attr('startwidth') == undefined)
-                $(image).attr('startwidth', $(image).width());
-            if ($(image).attr('startheight') == undefined)
-                $(image).attr('startheight', $(image).height());
-            
-            var imgw = $(image).attr('startwidth');
-            var imgh = $(image).attr('startheight');
             var winw = $('.image_zone_view').width();
             var winh = $('.image_zone_view').height();
-            //console.log( imgw, winw, imgh, winh );
-            if ( (imgw >= winw) || (imgh >= winh) ) {
-                if ( (imgw/winw) > (imgh/winh) ) {
-                    $(image).width(winw);
-                } else {
-                    $(image).height(winh);
-                }
-            } else {
-                if ( (imgw/winw) > (imgh/winh) ) {
-                    $(image).width(winw);
-                } else {
-                    $(image).height(winh);
-                }
-            }
+            var ratioX, ratioY, scale, newWidth, newHeight;
+            
+            ratioX = winw / $(image).width();
+            ratioY = winh / $(image).height();
+            scale = ratioX < ratioY ? ratioX : ratioY;
+            newWidth = parseInt($(image).width() * scale, 10);
+            newHeight = parseInt($(image).height() * scale, 10);
+            $(image).css({
+                "width": newWidth + "px",
+                "height": newHeight + "px",
+            }).attr({
+                "width": newWidth,
+                "height": newHeight
+            });
         }
         $(image).css({
             'margin-top': ($('.image_zone_view').height() - $(image).height()) / 2,
@@ -317,34 +310,46 @@ LionFace.ProfileImages.prototype = {
 
     popup_to_prev: function() {
         var now = $('.image_container li[popup=true]');
-        if ($(now).prev().length > 0) {
-            $(now).attr('popup', false);
-            $(now).prev().attr('popup', true);
-            this.popup_change_item($(now).prev());
+        var next = undefined;
+        if ($('.image_container li').length > 1) {
+            if ($(now).prev().length > 0) {
+                next = $(now).prev();
+            } else {
+                next = $('.image_container li:last');
+            }
         }
+        this.popup_change_item($(next));
     },
 
     popup_to_next: function() {
-        var now = $('.image_container li[popup=true]')
-        if ($(now).next().length > 0) {
-            $(now).attr('popup', false);
-            $(now).next().attr('popup', true);
-            this.popup_change_item($(now).next());
+        var now = $('.image_container li[popup=true]');
+        var next = undefined;
+        if ($('.image_container li').length > 1) {
+            if ($(now).next().length > 0) {
+                next = $(now).next();
+            } else {
+                next = $('.image_container li:first');
+            }
         }
+        this.popup_change_item($(next));
     },
 
     popup_change_item: function(item, change) {
-        var _this = this;
+        if (item == undefined)
+            return false;
         if (change == undefined)
             change = true;
-        this.popup_resize();
-        //$('.image_zone_view').find('#prev,#next').hide();
+        var _this = this;
+        $('.image_container li[popup=true]').attr('popup', false);
+        $(item).attr('popup', true);
+        $('.image_zone_view').find('#prev, #next').hide().find('img').hide();
         $('.image_zone_view #image').hide().html('');
         $('.image_zone_view #loader').show();
         var image = $('<img>');
         $(image).load(function() {
             $('.image_zone_view #loader').hide();
             $('.image_zone_view #image').show();
+            $('.image_zone_view').find('#prev, #next').show();
             _this.popup_resize();
         });
         $('.image_zone_view #image').append( $(image) );
@@ -380,33 +385,28 @@ LionFace.ProfileImages.prototype = {
         });
         $(window).on('resize', this.popup_resize);
         $(document).on('resize', this.popup_resize);
-        /*
-        $('.image_zone_view #image').mousemove(function(event) {
-            console.log( event );
-            if (event == undefined)
-                event = $('.image_zone_view #image').prevent;
-            $('.image_zone_view #image').prevent = event;
-            var position = event.clientX - $('.image_zone_view #image').offset().left;
-            console.log( event, position, $('.image_zone_view #image').width(), position/$('.image_zone_view #image').width() );
-            if (position/$('.image_zone_view #image').width() < 0.2 && $('.image_container li[popup=true]').prev().length > 0) {
-                $(this).parent().find('#prev').fadeIn(_this.options.popup_fadeDuration);
-            } else if (position/$('.image_zone_view #image').width() > 0.8 && $('.image_container li[popup=true]').next().length > 0) {
-                $(this).parent().find('#next').fadeIn(_this.options.popup_fadeDuration);
-            } else {
-                $(this).parent().find('#prev,#next').fadeOut(_this.options.popup_fadeDuration);
+        $('.image_zone_view').find('#prev, #next').hover(
+            function(event) {
+                if ($('.image_container li').length > 1) {
+                    $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
+                }
+            },
+            function(event) {
+                if ($('.image_container li').length > 1) {
+                    $(this).find('img').fadeOut(_this.options.popup_fadeDuration);
+                }
+            }
+        ).mousemove(function(event) {
+            if ($('.image_container li').length > 1) {
+                $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
             }
         });
-        $('.image_zone_view #image').click(function(event) {
-            console.log( 'click' );
-            var position = event.clientX - $(this).offset().left;
-            if (position/$(this).width() < 0.2) {
-                _this.popup_to_prev();
-            } else if (position/$(this).width() > 0.8) {
-                _this.popup_to_next();
-            }
-            return false;
+        $('.image_zone_view #prev').click(function(event) {
+            _this.popup_to_prev();
         });
-        */
+        $('.image_zone_view #next').click(function(event) {
+            _this.popup_to_next();
+        });
     },
 
     bind_sorting: function() {

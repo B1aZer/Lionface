@@ -41,7 +41,11 @@ class ImageForm(forms.ModelForm):
         counter.count += 1
         number = counter.count
         counter.save()
-        self.cleaned_data['photo'].name = str(number) + os.path.splitext(self.cleaned_data['photo'].name)[1]
+        self.cleaned_data['photo'].name = '%s_%d%s' % (
+            user.username,
+            number,
+            os.path.splitext(self.cleaned_data['photo'].name)[1],
+        )
         image = UserImage.objects.create(
             image=self.cleaned_data['photo'],
             owner=user
