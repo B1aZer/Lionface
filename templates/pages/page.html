@@ -22,9 +22,10 @@ LionFace.User.page_list = true;
             <div id="page_chooose_div">
                 {% if request.user|get_community_pages_friends:page %}
                 <a class="profile_btn page_remove_friend" href="{% url pages.views.remove_friend_page slug=page.username %}" style="cursor: pointer;">- Remove</a>
-                {% else %}
                 {% endif %}
+                {% if request.user|get_community_friends_for:page %}
                 <a class="profile_btn page_add_friend" href="{% url pages.views.send_friend_request slug=page.username %}" style="cursor: pointer;">+ Add</a>
+                {% endif %}
             </div>
         </div>
         {% endif %}

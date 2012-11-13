@@ -2,6 +2,8 @@
 not unique -> delete requests
 ##next###
 redirect after create!!
+### DoS ###
+loop problem
 
 deleting sharing origin wont delete children
 wrong privacy on deleted

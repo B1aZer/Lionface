@@ -436,9 +436,14 @@ class UserProfile(User):
                         friends.append(friend)
         return friends
 
-    def get_community_pages_count(self):
+    def get_community_pages_count(self, page=None):
         pages = self.get_admin_pages()
-        comm_pages = [page for page in pages if self.check_option('pages_community__%s' % page.id)]
+        comm_pages = [one_page for one_page in pages if self.check_option('pages_community__%s' % one_page.id)]
+        if page:
+            topage_requests = [one_page.from_page for one_page in page.get_requests()]
+            page_friends = page.get_friends()
+            sum_pages = set(chain(page_friends,topage_requests))
+            comm_pages = [one_page for one_page in comm_pages if one_page not in sum_pages]
         return len(comm_pages)
 
     @models.permalink

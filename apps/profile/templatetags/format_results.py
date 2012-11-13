@@ -217,6 +217,10 @@ def check_pages_community(user,page=None):
 def get_community_pages_friends(user,page):
     return user.get_community_pages_friends(page)
 
+@register.filter(name="get_community_friends_for")
+def get_community_friends_for(user,page):
+    return user.get_community_pages_count(page)
+
 
 
 

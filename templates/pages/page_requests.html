@@ -1,5 +1,5 @@
+<div id="page_friend_requests" style="text-align:center; width: 100%;">
 {% if request.user in page.get_community_admins %}
-        <div id="page_friend_requests" style="text-align:center; width: 100%;">
             {% for reqst in page.get_requests %} 
                 <div style="display: block;">
                     <span> {{reqst.from_page.name }} has listed you as a friend. </span>
@@ -13,5 +13,5 @@
                     <a href="{% url pages.views.hide_friend_request slug=page.username request_id=reqst.id %}">hide</a>
                 </div>
             {% endfor %} 
-        </div>
 {% endif %}
+</div>

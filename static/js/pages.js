@@ -258,8 +258,7 @@ LionFace.Pages.prototype = {
                                     $('.page_add_friend').show();
                                 }
                                 else {
-                                    self.html('Page request sent');
-                                    self.addClass('request_sent');
+                                    /*self.addClass('request_sent');*/
                                     $('.page_remove_friend').show();
                                 }
                                 $('#page_choose_select').remove();

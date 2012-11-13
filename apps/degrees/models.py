@@ -231,6 +231,11 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                                 dep.path = "%s,%s" % (dep.from_user.id, shortest.path)
                                 dep.distance = shortest.distance + 1
                                 dep.save()
+                                # FIXME
+                                # THis will not remove all elements
+                                # maybe we can use
+                                # for item in mylist[:]:
+                                # but needs to be tested
                                 deps_lost.remove(dep)
                                 updating = True
                             else:
@@ -259,6 +264,8 @@ def create_degree_of_separation(sender, instance, action, reverse, model, pk_set
                                 dep.save()
                                 updated_count += 1
                                 updating_rev = True
+                                # FIXME
+                                # look above
                                 deps_rev_lost.remove(dep)
                             else:
                                 if shortest.distance + 1 < dep.distance:
