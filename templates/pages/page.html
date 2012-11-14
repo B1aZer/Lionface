@@ -9,8 +9,8 @@ LionFace.User.page_list = true;
 {% endblock %}  
 
 {% block content %}
-  <div class="content_area">
-    <div id="profile_top">
+  <div class="content_area" style="position: relative; top: -12px;">
+    <div id="profile_top" style="z-index: 999;">
         {% include 'pages/page_requests.html' %}
         <div class="left">{{page.username}} 
             {% if page.url %}
