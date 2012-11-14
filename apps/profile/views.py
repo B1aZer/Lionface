@@ -30,7 +30,7 @@ except ImportError:
 
 
 @login_required
-def feed(request, username=None):
+def feed(request, username):
     return render_to_response(
         'profile/feed.html',
         {
@@ -50,14 +50,15 @@ def timeline(request):
 
 @login_required
 @unblocked_users
-def profile_image(request, username=None, rows_show=4):
-    if username != None:
-        try:
-            profile_user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            raise Http404
-    else:
-        profile_user = request.user
+def profile_image(request, username, rows_show=4):
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
+
+    is_visible = profile_user.check_visiblity('profile_image', request.user)
+    if not is_visible:
+        raise Http404
 
     if request.method == 'POST':
         if 'image' in request.POST:
@@ -71,10 +72,6 @@ def profile_image(request, username=None, rows_show=4):
                 return HttpResponseRedirect(request.path)
     else:
         form = ImageForm()
-
-    is_visible = profile_user.check_visiblity('profile_image', request.user)
-    if not is_visible:
-        raise Http404
 
     image_rows = UserImages.objects.filter(profile=profile_user) \
         .select_related('image').get_rows(0, rows_show)
@@ -95,22 +92,16 @@ def profile_image(request, username=None, rows_show=4):
 @login_required
 @unblocked_users
 def profile_image_more(request, username):
-    if request.method != 'POST':
-        return HttpResponseBadRequest('Method must be POST.')
-
     row = request.POST.get('row', None)
     try:
         row = int(row)
     except (TypeError, ValueError), e:
         return HttpResponseBadRequest('Bad row was received.')
 
-    if username != None:
-        try:
-            profile_user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            raise Http404
-    else:
-        profile_user = request.user
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
 
     is_visible = profile_user.check_visiblity('profile_image', request.user)
     if not is_visible:
@@ -125,7 +116,7 @@ def profile_image_more(request, username):
     data = {}
     data['total_rows'] = total_rows
     data['html'] = render_to_string('profile/image_li.html', {
-        'rows' : image_row,
+        'rows': image_row,
         'profile_user': profile_user,
     }, context_instance=RequestContext(request))
     data['positions'] = UserImages.objects.filter(profile=profile_user) \
@@ -138,9 +129,6 @@ def profile_image_more(request, username):
 @login_required
 @unblocked_users
 def profile_image_primary(request, username):
-    if request.method != 'POST':
-        return HttpResponseBadRequest('Method must be POST.')
-
     if request.user.username != username:
         raise Http404
     profile_user = request.user
@@ -172,9 +160,6 @@ def profile_image_primary(request, username):
 @login_required
 @unblocked_users
 def profile_image_delete(request, username):
-    if request.method != 'POST':
-        return HttpResponseBadRequest('Method must be POST.')
-
     if request.user.username != username:
         raise Http404
     profile_user = request.user
@@ -202,7 +187,7 @@ def profile_image_delete(request, username):
             image_row = UserImages.objects.filter(profile=profile_user) \
                 .select_related('image').get_row(row)[-1:]
             data['html'] = render_to_string('profile/image_li.html', {
-                'rows' : image_row,
+                'rows': image_row,
                 'profile_user': profile_user,
             }, context_instance=RequestContext(request))
         data['photos_count'] = profile_user.all_images.count()
@@ -219,9 +204,6 @@ def profile_image_delete(request, username):
 @login_required
 @unblocked_users
 def profile_image_change_position(request, username):
-    if request.method != 'POST':
-        return HttpResponseBadRequest('Method must be POST.')
-
     if request.user.username != username:
         raise Http404
     profile_user = request.user
@@ -254,17 +236,96 @@ def profile_image_change_position(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@login_required
+@unblocked_users
+def profile_image_comments_create(request, username):
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
+
+    is_visible = profile_user.check_visiblity('profile_image', request.user)
+    if not is_visible:
+        raise Http404
+
+    try:
+        comment = request.REQUEST['comment']
+    except KeyError:
+        return HttpResponseBadRequest("Comment wasn't received.")
+
+    try:
+        image = UserImages.objects.filter(profile=profile_user) \
+            .select_related('image') \
+            .only('image') \
+            .get(pk=request.REQUEST.get('pk', None)).image
+    except UserImages.DoesNotExist as e:
+        return HttpResponseBadRequest('Bad pk was received.')
+
+    data = {}
+    try:
+        comment = UserImageComments.objects.create(
+            image=image,
+            owner=request.user,
+            message=comment
+        )
+        data['comments'] = render_to_string('profile/image_comments_li.html', {
+            'comments': [comment],
+            'profile_user': profile_user,
+        }, context_instance=RequestContext(request))
+    except Exception as e:
+        data['status'] = 'fail'
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+@unblocked_users
+def profile_image_comments_part(request, username, comments_show=5):
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
+
+    is_visible = profile_user.check_visiblity('profile_image', request.user)
+    if not is_visible:
+        raise Http404
+
+    try:
+        comments_show = int(request.REQUEST.get('comments_show', comments_show))
+    except (TypeError, ValueError) as e:
+        return HttpResponseBadRequest('Bad comments_show was received.')
+
+    try:
+        image = UserImages.objects.filter(profile=profile_user) \
+            .select_related('image') \
+            .only('image') \
+            .get(pk=request.REQUEST.get('pk', None)).image
+    except UserImages.DoesNotExist as e:
+        return HttpResponseBadRequest('Bad pk was received.')
+
+    data = {}
+    try:
+        data['count'] = image.comments.count()
+        data['comments'] = render_to_string('profile/image_comments_li.html', {
+            'comments': image.comments.select_related('owner')[:comments_show],
+            'profile_user': profile_user,
+        }, context_instance=RequestContext(request))
+    except Exception as e:
+        data['status'] = 'fail'
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 #@login_required
 @unblocked_users
 #@default_user
 def profile(request, username='admin'):
-    if username != None:
-        try:
-            profile_user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            raise Http404
-    else:
-        profile_user = request.user
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
 
     form = ImageForm()
     form_mess = MessageForm()
@@ -317,15 +378,12 @@ def profile(request, username='admin'):
 
 @login_required
 @unblocked_users
-def albums(request, username=None):
+def albums(request, username):
     """Albums view"""
-    if username != None:
-        try:
-            profile_user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            raise Http404
-    else:
-        profile_user = request.user
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
 
     return render_to_response(
         'profile/albums.html',
@@ -338,14 +396,11 @@ def albums(request, username=None):
 
 @login_required
 @unblocked_users
-def album_posts(request, username=None, album_id=None):
-    if username != None:
-        try:
-            profile_user = UserProfile.objects.get(username=username)
-        except UserProfile.DoesNotExist:
-            raise Http404
-    else:
-        profile_user = request.user
+def album_posts(request, username, album_id=None):
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
 
     if album_id:
         try:
@@ -369,7 +424,7 @@ def album_posts(request, username=None, album_id=None):
     )
 
 @login_required
-def album_create(request, username=None):
+def album_create(request, username):
     data = {'status':'FAIL'}
     if request.method == 'POST' and 'album_name' in request.POST:
         data = {'status':'OK'}
@@ -377,13 +432,13 @@ def album_create(request, username=None):
         if created:
             data['html'] = render_to_string('profile/album.html',
                 {
-                    'album' : album,
-                    'profile_user' : request.user,
+                    'album': album,
+                    'profile_user': request.user,
                 }, context_instance=RequestContext(request))
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def album_postion(request, username=None):
+def album_postion(request, username):
     data = {'status':'OK'}
     if request.method == 'POST' and 'album_id' in request.POST:
         album_id = request.POST.get('album_id',None)
@@ -407,7 +462,7 @@ def album_postion(request, username=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def change_album_name(request, username=None):
+def change_album_name(request, username):
     data = {'status':'FAIL'}
     if request.method == 'POST' and 'album_id' in request.POST:
         album_id = request.POST.get('album_id',None)
@@ -423,7 +478,7 @@ def change_album_name(request, username=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def delete_album(request, username=None):
+def delete_album(request, username):
     data = {'status':'FAIL'}
     if request.method == 'POST' and 'album_id' in request.POST:
         album_id = request.POST.get('album_id',None)
@@ -437,7 +492,7 @@ def delete_album(request, username=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 @login_required
-def settings(request, username=None):
+def settings(request, username):
     changed = False
     active = 'basics'
     form = UserInfoForm(instance=request.user,initial = request.user.get_options())
@@ -514,7 +569,7 @@ def settings(request, username=None):
     )
 
 @login_required
-def delete_profile(request, username=None):
+def delete_profile(request, username):
     data = {'status':'FAIL'}
     if request.method == 'POST':
         if 'confirm_password' in request.POST:
@@ -531,7 +586,7 @@ def delete_profile(request, username=None):
 
 @login_required
 @unblocked_users
-def related_users(request,username=None):
+def related_users(request,username):
     if not username:
         profile_user = request.user
     else:
@@ -566,8 +621,8 @@ def related_users(request,username=None):
         if len(data) > 0 and 'ajax' in request.GET:
             data['html'] = render_to_string('profile/related_users.html',
                 {
-                    'current_user' : profile_user,
-                    'users' : list(set(users)),
+                    'current_user': profile_user,
+                    'users': list(set(users)),
                 }, context_instance=RequestContext(request))
             return HttpResponse(json.dumps(data), "application/json")
 
@@ -584,7 +639,7 @@ def related_users(request,username=None):
     )
 
 @login_required
-def reset_picture(request, username=None):
+def reset_picture(request, username):
     profile = request.user
     if profile != request.user:
         raise Http404
@@ -600,7 +655,7 @@ def reset_picture(request, username=None):
 
 @login_required
 @unblocked_users
-def loves(request, username=None):
+def loves(request, username):
     data = {}
     if not username:
         profile_user = request.user
@@ -621,7 +676,7 @@ def loves(request, username=None):
     if request.method == 'GET' and 'ajax' in request.GET:
         data['html'] = render_to_string('pages/pages_loves.html',
                 {
-                    'pages' : pages,
+                    'pages': pages,
                 }, context_instance=RequestContext(request))
         return HttpResponse(json.dumps(data), "application/json")
 

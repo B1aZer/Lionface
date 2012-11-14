@@ -35,16 +35,16 @@
 	bottom: 1;
 	height: 100%;
 }
-.image_zone_view .prev_next {
+.image_zone_view .prev, .image_zone_view .next {
 	position: absolute;
 	z-index: 10001;
 	height: 100%;
 	display: none;
 }
-.image_zone_view #prev img {
+.image_zone_view .prev img {
 	float: left;
 }
-.image_zone_view #next img {
+.image_zone_view .next img {
 	float: right;
 }
 .image_zone_info {
@@ -55,7 +55,16 @@
 	background-color: white;
 	opacity: 0.90;
 }
-.image_zone_info #scroll_area a #thumb {
+.image_zone_info .scroll_area {
+	width: 350px;
+	overflow: hidden;
+	overflow-y: auto;
+	color: #777;
+}
+.image_zone_info .scroll_area .owner {
+	height: 52px;
+}
+.image_zone_info .scroll_area .owner .thumb {
 	float: left;
 	background-size: 50px, 50px;
 	width: 50px; height: 50px;
@@ -64,40 +73,73 @@
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-.image_zone_info #fullname {
-	position: absolute;
+.image_zone_info .scroll_area .owner .fullname {
+	position: relative;
 	float: left;
-	margin: 10px auto auto 75px;
+	top: 7px;
+	left: 15px;
 	color: #777;
 }
-.image_zone_info #username {
-	position: absolute;
+.image_zone_info .scroll_area .owner .username {
+	position: relative;
 	float: left;
-	margin: 5px auto auto 75px;
-	color: #AAA; font-size: 8pt; padding: 3px 0;
+	top: 21px;
+	left: -62px;
+	color: #AAA;
+	font-size: 8pt;
 }
-.image_zone_info #make_comment {
+.image_zone_info .scroll_area .comments .count {
+	margin: 5px auto auto 5px;
+	text-align: left;
+	display: none;
+}
+.image_zone_info .scroll_area .comments ul {
+	margin-top: 10px;
+	width: 350px;
+}
+.image_zone_info .scroll_area .comments li {
+	float: left;
+	text-align: left;
+	margin: 4px auto 0 25px;
+	width: 305px;
+	background-color: #EDEFF4;
+}
+.image_zone_info .scroll_area .comments .thumb {
+	float: left;
+	background-size: 32px, 32px;
+	width: 32px; height: 32px;
+	margin: 4px auto 4px 4px;
+	border: 1px solid #AAA;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.image_zone_info .scroll_area .comments .text {
+	float: left;
+	margin: 7px auto auto 7px;
+}
+.image_zone_info .make_comment {
 	position: absolute;
 	bottom: 10px;
 	width: 350px;
 }
-.image_zone_info #make_comment #thumb {
+.image_zone_info .make_comment .thumb {
 	float: left;
-	margin: 5px auto auto 15px;
+	margin: 0px auto auto 15px;
 	background-size: 32px, 32px;
 	width: 32px; height: 32px;
 	border: 1px solid #AAA;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-.image_zone_info #make_comment form {
+.image_zone_info .make_comment form {
 	float: right;
 	margin: 1px 10px auto auto;
 }
-.image_zone_info #make_comment textarea {
+.image_zone_info .make_comment textarea {
 	margin-top: 5px;
 	width: 275px;
-	height: 20px;
+	height: 17px;
+	overflow: hidden;
 	resize: none;
 	border-color: #777;
 	border-width: 1px;
@@ -108,29 +150,32 @@
 	padding-top: 3px;
 	padding-left: 3px;
 	padding-right: 3px;
-	overflow: auto;
 }
 </style>
 <div class="image_popup">
 	<div class="image_overlay"></div>
 	<div class="image_zone">
 		<div class="image_zone_view">
-			<div id="loader" style="display: none; height: 100%;"><img src="{% media_url 'images/loader.gif' %}" /></div>
-			<div id="prev" class="prev_next"><img src="{% media_url 'images/prev.png' %}" /></div>
-			<div id="next" class="prev_next"><img src="{% media_url 'images/next.png' %}" /></div>
-			<div id="image" style="display: none;"></div>
+			<div class="loader" style="display: none; height: 100%;"><img src="{% media_url 'images/loader.gif' %}" /></div>
+			<div class="prev"><img src="{% media_url 'images/prev.png' %}" /></div>
+			<div class="next"><img src="{% media_url 'images/next.png' %}" /></div>
+			<div class="image" style="display: none;"></div>
 		</div>
 		<div class="image_zone_info">
-			<div id="close"><a href="#" class="ui-icon ui-icon-closethick" style="margin: 0 0 0 auto;" title="Press Esc for exit"></a></div>
-			<div id="scroll_area">
-				<a id="owner" href="{{ profile_user.get_absolute_url }}">
-					<div{% if request.user == profile_user %} thumb="1"{% endif %} id="thumb" style="background-image: url('/{{ profile_user.photo.thumb_name }}');"></div>
-					<div id="fullname">{{ profile_user.full_name }}</div><br />
-					<div id="username">{{ profile_user.username }}</div>
-				</a>
+			<div class="close"><a href="#" class="ui-icon ui-icon-closethick" style="margin: 0 0 0 auto;" title="Press Esc for exit"></a></div>
+			<div class="scroll_area">
+				<div class="owner"><a href="{{ profile_user.get_absolute_url }}">
+					<div{% if request.user == profile_user %} thumb="1"{% endif %} class="thumb" style="background-image: url('/{{ profile_user.photo.thumb_name }}');"></div>
+					<div class="fullname">{{ profile_user.full_name }}</div>
+					<div class="username">{{ profile_user.username }}</div>
+				</a></div>
+				<div class="comments">
+					<div class="count">Show all <span></span> comments</div>
+					<ul></ul>
+				</div>
 			</div>
-			<div id="make_comment">
-				<div id="thumb" style="background-image: url('/{{ request.user.photo.thumb_name }}');"></div>
+			<div class="make_comment">
+				<div class="thumb" style="background-image: url('/{{ request.user.photo.thumb_name }}');"></div>
 				<form>
 					<textarea name="add_comment_text" placeholder="Add comment..."></textarea>
 				</form>
