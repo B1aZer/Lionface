@@ -515,11 +515,25 @@ post_save.connect(create_user_image, sender=UserImage)
 def delete_user_image(sender, instance, **kwargs):
     # remove all user_image_tag linked with current image
     UserImageTag.objects.filter(image=instance).delete()
+    # code above no need for postgresql ?
     # remove image files from fs
     picture = instance.image
     picture.storage.delete(picture.thumb_path)
     picture.delete(save=False)
 pre_delete.connect(delete_user_image, sender=UserImage)
+
+
+class UserImageComments(models.Model):
+    image = models.ForeignKey('UserImage', related_name='comments')
+    owner = models.ForeignKey('UserProfile')
+    date = models.DateTimeField(auto_now_add=True)
+    message = models.TextField()
+
+    class Meta:
+        ordering = ['date']
+
+    def __unicode__(self):
+        return '%s -- %s to %s by %s' % (self.date, self.message, self.image, self.owner)
 
 
 import post.models
@@ -611,9 +625,6 @@ def delete_user_images(sender, instance, **kwargs):
 post_delete.connect(delete_user_images, sender=UserImages)
 
 
-
-
-
 class UserImageTag(models.Model):
     image = models.ForeignKey('UserImage')
     profile = models.ForeignKey('UserProfile', blank=True, null=True)
@@ -623,7 +634,6 @@ class UserImageTag(models.Model):
 
     def __unicode__(self):
         return '%s in %s' % (self.image, self.profile)
-
 
 
 class Relationship(models.Model):

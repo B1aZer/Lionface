@@ -110,8 +110,8 @@ LionFace.ProfileImages.prototype = {
             _this.swap_images(elem1, elem2, 0);
         }
         function cmp_images(a, b) {
-            a = parseInt($(a).attr('position'));
-            b = parseInt($(b).attr('position'));
+            a = parseInt($(a).data('position'));
+            b = parseInt($(b).data('position'));
             if (a > b) return 1;
             if (a < b) return -1;
             return 0;
@@ -144,7 +144,7 @@ LionFace.ProfileImages.prototype = {
         if (resort == undefined)
             resort = true;
         $('.image_container li').each(function(index, elem) {
-            $(elem).attr('position', data[$(elem).attr('pk')]);
+            $(elem).data('position', data[$(elem).data('pk')]);
         });
         if (resort)
             this.sort_images();
@@ -179,7 +179,7 @@ LionFace.ProfileImages.prototype = {
                 url: LionFace.User['profile_images_url_primary'],
                 type: 'POST',
                 data: {
-                    'pk': $(image_settings).parent().parent().attr('pk'),
+                    'pk': $(image_settings).parent().parent().data('pk'),
                 },
                 success: function(data, textStatus, jqXHR) {
                     if ( data.status == 'ok' ) {
@@ -208,7 +208,7 @@ LionFace.ProfileImages.prototype = {
                 url: LionFace.User['profile_images_url_delete'],
                 type: 'POST',
                 data: {
-                    'pk': $(image_settings).parent().parent().attr('pk'),
+                    'pk': $(image_settings).parent().parent().data('pk'),
                     'row': LionFace.User['profile_images_now_rows'],
                 },
                 success: function(data, textStatus, jqXHR) {
@@ -224,7 +224,7 @@ LionFace.ProfileImages.prototype = {
                             $(li).remove();
                             if ( data.html != undefined ) {
                                 var item = $(data.html).filter('li');
-                                if ( $(item).attr('pk') != $(ul).find('li:last').attr('pk') ) {
+                                if ( $(item).data('pk') != $(ul).find('li:last').data('pk') ) {
                                     _this.create_settings($(item));
                                     $(ul).find('li:last').after( $(item) );
                                 }
@@ -272,18 +272,24 @@ LionFace.ProfileImages.prototype = {
             left: $(window).scrollLeft() + 'px'
         });
         $('.image_zone_view').width($('.image_zone').width() - 351);
-        $('.image_zone_view').find('#prev, #next').css({
+        $('.image_zone_view').find('.prev, .next').css({
             'width': $('.image_zone').width()*0.2 + 'px',
         }).find('img').css({
             'margin-top': ($('.image_zone').height()-45)/2,
         });
-        $('.image_zone_view #next').css({
+        $('.image_zone_view .next').css({
             'margin-left': $('.image_zone').width()*(1 - 0.2) - 351,
         });
-        $('.image_zone_view #loader').css({
+        $('.image_zone_view .loader').css({
             'line-height': $('.image_zone').height() + 'px',
         });
-        var image = $('.image_zone_view #image img');
+        $('.image_zone_info .scroll_area').height(
+            $('.image_zone_info').height()
+            - $('.image_zone_info .close').height()
+            - $('.image_zone_info .make_comment').height()
+            - 15
+        );
+        var image = $('.image_zone_view .image img');
         if ($(image).length) {
             var winw = $('.image_zone_view').width();
             var winh = $('.image_zone_view').height();
@@ -343,22 +349,49 @@ LionFace.ProfileImages.prototype = {
         this.popup_resize();
         $('.image_container li[popup=true]').attr('popup', false);
         $(item).attr('popup', true);
-        $('.image_zone_view').find('#prev, #next').hide().find('img').hide();
-        $('.image_zone_view #image').hide().html('');
-        $('.image_zone_info #make_comment').hide();
-        if (change)
-            $('.image_zone_info #make_comment textarea').val('');
-        $('.image_zone_view #loader').show();
+        $('.image_zone_view').find('.prev, .next').hide().find('img').hide();
+        $('.image_zone_view .image').hide().html('');
+        $('.image_zone_view .loader').show();
+        // load image
         var image = $('<img>');
         $(image).load(function() {
-            $('.image_zone_view #loader').hide();
-            $('.image_zone_view #image').show();
-            $('.image_zone_view').find('#prev, #next').show();
-            $('.image_zone_info #make_comment').show();
+            $('.image_zone_view .loader').hide();
+            $('.image_zone_view .image').show();
+            $('.image_zone_view').find('.prev, .next').show();
+            $('.image_zone_info .make_comment').show();
             _this.popup_resize();
         });
-        $('.image_zone_view #image').append( $(image) );
+        $('.image_zone_view .image').append( $(image) );
         $(image).attr('src', $(item).find('div.image_album').attr('data-original-url'));
+        // load comments
+        var $ul = $('.image_zone_info .comments ul');
+        $.ajax({
+            url: LionFace.User['profile_image_comments_part'],
+            data: {
+                'pk': $(item).data('pk'),
+            },
+            beforeSend: function(jqXHR, settings) {
+                $ul.hide().html('');
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 'ok') {
+                    $(data.comments).filter('li').each(function(index, elem) {
+                        $ul.append($(elem));
+                    });
+                    $ul.fadeIn(200);
+                } else {
+                    this.error(jqXHR, textStatus);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                
+            },
+        });
+        // make comment
+        $('.image_zone_info .make_comment').hide();
+        if (change) {
+            $('.image_zone_info .make_comment textarea').val('');
+        }
     },
 
     popup_start: function(item) {
@@ -384,13 +417,14 @@ LionFace.ProfileImages.prototype = {
             _this.popup_end();
             return false;
         });
-        $('.image_zone_info #close a').click(function() {
+        $('.image_zone_info .close a').click(function() {
             _this.popup_end();
             return false;
         });
         $(window).on('resize', this.popup_resize);
         $(document).on('resize', this.popup_resize);
-        $('.image_zone_view').find('#prev, #next').hover(
+        // arrows
+        $('.image_zone_view').find('.prev, .next').hover(
             function(event) {
                 if ($('.image_container li').length > 1) {
                     $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
@@ -406,25 +440,55 @@ LionFace.ProfileImages.prototype = {
                 $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
             }
         });
-        $('.image_zone_view #prev').click(function(event) {
+        $('.image_zone_view .prev').click(function(event) {
             _this.popup_to_prev();
         });
-        $('.image_zone_view #next').click(function(event) {
+        $('.image_zone_view .next').click(function(event) {
             _this.popup_to_next();
         });
-        $('.image_zone_info #make_comment textarea').keyup(function(event) {
-            var KEYCODE_ENTER = 13;
-            if (event.keyCode == KEYCODE_ENTER) {
-                console.log( 'send comment' );
-            } else {
-                var diff = this.scrollHeight - this.clientHeight;
-                if (!isNaN(diff) && diff != 0) {
-                    if (diff > 0) {
-                        $(this).height($(this).height() + 14 + 'px');
-                    } else {
-                        $(this).height($(this).height() - 14 + 'px');
-                    }
+        // textarea in make_comment
+        $('.image_zone_info .make_comment textarea').autosize({
+            callback: function(ta) {
+                _this.popup_resize();
+            },
+        }).keydown(function(event){
+            var
+            KEYCODE_ENTER = 13,
+            keycode = event.keyCode;
+            if (keycode == KEYCODE_ENTER) {
+                var
+                $this = $(this),
+                val = $this.val();
+                if (val.length > 1) {
+                    $.ajax({
+                        url: LionFace.User['profile_images_comments_create'],
+                        type: 'POST',
+                        data: {
+                            'comment': val,
+                            'pk': $('.image_container li[popup=true]').data('pk'),
+                        },
+                        beforeSend: function(jqXHR, settings) {
+                            $this.data('val', val);
+                            $this.val(' ');
+                            $this.prop('disabled', true);
+                        },
+                        success: function(data, textStatus, jqXHR) {
+                            if (data.status == 'ok') {
+                                $this.val('');
+                                
+                            } else {
+                                this.error(jqXHR, textStatus);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            $this.val($this.data('val'));
+                        },
+                        complete: function(jqXHR, textStatus) {
+                            $this.prop('disabled', false);
+                        },
+                    });
                 }
+                return false;
             }
         });
     },
@@ -460,8 +524,8 @@ LionFace.ProfileImages.prototype = {
                         url: LionFace.User['profile_images_url_change_position'],
                         type: 'POST',
                         data: {
-                            'pk': $(item2).attr('pk'),
-                            'instead': $(item1).attr('pk'),
+                            'pk': $(item2).data('pk'),
+                            'instead': $(item1).data('pk'),
                         },
                         success: function(data, textStatus, jqXHR) {
                             if (data.status == 'ok') {
