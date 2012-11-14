@@ -1,5 +1,5 @@
 {% for row in rows %}
-<li class="ui-state-default" position="{{ row.rating }}"{% if profile_user == request.user %} pk="{{ row.pk }}"{% endif %}>
+<li class="ui-state-default" data-position="{{ row.rating }}" data-pk="{{ row.pk }}">
 	<div style="background-image: url('/{{ row.image.image.thumb_name }}');" data-original-url="/{{ row.image.image }}" class="image_album">
 		{% if profile_user == request.user %}
 		<div id="image_settings">

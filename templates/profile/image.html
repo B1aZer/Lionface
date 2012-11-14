@@ -55,6 +55,8 @@
 		LionFace.User['profile_images_url_primary'] = "{% url profile-image-primary profile_user.username %}";
 		LionFace.User['profile_images_url_delete'] = "{% url profile-image-delete profile_user.username %}";
 		LionFace.User['profile_images_url_change_position'] = "{% url profile-image-change_position profile_user.username %}";
+		LionFace.User['profile_images_comments_create'] = "{% url profile_image_comments_create profile_user.username %}";
+		LionFace.User['profile_image_comments_part'] = "{% url profile_image_comments_part profile_user.username %}";
 	});
 </script>
 {% endblock %}
@@ -63,7 +65,6 @@
 {% include_media 'profile.js' %}
 <div align="center">
 <div class="image_container" align="center">
-	{% include "profile/image_popup.html" %}
 	<ul>
 	{% for rows in image_rows %}
 		{% include "profile/image_li.html" %}
@@ -74,5 +75,6 @@
 		<a href="#">View more</a>
 	</div>
 </div>
+{% include "profile/image_popup.html" %}
 </div>
 {% endblock %}

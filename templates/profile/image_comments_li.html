@@ -1,0 +1,6 @@
+{% for comment in comments %}
+    <li>
+        <div class="thumb" style="background-image: url('/{{ comment.owner.photo.thumb_name }}');"></div>
+        <div class="text"><b>{{ comment.owner.full_name }}</b> {{ comment.message }}</div>
+    </li>
+{% endfor %}
