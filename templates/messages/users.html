@@ -3,7 +3,7 @@
     <div class="left_col">
         {% block left_col %}
         <div style="position: relative; top: -10px;">
-            {% for user in messages %}
+            {% for user in user_messages %}
             <div style="border: 1px solid #EEE; border-width: 1px 0 0 0;">
                 <div class="message user_id_{{ user.id }} {user: '{{ user.id }}' }">
                     <a href="{{ user.link }}">
@@ -29,17 +29,17 @@
             {% endfor %}
 
 
-            {% if messages %}
+            {% if user_messages %}
             <div style="border: 1px solid #EEE; border-width: 1px 0 0 0; margin-top: 5px;">
                 <table width="100%" style="font-size: 8pt; margin-top: 10px;"><tr>
-                        {% if messages.has_previous %}
-                        <td align="left" width="75"><a href="?page={{ messages.previous_page_number }}" class="profile_nav nav_link">< Newer</a></td>
+                        {% if user_messages.has_previous %}
+                        <td align="left" width="75"><a href="?page={{ user_messages.previous_page_number }}" class="profile_nav nav_link">< Newer</a></td>
                         {% else %}
                         <td align="left" width="75"><a href="javascript:;" class="" style="color:#BBB; padding: 7px; cursor: default; text-decoration: none;">< Newer</a></td>
                         {% endif %}
-                        <td align="center" width="" style="color: #AAA; font-size: 7pt;">{{ messages.number }} of {{ messages.paginator.num_pages }}</td>
-                        {% if messages.has_next %}
-                        <td align="right" width="75"><a href="?page={{ messages.next_page_number }}" class="profile_nav nav_link">Older ></a></td>
+                        <td align="center" width="" style="color: #AAA; font-size: 7pt;">{{ user_messages.number }} of {{ user_messages.paginator.num_pages }}</td>
+                        {% if user_messages.has_next %}
+                        <td align="right" width="75"><a href="?page={{ user_messages.next_page_number }}" class="profile_nav nav_link">Older ></a></td>
                         {% else %}
                         <td align="right" width="75"><a href="javascript:;" class="" style="color:#BBB; padding: 7px; cursor: default; text-decoration: none;">Older ></a></td>
                         {% endif %}

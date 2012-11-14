@@ -257,7 +257,8 @@ $(document).ready(function() {
         load_messages(meta.user,false,1);
     });
 
-    $('#revert_btn').live('click',function() {
+    $('#revert_btn').live('click',function(e) {
+        e.preventDefault();
         if ($('.message_feed').length) {
             if ($('body').data('messages').page) {
                 var page_num = $('body').data('messages').page;

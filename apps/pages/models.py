@@ -1,6 +1,8 @@
 from django.db import models
 from account.models import UserProfile
 from django.core.validators import validate_slug, URLValidator
+from django.db.models.signals import m2m_changed
+from django.db.models import F
 
 PAGE_TYPE = (
         ('BS','Business Page'),
@@ -28,6 +30,13 @@ class PageRequest(models.Model):
 
     def decline(self):
         self.delete()
+
+
+class PagePositions(models.Model):
+    to_page = models.ForeignKey('Pages', related_name='posto_page')
+    from_page = models.ForeignKey('Pages', related_name='postfrom_page')
+    position = models.IntegerField(blank = True, null = True)
+
 
 class Pages(models.Model):
     name = models.CharField(max_length='200')
@@ -71,8 +80,25 @@ class Pages(models.Model):
     def get_friends(self):
         return self.friends.all()
 
+    def get_business_friends(self):
+        bs_pages = self.friends.filter(type='BS')
+        bs_pages = sorted(bs_pages, key= lambda s: self.get_position_for(s))
+        return bs_pages
+
+    def get_nonprofit_friends(self):
+        np_pages = self.friends.filter(type='NP')
+        np_pages = sorted(np_pages, key= lambda s: self.get_position_for(s))
+        return np_pages
+
     def get_friends_count(self):
         return self.friends.count()
+
+    def get_position_for(self, page):
+        try:
+            obj = PagePositions.objects.get(to_page=self, from_page=page)
+            return obj.position
+        except:
+            return 0
 
     @models.permalink
     def get_absolute_url(self):
@@ -91,4 +117,61 @@ class Pages(models.Model):
         self.user.set_option('pages_photos__%s' % self.id,True)
         self.user.set_option('pages_updates__%s' % self.id,True)
         self.user.set_option('pages_community__%s' % self.id,True)
+
+
+def change_friend_position(sender, instance, action, reverse, model, pk_set, using, **kwargs):
+    if action =='post_add':
+        try:
+            page = model.objects.get(id=pk_set.pop())
+        except KeyError:
+            # debugging
+            return
+        friend = instance
+        #import pdb;pdb.set_trace()
+        if friend.type == 'BS':
+            position = len(page.get_business_friends())
+            # for some reason page already in friend's list
+            # adn we can't use pre_add here
+        else:
+            position = len(page.get_nonprofit_friends())
+
+        if page.type == 'BS':
+            friend_position = len(friend.get_business_friends()) - 1
+        else:
+            friend_position = len(friend.get_nonprofit_friends()) - 1
+
+        position_obj = PagePositions(to_page=page, from_page=friend, \
+                    position = position)
+        # make the same for friend
+        position_obj_friend = PagePositions(to_page=friend, from_page=page, \
+                    position = friend_position)
+        position_obj.save()
+        position_obj_friend.save()
+    if action =='post_remove':
+        page = instance
+        try:
+            friend = model.objects.get(id=pk_set.pop())
+        except KeyError:
+            return
+        try:
+            page_pos = PagePositions.objects.get(to_page=page, from_page=friend)
+            page_pos.delete()
+            friend_pos = PagePositions.objects.get(to_page=friend, from_page=page)
+            friend_pos.delete()
+        except:
+            pass
+        # update positions
+        if page_pos:
+            PagePositions.objects.filter(to_page=page, \
+                    position__gt=page_pos.position, \
+                    from_page__type=friend.type)\
+                .update(position=F('position') - 1)
+        if friend_pos:
+            PagePositions.objects.filter(to_page=friend,
+                    position__gt=friend_pos.position,\
+                    from_page__type=page.type)\
+                .update(position=F('position') - 1)
+m2m_changed.connect(change_friend_position, sender=Pages.friends.through)
+
+
 
