@@ -1,6 +1,6 @@
 {% load format_results %}
 
-{% for message in messages %}
+{% for message in user_messages %}
 
 
 <div class="mess{% if not message.read %} mess_unread{% endif %}" {% if request.user == message.user %} style="left: 85px; border: 2px dashed #EEE; background: #FFF;" {% endif %}>

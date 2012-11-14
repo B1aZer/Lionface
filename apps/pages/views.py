@@ -4,6 +4,7 @@ from django.template import RequestContext, TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.shortcuts import render_to_response, redirect
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.db.models import F
 from .forms import *
 from .models import *
 from post.models import PagePost
@@ -641,6 +642,41 @@ def hide_friend_request(request, slug=None, request_id=None):
         except PageRequest.DoesNotExist:
             raise Http404
     return redirect(page_request.from_page.get_absolute_url())
+
+
+@login_required
+def friends_position(request, slug=None):
+    data = {'status':'OK'}
+    if request.method == 'POST':
+        position_bgn = request.POST.get('position_bgn')
+        position_end = request.POST.get('position_end')
+        friend_id = request.POST.get('friend_id')
+        if friend_id:
+            try:
+                #import pdb;pdb.set_trace()
+                page = Pages.objects.get(username=slug)
+                friend = Pages.objects.get(id=int(friend_id))
+                obj = PagePositions.objects.get(to_page=page, from_page=friend)
+                obj.position = position_end
+                obj.save()
+                if position_bgn < position_end:
+                    positions = PagePositions.objects.filter(to_page=page, \
+                            position__gte=position_bgn, \
+                            position__lte=position_end, \
+                            from_page__type=friend.type).exclude(id=obj.id)
+                    positions.update(position=F('position') - 1)
+                elif position_bgn > position_end:
+                    positions = PagePositions.objects.filter(to_page=page,
+                            position__gte=position_end, \
+                            position__lte=position_bgn, \
+                            from_page__type=friend.type).exclude(id=obj.id)
+                    positions.update(position=F('position') + 1)
+            except Pages.DoesNotExist:
+                raise Http404
+
+
+
+    return HttpResponse(json.dumps(data), "application/json")
 
 
 

@@ -5,6 +5,11 @@
 <script>
 LionFace.User.page_id = '{{ page.id }}';
 LionFace.User.page_list = true;
+{% if request.user|check_pages_community:page %}
+LionFace.User.options['pages_community__'+{{ page.id }}] = true;
+{% else %}
+LionFace.User.options['pages_community__'+{{ page.id }}] = false;
+{% endif %} 
 </script>
 {% endblock %}  
 

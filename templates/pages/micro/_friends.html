@@ -1,0 +1,37 @@
+{% load media format_results %}
+<div class="float_left">
+    {% if page.get_friends %}
+	<div class="friend_container">
+            
+            {% if page.get_nonprofit_friends %}
+            <div class="friend_title" style="color: #909e4a;">Nonprofit Friends</div><br />
+            <div class="friends_nonprofit">
+                {% for friend in page.get_nonprofit_friends %} 
+                <div title="{{ friend.id }}" id="page_id_{{ friend.id }}" class="friend_icon">
+                    <a href="{{ friend.get_absolute_url }}">
+                        <img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" />
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            <br /><br />
+            {% endif %}
+            {% if page.get_business_friends %}
+            <div class="friend_title" style="color: #3ea8d2;">Business Friends</div><br />
+            <div class="friends_business">
+                {% for friend in page.get_business_friends %}
+                    {# variables: #}
+                    {# friend.name #}
+                    {# friend.username #}
+                    {# friend.get_absolute_url #}
+                    <div title="{{ friend.id }}" id="page_id_{{ friend.id }}" class="friend_icon">
+                        <a href="{{ friend.get_absolute_url }}">
+                            <img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" />
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+	</div>
+    {% endif %}
+</div>   

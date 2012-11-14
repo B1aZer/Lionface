@@ -86,7 +86,7 @@ def messages(request, username=None):
 
             data = render_to_string('messages/users.html',
                 {
-                    'messages':names,
+                    'user_messages':names,
                 }, context_instance=RequestContext(request))
             return HttpResponse(json.dumps(data), "application/json")
 
@@ -95,7 +95,7 @@ def messages(request, username=None):
         {
             'form':form,
             'send':send,
-            'messages':names,
+            'user_messages':names,
         },
         RequestContext(request)
     )
@@ -146,7 +146,7 @@ def show(request, username=None):
 
         data['html'] = render_to_string('messages/feed.html',
                 {
-                    'messages':messages,
+                    'user_messages':messages,
                 }, context_instance=RequestContext(request))
         data['sort'] = request.user.check_option('reverse') or 'asc'
         data['page'] = page
