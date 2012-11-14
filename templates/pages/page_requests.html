@@ -1,11 +1,13 @@
 <div id="page_friend_requests" style="text-align:center; width: 100%;">
 {% if request.user in page.get_community_admins %}
             {% for reqst in page.get_requests %} 
-                <div class="page_rqst" style="display: block;">
+				<div align="right" style="display: block;">
+                <div class="page_rqst">
                     <span> <a href="">{{reqst.from_page.name }}</a> has listed this Page as a friend. </span>
                     <a href="{% url pages.views.accept_friend_request slug=page.username request_id=reqst.id %}" class="blue_btn" style="color: #FFF; margin: 0 5px;">Accept</a>
                     <a href="{% url pages.views.decline_friend_request slug=page.username request_id=reqst.id %}" style="color: #999;">Decline</a>
                 </div>
+				</div>
             {% endfor %}
             {% for reqst in page.get_accepted_requests %}
                 <div style="display: block; padding: 4px;">

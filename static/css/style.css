@@ -1154,10 +1154,15 @@ a.nav_page:link, a.nav_page:active, a.nav_page:visited {
 	font-size: 11pt;
 }
 
+#page_choose_select {
+	position: relative;
+	top: -5px;
+}
+
 .page_rqst {
 	display: block; 
 	padding: 8px; 
-	margin: 6px 0 10px 0; 
+	margin: 0px 0 10px 0; 
 	border: 1px solid #CCC; 	
 	background: #ffffff; /* Old browsers */
 	background: -moz-linear-gradient(top, #ffffff 0%, #f7f7f7 100%); /* FF3.6+ */
@@ -1170,6 +1175,8 @@ a.nav_page:link, a.nav_page:active, a.nav_page:visited {
 	-moz-border-radius: 3px; 
 	border-radius: 3px;
 	text-align: right;
+	-moz-box-shadow: 0 4px 8px -4px #777;
+	box-shadow: 0 4px 8px -4px #777;
 }
 
 .page a:link, .page a:active, .page a:visited {
