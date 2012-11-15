@@ -268,14 +268,49 @@ LionFace.Pages.prototype = {
                                     $('.page_remove_friend').show();
                                 }
                                 $('#page_choose_select').remove();
+                                $('.choose_help').remove();
                             }
                         }
                         else {
                             $('#page_choose_select').remove();
+                            $('.choose_help').remove();
                         }
                     }
                 });
             }
+        });
+
+        // hide friends icons, if we have more than 4
+        $('.friend_busn_hidden , .friend_nonp_hidden').hide();
+        // show them
+        $(document).on('click','.show_more_friends',function(e) {
+            e.preventDefault();
+            var self = $(this);
+            if (!self.data('shown')) {
+                if (self.hasClass('business_friends_show')) {
+                    $('.friend_busn_hidden').show();
+                }else{
+                    $('.friend_nonp_hidden').show();
+                }
+                self.data('shown',true);
+                self.html('Hide');
+            }
+            else {
+                if (self.hasClass('business_friends_show')) {
+                    $('.friend_busn_hidden').hide();
+                }else{
+                    $('.friend_nonp_hidden').hide();
+                }
+                self.data('shown',false);
+                self.html('Show');
+            }
+        });   
+
+        //on mouse over icon name
+        $(document).on("mouseenter", ".friend_icon", function(){
+            $(this).find('.friend_name').show();
+        }).on("mouseleave", ".friend_icon", function(){
+            $(this).find('.friend_name').hide();
         });
 
     },
@@ -289,9 +324,11 @@ LionFace.Pages.prototype = {
                 pos_bgn = ui.item.index();
             },
             stop: function(event, ui) {
+                /*
                 console.log("New position: " + ui.item.index());
                 console.log("Old position: " + pos_bgn);
                 console.log("ID: " + get_int(ui.item[0].id));
+                */
                 
                 if (ui.item.index() != pos_bgn) {
                     make_request({

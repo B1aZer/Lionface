@@ -7,30 +7,47 @@
             <div class="friend_title" style="color: #909e4a;">Nonprofit Friends</div><br />
             <div class="friends_nonprofit">
                 {% for friend in page.get_nonprofit_friends %} 
-                <div title="{{ friend.id }}" id="page_id_{{ friend.id }}" class="friend_icon">
+                <div title="{{ friend.id }}" id="page_id_{{ friend.id }}"
+                    {% if forloop.counter > 4 %}
+                        class="friend_icon friend_nonp_hidden"
+                        {% else %}
+                        class="friend_icon"
+                        {% endif %}
+                        > 
                     <a href="{{ friend.get_absolute_url }}">
                         <img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" />
                     </a>
+                    <div class="friend_name" style="text-align: center; display:none;">{{ friend.name }}</div>
                 </div>
                 {% endfor %}
             </div>
+            {% if page.get_nonprofit_friends|length > 4 %}
+            <a href="#" class="show_more_friends nonprofits_friends_show">Show</a>
+            {% endif %}
             <br /><br />
             {% endif %}
             {% if page.get_business_friends %}
             <div class="friend_title" style="color: #3ea8d2;">Business Friends</div><br />
             <div class="friends_business">
                 {% for friend in page.get_business_friends %}
-                    {# variables: #}
-                    {# friend.name #}
-                    {# friend.username #}
-                    {# friend.get_absolute_url #}
-                    <div title="{{ friend.id }}" id="page_id_{{ friend.id }}" class="friend_icon">
+                    
+                    <div title="{{ friend.id }}" id="page_id_{{ friend.id }}" 
+                        {% if forloop.counter > 4 %}
+                        class="friend_icon friend_busn_hidden"
+                        {% else %}
+                        class="friend_icon"
+                        {% endif %}
+                        >
                         <a href="{{ friend.get_absolute_url }}">
                             <img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" />
                         </a>
+                        <div class="friend_name" style="text-align: center; display:none;">{{ friend.name }}</div>
                     </div>
                 {% endfor %}
             </div>
+            {% if page.get_business_friends|length > 4 %}
+            <a href="#" class="show_more_friends business_friends_show">Show</a>
+            {% endif %}
             {% endif %}
 	</div>
     {% endif %}
