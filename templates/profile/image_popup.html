@@ -63,6 +63,10 @@
 }
 .image_zone_info .scroll_area .owner {
 	height: 52px;
+	text-align: left;
+}
+.image_zone_info .scroll_area .owner a {
+	text-decoration: none;
 }
 .image_zone_info .scroll_area .owner .thumb {
 	float: left;
@@ -75,23 +79,16 @@
 }
 .image_zone_info .scroll_area .owner .fullname {
 	position: relative;
-	float: left;
 	top: 7px;
 	left: 15px;
 	color: #777;
 }
 .image_zone_info .scroll_area .owner .username {
 	position: relative;
-	float: left;
-	top: 21px;
-	left: -62px;
+	top: 4pt;
+	left: 18px;
 	color: #AAA;
 	font-size: 8pt;
-}
-.image_zone_info .scroll_area .comments .count {
-	margin: 5px auto auto 5px;
-	text-align: left;
-	display: none;
 }
 .image_zone_info .scroll_area .comments ul {
 	margin-top: 10px;
@@ -103,6 +100,10 @@
 	margin: 4px auto 0 25px;
 	width: 305px;
 	background-color: #EDEFF4;
+}
+.image_zone_info .scroll_area .comments .delete {
+	float: right;
+	display: none;
 }
 .image_zone_info .scroll_area .comments .thumb {
 	float: left;
@@ -116,6 +117,16 @@
 .image_zone_info .scroll_area .comments .text {
 	float: left;
 	margin: 7px auto auto 7px;
+}
+.image_zone_info .scroll_area .comments .text a {
+	font-weight: 600;
+	text-decoration: none;
+	color: #777;
+}
+.image_zone_info .scroll_area .comments .date {
+	text-align: left;
+	margin: 10px auto 5px 42px;
+	font-size: 8pt;
 }
 .image_zone_info .make_comment {
 	position: absolute;
@@ -170,7 +181,6 @@
 					<div class="username">{{ profile_user.username }}</div>
 				</a></div>
 				<div class="comments">
-					<div class="count">Show all <span></span> comments</div>
 					<ul></ul>
 				</div>
 			</div>

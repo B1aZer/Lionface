@@ -199,7 +199,7 @@ MEDIA_BUNDLES = (
         'css/reset.css',
         'css/style.css',
         'css/public.css',
-        'css/jquery-ui-1.8.23.custom.css',
+        'css/jquery-ui-1.9.1.custom.css',
     ),
     ('main.js',
         'js/jquery-1.8.0.min.js',

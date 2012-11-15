@@ -569,6 +569,10 @@ class UserImages(models.Model):
     rating = models.IntegerField(blank=True, null=True)
     activity = models.BooleanField(default=False)
 
+    # uncomment prev next migration
+    #class Meta:
+    #    unique_together = (('image', 'profile'),)
+
     objects = UserImagesQuerySet.as_manager()
 
     def change_position(self, old, new):

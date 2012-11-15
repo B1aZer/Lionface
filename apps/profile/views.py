@@ -230,7 +230,6 @@ def profile_image_change_position(request, username):
             .get_positions()
     except Exception as e:
         data['status'] = 'fail'
-        #data['errmsg'] = str(e)
     else:
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
@@ -249,15 +248,23 @@ def profile_image_comments_create(request, username):
         raise Http404
 
     try:
-        comment = request.REQUEST['comment']
+        message = request.REQUEST['message']
     except KeyError:
         return HttpResponseBadRequest("Comment wasn't received.")
 
+    pks = []
+    for pk in request.POST.getlist('pks[]'):
+        try:
+            pks.append(int(pk))
+        except (TypeError, ValueError):
+            pass
+
     try:
         image = UserImages.objects.filter(profile=profile_user) \
-            .select_related('image') \
             .only('image') \
-            .get(pk=request.REQUEST.get('pk', None)).image
+            .select_related('image') \
+            .get(pk=request.REQUEST.get('pk', None)) \
+            .image
     except UserImages.DoesNotExist as e:
         return HttpResponseBadRequest('Bad pk was received.')
 
@@ -266,9 +273,11 @@ def profile_image_comments_create(request, username):
         comment = UserImageComments.objects.create(
             image=image,
             owner=request.user,
-            message=comment
+            message=message
         )
+        #'comments': image.comments.exclude(pk__in=pks).select_related('owner')
         data['comments'] = render_to_string('profile/image_comments_li.html', {
+            'image': image,
             'comments': [comment],
             'profile_user': profile_user,
         }, context_instance=RequestContext(request))
@@ -281,7 +290,7 @@ def profile_image_comments_create(request, username):
 
 @login_required
 @unblocked_users
-def profile_image_comments_part(request, username, comments_show=5):
+def profile_image_comments(request, username):
     try:
         profile_user = UserProfile.objects.get(username=username)
     except UserProfile.DoesNotExist:
@@ -292,23 +301,65 @@ def profile_image_comments_part(request, username, comments_show=5):
         raise Http404
 
     try:
-        comments_show = int(request.REQUEST.get('comments_show', comments_show))
-    except (TypeError, ValueError) as e:
-        return HttpResponseBadRequest('Bad comments_show was received.')
-
-    try:
         image = UserImages.objects.filter(profile=profile_user) \
-            .select_related('image') \
             .only('image') \
-            .get(pk=request.REQUEST.get('pk', None)).image
+            .select_related('image') \
+            .get(pk=request.REQUEST.get('pk', None)) \
+            .image
     except UserImages.DoesNotExist as e:
         return HttpResponseBadRequest('Bad pk was received.')
 
     data = {}
     try:
-        data['count'] = image.comments.count()
         data['comments'] = render_to_string('profile/image_comments_li.html', {
-            'comments': image.comments.select_related('owner')[:comments_show],
+            'image': image,
+            'comments': image.comments.select_related('owner'),
+            'profile_user': profile_user,
+        }, context_instance=RequestContext(request))
+    except Exception as e:
+        data['status'] = 'fail'
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+@unblocked_users
+def profile_image_comments_delete(request, username):
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
+
+    is_visible = profile_user.check_visiblity('profile_image', request.user)
+    if not is_visible:
+        raise Http404
+
+    #try:
+    #    last_comment_pk = int(request.REQUEST.get('last_comment_pk'))
+    #except (ValueError, TypeError):
+    #    return HttpResponseBadRequest('Bad last_comment_pk was received.')
+
+    try:
+        image = UserImages.objects.filter(profile=profile_user) \
+            .only('image') \
+            .select_related('image') \
+            .get(pk=request.REQUEST.get('pk', None)) \
+            .image
+    except UserImages.DoesNotExist as e:
+        return HttpResponseBadRequest('Bad pk was received.')
+
+    try:
+        comment = image.comments.get(pk=request.REQUEST.get('comment_pk', None))
+    except UserImageComments.DoesNotExist as e:
+        return HttpResponseBadRequest('Bad comment_pk was received.')
+
+    data = {}
+    try:
+        comment.delete()
+        #'comments': image.comments.filter(pk__gt=last_comment_pk).select_related('owner')
+        data['comments'] = render_to_string('profile/image_comments_li.html', {
+            'image': image,
             'profile_user': profile_user,
         }, context_instance=RequestContext(request))
     except Exception as e:
