@@ -314,8 +314,30 @@ LionFace.Pages.prototype = {
             $(this).find('.friend_name').hide();
         });
 
-        var edit_a = $('#edit_page_text').clone();
-        var edit_url = edit_a.attr('href');
+
+        // hide loves icons, if we have more than 1 row
+        //moved to community.html
+        // show them
+        $(document).on('click','.community_see_more',function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var content = self.find('div');
+            var lovers = self.hasClass('lovers_link');
+            if (!self.data('shown')) {
+                if (lovers) {
+                    $('.loves_hidden').show();
+                }
+                self.data('shown',true);
+                content.html('See Less');
+            }
+            else {
+                if (lovers) {
+                    $('.loves_hidden').hide();
+                }
+                self.data('shown',false);
+                content.html('See More');
+            }
+        }); 
 
 
     },

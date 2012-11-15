@@ -68,6 +68,7 @@ SEND_MESSAGE = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('
 FRIEND_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
 FOLLOWING_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
 PROFILE_IMAGE = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
+LOVES_DEFAULT = [('Public','Public'), ('Private','Private'),]
 
 
 class UserInfoForm(forms.ModelForm):
@@ -84,6 +85,7 @@ class UserInfoForm(forms.ModelForm):
     option_friend_list = forms.ChoiceField(required=False, choices=( FRIEND_LIST ))
     option_following_list = forms.ChoiceField(required=False, choices=( FOLLOWING_LIST ))
     option_profile_image = forms.ChoiceField(required=False, choices=( PROFILE_IMAGE ))
+    option_loves = forms.ChoiceField(required=False, choices=( LOVES_DEFAULT ))
 
     class Meta:
         model = UserProfile
@@ -92,6 +94,7 @@ class UserInfoForm(forms.ModelForm):
             'email' : TextInput(attrs={'style': 'border: 1px solid #DDD; padding: 7px; width: 300px;'}),
             'username' : TextInput(attrs={'readonly':'readonly'}),
         }
+
     def __init__(self, *args, **kwargs):
         super(UserInfoForm, self).__init__(*args, **kwargs)
 
@@ -101,10 +104,12 @@ class UserInfoForm(forms.ModelForm):
             self.initial['full_name'] = instance.full_name
 
     def clean_full_name(self):
+
         def titlecase(s):
                 return re.sub("[A-Za-z]+('[A-Za-z]+)?",
                               lambda mo: mo.group(0)[0].upper() + mo.group(0)[1:],
                               s)
+
         if not re.search("[a-zA-Z]{2,} [a-zA-Z]{2,}", self.cleaned_data['full_name']):
             raise forms.ValidationError("Please enter your full name.")
         for name in self.cleaned_data['full_name'].split(' '):

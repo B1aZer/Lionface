@@ -66,6 +66,30 @@ class Pages(models.Model):
     def get_lovers(self):
         return self.users_loved.all()
 
+    def get_lovers_count(self):
+        return self.users_loved.count()
+
+    def get_lovers_public(self):
+        lovers = self.users_loved.all()
+        lovers = [lover for lover in lovers if not lover.check_option('loves','Private')]
+        return lovers
+
+    def get_lovers_public_count(self):
+        lovers = self.users_loved.all()
+        lovers = [lover for lover in lovers if not lover.check_option('loves','Private')]
+        return len(lovers)
+
+    def get_lovers_private_count(self):
+        lovers = self.users_loved.all()
+        lovers = [lover for lover in lovers if lover.check_option('loves','Private')]
+        return len(lovers)
+
+    def get_lovers_ordered(self):
+        # limit to 7x10 rows
+        lovers = self.get_lovers_public()[:70]
+        lovers = sorted(lovers, key=lambda s: s.get_followers_count(), reverse=True)
+        return lovers
+
     def get_posts(self):
         return self.posts.all()
 
