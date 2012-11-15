@@ -40,7 +40,13 @@
                     {% endif %}
                     <span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: (total_confirmed)</span><br />
                 <div id="employees_div" {% if not page.check_employees %} style="display:none;" {% endif %}>
-                    <div class="add_community_info">Click to add text here. (optional)</div>
+                    <div class="add_community_info">
+                        {% if page.text_employees %}
+                            {{ page.text_employees|linebreaksbr }}
+                        {% else %}
+                            Click to add text here. (optional)
+                        {% endif %} 
+                    </div>
                     <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
                         <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confrimed Public Employees: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
                         <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
@@ -71,7 +77,13 @@
                 {% endif %}
                 <span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: (total_confirmed)</span><br />
                 <div id="interns_div" {% if not page.check_interns %} style="display:none;" {% endif %}>
-                    <div class="add_community_info">Click to add text here. (optional)</div>
+                    <div class="add_community_info">
+                        {% if page.text_interns %}
+                            {{ page.text_interns|linebreaksbr }}
+                        {% else %}
+                            Click to add text here. (optional)
+                        {% endif %} 
+                    </div>
                     <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
                         <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confirmed Public Interns: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
                         <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
@@ -95,7 +107,13 @@
                     {% endif %}
                     <span style="color:#909E4A; font-size: 16pt;">Volunteers</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Volunteers: (total_confirmed)</span><br />
                     <div id="volunteers_div" {% if not page.check_volunteers %} style="display:none;" {% endif %}>
-                    <div class="add_community_info">Click to add text here. (optional)</div>
+                    <div class="add_community_info">
+                        {% if page.text_volunteers %}
+                            {{ page.text_volunteers|linebreaksbr }}
+                        {% else %}
+                            Click to add text here. (optional)
+                        {% endif %} 
+                    </div>
                     <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
                         <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confirmed Public Volunteers: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
                         <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>

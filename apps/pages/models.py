@@ -53,8 +53,11 @@ class Pages(models.Model):
     category = models.CharField(max_length=100, default='undefined')
     cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/noCoverImage.png')
     has_employees = models.BooleanField(default=True)
+    text_employees = models.TextField(blank=True)
     has_interns = models.BooleanField(default=True)
+    text_interns = models.TextField(blank=True)
     has_volunteers = models.BooleanField(default=True)
+    text_volunteers = models.TextField(blank=True)
 
     class Meta:
         verbose_name = "Page"

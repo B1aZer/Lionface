@@ -707,6 +707,35 @@ def community_check(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@login_required
+def community_text(request, slug=None):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    content = request.POST.get('content',None)
+    parent_id = request.POST.get('parent_id',None)
+    if parent_id == 'employees_div':
+        page.text_employees = content
+        page.save()
+        data['status'] = 'OK'
+    if parent_id == 'interns_div':
+        page.text_interns = content
+        page.save()
+        data['status'] = 'OK'
+    if parent_id == 'volunteers_div':
+        page.text_volunteers = content
+        page.save()
+        data['status'] = 'OK'
+    if data['status'] == 'OK':
+        data['html'] = render_to_string("pages/micro/_community_info.html",
+                    {
+                        'content':content,
+                    }, RequestContext(request))
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 
 
 

@@ -314,6 +314,10 @@ LionFace.Pages.prototype = {
             $(this).find('.friend_name').hide();
         });
 
+        var edit_a = $('#edit_page_text').clone();
+        var edit_url = edit_a.attr('href');
+
+
     },
     sortable_friends : function () {
         // Making sortable
@@ -382,6 +386,44 @@ LionFace.Pages.prototype = {
                 }
             });
         });
+        
+        //inline edit of the community's context  
+        $(document).on('click','.add_community_info',function(e){
+            e.preventDefault();
+            var edit_div = $(this);
+            var content = $(this).html();
+                                        
+            var edit_input = $('<textarea>', {id: 'edit_info',
+                                            rows: '4',
+                                            cols: '65',
+                                            maxlength: '500'});
+            edit_div.replaceWith(edit_input);
+            content = String(content).replace(/^\s+|\s+$/g, '');
+            if (content) {
+                content = content.replace(/<br>/g,'\n');
+                edit_input.val(content);
+            }
+            edit_input.focus(); 
+        });
+
+        $(document).on('blur','#edit_info',function() {
+            var edit_input = $(this);
+            var content = edit_input.val(); 
+            var edit_url = 'community_text'+'/';
+            var parent_id = edit_input.parent().attr('id');
+            make_request({
+                url:edit_url,
+                data:{
+                    'content':content,
+                    'parent_id':parent_id,
+                },
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        edit_input.replaceWith(data.html);
+                    }
+                }
+            });
+        });         
     },
     load_page_feed : function(elem, page) {
         var elem = elem || $('#page_feed');
