@@ -56,7 +56,8 @@
 		LionFace.User['profile_images_url_delete'] = "{% url profile-image-delete profile_user.username %}";
 		LionFace.User['profile_images_url_change_position'] = "{% url profile-image-change_position profile_user.username %}";
 		LionFace.User['profile_images_comments_create'] = "{% url profile_image_comments_create profile_user.username %}";
-		LionFace.User['profile_image_comments_part'] = "{% url profile_image_comments_part profile_user.username %}";
+		LionFace.User['profile_images_comments'] = "{% url profile_image_comments profile_user.username %}";
+		LionFace.User['profile_images_comments_delete'] = "{% url profile_image_comments_delete profile_user.username %}";
 	});
 </script>
 {% endblock %}
