@@ -1,6 +1,12 @@
 {% for comment in comments %}
-    <li>
-        <div class="thumb" style="background-image: url('/{{ comment.owner.photo.thumb_name }}');"></div>
-        <div class="text"><b>{{ comment.owner.full_name }}</b> {{ comment.message }}</div>
+    <li data-pk="{{ comment.pk }}">
+        {% if comment.owner == request.user or image.owner == request.user %}
+        <div class="delete"><a href="#" class="ui-icon ui-icon-circle-close" title="Delete this comment"></a></div>
+        {% endif %}
+        <a href="{{ comment.owner.get_absolute_url }}">
+            <div class="thumb" style="background-image: url('/{{ comment.owner.photo.thumb_name }}');"></div>
+        </a>
+        <div class="text"><a href="{{ comment.owner.get_absolute_url }}">{{ comment.owner.full_name }}</a> {{ comment.message }}</div><br/>
+        <div class="date">{{ comment.date }}</div>
     </li>
 {% endfor %}
