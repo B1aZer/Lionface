@@ -679,6 +679,34 @@ def friends_position(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@login_required
+def community_check(request, slug=None):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    name = request.POST.get('name',None)
+    checked = request.POST.get('checked',None)
+    if checked =='true':
+        checked = True
+    else:
+        checked = False
+    if name == 'employees_checkbox':
+        page.has_employees = checked
+        page.save()
+        data['status'] = 'OK'
+    if name == 'interns_checkbox':
+        page.has_interns = checked
+        page.save()
+        data['status'] = 'OK'
+    if name == 'volunteers_checkbox':
+        page.has_volunteers = checked
+        page.save()
+        data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 
 
 

@@ -32,6 +32,7 @@ class PageRequest(models.Model):
         self.delete()
 
 
+
 class PagePositions(models.Model):
     to_page = models.ForeignKey('Pages', related_name='posto_page')
     from_page = models.ForeignKey('Pages', related_name='postfrom_page')
@@ -51,6 +52,9 @@ class Pages(models.Model):
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
     category = models.CharField(max_length=100, default='undefined')
     cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/noCoverImage.png')
+    has_employees = models.BooleanField(default=True)
+    has_interns = models.BooleanField(default=True)
+    has_volunteers = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "Page"
@@ -99,6 +103,15 @@ class Pages(models.Model):
             return obj.position
         except:
             return 0
+
+    def check_employees(self):
+        return self.has_employees
+
+    def check_interns(self):
+        return self.has_interns
+
+    def check_volunteers(self):
+        return self.has_volunteers
 
     @models.permalink
     def get_absolute_url(self):

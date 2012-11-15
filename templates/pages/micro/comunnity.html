@@ -1,4 +1,4 @@
-{% load media %}
+{% load media format_results %}
 {% include 'pages/micro/_friends.html' %}
 
 <div class="page_center">
@@ -30,71 +30,87 @@
 					<a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
 				</div>
 					<br /><br />
-
-       			{% if page.type == 'BS' %}
-                    <input type="checkbox" class="community_checkbox" /> <span style="color:#3ea8d2; font-size: 16pt;">Employees</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: (total_confirmed)</span><br />
-                {% else %}   
-                    <input type="checkbox" class="community_checkbox" /> <span style="color:#909E4A; font-size: 16pt;">Employees</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: (total_confirmed)</span><br />
+                {% if request.user|check_pages_community:page %}
+                <input id="employees_checkbox" type="checkbox" class="community_checkbox" {% if page.check_employees %} checked {% endif %}/>
                 {% endif %}
-				<div class="add_community_info">Click to add text here. (optional)</div>
-				<div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-					<div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confrimed Public Employees: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div><br /><br />
-					<a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
-				</div>
-				<div style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-					<table width="100%"><tr><td align="left"><a href="#">UserFull Name</a>: Jun 2010 - Present</td>
-						<td align="right"><a href="#" class="profile_btn" style="position: relative; top: 0px;">Confirm</a> <a href="#" style="color: #AAA;">Deny</a></td></tr></table>
-				</div>
-					<br /><br />
-       			{% if page.type == 'BS' %}
-                    <input type="checkbox" class="community_checkbox" /> <span style="color:#3ea8d2; font-size: 16pt;">Interns</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: (total_confirmed)</span><br />
-                {% else %}   
-                    <input type="checkbox" class="community_checkbox" /> <span style="color:#909E4A; font-size: 16pt;">Interns</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: (total_confirmed)</span><br />
+                    {% if page.type == 'BS' %}
+                        <span style="color:#3ea8d2; font-size: 16pt;">Employees</span>
+                    {% else %}   
+                        <span style="color:#909E4A; font-size: 16pt;">Employees</span>
+                    {% endif %}
+                    <span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: (total_confirmed)</span><br />
+                <div id="employees_div" {% if not page.check_employees %} style="display:none;" {% endif %}>
+                    <div class="add_community_info">Click to add text here. (optional)</div>
+                    <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confrimed Public Employees: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div><br /><br />
+                        <a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
+                    </div>
+                    <div style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        <table width="100%"><tr><td align="left"><a href="#">UserFull Name</a>: Jun 2010 - Present</td>
+                            <td align="right"><a href="#" class="profile_btn" style="position: relative; top: 0px;">Confirm</a> <a href="#" style="color: #AAA;">Deny</a></td></tr></table>
+                    </div>
+                        <br /><br />
+                </div>
+                {% if request.user|check_pages_community:page %}
+                <input id="interns_checkbox" type="checkbox" class="community_checkbox" {% if page.check_interns %} checked {% endif %}/> 
                 {% endif %}
-				<div class="add_community_info">Click to add text here. (optional)</div>
-				<div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-					<div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confirmed Public Interns: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div><br /><br />
-					<a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
-				</div>
-					<br /><br ?>
+       			{% if page.type == 'BS' %}
+                    <span style="color:#3ea8d2; font-size: 16pt;">Interns</span>
+                {% else %}   
+                    <span style="color:#909E4A; font-size: 16pt;">Interns</span>
+                {% endif %}
+                <span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: (total_confirmed)</span><br />
+                <div id="interns_div" {% if not page.check_interns %} style="display:none;" {% endif %}>
+                    <div class="add_community_info">Click to add text here. (optional)</div>
+                    <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confirmed Public Interns: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div><br /><br />
+                        <a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
+                    </div>
+                        <br /><br ?>
+                </div>
        			{% if page.type == 'BS' %}
                 {% else %}   
-                    <input type="checkbox" class="community_checkbox" /> <span style="color:#909E4A; font-size: 16pt;">Volunteers</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Volunteers: (total_confirmed)</span><br />
-				<div class="add_community_info">Click to add text here. (optional)</div>
-				<div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-					<div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confirmed Public Volunteers: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
-					<div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div><br /><br />
-					<a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
-				</div>
+                    {% if request.user|check_pages_community:page %}
+                    <input id="volunteers_checkbox" type="checkbox" class="community_checkbox" {% if page.check_volunteers %} checked {% endif %}/> 
+                    {% endif %}
+                    <span style="color:#909E4A; font-size: 16pt;">Volunteers</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Volunteers: (total_confirmed)</span><br />
+                    <div id="volunteers_div" {% if not page.check_volunteers %} style="display:none;" {% endif %}>
+                    <div class="add_community_info">Click to add text here. (optional)</div>
+                    <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confirmed Public Volunteers: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div>
+                        <div class="friend_icon"><img src="{% media_url 'images/noThumb.png' %}" width="36" height="36" /></div><br /><br />
+                        <a href="#"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
+                    </div>
+                </div>
                 {% endif %}
     </div>
 </div>

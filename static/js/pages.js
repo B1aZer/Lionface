@@ -11,6 +11,7 @@ LionFace.Pages.prototype = {
         this.bind_page_functions();
         if (LionFace.User.options['pages_community__'+LionFace.User.page_id]) {
             this.sortable_friends();
+            this.community_micro();
         }
         if (LionFace.User.page_list) {
             this.load_page_feed(); 
@@ -345,6 +346,42 @@ LionFace.Pages.prototype = {
             }
         });
         $( ".friends_business, .friends_nonprofit" ).disableSelection();
+    },
+    community_micro : function() {
+        
+        $(document).on('change','.community_checkbox',function() {
+            var self = $(this);
+            var name = self.attr('id');
+            var url = 'community_check' + '/';
+            var checked = self.prop('checked');
+            if (name == 'employees_checkbox') {
+                var content_div = '#employees_div';
+            }
+            if (name == 'interns_checkbox') {
+                var content_div = '#interns_div';
+            }
+            if (name == 'volunteers_checkbox') {
+                var content_div = '#volunteers_div';
+            }
+            make_request({
+                url:url,
+                data: {
+                    'name':name,
+                    'checked':checked,
+                },
+                callback: function(data) {
+                    if(data.status =='OK') {
+                        if(!checked){
+                            $(content_div).hide();
+                        }
+                        else {
+                            $(content_div).show();
+                        }
+                    }
+                    
+                }
+            });
+        });
     },
     load_page_feed : function(elem, page) {
         var elem = elem || $('#page_feed');
