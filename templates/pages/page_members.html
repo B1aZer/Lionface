@@ -14,42 +14,42 @@ $(document).ready(function() {
 </script>
                 <tr>
                     <td colspan="3">
-                        <div id="select_community" style="display: none;">
-					<a href="#" id="volunteer_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era'); HideContent('select_community'); return false;">+ Volunteer</a> 
-					<a href="#" id="intern_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era'); HideContent('select_community'); return false;">+ Intern</a> 
-					<a href="#" id="employee_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era'); HideContent('select_community'); return false;">+ Employee</a>
-					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('select_community'); return false;">Cancel</a>
+                        <div id="select_community_{{page.id}}" style="display: none;">
+					<a href="#" id="volunteer_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era_{{ page.id }}'); HideContent('select_community_{{page.id}}'); return false;">+ Volunteer</a> 
+					<a href="#" id="intern_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era_{{ page.id }}'); HideContent('select_community_{{page.id}}'); return false;">+ Intern</a> 
+					<a href="#" id="employee_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era_{{ page.id }}'); HideContent('select_community_{{ page.id }}'); return false;">+ Employee</a>
+					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('select_community_{{page.id}}'); return false;">Cancel</a>
                         </div>
                     </td>
                 </tr>
-            <tr><td colspan="3"><div id="select_era" style="display: none;">
-					<a href="#" style="color: #AAA;" onClick="ShowContent('select_community'); HideContent('select_era'); return false;">< Back</a>
-					<a href="#" class="profile_btn" style="margin: 7px;" onClick="ShowContent('past'); HideContent('select_era'); return false;">In The Past</a> 
-					<a href="#" class="profile_btn" style="margin: 7px;" onClick="ShowContent('present'); HideContent('select_era'); return false;">Currently</a>
-					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('select_era'); return false;">Cancel</a></div>
-				</td></tr><tr><td colspan="3"><div id="past" style="display: none;">
-					<a href="#" style="color: #AAA;" onClick="ShowContent('select_era'); HideContent('past'); return false;">< Back</a>
+            <tr><td colspan="3"><div id="select_era_{{ page.id }}" style="display: none;">
+					<a href="#" style="color: #AAA;" onClick="ShowContent('select_community_{{page.id}}'); HideContent('select_era_{{page.id}}'); return false;">< Back</a>
+					<a href="#" class="profile_btn" style="margin: 7px;" onClick="ShowContent('past_{{page.id}}'); HideContent('select_era_{{page.id}}'); return false;">In The Past</a> 
+					<a href="#" class="profile_btn" style="margin: 7px;" onClick="ShowContent('present_{{page.id}}'); HideContent('select_era_{{page.id}}'); return false;">Currently</a>
+					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('select_era_{{ page.id }}'); return false;">Cancel</a></div>
+				</td></tr><tr><td colspan="3"><div id="past_{{page.id}}" style="display: none;">
+					<a href="#" style="color: #AAA;" onClick="ShowContent('select_era_{{ page.id }}'); HideContent('past_{{page.id}}'); return false;">< Back</a>
 					<span style="padding: 12px 7px; margin: 5px; background: #FAFAFA; border: 1px solid #CCC;">
 						<span style="margin: 5px;"><label for="from">From: </label> <input type="text" class="date_from former_member" name="from" /></span>
-						<span style="margin: 5px;"><label for="from">To: </label> <input type="text" class="date_to" name="from" /></span>
+						<span style="margin: 5px;"><label for="from">To: </label> <input class="date_to" type="text" name="from" /></span>
 					</span>
-					<a href="{% url pages.views.page_members slug=page.username %}" class="profile_btn save_member" style="margin: 7px; position: relative; top: 0px;" onClick="HideContent('past'); return false;">Save</a>
-					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('past'); return false;">Cancel</a></div>
+					<a href="{% url pages.views.page_members slug=page.username %}" class="profile_btn save_member" style="margin: 7px; position: relative; top: 0px;" onClick="HideContent('past_{{page.id}}'); return false;">Save</a>
+					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('past_{{page.id}}'); return false;">Cancel</a></div>
 					<div style="height: 7px;"></div>
-				</td></tr><tr><td colspan="3"><div id="present" style="display: none;">
-					<a href="#" style="color: #AAA;" onClick="ShowContent('select_era'); HideContent('present'); return false;">< Back</a>
+				</td></tr><tr><td colspan="3"><div id="present_{{page.id}}" style="display: none;">
+					<a href="#" style="color: #AAA;" onClick="ShowContent('select_era_{{ page.id }}'); HideContent('present_{{page.id}}'); return false;">< Back</a>
 					<span style="padding: 12px 7px; margin: 5px; background: #FAFAFA; border: 1px solid #CCC;">
 						<span style="margin: 5px;"><label for="from">From: </label> <input type="text" class="date_from current_member" name="from" /></span>
 						<span style="margin: 5px;">To: Present</span>
 					</span>
-                    <a href="{% url pages.views.page_members slug=page.username %}" class="profile_btn save_member" style="margin: 7px; position: relative; top: 0px;" onClick="HideContent('present'); return false;">Save</a>
-					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('present'); return false;">Cancel</a></div>
+                    <a href="{% url pages.views.page_members slug=page.username %}" class="profile_btn save_member" style="margin: 7px; position: relative; top: 0px;" onClick="HideContent('present_{{page.id}}'); return false;">Save</a>
+					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('present_{{page.id}}'); return false;">Cancel</a></div>
 					<div style="height: 7px;"></div>
-				</td></tr><tr><td colspan="3"><div id="edit" style="display: none;">
-						<a href="#" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_community'); HideContent('edit'); return false;">Edit</a> 
-						<a href="#" id="remove_member" class="profile_btn" style="margin: 7px;" onClick="HideContent('edit'); return false;">Remove</a>
+				</td></tr><tr><td colspan="3"><div id="edit_{{page.id}}" style="display: none;">
+						<a href="#" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_community_{{page.id}}'); HideContent('edit_{{page.id}}'); return false;">Edit</a> 
+						<a href="#" id="remove_member" class="profile_btn" style="margin: 7px;" onClick="HideContent('edit_{{page.id}}'); return false;">Remove</a>
 					</span>
-					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('edit'); return false;">Cancel</a></div>
+					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('edit_{{page.id}}'); return false;">Cancel</a></div>
                 <div style="height: 7px;"></div>
 				</td>
                 </tr>

@@ -32,11 +32,11 @@
                     {% endblock %}
                 </div>
 				</td><td align="right">
-					<a href="#" class="profile_btn" onClick="ShowContent('select_community'); return false;">+ Community</a><br />
+                    <a href="#" class="profile_btn" onClick="ShowContent('select_community_{{page.id}}'); return false;">+ Community</a><br />
                     {% for member in page|show_membership:profile_user %}
                     <div id="member_{{ member.id }}">
 					<span style="font-size: 10pt; color: #555;">
-                        <a href="{% url pages.views.page_members slug=page.username member_id=member.id %}" class="edit_member" title="Remove" style="color: #AAA; font-size: 7pt; cursor: pointer;" onClick="ShowContent('edit'); return false;">Edit</a>
+                        <a href="{% url pages.views.page_members slug=page.username member_id=member.id %}" class="edit_member" title="Remove" style="color: #AAA; font-size: 7pt; cursor: pointer;" onClick="ShowContent('edit_{{page.id}}'); return false;">Edit</a>
                         <span style="color: #909e4a; font-size: 8pt;">confirmed</span> {{ member.get_type }}
                         <br />
                         {{ member.from_date }} to {{ member.to_date }}</span>

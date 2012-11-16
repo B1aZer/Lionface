@@ -851,8 +851,10 @@ LionFace.Site.prototype = {
             if (volunteer_flag) { member_type = 'VL'; }
             if (intern_flag) { member_type = 'IN'; }
             if (employee_flag) { member_type = 'EM'; }
-            var from_date = $('.former_member').val() || $('.current_member').val();
-            var to_date = $('.date_to').val();
+            var from_date = $(this).parent().find('.former_member').val() || $(this).parent().find('.current_member').val();
+            var to_date = $(this).parent().find('.date_to').val();
+            console.log(member_type);
+            console.log(from_date);
             if (member_type && from_date) {
                 make_request({
                     url:url,
