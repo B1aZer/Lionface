@@ -703,13 +703,23 @@ LionFace.Site.prototype = {
                             if (vote == 'up') {
                                 me.html('Loved');
                                 me.addClass('loved');   
-                                love_count = love_count + 1;
+                                if (data.loved) {
+                                    love_count = parseInt(data.loved);
+                                }
+                                else {
+                                    love_count = love_count + 1;
+                                }
                                 
                             }
                             else {
                                 me.html('Love');
                                 me.removeClass('loved'); 
-                                love_count = love_count - 1;
+                                if (data.loved) {
+                                    love_count = parseInt(data.loved);
+                                }
+                                else {
+                                    love_count = love_count - 1;
+                                }
                             }
                             love_div.html(love_count);
                         }

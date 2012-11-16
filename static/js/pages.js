@@ -282,7 +282,7 @@ LionFace.Pages.prototype = {
         });
 
         // hide friends icons, if we have more than 4
-        $('.friend_busn_hidden , .friend_nonp_hidden').hide();
+        // moved to template micro/_friends.html
         // show them
         $(document).on('click','.show_more_friends',function(e) {
             e.preventDefault();

@@ -290,15 +290,17 @@ def love_count(request):
             try:
                 page = Pages.objects.get(id=int(page_id))
                 if vote == 'up':
-                    page.loves += 1
+                    page.loves = page.get_lovers().count() + 1
                     page.users_loved.add(request.user)
                     page.save()
                     data['status'] = 'OK'
+                    data['loved'] = page.loves
                 if vote == 'down':
-                    page.loves -= 1
+                    page.loves = page.get_lovers().count() - 1
                     page.users_loved.remove(request.user)
                     page.save()
                     data['status'] = 'OK'
+                    data['loved'] = page.loves
             except Pages.DoesNotExist:
                 pass
     return HttpResponse(json.dumps(data), "application/json")

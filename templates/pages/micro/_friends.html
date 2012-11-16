@@ -1,4 +1,9 @@
 {% load media format_results %}
+<script>
+$(document).ready(function() {
+    $('.friend_busn_hidden , .friend_nonp_hidden').hide();
+});
+</script>
 <div class="float_left">
     {% if page.get_friends %}
 	<div class="friend_container">
