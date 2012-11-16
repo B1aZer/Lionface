@@ -3,10 +3,17 @@ from account.models import UserProfile
 from django.core.validators import validate_slug, URLValidator
 from django.db.models.signals import m2m_changed
 from django.db.models import F
+from datetime import datetime
 
 PAGE_TYPE = (
         ('BS','Business Page'),
         ('NP','Nonprofit Page'),
+)
+
+MEMBERSHIP_TYPE = (
+        ('VL','Volunteer'),
+        ('IN','Intern'),
+        ('EM','Employee'),
 )
 
 class PageRequest(models.Model):
@@ -39,6 +46,16 @@ class PagePositions(models.Model):
     position = models.IntegerField(blank = True, null = True)
 
 
+"""
+class Membership(models.Model):
+    user = models.ForeignKey("UserProfile")
+    page = models.ForeignKey("Pages")
+    type = models.CharField(max_length='2', choices=MEMBERSHIP_TYPE)
+    from_date = models.DateField()
+    to_date = models.DateField(default=datetime.now)
+    """
+
+
 class Pages(models.Model):
     name = models.CharField(max_length='200')
     friends = models.ManyToManyField('self', related_name='friends')
@@ -58,6 +75,8 @@ class Pages(models.Model):
     text_interns = models.TextField(blank=True)
     has_volunteers = models.BooleanField(default=True)
     text_volunteers = models.TextField(blank=True)
+    admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
+    #members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
 
     class Meta:
         verbose_name = "Page"
@@ -189,6 +208,8 @@ def change_friend_position(sender, instance, action, reverse, model, pk_set, usi
         position_obj_friend.save()
     if action =='post_remove':
         page = instance
+        page_pos = None
+        friend_pos = None
         try:
             friend = model.objects.get(id=pk_set.pop())
         except KeyError:

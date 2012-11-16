@@ -15,7 +15,8 @@ def home(request):
     return render_to_response(
         'public/home.html',
         {
-            'login_form': LoginForm(prefix='login')
+            'login_form': LoginForm(prefix='login'),
+            'signup_form': SignupForm(prefix='signup')
         },
         RequestContext(request)
     )

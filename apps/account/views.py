@@ -58,6 +58,7 @@ def login(request, template_name='public/home.html'):
         template_name,
         {
             'login_form': form,
+            'signup_form': SignupForm(prefix='signup')
         },
         RequestContext(request)
     )
