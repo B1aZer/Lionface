@@ -7,7 +7,7 @@
             <div class="friend_title" style="color: #909e4a;">Nonprofit Friends</div><br />
             <div class="friends_nonprofit">
                 {% for friend in page.get_nonprofit_friends %} 
-                <div title="{{ friend.id }}" id="page_id_{{ friend.id }}"
+                <div id="page_id_{{ friend.id }}"
                     {% if forloop.counter > 4 %}
                         class="friend_icon friend_nonp_hidden"
                         {% else %}
@@ -22,7 +22,7 @@
                 {% endfor %}
             </div>
             {% if page.get_nonprofit_friends|length > 4 %}
-            <a href="#" class="show_more_friends nonprofits_friends_show">Show</a>
+            <a href="#" class="show_more_friends nonprofits_friends_show">Show All</a>
             {% endif %}
             <br /><br />
             {% endif %}
@@ -31,7 +31,7 @@
             <div class="friends_business">
                 {% for friend in page.get_business_friends %}
                     
-                    <div title="{{ friend.id }}" id="page_id_{{ friend.id }}" 
+                    <div id="page_id_{{ friend.id }}" 
                         {% if forloop.counter > 4 %}
                         class="friend_icon friend_busn_hidden"
                         {% else %}
@@ -46,7 +46,7 @@
                 {% endfor %}
             </div>
             {% if page.get_business_friends|length > 4 %}
-            <a href="#" class="show_more_friends business_friends_show">Show</a>
+            <a href="#" class="show_more_friends business_friends_show">Show All</a>
             {% endif %}
             {% endif %}
 	</div>

@@ -1930,14 +1930,14 @@ a.admin_name:link, a.admin_name:active, a.admin_name:visited, a.admin_name:hover
 }
 
 .friend_container {
-background: #eaeaea; /* Old browsers */
-background: -moz-linear-gradient(left, #eaeaea 0%, #dddddd 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, right top, color-stop(0%,#eaeaea), color-stop(100%,#dddddd)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(left, #eaeaea 0%,#dddddd 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(left, #eaeaea 0%,#dddddd 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(left, #eaeaea 0%,#dddddd 100%); /* IE10+ */
-background: linear-gradient(to right, #eaeaea 0%,#dddddd 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#dddddd',GradientType=1 ); /* IE6-9 */
+	background: #eaeaea; /* Old browsers */
+	background: -moz-linear-gradient(left, #eaeaea 0%, #dddddd 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#eaeaea), color-stop(100%,#dddddd)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left, #eaeaea 0%,#dddddd 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left, #eaeaea 0%,#dddddd 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left, #eaeaea 0%,#dddddd 100%); /* IE10+ */
+	background: linear-gradient(to right, #eaeaea 0%,#dddddd 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#dddddd',GradientType=1 ); /* IE6-9 */
  	padding: 10px 10px 10px 10px; 
 	width: 230px; 
 	position: relative; left: -10px; 
@@ -1956,8 +1956,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', end
 	border: 1px solid #D5D5D5;
 	padding: 3px 4px 0px 4px;
 	text-align: left;
-	margin: 0px 3px;
+	margin: 3px 3px;
 	background: #FFF;
+	position: relative;
 }
 
 .friend_icon:hover {
@@ -1976,6 +1977,29 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', end
 
 .friend_icon img {
 	border: 1px solid #DDD;
+}
+
+.friend_name {
+	color: #FFF;
+	position: absolute; left: 45px; top: -1px;
+	background: #555; /* Old browsers */
+	background: -moz-linear-gradient(top, #555 0%, #333333 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#555), color-stop(100%,#333333)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #555 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #555 0%,#333333 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #555 0%,#333333 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #555 0%,#333333 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
+	padding: 8px 10px 4px 10px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	z-index: 9999;
+	-moz-box-shadow: 0 4px 8px -4px #777;
+	box-shadow: 0 4px 8px -4px #777;
+}
+
+a.show_more_friends, a.business_friends_show, a.nonprofits_friends_show {
+	font-size: 8pt; color: #999; padding: 4px; position: relative; top: 4px;
 }
 
 /* Schools */

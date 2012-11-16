@@ -12,31 +12,42 @@
 <div align="center">
   <div id="center_box">
     <div class="content_area">
-      <div class="float_box"><a href="http://www.lionface.org" style="border: 0px none;"><img src="{% media_url 'images/logo300.png' %}" border="0" style="padding-top: 135px;"/></a></div>
-      <div class="heart float_box">
-        {% block heart %}
-		<table width="100%" height="450"><tr><td>
-        <div class="next_generation"><span style="font-size: 16pt;">The</span> <span style="font-size: 25pt;">Next Generation</span><br /><span style="font-size: 16pt;">in</span> Social Networking
-			<div style="font-size: 9pt;">Powered by Python</div></div>
-        <div>
-          <a href="{% url account.views.signup %}" class="create">Create an Account</a>
-
-        </div>
+<table width="100%" height="450"><tr><td>
+<table width="900"><tr><td width="450" align="left">
+	<a href="{% url account.views.login %}" style="border: 0px none;"><div class="white_opacity" style="text-align: center;">
+			<div class="next_generation">The Next Generation in Social Networking</div>
+			<div style="position: absolute; left: 17px; bottom: -17px; color: #DDD; font-size: 8pt;">Built in Python Django</div>
+			<div class="center_container">
+		<table width="100%" height="300"><tr><td>
+      		<img src="{% media_url 'images/logo300.png' %}" border="0"/>
 		</td></tr></table>
-        {% endblock %}
-      </div>
-    </div>
-  </div>
-<div style="position: relative;">
-	<div class="learn_more" id="learn" style="color: #DDD; font-size: 8pt;">Learn more about Lionface by clicking the links below.</div>
-	<div class="learn_more" id="lf" style="display: none;">Lionface</div>
-	<div class="learn_more" id="n" style="display: none;">Nonprofits</div>
-	<div class="learn_more" id="b" style="display: none;">Businesses</div>
-	<div class="learn_more" id="t" style="display: none;">Tags</div>
-	<div class="learn_more" id="f" style="display: none;">Followers</div>
-	<div class="learn_more" id="d" style="display: none;">Degree of Separation</div>
-	<div class="learn_more" id="a" style="display: none;">Albums</div>
+			</div>
+	</div></a>
+</td><td width="450" align="right">
+
+          {% include "account/signup.html" %}
+
+</td></tr></table>
+</td></tr></table>
+
+<div style="position: relative; top: 20px; text-align: center;">
+	<div id="learn"><span class="learn_more_learn">Learn more about Lionface by clicking the links below.</span></div>
+	<div id="lf" style="display: none;"><span class="learn_more">Lionface</span></div>
+	<div id="n" style="display: none;"><span class="learn_more">Nonprofits</span></div>
+	<div id="b" style="display: none;"><span class="learn_more">Businesses</span></div>
+	<div id="t" style="display: none;"><span class="learn_more">Tags</span></div>
+	<div id="f" style="display: none;"><span class="learn_more">Followers</span></div>
+	<div id="d" style="display: none;"><span class="learn_more">Degree of Separation</span></div>
+	<div id="a" style="display: none;"><span class="learn_more">Albums</span></div>
 </div>
+
+    </div>
+<div class="photo_disclaimer">
+	Photograph: Norwich, Vermont
+</div>
+  </div>
+
+
 
 	<div class="enabled_table">
 		<div id="lionface" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('lf'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('lf'); return false;"><div class="enabled">Lf</div></div>
