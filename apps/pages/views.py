@@ -755,6 +755,7 @@ def page_members(request, slug=None, member_id=None):
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
+    member = None
     member_type = request.POST.get('member_type',None)
     from_date = request.POST.get('from_date',None)
     to_date = request.POST.get('to_date',None)
