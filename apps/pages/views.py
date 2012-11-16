@@ -656,7 +656,12 @@ def friends_position(request, slug=None):
                 #import pdb;pdb.set_trace()
                 page = Pages.objects.get(username=slug)
                 friend = Pages.objects.get(id=int(friend_id))
-                obj = PagePositions.objects.get(to_page=page, from_page=friend)
+                try:
+                    obj = PagePositions.objects.get(to_page=page, from_page=friend)
+                except:
+                    # something wrong with positioning,
+                    # but we will save new position anyway
+                    obj = PagePositions(to_page=page, from_page=friend)
                 obj.position = position_end
                 obj.save()
                 if position_bgn < position_end:
@@ -671,7 +676,9 @@ def friends_position(request, slug=None):
                             position__lte=position_bgn, \
                             from_page__type=friend.type).exclude(id=obj.id)
                     positions.update(position=F('position') + 1)
-            except Pages.DoesNotExist:
+                # this fix only for broken positioning
+                positions.filter(position__lt=0).update(position=0)
+            except:
                 raise Http404
 
 

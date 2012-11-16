@@ -4,6 +4,7 @@ from django.core.validators import validate_slug, URLValidator
 from django.db.models.signals import m2m_changed
 from django.db.models import F
 from datetime import datetime
+import logging
 
 PAGE_TYPE = (
         ('BS','Business Page'),
@@ -81,6 +82,9 @@ class Pages(models.Model):
     class Meta:
         verbose_name = "Page"
         verbose_name_plural = "Pages"
+
+    def __repr__ (self):
+        return '<Page %s> %s' % (self.id, self.username)
 
     def get_lovers(self):
         return self.users_loved.all()
@@ -184,9 +188,10 @@ def change_friend_position(sender, instance, action, reverse, model, pk_set, usi
             page = model.objects.get(id=pk_set.pop())
         except KeyError:
             # debugging
+            logger = logging.getLogger(__name__)
+            logger.error('Error in retrieving id')
             return
         friend = instance
-        #import pdb;pdb.set_trace()
         if friend.type == 'BS':
             position = len(page.get_business_friends())
             # for some reason page already in friend's list
@@ -213,10 +218,15 @@ def change_friend_position(sender, instance, action, reverse, model, pk_set, usi
         try:
             friend = model.objects.get(id=pk_set.pop())
         except KeyError:
+            logger = logging.getLogger(__name__)
+            logger.error('Error in retrieving id')
             return
         try:
             page_pos = PagePositions.objects.get(to_page=page, from_page=friend)
             page_pos.delete()
+        except:
+            pass
+        try:
             friend_pos = PagePositions.objects.get(to_page=friend, from_page=page)
             friend_pos.delete()
         except:
