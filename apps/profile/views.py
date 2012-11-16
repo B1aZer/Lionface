@@ -252,13 +252,6 @@ def profile_image_comments_create(request, username):
     except KeyError:
         return HttpResponseBadRequest("Comment wasn't received.")
 
-    pks = []
-    for pk in request.POST.getlist('pks[]'):
-        try:
-            pks.append(int(pk))
-        except (TypeError, ValueError):
-            pass
-
     try:
         image = UserImages.objects.filter(profile=profile_user) \
             .only('image') \
@@ -275,10 +268,9 @@ def profile_image_comments_create(request, username):
             owner=request.user,
             message=message
         )
-        #'comments': image.comments.exclude(pk__in=pks).select_related('owner')
         data['comments'] = render_to_string('profile/image_comments_li.html', {
             'image': image,
-            'comments': [comment],
+            'comments': image.comments.select_related('owner'),
             'profile_user': profile_user,
         }, context_instance=RequestContext(request))
     except Exception as e:
@@ -335,11 +327,6 @@ def profile_image_comments_delete(request, username):
     if not is_visible:
         raise Http404
 
-    #try:
-    #    last_comment_pk = int(request.REQUEST.get('last_comment_pk'))
-    #except (ValueError, TypeError):
-    #    return HttpResponseBadRequest('Bad last_comment_pk was received.')
-
     try:
         image = UserImages.objects.filter(profile=profile_user) \
             .only('image') \
@@ -357,9 +344,9 @@ def profile_image_comments_delete(request, username):
     data = {}
     try:
         comment.delete()
-        #'comments': image.comments.filter(pk__gt=last_comment_pk).select_related('owner')
         data['comments'] = render_to_string('profile/image_comments_li.html', {
             'image': image,
+            'comments': image.comments.select_related('owner'),
             'profile_user': profile_user,
         }, context_instance=RequestContext(request))
     except Exception as e:
