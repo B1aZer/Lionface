@@ -7,11 +7,23 @@
 <div class="page_center">
     <div style="padding: 15px;">
 				<div style="display: block; text-align: right; border-bottom: 1px solid #DDD; padding: 3px 0; margin: 0 0 10px 0;">
-					<table width="100%"><tr><td align="left"><a href="#" class="profile_btn">+ Community</a><td><td align="right">
-					<span style="font-size: 10pt; color: #555;"><span title="Remove" style="color: #AAA; font-size: 7pt; cursor: pointer;" onClick="ShowContent('edit'); return false;">Edit</span> 
-					<span style="color: #909e4a; font-size: 8pt;">confirmed</span> Intern<br />
-					Jun 2012 to Present</span>
-					</td></tr></table>
+					<table width="100%"><tr><td align="left">
+                                <a href="#" class="profile_btn" onClick="ShowContent('select_community'); return false;">+ Community</a>
+                    <td>
+                    <td align="right">
+                    {% for member in page.get_members %}
+                    <div id="member_{{ member.id }}">
+					<span style="font-size: 10pt; color: #555;">
+                        <a href="{% url pages.views.page_members slug=page.username member_id=member.id %}" class="edit_member"  title="Remove" style="color: #AAA; font-size: 7pt; cursor: pointer;" onClick="ShowContent('edit'); return false;">Edit</a> 
+                        <span> {{ member.get_name }} </span>
+                        <span style="color: #909e4a; font-size: 8pt;">confirmed</span> {{ member.get_type }}
+                    <br />
+					{{ member.from_date }} to {{ member.to_date }}</span>
+                    {% endfor %}
+                    </div>
+					</td></tr>
+                    {% include 'pages/page_members.html' %}
+                </table>
 				</div>
        			{% if page.type == 'BS' %}
                 <span style="color:#3ea8d2; font-size: 16pt;">Loves</span><span style="color: #999; font-size: 9pt;"> Total: {{ page.get_lovers_count }} Public: {{ page.get_lovers_public_count }} Private: {{ page.get_lovers_private_count }}</span><br />

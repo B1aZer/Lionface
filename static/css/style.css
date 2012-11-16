@@ -540,6 +540,10 @@ a.profile_btn:hover {
 	border: 1px solid #FAFAFA;
 }
 
+.ui-datepicker-calendar .ui-state-default {
+	margin: 0;
+}
+
 .ui-state-default:active {
 	-moz-box-shadow: 0 17px 8px -8px #777;
 	box-shadow: 0 17px 8px -8px #777;

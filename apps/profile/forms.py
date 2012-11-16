@@ -69,6 +69,8 @@ FRIEND_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('F
 FOLLOWING_LIST = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
 PROFILE_IMAGE = [('Public','Public'), ("Friend's Friends","Friend's Friends"), ('Friends','Friends'), ("Just Me","Just Me"),]
 LOVES_DEFAULT = [('Public','Public'), ('Private','Private'),]
+VIA_PROFILE = FRIEND_LIST
+VIA_PAGES = LOVES_DEFAULT
 
 
 class UserInfoForm(forms.ModelForm):
@@ -86,6 +88,8 @@ class UserInfoForm(forms.ModelForm):
     option_following_list = forms.ChoiceField(required=False, choices=( FOLLOWING_LIST ))
     option_profile_image = forms.ChoiceField(required=False, choices=( PROFILE_IMAGE ))
     option_loves = forms.ChoiceField(required=False, choices=( LOVES_DEFAULT ))
+    option_vie_profile = forms.ChoiceField(required=False, choices=( VIA_PROFILE ))
+    option_vie_pages = forms.ChoiceField(required=False, choices=( VIA_PAGES ))
 
     class Meta:
         model = UserProfile

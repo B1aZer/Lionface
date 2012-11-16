@@ -4,6 +4,7 @@ from django.template import RequestContext, TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.shortcuts import render_to_response, redirect
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.urlresolvers import reverse
 from django.db.models import F
 from .forms import *
 from .models import *
@@ -16,9 +17,11 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
 from StringIO import StringIO
 import base64
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
+
 
 try:
     import json
@@ -745,6 +748,44 @@ def community_text(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@login_required
+def page_members(request, slug=None, member_id=None):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    member_type = request.POST.get('member_type',None)
+    from_date = request.POST.get('from_date',None)
+    to_date = request.POST.get('to_date',None)
+    user = request.user
+    delete_member = request.POST.get('delete',None)
+    if member_id:
+        member = Membership.objects.get(id=member_id)
+    if delete_member:
+        member.delete()
+        data['status'] = 'OK'
+        data['id'] = member_id
+    else:
+        if from_date and member_type:
+            from_date = datetime.strptime(from_date, "%m/%d/%Y")
+            if to_date:
+                to_date = datetime.strptime(to_date, "%m/%d/%Y")
+            if not member:
+                member = Membership()
+                member.user=user
+                member.page=page
+            member.type=member_type
+            member.from_date=from_date
+            if to_date:
+                member.to_date=to_date
+            try:
+                member.save()
+                data['status'] = 'OK'
+                data['redirect'] = reverse('user-loves',args=(request.user,))
+            except:
+                pass
+    return HttpResponse(json.dumps(data), "application/json")
 
 
 

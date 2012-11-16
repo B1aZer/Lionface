@@ -148,6 +148,7 @@ def check_message_sending(user,current):
 def check_friend_request(user,current):
     return user.check_visiblity('add_friend',current)
 
+
 @register.filter(name='escaping')
 def escaping(value):
     return escape(value)
@@ -226,6 +227,10 @@ def get_community_pages_friends(user,page):
 def get_community_friends_for(user,page):
     return user.get_community_pages_count(page)
 
+
+@register.filter(name="show_membership")
+def show_membership(page,user):
+    return page.show_membership(user)
 
 
 

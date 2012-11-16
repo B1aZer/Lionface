@@ -47,16 +47,6 @@ class PagePositions(models.Model):
     position = models.IntegerField(blank = True, null = True)
 
 
-"""
-class Membership(models.Model):
-    user = models.ForeignKey("UserProfile")
-    page = models.ForeignKey("Pages")
-    type = models.CharField(max_length='2', choices=MEMBERSHIP_TYPE)
-    from_date = models.DateField()
-    to_date = models.DateField(default=datetime.now)
-    """
-
-
 class Pages(models.Model):
     name = models.CharField(max_length='200')
     friends = models.ManyToManyField('self', related_name='friends')
@@ -77,7 +67,7 @@ class Pages(models.Model):
     has_volunteers = models.BooleanField(default=True)
     text_volunteers = models.TextField(blank=True)
     admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
-    #members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
+    members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
 
     class Meta:
         verbose_name = "Page"
@@ -153,6 +143,14 @@ class Pages(models.Model):
             return obj.position
         except:
             return 0
+
+    def get_members(self):
+        members = Membership.objects.filter(page=self)
+        return members
+
+    def show_membership(self, user):
+        membership = Membership.objects.filter(page=self,user=user)
+        return membership
 
     def check_employees(self):
         return self.has_employees
@@ -243,6 +241,22 @@ def change_friend_position(sender, instance, action, reverse, model, pk_set, usi
                     from_page__type=page.type)\
                 .update(position=F('position') - 1)
 m2m_changed.connect(change_friend_position, sender=Pages.friends.through)
+
+
+class Membership(models.Model):
+    user = models.ForeignKey(UserProfile)
+    page = models.ForeignKey(Pages)
+    type = models.CharField(max_length='2', choices=MEMBERSHIP_TYPE)
+    from_date = models.DateField()
+    to_date = models.DateField(default=datetime.now)
+
+    def get_type(self):
+        mtype = [mtype for mtype in MEMBERSHIP_TYPE if mtype[0] == self.type]
+        return mtype[0][1]
+
+    def get_name(self):
+        return self.user.get_full_name()
+
 
 
 
