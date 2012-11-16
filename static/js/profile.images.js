@@ -362,12 +362,10 @@ LionFace.ProfileImages.prototype = {
         // load image
         var image = $('<img>');
         $(image).load(function() {
-            //setTimeout(function(){
             $('.image_zone_view .loader').hide();
             $('.image_zone_view .image').show();
             $('.image_zone_view').find('.prev, .next').show();
             _this.popup_resize();
-            //}, 1500);
         });
         $('.image_zone_view .image').append( $(image) );
         $(image).attr('src', $(item).find('div.image_album').attr('data-original-url'));
@@ -379,18 +377,12 @@ LionFace.ProfileImages.prototype = {
                 'pk': $(item).data('pk'),
             },
             beforeSend: function(jqXHR, settings) {
-                $ul.hide().html('');
+                $ul.html('');
             },
             success: function(data, textStatus, jqXHR) {
                 if (data.status == 'ok') {
-                    _this.popup_append_comments($(data.comments).filter('li'));
-                    $ul.fadeIn(200);
-                } else {
-                    this.error(jqXHR, textStatus);
+                    _this.popup_refresh_comments($(data.comments).filter('li'));
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                
             },
         });
         // make comment
@@ -419,87 +411,77 @@ LionFace.ProfileImages.prototype = {
         this.popup_start.overflow = undefined;
     },
 
-    popup_append_comments: function($comments) {
+    popup_refresh_comments: function($comments) {
         var _this = this;
         var $ul = $('.image_zone_info .comments ul');
-        $comments.each(function(index, item) {
-            var $item = $(item);
-            $ul.prepend($item);
-            if ($item.find('div.delete').length > 0) {
-                $item.hover(
-                    function(event) {
-                        $item.find('div.delete').show();
-                    },
-                    function(event) {
-                        $item.find('div.delete').hide();
-                    }
-                ).find('div.delete').click(function(event) {
-                    // delete comment
-                    $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
-                    .appendTo($('.image_popup')).dialog({
-                        resizable: false,
-                        height: 150,
-                        width: 400,
-                        modal: true,
-                        closeOnEscape: false,
-                        buttons: {
-                            "Delete": function() {
-                                $.ajax({
-                                    url: LionFace.User['profile_images_comments_delete'],
-                                    type: 'POST',
-                                    data: {
-                                        'comment_pk': $item.data('pk'),
-                                        'pk': $('.image_container li[popup=true]').data('pk'),
-                                        //'last_comment_pk': $('.image_popup .comments li:first').data('pk'),
-                                    },
-                                    success: function(data, textStatus, jqXHR) {
-                                        if (data.status == 'ok') {
-                                            $(item).remove();
-                                            //_this.popup_append_comments($(data.comments).filter('li'));
-                                        } else {
-                                            this.error(jqXHR, textStatus);
-                                        }
-                                    },
-                                });
-                                $(this).dialog('close');
+        $ul.fadeOut(200, function() {
+            $ul.html('');
+            $comments.each(function(index, item) {
+                var $item = $(item);
+                $ul.prepend($item);
+                if ($item.find('div.delete').length > 0) {
+                    $item.hover(
+                        function(event) {
+                            $item.find('div.delete').show();
+                        },
+                        function(event) {
+                            $item.find('div.delete').hide();
+                        }
+                    ).find('div.delete').click(function(event) {
+                        // delete comment
+                        $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
+                        .appendTo($('.image_popup')).dialog({
+                            resizable: false,
+                            height: 150,
+                            width: 400,
+                            modal: true,
+                            closeOnEscape: false,
+                            buttons: {
+                                "Delete": function() {
+                                    $.ajax({
+                                        url: LionFace.User['profile_images_comments_delete'],
+                                        type: 'POST',
+                                        data: {
+                                            'comment_pk': $item.data('pk'),
+                                            'pk': $('.image_container li[popup=true]').data('pk'),
+                                        },
+                                        success: function(data, textStatus, jqXHR) {
+                                            if (data.status == 'ok') {
+                                                _this.popup_refresh_comments($(data.comments).filter('li'));
+                                            }
+                                        },
+                                    });
+                                    $(this).dialog('close');
+                                },
+                                "Cancel": function() {
+                                    $(this).dialog('close');
+                                }
                             },
-                            "Cancel": function() {
-                                $(this).dialog('close');
-                            }
-                        },
-                        open: function(event, ui) {
-                            _this.popup_disableKeyboard();
-                            var $dialog = $(this).parent();
-                            $dialog.find('.ui-dialog-titlebar').remove();
-                            $dialog.find(this).css({'overflow': 'hidden'});
-                            $dialog.find('.ui-dialog-buttonpane').css({
-                                'border-width': 0,
-                                'margin': 0,
-                                'padding': 0,
-                            });
-                            $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
-                        },
-                        close: function(event, ui) {
-                            _this.popup_enableKeyboard();
-                            $(this).dialog('destroy').remove();
-                        },
-                        zIndex: 10002,
+                            open: function(event, ui) {
+                                _this.popup_disableKeyboard();
+                                var $dialog = $(this).parent();
+                                $dialog.find('.ui-dialog-titlebar').remove();
+                                $dialog.find(this).css({'overflow': 'hidden'});
+                                $dialog.find('.ui-dialog-buttonpane').css({
+                                    'border-width': 0,
+                                    'margin': 0,
+                                    'padding': 0,
+                                });
+                                $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
+                            },
+                            close: function(event, ui) {
+                                _this.popup_enableKeyboard();
+                                $(this).dialog('destroy').remove();
+                            },
+                            zIndex: 10002,
+                        });
+                        return false;
                     });
-                    return false;
-                });
-            }
+                }
+            });
+            $ul.fadeIn(200);
         });
     },
-
-    /*
-    popup_comments_get_pks: function() {
-        var pks = new Array();
-        $('.image_zone_info .comments li').each(function(index, item) {
-            pks.push($(item).data('pk'));
-        });
-        return pks;
-    },
-    */
 
     bind_popup: function() {
         var _this = this;
@@ -563,7 +545,6 @@ LionFace.ProfileImages.prototype = {
                         data: {
                             'message': val,
                             'pk': $('.image_container li[popup=true]').data('pk'),
-                            //'pks':  _this.popup_comments_get_pks(),
                         },
                         beforeSend: function(jqXHR, settings) {
                             $this.data('val', val);
@@ -573,7 +554,7 @@ LionFace.ProfileImages.prototype = {
                         success: function(data, textStatus, jqXHR) {
                             if (data.status == 'ok') {
                                 $this.val('');
-                                _this.popup_append_comments($(data.comments).filter('li'));
+                                _this.popup_refresh_comments($(data.comments).filter('li'));
                             } else {
                                 this.error(jqXHR, textStatus);
                             }
