@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, 
 
 from django.utils import simplejson as json
 
-from .fields import ImageWithThumbField, CoordsField
+from .fields import ImageWithThumbField
 from .storage import ImageStorage
 
 
@@ -304,12 +304,7 @@ class UserProfile(User):
 
     def new_notifcations(self):
         return self.notification_set.filter(read=False) \
-                .exclude(type='MC') \
-                .exclude(type='MF') \
-                .exclude(type='MS') \
-                .exclude(type='MM') \
-                .exclude(type='FM') \
-                .exclude(type='MP') \
+                .exclude(type__in=['MC', 'MI', 'MF', 'MS', 'MM', 'FM', 'MP']) \
                 .count()
 
     def add_follower(self, person):
@@ -513,9 +508,6 @@ post_save.connect(create_user_image, sender=UserImage)
 
 
 def delete_user_image(sender, instance, **kwargs):
-    # remove all user_image_tag linked with current image
-    UserImageTag.objects.filter(image=instance).delete()
-    # code above no need for postgresql ?
     # remove image files from fs
     picture = instance.image
     picture.storage.delete(picture.thumb_path)
@@ -569,9 +561,8 @@ class UserImages(models.Model):
     rating = models.IntegerField(blank=True, null=True)
     activity = models.BooleanField(default=False)
 
-    # uncomment prev next migration
-    #class Meta:
-    #    unique_together = (('image', 'profile'),)
+    class Meta:
+        unique_together = (('image', 'profile'),)
 
     objects = UserImagesQuerySet.as_manager()
 
@@ -627,17 +618,6 @@ def delete_user_images(sender, instance, **kwargs):
     if UserImages.objects.filter(image=instance.image).count() == 0:
         instance.image.delete()
 post_delete.connect(delete_user_images, sender=UserImages)
-
-
-class UserImageTag(models.Model):
-    image = models.ForeignKey('UserImage')
-    profile = models.ForeignKey('UserProfile', blank=True, null=True)
-    page = models.CharField(max_length='100', blank=True, null=True)
-    coords = CoordsField()
-    is_delete = models.BooleanField(default=False)
-
-    def __unicode__(self):
-        return '%s in %s' % (self.image, self.profile)
 
 
 class Relationship(models.Model):

@@ -658,6 +658,170 @@ a.profile_btn:hover {
     cursor:pointer;
 }
 
+.image_popup {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+.image_overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background-color: black;
+	opacity: 0.85;
+}
+.image_zone {
+	position: absolute;
+	z-index: 10000;
+	top: 10%;
+	left: 10%;
+	width: 80%;
+	height: 80%;
+	background-color: black;
+}
+.image_zone_view {
+	position: relative;
+	float: left;
+	top: 1;
+	left: 1;
+	bottom: 1;
+	height: 100%;
+}
+.image_zone_view .prev, .image_zone_view .next {
+	position: absolute;
+	z-index: 10001;
+	height: 100%;
+	display: none;
+}
+.image_zone_view .prev img {
+	float: left;
+}
+.image_zone_view .next img {
+	float: right;
+}
+.image_zone_info {
+	float: right;
+	margin: 0 0 0 auto;
+	width: 350px;
+	height: 100%;
+	background-color: white;
+	opacity: 0.90;
+}
+.image_zone_info .scroll_area {
+	width: 350px;
+	overflow: hidden;
+	overflow-y: auto;
+	color: #777;
+}
+.image_zone_info .scroll_area .owner {
+	height: 52px;
+	text-align: left;
+}
+.image_zone_info .scroll_area .owner a {
+	text-decoration: none;
+}
+.image_zone_info .scroll_area .owner .thumb {
+	float: left;
+	background-size: 50px, 50px;
+	width: 50px; height: 50px;
+	margin: 0 auto auto 10px;
+	border: 1px solid #AAA;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.image_zone_info .scroll_area .owner .fullname {
+	position: relative;
+	top: 7px;
+	left: 15px;
+	color: #777;
+}
+.image_zone_info .scroll_area .owner .username {
+	position: relative;
+	top: 4pt;
+	left: 18px;
+	color: #AAA;
+	font-size: 8pt;
+}
+.image_zone_info .scroll_area .comments ul {
+	margin-top: 10px;
+	width: 350px;
+}
+.image_zone_info .scroll_area .comments li {
+	float: left;
+	text-align: left;
+	margin: 4px auto 0 25px;
+	width: 305px;
+	background-color: #EDEFF4;
+}
+.image_zone_info .scroll_area .comments .delete {
+	position: absolute;
+	right: 20px;
+	display: none;
+}
+.image_zone_info .scroll_area .comments .thumb {
+	float: left;
+	background-size: 32px, 32px;
+	width: 32px; height: 32px;
+	margin: 4px auto 4px 4px;
+	border: 1px solid #AAA;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.image_zone_info .scroll_area .comments .text {
+	text-align: left;
+	margin: 7px auto auto 42px;
+}
+.image_zone_info .scroll_area .comments .text a {
+	font-weight: 700;
+	text-decoration: none;
+	color: #777;
+}
+.image_zone_info .scroll_area .comments .date {
+	text-align: left;
+	margin: auto auto 5px 42px;
+	font-size: 8pt;
+}
+.image_zone_info .make_comment {
+	position: absolute;
+	bottom: 10px;
+	width: 350px;
+}
+.image_zone_info .make_comment .thumb {
+	float: left;
+	margin: 0px auto auto 15px;
+	background-size: 32px, 32px;
+	width: 32px; height: 32px;
+	border: 1px solid #AAA;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.image_zone_info .make_comment form {
+	float: right;
+	margin: 1px 10px auto auto;
+}
+.image_zone_info .make_comment textarea {
+	margin-top: 5px;
+	width: 275px;
+	height: 17px;
+	overflow: hidden;
+	resize: none;
+	border-color: #777;
+	border-width: 1px;
+	border-style: solid;
+	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+	font-size: 12px;
+	line-height: 14px;
+	padding-top: 3px;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
 .share_content {
 	padding: 10px 15px 5px 15px; 
 	background-color: #F7F7F7;

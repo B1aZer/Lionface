@@ -1,6 +1,9 @@
-LionFace.Pages = function() {
+LionFace.Pages = function(options) {
+    this.options = $.extend({
+        
+    }, options || {});;
     this.init();
-}
+};
 
 
 LionFace.Pages.prototype = {
@@ -31,8 +34,8 @@ LionFace.Pages.prototype = {
             }); 
         })
     },
-}
+};
 
 $(function() {         
-    LionFace.Pages = new LionFace.Pages()
+    LionFace.Pages = new LionFace.Pages();
 });

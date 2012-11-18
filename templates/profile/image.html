@@ -51,6 +51,7 @@
 {% block js %}
 <script type="text/javascript">
 	$(function() {
+		LionFace.User['profile_user_username'] = '{{ profile_user.username }}';
 		LionFace.User['profile_images_url_more'] = "{% url profile-image-more profile_user.username %}";
 		LionFace.User['profile_images_total_rows'] = {{ total_rows }};
 		LionFace.User['profile_images_now_rows'] = {{ image_rows|length }};

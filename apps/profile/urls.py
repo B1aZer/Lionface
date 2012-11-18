@@ -15,6 +15,7 @@ urlpatterns = patterns('profile.views',
     url(r'^(?P<username>\w+)/image/comments/create/$', 'profile_image_comments_create', name='profile_image_comments_create'),
     url(r'^(?P<username>\w+)/image/comments/$', 'profile_image_comments', name='profile_image_comments'),
     url(r'^(?P<username>\w+)/image/comments/delete/$', 'profile_image_comments_delete', name='profile_image_comments_delete'),
+    url(r'^(?P<username>\w+)/image/comments/notification/$', 'profile_image_comments_notification'),
     url(r'^(?P<username>\w+)/albums/$', 'albums', name="users-albums"),
     url(r'^(?P<username>\w+)/albums/(?P<album_id>\d+)/$', 'album_posts', name="users-albums-posts"),
 
