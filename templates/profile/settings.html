@@ -3,9 +3,9 @@
 
 {% block content_title %}{% endblock %}
 {% block content_middle %}
-	<table width="100%"><tr><td align="left" style="color: #999;">
+	<table width="100%" height="40"><tr><td align="left" style="color: #999;" valign="bottom">
 		<a href="{{ request.user.get_absolute_url }}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | Account
-	</td><td align="right">
+	</td><td align="right" valign="bottom">
 		<a href="{{ request.user.get_absolute_url }}" style="color: #AAA;">Cancel</a>
 	</td></tr></table>
 {% endblock %}
@@ -125,12 +125,6 @@
 </tr>
 <tr>
     <td colspan="2"><span style="font-size: 11px; color: #999;">Note: Loving, commenting and sharing inherit the privacy settings of their parent post. If your post is public then loving, commenting and sharing is also available to the public.</span></td>
-</tr>
-<tr>
-    <td width="200">Love Default<br></td>
-    <td> 
-        <select><option selected>Enalbed</option><option>Disabled</option></select>
-    </td>
 </tr>
 <tr>
     <td width="200">Comment Default<br></td>

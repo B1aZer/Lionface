@@ -14,13 +14,14 @@ LionFace.User.options['pages_community__'+{{ page.id }}] = false;
 {% endblock %}  
 
 {% block content %}
-  <div class="content_area" style="position: relative; top: -12px;">
+  <div class="content_area">
     <div id="profile_top" style="z-index: 999;">
         {% include 'pages/page_requests.html' %}
-        <div class="left">{{page.username}} 
+        <div class="left"><table height="25"><tr><td valign="bottom">{{page.username}} 
             {% if page.url %}
             <a href="{{ page.url }}" target="_black">{{ page.url }}</a>
             {% endif %}
+			</td></tr></table>
         </div>
         {% if request.user|check_pages_community %}
         <div class="right" style="position: relative;">
@@ -35,7 +36,8 @@ LionFace.User.options['pages_community__'+{{ page.id }}] = false;
         </div>
         {% endif %}
 	</div>
-	<div style="position: relative; z-index: 1;">
+
+	<div style="position: relative; display: block; z-index: 1;">
         <div class="cover_photo" style="overflow:hidden;">
             <div id="cover_image" 
                 {% if data_uri %}
@@ -93,7 +95,6 @@ LionFace.User.options['pages_community__'+{{ page.id }}] = false;
 			<td/>
             {% if page.type == 'BS' %}
 			<td width="250" class="love_container love_business" align="center"> 
-                <div class="sponsored"></div>
             {% else %}
 			<td width="250" class="love_container love_nonprofit" align="center"> 
             {% endif %}

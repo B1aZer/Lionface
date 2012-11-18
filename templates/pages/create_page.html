@@ -1,0 +1,62 @@
+	<form id="business_submit_form" action="" method="post">{% csrf_token %} 
+        <div class="create_business" id="create_business">
+            <table width="100%"><tr>
+                <td align="right">Business Name</td>
+                <td align="left">
+                    {{ form_busn.name.errors }}
+                    {{ form_busn.name }}
+                    <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
+                <td align="right"><div style="position: relative;">Business Username</td>
+                    <td width="200" align="left">
+                        {{ form_busn.username.errors }}
+                        {{ form_busn.username }}
+                        <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/business/(page username)</div></div></td>
+                <td width="33%" align="left"><div style="position: relative; left: 7px;">Category:</div>
+                    {{ form_busn.category.errors }}
+                    {{ form_busn.category }}
+                    </td>
+            </tr><tr>
+                <td colspan="4" align="right" style="font-size: 8pt; color: #999;">
+                    <div>
+                        <span style="margin-right: 170px;">{{ form_busn.represent.errors }}</span>
+                        <span style="margin-left: 20px;">{{ form_busn.terms.errors }}</span>
+                    </div>
+                    {{ form_busn.represent }} <label >{{ form_busn.represent.label }}</label>
+                    {{ form_busn.terms }} <label >{{ form_busn.terms.label }}</label>
+                <td align="left">
+                    <a id="business_submit" href="#" class="business_btn">Create Business</a> 
+                    <a href="#" title=" Cancel " onClick="HideContent('create_business'); HideContent('create'); return false;" style="color: #777;">x</a></td>
+            </tr></table>
+        </div>
+    </form>
+    <form id="nonprofit_submit_form" action="" method="post">{% csrf_token %} 
+	<div class="create_nonprofit" id="create_nonprofit">
+		<table width="100%"><tr>
+			<td align="right">Nonprofit Name</td>
+			<td align="left">
+                {{ form_nonp.name.errors }}
+                {{ form_nonp.name }}
+                <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
+			<td align="right"><div style="position: relative;">Nonprofit Username</div></td>
+			<td width="200" align="left">
+                {{ form_nonp.username.errors }}
+                {{ form_nonp.username }}
+                <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/nonprofit/(page username)</div></td>
+			<td width="33%" align="left"><div style="position: relative; left: 7px;">Category:</div>
+                {{ form_nonp.category.errors }}
+                {{ form_nonp.category }}
+				</td>
+		</tr><tr>
+			<td colspan="4" align="right" style="font-size: 8pt; color: #999;">
+                <div>
+                    <span style="margin-right: 170px;">{{ form_nonp.represent.errors }}</span>
+                    <span style="margin-left: 20px;">{{ form_nonp.terms.errors }}</span>
+                </div>
+                {{ form_nonp.represent }} <label >{{ form_nonp.represent.label }}</label>
+                {{ form_nonp.terms }} <label >{{ form_nonp.terms.label }}</label>            
+			<td align="left">
+                <a id="nonprofit_submit" href="#" class="nonprofit_btn">Create Nonprofit</a> 
+				<a href="#" title=" Cancel " onClick="HideContent('create_nonprofit'); HideContent('create'); return false;" style="color: #777;">x</a></td>
+		</tr></table>
+	</div>
+    </form>

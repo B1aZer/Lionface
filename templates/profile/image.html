@@ -1,11 +1,13 @@
 {% extends 'profile/base.html' %}
 {% load media friends format_results %}
 
-{% block content_title %}{% endblock %}
-{% block content_middle %}
+{% block content_title %} {% endblock %}
+{% block content_middle %}{% endblock %}
+{% block content_subtitle %}{% endblock %}
+
+{% block dashboard %}
 	{% include "profile/dashboard.html" %}
 {% endblock %}
-{% block content_subtitle %}{% endblock %}
 
 {% block left_col %}
 <div onclick="window.open('/{{ profile_user.photo }}');return false;" 

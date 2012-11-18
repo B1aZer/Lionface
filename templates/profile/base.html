@@ -29,6 +29,10 @@ $.extend(LionFace.User,{'album_count':'{{ profile_user.get_album_count }}'});
       <div class="center">{% block content_middle %}{% endblock %}</div>
       <div class="right">{% block content_subtitle %}{% endblock %}</div>
     </div>
+  <div style="clear: both;"></div>
+	<div class="center_col">
+	  {% block dashboard %}{% endblock %}
+	</div>
     <div style="clear: both;"></div>
     <div class="left_col">
       {% block left_col %}{% endblock %}
@@ -41,6 +45,7 @@ $.extend(LionFace.User,{'album_count':'{{ profile_user.get_album_count }}'});
 	<div class="center_col">
 	  {% block center_col %}{% endblock %}
 	</div>
+  </div>
   </div>
   {% endblock %}
 

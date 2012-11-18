@@ -180,29 +180,21 @@ a.colored_tag:hover {
 }
 
 
-.dashboard_name {
+.dashboard_name, a.name_link:link, a.name_link:active, a.name_link:visited {
 	color: #777;
 }
 
-a.name_link:hover .dashboard_name {
+a.name_link:hover {
 	color: #F58;
 	text-decoration: underline;
-}
-
-a.name_link {
-	display: block;
-	padding: 4px;
-}
-a.name_link:hover {
-	background: #FCFCFC;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
 }
 
 .shared {
 	background: #900;
 	display: inline-block;
-	padding: 7px;
+	padding: 7px 0 5px 0;
+	width: 50px;
+	text-align: center;
 	color: #FFF;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -529,7 +521,8 @@ a.profile_btn:hover {
 }
 
 .image_album {
-	background-size: 200px 200px; width: 200px; height: 200px; border: 1px solid #E7E7E7;
+	background-size: 200px 200px; -moz-background-size: 200px 200px !important; 
+ 	width: 200px; height: 200px; border: 1px solid #E7E7E7;
 }
 
 .ui-state-default {
@@ -892,20 +885,30 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 #dashboard {
 	display: block;
 	width: 900px;
+	height: 50px;
 	border: 1px solid #DDD;
 	background: #FFF;
 	-moz-box-shadow: 0 4px 8px -4px #AAA;
 	box-shadow: 0 4px 8px -4px #AAA;
-	margin-bottom: 10px;
-	margin-top: 26px;
+	margin-bottom: 30px !important;
 }
 
 .dashboard_related {
-	display: block; height: 100%;
-	width: 120px;
+	display: block; height: 100%; width: 120px;
 	position: relative; top: 2px;
-	background: #F7F7F7;
+}
+
+.dashboard_related_td {
+	background: #fafafa; /* Old browsers */
+	background: -moz-linear-gradient(top, #fafafa 0%, #eeeeee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
 	border-left: 1px solid #CCC;
+	padding-left: 10px;
 }
 
 a.db_related {
@@ -918,8 +921,11 @@ a.db_related:hover {
 
 .db_addfriend a.profile_btn {
 	position: relative;
-	top: 1px;
+	top: 1px; right: 5px;
 }
+
+.db_addfriend {
+	}
 
 a.send_message:link, a.send_message:active, a.send_message:visited {
 	font-size: 8pt;
@@ -972,7 +978,7 @@ a.send_message:hover {
 	opacity: 1;
 }
 
-.left { float: left; color: #999; }
+.left { float: left; color: #999; display: block; }
 .right { float: right; position: relative; }
 .center { text-align: center; position: relative; left: 0px; top: 0px; width: 900px; }
 
@@ -995,7 +1001,7 @@ a.send_message:hover {
 	
 }
 
-#profile_top { display: block; font-size: 9pt; margin-top: 20px; position: relative; min-height: 26px; }
+#profile_top { display: block; font-size: 9pt; position: relative; height: 40px; margin-top: 15px; }
 #profile_top div { display: inline-block; }
 
 
@@ -1022,26 +1028,29 @@ a.send_message:hover {
 /* Header */
 
 #header {
-  height: 40px;
+	height: 40px;
 	border: 1px solid #CCC;
 	border-width: 0 0 1px 0;
 	background: url(../images/header_bg.png) #333;
 	background-size: 450px 50px;
+	-moz-background-size: 450px 50px !important; 
 	background-position: center center;
-	-moz-box-shadow: 0 0 8px -2px #333;
-	box-shadow: 0 0 8px -2px #333;
+	-moz-box-shadow: 0 4px 8px -2px #333;
+	box-shadow: 0 4px 8px -4px #333;
+	position: fixed; left: 0px; top: 0px;
+	width: 100%;
 }
 
 #header .left_links {
-  float: left; position: relative; left: -10px;
+  float: left; position: relative; left: 1px; top: -10px;
 }
-#header .left_links ul { list-style: none; padding: 0px; margin: 0px; margin-top: 15px; }
+#header .left_links ul { list-style: none; padding: 0px; margin: 0px; }
 #header .left_links ul li { padding: 0px; margin: 0px; display: inline-block; }
 
 #header #search_bar { 
 	float: right; 
 	background: #FFF; 
-	position: relative; top: 7px;
+	position: relative; top: 7px; right: 1px;
 }
 
 #header #search_bar input[type=text] { 
@@ -1068,7 +1077,8 @@ a.send_message:hover {
 
 .header_profile_image div {
 	display: inline-block; 
-	background-size: 34px 34px; 
+	background-size: 34px 34px;
+	-moz-background-size: 34px 34px !important; 
 	background-repeat: no-repeat;
 	background-position: center center;
 	width: 34px; height: 34px; 
@@ -1125,6 +1135,8 @@ a.nav_page:link, a.nav_page:active, a.nav_page:visited {
 	border-radius: 3px;
 	background: url(../images/noThumb.png) #FAFAFA;
 	background-size: 30px 30px;
+	-moz-background-size: 30px 30px !important; 
+
 }
 
 .page_settings {
@@ -1209,6 +1221,8 @@ a.nav_messages:link, a.nav_messages:active, a.nav_messages:visited {
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: 18px 18px;
+	-moz-background-size: 18px 18px !important; 
+
 }
 
 a.nav_notifications:link, a.nav_notifications:active, a.nav_notifications:visited {
@@ -1216,6 +1230,8 @@ a.nav_notifications:link, a.nav_notifications:active, a.nav_notifications:visite
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: 18px 18px;
+	-moz-background-size: 18px 18px !important; 
+
 }
 
 a.nav_messages:hover { 
@@ -1223,6 +1239,8 @@ a.nav_messages:hover {
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: 18px 18px;
+	-moz-background-size: 18px 18px !important; 
+
 }
 
 a.nav_notifications:hover { 
@@ -1230,6 +1248,8 @@ a.nav_notifications:hover {
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: 18px 18px;
+	-moz-background-size: 18px 18px !important; 
+
 }
 
 .count {
@@ -1248,6 +1268,7 @@ a.nav_notifications:hover {
 	height: 90px; 
 	background: url(../images/noProfilePhoto.png) #EEE; 
 	background-size: 90px 90px;
+	-moz-background-size: 90px 90px !important; 
 	margin: 10px; 
 	position: relative; top: 7px;
 	border: 1px solid #CCC;
@@ -1265,7 +1286,7 @@ a.nav_notifications:hover {
 .auto_subtext { 
 	font-size: 8pt;
 	line-height: 8pt;
-	color: #777;
+	color: #CCC;
 }
 
 .result_related, .result_post, .result_search {
@@ -1294,7 +1315,8 @@ a.nav_notifications:hover {
 .result .subtext { font-size: 8pt; color: #999; line-height: 10pt; }
 
 .link_loader { width: 16px; height: 16px; float: left; background: url(../images/link_loader.gif) center no-repeat; }
-.large_loader { background: url(../images/loader.gif); background-size: 64px 64px; width: 600px; height: 64px; margin: auto; padding: 50px; background-position: center center; background-repeat: no-repeat; }
+.large_loader { background: url(../images/loader.gif); background-size: 64px 64px; -moz-background-size: 64px 64px !important; 
+ width: 600px; height: 64px; margin: auto; padding: 50px; background-position: center center; background-repeat: no-repeat; }
 
 .DoS {
 	position: absolute;
@@ -1327,6 +1349,7 @@ a.nav_notifications:hover {
 .link-output:hover {
 	background: url(../images/arrow.png) #FFF;
 	background-size: 20px 20px;
+	-moz-background-size: 20px 20px !important; 
 	background-position: center right; 
 	background-repeat: no-repeat;
 	cursor: pointer;
@@ -1406,6 +1429,7 @@ a.new_notification, span.new_notification {
 .message:hover {
 	background: url(../images/arrow.png) #FFF;
 	background-size: 20px 20px;
+	-moz-background-size: 20px 20px !important; 
 	background-position: center right; 
 	background-repeat: no-repeat;
 	-moz-border-radius: 3px 0 0 3px;
@@ -1585,25 +1609,6 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 }
 
 /* Pages */
-
-.sponsored, .unsponsored {
-	display: block; height: 49px; width: 100px;
-	background: url('../images/sponsored.png');
-	background-position: top right;
-	background-repeat: no-repeat;
-	background-size: 100px 49px;
-	position: absolute;
-	right: -15px;
-	top: -12px;
-	z-index: 999;
-}
-
-.unsponsored, .sponsored:hover {
-	background: url('../images/unsponsored.png');
-	background-position: top right;
-	background-repeat: no-repeat;
-	background-size: 100px 49px;
-}
 
 a.love:link, a.love:active, a.love:visited { 
 	display: inline-block; 
@@ -1789,7 +1794,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 .create_options {
 	position: absolute; 
 	right: -16px; 
-	top: -10px; 
+	bottom: 0px; 
 	width: 400px; 
 	text-align: right; 
 	background: #FBFBFB;

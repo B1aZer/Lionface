@@ -1,4 +1,5 @@
 <div id="page_friend_requests" style="text-align:center; width: 100%;">
+<div style="position: absolute; right: 0px; top: 50px;">
 {% if request.user in page.get_community_admins %}
             {% for reqst in page.get_requests %} 
 				<div align="right" style="display: block;">
@@ -16,4 +17,5 @@
                 </div>
             {% endfor %} 
 {% endif %}
+</div>
 </div>
