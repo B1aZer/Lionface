@@ -1,80 +1,137 @@
+LionFace.Notification = function(options) {
+    this.options = $.extend({
+        
+    }, options || {});;
+    this.init();
+};
 
+LionFace.Notification.prototype = {
 
-function load_post(post, type, model) { 
-    var url = "/posts/show/";
+    init: function() {
+        this.bind_load_content();
+        this.bind_mark_notification();
+        this.bind_nav();
+        this.reset_notificaton_count();
+    },
 
-    var model = model || '';
+    reset_notificaton_count: function() {  
+        if ($('#notifications_id_notif span').length) {
+            $('#notifications_id_notif span').remove();
+        }
+    },
 
-    var $elem = $('.right_content');
-    $elem.html("");
-    $elem.addClass("large_loader"); 
+    load_post: function(post, type, model) { 
+        var url = "/posts/show/";
+        var model = model || '';
+        var $elem = $('.right_content');
 
-    make_request({
-      url: url,
-      data: {
-          post_id : post,
-          post_type : type,
-          post_model : model,
-      },
-      callback: function(data) {
-        //alert(data.html);
-        $elem.removeClass("large_loader");
-        $elem.html(data.html);
-        make_excerpts();
+        $elem.html("").addClass("large_loader"); 
+        make_request({
+            url: url,
+            data: {
+                post_id: post,
+                post_type: type,
+                post_model: model,
+            },
+            callback: function(data) {
+                $elem.removeClass("large_loader")
+                if (data.html != undefined) {
+                    console.log( data.html );
+                    $elem.html(data.html);
+                    make_excerpts();
+                }
+            },
+            errorback: function() {
+                $elem.removeClass("large_loader");
+                alert('Unable to retrieve data.');
+            },
+        });
+    },
 
-      },
-      errorback: function() {
-        alert('Unable to retrieve data.');
-        $elem.removeClass("large_loader");
-      }
-    });    
-
-}     
-
-function reset_notificaton_count() {  
-    if ($('#notifications_id_notif span').length) {
-        $('#notifications_id_notif span').remove();
-    }
-}
-
-$(document).ready(function(){
-    $(document).on('click',".profile_post, .shared_post, .comment_submitted, .follow_comment, .follow_shared", function(e) {
-        var starter = document.elementFromPoint(e.clientX, e.clientY);  
-        if ($(starter).is('a')) {
+    load_image_comments: function(pk) {
+        if (pk == undefined)
             return;
-            }
-        var meta = $(this).metadata();
-        if (meta.id) {
-            load_post(meta.id, meta.type, meta.model)
-            }
-        else {
-            $('.right_content').html("");
-            }
-    });
-
-    $(document).on('click','.nav_link', function() { 
-        url = $(this).attr('href');
-
+        var $elem = $('.right_content');
         $.ajax({
+            url: '/' + LionFace.User.username + '/image/comments/notification/',
+            data: {
+                'pk': pk,
+            },
+            beforeSend: function(jqXHR, settings) {
+                $elem.html('').addClass('large_loader');
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 'ok') {
+                    $elem.html(data.html);
+                } else {
+                    this.error(jqXHR, textStatus);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert('Unable to retrieve data.');
+            },
+            complete: function(jqXHR, textStatus) {
+                $elem.removeClass('large_loader');
+            },
+        });
+        
+    },
+
+    bind_load_content: function() {
+        var _this = this;
+        var selectors = [
+            '.profile_post',
+            '.shared_post',
+            '.comment_submitted',
+            '.comment_image',
+            '.follow_comment',
+            '.follow_shared',
+        ];
+
+        $(document).on('click', selectors.join(','), function(e) {
+            var starter = document.elementFromPoint(e.clientX, e.clientY);  
+            if ($(starter).is('a')) {
+                return;
+            }
+            var meta = $(this).metadata();
+            if (meta.id) {
+                if ($(this).hasClass('comment_image')) {
+                    _this.load_image_comments(meta.id);
+                } else {
+                    _this.load_post(meta.id, meta.type, meta.model)
+                }
+            } else {
+                $('.right_content').html("");
+            }
+        });
+    },
+
+    bind_mark_notification: function() {
+        $(document).on('click', '.notification', function(e) {
+            if ($(this).find('.new_notification').length) {
+                $(this).find('.new_notification').removeClass('new_notification');
+            }
+        });
+    },
+
+    bind_nav: function() {
+        $(document).on('click', '.nav_link', function() { 
+            $.ajax({
                 type: 'GET',
-                url: url,
+                url: $(this).attr('href'),
                 success: function(data) {
                     $('.left_col').replaceWith(data);
                 },
                 error: function() {
                     console.log('fail');
-                } 
+                },
             });
+            return false;
+        });
+    },
 
-        return false;
+};
 
-    });           
-
-    $(document).on('click',".notification", function(e) {
-        if ($(this).find('.new_notification').length) {
-            $(this).find('.new_notification').removeClass('new_notification');
-        }
-    });
-
-    reset_notificaton_count();
-}); 
+$(function() {         
+    LionFace.Notification = new LionFace.Notification();
+});

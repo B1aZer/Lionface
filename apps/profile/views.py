@@ -350,6 +350,34 @@ def profile_image_comments_delete(request, username):
             'profile_user': profile_user,
         }, context_instance=RequestContext(request))
     except Exception as e:
+        print e
+        data['status'] = 'fail'
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def profile_image_comments_notification(request, username):
+    if request.user.username != username:
+        raise Http404
+    profile_user = request.user
+
+    try:
+        image = UserImages.objects.filter(profile=profile_user) \
+            .only('image') \
+            .select_related('image') \
+            .get(pk=request.REQUEST.get('pk', None)) \
+            .image
+    except UserImageComments.DoesNotExist as e:
+        return HttpResponseBadRequest('Bad pk was received.')
+
+    data = {}
+    try:
+        data['html'] = render_to_string('profile/image_notification.html', {
+            'image': image,
+            'profile_user': profile_user,
+        }, context_instance=RequestContext(request))
+    except Exception as e:
         data['status'] = 'fail'
     else:
         data['status'] = 'ok'

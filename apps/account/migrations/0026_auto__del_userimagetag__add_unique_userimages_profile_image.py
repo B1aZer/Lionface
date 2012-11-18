@@ -3,46 +3,31 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
-from django.db import connection, transaction
 
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Deleting model 'UserImageTag'
+        db.delete_table('account_userimagetag')
 
-        # Changing field 'UserProfile.photo'
-        db.alter_column('account_userprofile', 'photo', self.gf('account.fields.ImageWithThumbField')(max_length=100))
-        # Deleting field 'UserImage.rating'
-        db.delete_column('account_userimage', 'rating')
-
-
-        # Changing field 'UserImage.image'
-        db.alter_column('account_userimage', 'image', self.gf('account.fields.ImageWithThumbField')(max_length=100))
-        # Adding field 'UserImages.rating'
-        db.add_column('account_userimages', 'rating',
-                      self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
-                      keep_default=False)
-        # Set value for field rating
-        if not db.dry_run:
-            cursor = connection.cursor().cursor
-            cursor.execute("UPDATE account_userimages SET rating = id;")
-            transaction.commit_unless_managed()
+        # Adding unique constraint on 'UserImages', fields ['profile', 'image']
+        db.create_unique('account_userimages', ['profile_id', 'image_id'])
 
 
     def backwards(self, orm):
+        # Removing unique constraint on 'UserImages', fields ['profile', 'image']
+        db.delete_unique('account_userimages', ['profile_id', 'image_id'])
 
-        # Changing field 'UserProfile.photo'
-        db.alter_column('account_userprofile', 'photo', self.gf('django.db.models.fields.files.ImageField')(max_length=100))
-        # Adding field 'UserImage.rating'
-        db.add_column('account_userimage', 'rating',
-                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
-                      keep_default=False)
-
-
-        # Changing field 'UserImage.image'
-        db.alter_column('account_userimage', 'image', self.gf('django.db.models.fields.files.ImageField')(max_length=100))
-        # Deleting field 'UserImages.rating'
-        db.delete_column('account_userimages', 'rating')
+        # Adding model 'UserImageTag'
+        db.create_table('account_userimagetag', (
+            ('profile', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['account.UserProfile'], null=True, blank=True)),
+            ('is_delete', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('image', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['account.UserImage'])),
+            ('page', self.gf('django.db.models.fields.CharField')(max_length='100', null=True, blank=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+        ))
+        db.send_create_signal('account', ['UserImageTag'])
 
 
     models = {
@@ -69,21 +54,27 @@ class Migration(SchemaMigration):
             'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'my_images'", 'to': "orm['account.UserProfile']"}),
             'profiles': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'all_images'", 'symmetrical': 'False', 'through': "orm['account.UserImages']", 'to': "orm['account.UserProfile']"})
         },
+        'account.userimagecomments': {
+            'Meta': {'ordering': "['date']", 'object_name': 'UserImageComments'},
+            'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'comments'", 'to': "orm['account.UserImage']"}),
+            'message': ('django.db.models.fields.TextField', [], {}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"})
+        },
+        'account.userimagecounter': {
+            'Meta': {'object_name': 'UserImageCounter'},
+            'count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['account.UserProfile']", 'unique': 'True'})
+        },
         'account.userimages': {
-            'Meta': {'object_name': 'UserImages'},
+            'Meta': {'unique_together': "(('image', 'profile'),)", 'object_name': 'UserImages'},
             'activity': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserImage']"}),
             'profile': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"}),
             'rating': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
-        },
-        'account.userimagetag': {
-            'Meta': {'object_name': 'UserImageTag'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserImage']"}),
-            'is_delete': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'page': ('django.db.models.fields.CharField', [], {'max_length': "'100'", 'null': 'True', 'blank': 'True'}),
-            'profile': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         'account.useroptions': {
             'Meta': {'object_name': 'UserOptions'},
@@ -100,7 +91,7 @@ class Migration(SchemaMigration):
             'friends': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'friends_rel_+'", 'to': "orm['account.UserProfile']"}),
             'hidden': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'hidden_from'", 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
             'optional_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': "'200'"}),
-            'photo': ('account.fields.ImageWithThumbField', [], {'default': "'images/noProfilePhoto.png'", 'max_length': '100'}),
+            'photo': ('account.fields.ImageWithThumbField', [], {'default': "'uploads/images/noProfilePhoto.png'", 'max_length': '100'}),
             'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
         },
         'auth.group': {
