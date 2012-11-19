@@ -1,10 +1,4 @@
-pages sorting
-SMILEYS DB WHAAAT
-fix on pages
-#pages$
-not unique -> delete requests
 ##next###
-redirect after create!!
 ### DoS ###
 loop problem
 

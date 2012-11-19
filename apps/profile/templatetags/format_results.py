@@ -105,7 +105,11 @@ def smileys(value):
 
     for smiley in Smiley.objects.all():
         # come up with the <img> tag
-        img = '<img class="smiley" src="/%s" alt="%s" height="%i" width="%i" />' % (smiley.image.url, smiley.description, smiley.image.height, smiley.image.width)
+        try:
+            img = '<img class="smiley" src="/%s" alt="%s" height="%i" width="%i" />' % (smiley.image.url, smiley.description, smiley.image.height, smiley.image.width)
+        except:
+            # someone deleted file from smileys directory
+            img = smiley.pattern
         if False:
             # regex patterns allow you to use the same Smiley for multiple
             # ways to type a smiley

@@ -3,6 +3,9 @@
 $(document).ready(function() {
     $('.friend_busn_hidden , .friend_nonp_hidden').hide();
 });
+if (LionFace.User.options['pages_community__'+LionFace.User.page_id]) {
+            LionFace.User.Pages_sortable_friends();
+} 
 </script>
 <div class="float_left">
     {% if page.get_friends %}
