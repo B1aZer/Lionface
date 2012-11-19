@@ -1,14 +1,13 @@
-LionFace.ProfileImages = function() {
+LionFace.ProfileImages = function(options) {
+    this.options = $.extend({
+        'swap_images_default_delay': 1000,
+        'set_backgroundImage_default_delay': 1000,
+        'popup_fadeDuration': 500,
+    }, options || {});
     this.init();
 }
 
 LionFace.ProfileImages.prototype = {
-
-    options: {
-        'swap_images_default_delay': 1000,
-        'set_backgroundImage_default_delay': 1000,
-        'popup_fadeDuration': 500,
-    },
 
     init: function() {
         var _this = this;
@@ -16,7 +15,7 @@ LionFace.ProfileImages.prototype = {
             _this.create_settings(elem);
         });
         this.sort_images();
-        if (!LionFace.User.is_anonymous) {
+        if (!LionFace.User.is_anonymous && LionFace.User.username == LionFace.User.profile_user_username) {
             this.bind_sorting();
         }
         this.bind_view_more_button();

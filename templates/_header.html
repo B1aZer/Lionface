@@ -1,7 +1,8 @@
 {% load media format_results %}
-<div id="header">
+<div style="height: 40px; position: relative;">
+<div id="header" style="z-index: 99999;">
   <div class="content_area">
-    <div class="left_links" style="position: relative; top: -25px; left: 0pt;">
+    <div class="left_links">
       <ul>
         <li><a href="{% url profile.views.profile username=request.user.username %}" style="font-size: 12pt;" class="header_profile_image">
 			<div thumb="1" style="background: url('/{{ request.user.photo.thumb_name }}'); background-size: 34px 34px;"></div>
@@ -31,6 +32,7 @@
   </div>
 </div>
 
+
 <div align="center">
 
 {% for one_page in request.user.get_admin_pages %}
@@ -38,15 +40,15 @@
 {% cycle 55 95 135 175 215 255 295 335 375 415 455 495 as top_offset silent %}
 <div align="center" style="position: relative; width: 900px; height: 1px; text-align: left; display: block;">
     <div style="position: relative; left: {{ left_offset }}px; top: {{ top_offset }}px; width: 30px; z-index: 9999;">
-		<div onMouseOver="ShowContent('{{ one_page.id }}'); return false;" 
-            onMouseOut="HideContent('{{ one_page.id }}'); return false;" style="position: relative;">
+		<div onMouseOver="ShowContent('8_{{ one_page.id }}'); return false;" 
+            onMouseOut="HideContent('8_{{ one_page.id }}'); return false;" style="position: relative;">
 			<!-- need set thumb in a tag -->
             {% if one_page.type == 'BS' %}
-                <a href="{% url business-page slug=one_page.username %}" class="nav_page"></a>
+                <a href="{% url business-page slug=one_page.username %}" class="nav_page" style="background-image: url('/{{ one_page.photo.thumb_name }}');"></a>
             {% else %}
-                <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page"></a>
+                <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page" style="background-image: url('/{{ one_page.photo.thumb_name }}');"></a>
             {% endif %}
-			<div class="page_settings" style="display: none;" id="{{ one_page.id }}">
+			<div class="page_settings" style="display: none;" id="8_{{ one_page.id }}">
 			<div class="page">
 				<div class="one_page_name">{{ one_page.name }}</div>
                 {% if request.user|check_pages_basics:one_page or request.user|check_pages_admins:one_page %}
@@ -62,7 +64,7 @@
 
 <div style="position: relative; width: 900px; height: 1px; text-align: right;">
 
-	<div style="position: relative; right: -908px; top: 27px; width: 35px; z-index: 100;">
+	<div style="position: relative; right: -908px; top: 83px; width: 35px; z-index: 100;">
         
 		<a href="{% url messaging.views.messages request.user.username %}" id="messages_id_notif" class="nav_messages" title=" Messages ">
             {% if request.user.new_messages > 0 %} <span class="count">{{request.user.new_messages}}</span> {% endif %}
@@ -78,4 +80,4 @@
 </div>
 
 </div>
-
+</div>

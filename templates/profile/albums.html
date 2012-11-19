@@ -1,16 +1,17 @@
 {% extends 'profile/profile.html' %}
 {% load media friends format_results %}
+
 {% block content_title %} {% endblock %}
-{% block content_middle %}
-
-{% include "profile/dashboard.html" %}
-
-{% endblock %}
+{% block content_middle %}{% endblock %}
 {% block content_subtitle %}{% endblock %}
+
+{% block dashboard %}
+	{% include "profile/dashboard.html" %}
+{% endblock %}
 
 {% block left_col %}
 <div  onclick="window.location.href = '{% url profile.views.profile_image profile_user.username %}';return false;" 
-    class="noPhoto" style="background-image: url('/{{ profile_user.photo.thumb_name }}'); background-size: 200px 200px;"></div>
+    class="noPhoto" style="background-image: url('/{{ profile_user.photo.thumb_name }}'); background-size: 200px 200px; -moz-background-size: 200px 200px !important;"></div>
     
 	{% if profile_user == request.user %}
 		<div style="color: #999; font-size: 8pt; text-align: center; padding: 10px;">To rename an album, click on the name, enter a new name, and then click away.<br /><br />To view an album,<br /> click on the Posts link.</div>

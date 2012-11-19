@@ -11,12 +11,14 @@ NOTIFICATION_TYPES = (
     ('FR', 'Friend Request'),
     ('FA', 'Friend Accepted'),
     ('CS', 'Comment Submitted'),
+    ('CI', 'Comment Image'),
     ('PS', 'Post Shared'),
     ('PP', 'Profile Post'),
     ('FF', 'Following Acquired'),
     ('FC', 'Follow Comment'),
     ('FS', 'Follow Shared'),
     ('MC', 'Multiple Comment'),
+    ('MI', 'Multiple Image Comment'),
     ('MF', 'Multiple Comment Following'),
     ('MS', 'Multiple Shared'),
     ('MM', 'Multiple Shared Following'),
@@ -43,7 +45,9 @@ class Notification(models.Model):
     other_user = models.ForeignKey(UserProfile, null=True, related_name='other_user')
 
     def people_counter(self):
-        return self.extra_set.filter(user_id__gt = 0).count() or 1
+        if not hasattr(self, '_people_counter'):
+            setattr(self, '_people_counter', self.extra_set.filter(user_id__gt = 0).count() or 1)
+        return getattr(self, '_people_counter')
 
     def mark_read(self):
         if not self.read:
@@ -53,6 +57,13 @@ class Notification(models.Model):
         if self.type == 'MC':
             original_notfs = Notification.objects.filter(user=self.user, \
                     type='CS', \
+                    object_id = self.content_object.id,
+                    read = False)
+            if original_notfs.count():
+                original_notfs.update(read=True)
+        if self.type == 'MI':
+            original_notfs = Notification.objects.filter(user=self.user, \
+                    type='CI', \
                     object_id = self.content_object.id,
                     read = False)
             if original_notfs.count():
@@ -161,6 +172,18 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
 comment_was_posted.connect(create_comment_notifiaction)
 
 
+def create_comment_image_notifiaction(sender, instance, created, **kwargs):
+    if created:
+        if instance.owner != instance.image.owner:
+            Notification.objects.create(
+                user=instance.image.owner,
+                type='CI',
+                other_user=instance.owner,
+                content_object=instance.image
+            ).save()
+post_save.connect(create_comment_image_notifiaction, sender=UserImageComments)
+
+
 def create_follow_notification(sender, instance, created, **kwargs):
     if created:
         if instance.from_user <> instance.to_user:
@@ -183,8 +206,9 @@ pre_delete.connect(delete_dated_notifications, sender=NewsItem)
 
 def update_notification_count(sender, instance, created, **kwargs):
     """ merge unread notifications to one """
-    if instance.type in ('CS','FC','PS','FS'):
+    if instance.type in ('CS','CI','FC','PS','FS'):
         if instance.type == 'CS': notification_type = 'MC'
+        if instance.type == 'CI': notification_type = 'MI'
         if instance.type == 'FC': notification_type = 'MF'
         if instance.type == 'PS': notification_type = 'MS'
         if instance.type == 'FS': notification_type = 'MM'
@@ -223,7 +247,6 @@ def update_notification_count(sender, instance, created, **kwargs):
                             obj.extra_set.create(user_id=user_notf.other_user.id)
                     else:
                         obj.extra_set.create(user_id=user_notf.other_user.id)
-
             else:
                 obj = notf.get()
                 if obj.extra_set.all():

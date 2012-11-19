@@ -23,7 +23,6 @@ class Migration(SchemaMigration):
             ('image', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['account.UserImage'])),
             ('profile', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['account.UserProfile'], null=True, blank=True)),
             ('page', self.gf('django.db.models.fields.CharField')(max_length='100', null=True, blank=True)),
-            ('coords', self.gf('account.models.CoordsField')()),
             ('is_delete', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('account', ['UserImageTag'])
@@ -90,7 +89,6 @@ class Migration(SchemaMigration):
         },
         'account.userimagetag': {
             'Meta': {'object_name': 'UserImageTag'},
-            'coords': ('account.models.CoordsField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserImage']"}),
             'is_delete': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),

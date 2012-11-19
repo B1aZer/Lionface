@@ -10,33 +10,33 @@
 	  </td>
 	</tr>
     <tr>
-      <td align="right">{{ signup_form.full_name.label }}:<br /><span class="help_text">{{ signup_form.full_name.help_text }}</span></td>
-      <td>{{ signup_form.full_name }} {{ signup_form.full_name.errors }}</td>
-	  <td><img src="{% media_url 'images/check.png' %}" width="20" /></td>
+      <td align="right" width="200">{{ signup_form.full_name.label }}:<br /><span class="help_text">{{ signup_form.full_name.help_text }}</span></td>
+      <td align="right">{{ signup_form.full_name }} {{ signup_form.full_name.errors }}</td>
+	  <td width="20"><img src="{% media_url 'images/check.png' %}" width="20" /></td>
     </tr>
     <tr>
       <td align="right">{{ signup_form.password.label }}:<br /><span class="help_text">{{ signup_form.password.help_text }}</span></td>
-      <td>{{ signup_form.password }} {{ signup_form.password.errors }}</td>
-	  <td><img src="{% media_url 'images/check_no.png' %}" width="20" /></td>
+      <td align="right">{{ signup_form.password }} {{ signup_form.password.errors }}</td>
+	  <td width="20"><img src="{% media_url 'images/check_no.png' %}" width="20" /></td>
     </tr>
     <tr>
       <td align="right">{{ signup_form.password2.label }}:<br /><span class="help_text">{{ signup_form.password2.help_text }}</span></td>
-      <td>{{ signup_form.password2 }} {{ signup_form.password2.errors }}</td>
-	  <td></td>
+      <td align="right">{{ signup_form.password2 }} {{ signup_form.password2.errors }}</td>
+	  <td width="20"></td>
     </tr>
     <tr>
       <td align="right">{{ signup_form.email.label }}:<br /><span class="help_text">{{ signup_form.email.help_text }}</span></td>
-      <td>{{ signup_form.email }} {{ signup_form.email.errors }}</td>
-	  <td></td>
+      <td align="right">{{ signup_form.email }} {{ signup_form.email.errors }}</td>
+	  <td width="20"></td>
     </tr>
     <tr>
       <td align="right">{{ signup_form.username.label }}:<br /><span class="help_text">{{ signup_form.username.help_text }}</span></td>
-      <td>{{ signup_form.username }} {{ signup_form.username.errors }}</td>
-	  <td></td>
+      <td align="right">{{ signup_form.username }} {{ signup_form.username.errors }}</td>
+	  <td width="20"></td>
     </tr>
     <tr>
-    <td colspan="2" style="font-size: 8pt; text-align: right; letter-spacing: 1.25pt;">{{ signup_form.terms }} I agree to the <a href="{% url public.views.terms %}" target="_blank" style="color: #555">Terms</a>. <input id="signup_submit" type="submit" value="Create an Account"></td>
-	  <td></td>
+    <td colspan="3" style="font-size: 8pt; letter-spacing: 1.25pt;" align="right">{{ signup_form.terms }} I agree to the <a href="{% url public.views.terms %}" target="_blank" style="color: #555">Terms</a>. <input id="signup_submit" type="submit" value="Create an Account"></td>
+
     </tr>
   </table>
 </div>

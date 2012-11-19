@@ -1,0 +1,9 @@
+<li class="comment_image notification {type: 'comment image', id: '{{ notification.content_object.id }}'}">
+    <div style="padding: 15px;" class="link-output">
+        <a{% if notification.new_one %} class="new_notification"{% endif %} href="{{ notification.other_user.get_absolute_url }}">
+            {{ notification.other_user.get_full_name }}
+        </a><br />
+        <span style="color: #777; text-decoration: underline;">commented</span> on your image.
+    </div>
+    <div class="separator"></div>
+</li>

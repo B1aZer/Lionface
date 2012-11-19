@@ -4,11 +4,11 @@
 
 {% block content_title %}{% endblock %}
 {% block content_middle %}
-	<table width="100%"><tr><td align="left" width="200" style="color: #999;">
-		<a href="{% url profile.views.profile request.user.username %}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | News Feed
+	<table width="100%" height="40"><tr><td align="left" width="200" style="color: #999;" valign="bottom">
+		<a href="{% url profile.views.profile request.user.username %}" class="name_link">{{ user.full_name }}</a> | News Feed
 	</td><td align="center">
 		<a href="{% url schools.views.home %}" class="find_friends" style="display: none;">Find Friends from School ></a>
-	</td><td align="right" width="200">
+	</td><td align="right" width="200" valign="bottom">
 		<span style="color: #DDD;">share your heart</span>
 	</td></tr></table>
 {% endblock %}

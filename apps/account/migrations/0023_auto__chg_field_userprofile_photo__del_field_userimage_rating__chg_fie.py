@@ -79,7 +79,6 @@ class Migration(SchemaMigration):
         },
         'account.userimagetag': {
             'Meta': {'object_name': 'UserImageTag'},
-            'coords': ('account.fields.CoordsField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserImage']"}),
             'is_delete': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),

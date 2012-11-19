@@ -3,24 +3,25 @@
 
 {% block js %}
 <script>
-LionFace.User.page_id = '{{ page.id }}';
-LionFace.User.page_list = true;
-{% if request.user|check_pages_community:page %}
-LionFace.User.options['pages_community__'+{{ page.id }}] = true;
-{% else %}
-LionFace.User.options['pages_community__'+{{ page.id }}] = false;
-{% endif %} 
+    LionFace.User.page_id = '{{ page.id }}';
+    LionFace.User.page_list = true;
+    {% if request.user|check_pages_community:page %}
+        LionFace.User.options['pages_community__'+{{ page.id }}] = true;
+    {% else %}
+        LionFace.User.options['pages_community__'+{{ page.id }}] = false;
+    {% endif %} 
 </script>
 {% endblock %}  
 
 {% block content %}
-  <div class="content_area" style="position: relative; top: -12px;">
+  <div class="content_area">
     <div id="profile_top" style="z-index: 999;">
         {% include 'pages/page_requests.html' %}
-        <div class="left">{{page.username}} 
+        <div class="left"><table height="25"><tr><td valign="bottom">{{page.username}} 
             {% if page.url %}
             <a href="{{ page.url }}" target="_black">{{ page.url }}</a>
             {% endif %}
+      </td></tr></table>
         </div>
         {% if request.user|check_pages_community %}
         <div class="right" style="position: relative;">
@@ -34,8 +35,9 @@ LionFace.User.options['pages_community__'+{{ page.id }}] = false;
             </div>
         </div>
         {% endif %}
-	</div>
-	<div style="position: relative; z-index: 1;">
+  </div>
+
+    <div style="position: relative; display: block; z-index: 1;">
         <div class="cover_photo" style="overflow:hidden;">
             <div id="cover_image" 
                 {% if data_uri %}
@@ -57,28 +59,47 @@ LionFace.User.options['pages_community__'+{{ page.id }}] = false;
                     {% endif %}
                 {% endblock %}
             </div>
-		</div>
+        </div>
         {% block form %}
         <div style="position: relative;">
             <form action="." method="post" class="upload_cover_form" enctype="multipart/form-data" style="display:none;">
-			<div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; margin: 12px 0 0 0; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
+                <div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; margin: 12px 0 0 0; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
                 {% csrf_token %}
                 {{ form.cover_photo.errors }}
                 <label for="id_photo" style="margin-right: 10px;">Upload:</label>
                 {{ form.cover_photo }}
-                <input id="submit_cover_btn" name="image" type="submit" class="blue_btn" value="Upload" />
-			</div>
+                <input id="submit_cover_btn" name="cover_image" type="submit" class="blue_btn" value="Upload" />
+                <div class="ui-icon ui-icon-circle-close" style="position: absolute; right: 2px; top: 2px; display: none; cursor: pointer;"></div>
+                </div>
+            </form>
+            <form action="." method="post" class="upload_album_form" enctype="multipart/form-data" style="display:none;">
+                <div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; margin: 12px 0 0 0; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
+                {% csrf_token %}
+                {{ album_form.image.errors }}
+                <label for="id_photo" style="margin-right: 10px;">Upload:</label>
+                {{ album_form.image }}
+                <input id="submit_album_image_btn" name="album_image" type="submit" class="blue_btn" value="Upload" />
+                <div class="ui-icon ui-icon-circle-close" style="position: absolute; right: 2px; top: 2px; display: none; cursor: pointer;"></div>
+                </div>
             </form>
         </div> 
-
         {% endblock %}
         {% block page_footer %}
 
-		<table width="900">
-			<tr>
-			<td width="100"><div class="page_image"></div><td>
-			<td valign="top"><div style="padding: 10px 0px; position: relative; top: 10px;">
-				{% if page.type == 'BS' %}
+    <table width="900">
+      <tr>
+      <td width="100">
+        <div class="page_image" style="background-image: url('/{{ page.photo.thumb_name }}');">
+            {% if request.user in page.get_admins and request.user|check_pages_photos:page %}
+            <div style="position: absolute; bottom: 0px; display:none;">
+                <a href="#" id="upload_album_image" class="upload" style="color: #555;">Upload</a>
+                <a href="{% url pages.views.reset_album_activity slug=page.username %}" id="reset_album_image" class="upload" style="color: #555;">Clear</a>
+            </div>
+            {% endif %}
+        </div>
+      <td>
+      <td valign="top"><div style="padding: 10px 0px; position: relative; top: 10px;">
+        {% if page.type == 'BS' %}
                     <span style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</span> 
                 {% else %}   
                     <span style="color:#909E4A; font-size: 16pt;">{{ page.name }}</span> 
@@ -90,12 +111,11 @@ LionFace.User.options['pages_community__'+{{ page.id }}] = false;
                     <div id="page_content" style="padding: 10px 7px 10px 0px; line-height: 14pt;">
                         {% include 'pages/page_content.html' %}
                     </div>
-			<td/>
+      <td/>
             {% if page.type == 'BS' %}
-			<td width="250" class="love_container love_business" align="center"> 
-                <div class="sponsored"></div>
+      <td width="250" class="love_container love_business" align="center"> 
             {% else %}
-			<td width="250" class="love_container love_nonprofit" align="center"> 
+      <td width="250" class="love_container love_nonprofit" align="center"> 
             {% endif %}
                 <div style="padding: 10px 20px;">
                     {% if request.user in page.get_lovers %}
@@ -105,20 +125,20 @@ LionFace.User.options['pages_community__'+{{ page.id }}] = false;
                     {% endif %}
                     <br /><br />
                     <span class="love_count" style="color: #FFF; font-size: 9pt;">{{ page.loves }}</span>
-			</div></td>
-			</tr>
-		</table>
-	</div>
+      </div></td>
+      </tr>
+    </table>
+  </div>
     {% endblock %}
     {% block page_micro %}
-	<div class="pages_nav_area" id="pages_nav_page">
-		<a href="#" id="updates" class="page_btn business_btn business_on">Updates</a>
+  <div class="pages_nav_area" id="pages_nav_page">
+    <a href="#" id="updates" class="page_btn business_btn business_on">Updates</a>
         <a href="#" id="discussions" class="page_btn business_btn">Discussions</a>
         <a href="#" id="reviews" class="page_btn business_btn">Feedback</a>
         <a href="#" id="calendar" class="page_btn business_btn">Calendar</a>
         <a href="#" id="comunnity" class="page_btn business_btn">Comunnity</a>
-	</div>
-	
+  </div>
+  
 
 
         <div align="center">

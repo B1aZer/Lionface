@@ -67,7 +67,7 @@ a.reset:hover {
 }
 
 #center_box { 
-	height: 500px;
+	height: 600px;
 	width: 100%;	
 	-moz-box-shadow: inset 0 5px 10px -4px #333;
 	box-shadow: inset 0 5px 10px -4px #333; 
@@ -92,12 +92,8 @@ a.reset:hover {
 	-moz-border-radius: 5px 5px 40px 5px; border-radius: 5px 5px 40px 5px;
 }
 
-.white_opacity:hover .center_container, .white_opacity:focus .center_container {
-	background: #4EBBE2;
-}
-
 .photo_disclaimer {
-	position: absolute; left: 10px; bottom: 5px;
+	position: absolute; left: 5px; bottom: 5px;
 	background: url('../images/white.png'); 
 	padding: 3px 6px 0 6px;
 	-moz-border-radius: 3px; border-radius: 3px;
@@ -108,7 +104,8 @@ a.reset:hover {
 .heart .dark_box { color: #FFF; font-size: 10pt; padding: 10px 10px 30px 10px; }
 .heart .dark_box td { padding: 6px; }
 .heart input[type=submit] { border-color: #333; margin: 0 28px 0 25px; position: relative; left: -5px;}
-.heart input[type=text], .heart input[type=password] { border: 0px; padding: 5px; width: 175px; -moz-border:-radius: 3px; border-radius: 3px; }
+.heart input[type=text], .heart input[type=password] { border: 0px; padding: 5px; width: 175px; -moz-border:-radius: 3px; border-radius: 3px; background: #F7F7F7; }
+.heart input[type=text]:focus, .heart input[type=password]:focus { background: #FFF; }
 
 .learn_more { 
 	padding: 12px 20px 10px 20px; 
@@ -276,29 +273,6 @@ a.reset:hover {
 	background-color: #FFF;
 	-moz-box-shadow: inset 0 2px 6px -2px #777;
 	box-shadow: inset 0 2px 6px -2px #777; 
-}
-
-a.create:link, a.create:active, a.create:visited {
-	color: #444;
-	font-size: 13pt;
-	background: #ffffff; /* Old browsers */
-	background: -moz-linear-gradient(top, #ffffff 40%, #eeeeee 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(40%,#ffffff), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #ffffff 40%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #ffffff 40%,#eeeeee 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #ffffff 40%,#eeeeee 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #ffffff 40%,#eeeeee 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
-	padding: 10px 16px 8px 15px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	position: relative; top: 35px;
-	text-decoration: none;
-}
-
-.white_opacity:hover a.create {
-	-moz-box-shadow: 0 4px 8px -4px #333;
-	box-shadow: 0 4px 8px -4px #333; 
 }
 
 .micro_title { 
