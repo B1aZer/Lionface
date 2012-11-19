@@ -6,7 +6,7 @@
         <a href="{{ comment.owner.get_absolute_url }}">
             <div class="thumb" style="background-image: url('/{{ comment.owner.photo.thumb_name }}');"></div>
         </a>
-        <div class="text"><a href="{{ comment.owner.get_absolute_url }}">{{ comment.owner.full_name }}</a> {{ comment.message }}</div><br/>
+        <div class="text"><a href="{{ comment.owner.get_absolute_url }}">{{ comment.owner.full_name }}</a> {{ comment.message }}</div>
         <div class="date">{{ comment.date }}</div>
     </li>
 {% endfor %}

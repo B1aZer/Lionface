@@ -4,11 +4,11 @@
 				<table width="100%"><tr><td width="85" align="right"><div style="position: relative; top: -10px; left: -5px;">
                 {% if page.type == 'BS' %}
                 <a href="{% url business-page slug=page.username %}">
-                     <img src="" alt="{{page.id}}" width="50" height="50"  />
+                     <img src="/{{ page.photo.thumb_name }}" alt="{{page.id}}" width="50" height="50"  />
                 </a> 
                 {% else %}   
                  <a href="{% url nonprofit-page slug=page.username %}">
-                     <img src="" alt="{{page.id}}" width="50" height="50"  />
+                     <img src="/{{ page.photo.thumb_name }}" alt="{{page.id}}" width="50" height="50"  />
                 </a>
                 {% endif %}
 					</div></td><td align="left" style="padding: 10px;">

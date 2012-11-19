@@ -23,7 +23,7 @@ if (LionFace.User.options['pages_community__'+LionFace.User.page_id]) {
                         {% endif %}
                         > 
                     <a href="{{ friend.get_absolute_url }}">
-                        <img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" />
+                        <img src="/{{ page.photo.thumb_name }}" style="background-size: 30px 30px; -moz-background-size: 30px 30px;" width="30" height="30" />
                     </a>
                     <div class="friend_name" style="text-align: center; display:none;">{{ friend.name }}</div>
                 </div>

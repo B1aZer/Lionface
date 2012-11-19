@@ -723,6 +723,7 @@ a.profile_btn:hover {
 	height: 52px;
 	text-align: left;
 	border-bottom: 1px solid #DDD;
+	padding-bottom: 8px;
 }
 .image_zone_info .scroll_area .owner a {
 	text-decoration: none;
@@ -743,10 +744,13 @@ a.profile_btn:hover {
 	left: 15px;
 	color: #777;
 }
+.image_zone_info .scroll_area .owner .fullname:hover {
+	color: #F58;
+}
 .image_zone_info .scroll_area .owner .username {
 	position: relative;
 	top: 4pt;
-	left: 18px;
+	left: 10px;
 	color: #AAA;
 	font-size: 8pt;
 }
@@ -769,6 +773,7 @@ a.profile_btn:hover {
 .image_zone_info .scroll_area .comments .thumb {
 	float: left;
 	background-size: 32px, 32px;
+	-moz-background-size: 32px, 32px;
 	width: 32px; height: 32px;
 	margin: 4px auto 4px 4px;
 	border: 1px solid #AAA;
@@ -784,10 +789,14 @@ a.profile_btn:hover {
 	text-decoration: none;
 	color: #777;
 }
+.image_zone_info .scroll_area .comments .text a:hover {
+	color: #F58;
+}
 .image_zone_info .scroll_area .comments .date {
 	text-align: left;
 	margin: auto auto 5px 42px;
 	font-size: 8pt;
+	color: #BBB;
 }
 .image_zone_info .make_comment {
 	position: absolute;
@@ -798,6 +807,7 @@ a.profile_btn:hover {
 	float: left;
 	margin: 0px auto auto 15px;
 	background-size: 32px, 32px;
+	-moz-background-size: 32px, 32px;
 	width: 32px; height: 32px;
 	border: 1px solid #AAA;
 	-moz-border-radius: 3px;
