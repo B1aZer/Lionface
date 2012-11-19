@@ -814,9 +814,10 @@ def page_members(request, slug=None, member_id=None):
     if member_id:
         member = Membership.objects.get(id=member_id)
     if delete_member:
-        member.delete()
-        data['status'] = 'OK'
-        data['id'] = member_id
+        if user == member.get_user():
+            member.delete()
+            data['status'] = 'OK'
+            data['id'] = member_id
     else:
         if from_date and member_type:
             from_date = datetime.strptime(from_date, "%m/%d/%Y")
@@ -831,9 +832,10 @@ def page_members(request, slug=None, member_id=None):
             if to_date:
                 member.to_date=to_date
             try:
-                member.save()
-                data['status'] = 'OK'
-                data['redirect'] = reverse('user-loves',args=(request.user,))
+                if user == member.get_user():
+                    member.save()
+                    data['status'] = 'OK'
+                    data['redirect'] = reverse('user-loves',args=(request.user,))
             except:
                 pass
     return HttpResponse(json.dumps(data), "application/json")

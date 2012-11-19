@@ -37,7 +37,9 @@
                     {% if profile_user|check_profile_eiv:request.user %} 
                     <div id="member_{{ member.id }}">
 					<span style="font-size: 10pt; color: #555;">
+                        {% if request.user == profile_user %} 
                         <a href="{% url pages.views.page_members slug=page.username member_id=member.id %}" class="edit_member" title="Remove" style="color: #AAA; font-size: 7pt; cursor: pointer;" onClick="ShowContent('edit_{{page.id}}'); return false;">Edit</a>
+                        {% endif %}
                         <span style="color: #909e4a; font-size: 8pt;">confirmed</span> {{ member.get_type }}
                         <br />
                         {{ member.from_date }} to {{ member.to_date }}</span>
