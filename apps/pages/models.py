@@ -6,6 +6,9 @@ from django.db.models import F
 from datetime import datetime
 import logging
 
+from images.fields import ImageWithThumbField
+
+
 PAGE_TYPE = (
         ('BS','Business Page'),
         ('NP','Nonprofit Page'),
@@ -60,6 +63,7 @@ class Pages(models.Model):
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
     category = models.CharField(max_length=100, default='undefined')
     cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/noCoverImage.png')
+    photo = ImageWithThumbField(upload_to="uploads/images", default='uploads/images/noProfilePhoto.png')
     has_employees = models.BooleanField(default=True)
     text_employees = models.TextField(blank=True)
     has_interns = models.BooleanField(default=True)

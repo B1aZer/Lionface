@@ -22,6 +22,8 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 
+from images.forms import ImageForm
+
 
 try:
     import json
@@ -115,7 +117,35 @@ def page(request, slug=None):
 
     image_height = page.cover_photo.height
 
-    if request.method == 'POST':
+    if request.method == 'POST' \
+     and 'album_image' in request.POST \
+     and request.user.is_authenticated() \
+     and request.user.check_option('pages_photos__%s' % page.id):
+        album_form = ImageForm(request.POST, request.FILES)
+        if album_form.is_valid():
+            image = album_form.save(page)
+            image.make_activity()
+            try:
+                pil_object = Image.open(image.image.path)
+                w, h = pil_object.size
+                x, y = 0, 0
+                if w > h:
+                    x, y, w, h = int((w-h)/2), 0, h, h
+                elif h > w:
+                    x, y, w, h = 0, int((h-w)/2), w, w
+                new_pil_object = pil_object \
+                    .crop((x, y, x+w, y+h)) \
+                    .resize((200, 200))
+                new_pil_object.save(image.image.thumb_path)
+            except:
+                pass
+            name = 'business-page' if page.type == 'BS' else 'nonprofit-page'
+            return redirect(name, slug=page.username)
+    else:
+        album_form = ImageForm()
+
+    if request.method == 'POST' \
+     and 'cover_image' in request.POST:
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.cleaned_data['cover_photo']
@@ -177,6 +207,7 @@ def page(request, slug=None):
             {
                 'page': page,
                 'form': form,
+                'album_form': album_form,
                 'cover_offset': cover_offset,
                 'data_uri': data_uri,
             },
@@ -188,6 +219,7 @@ def page(request, slug=None):
             {
                 'page': page,
                 'form': form,
+                'album_form': album_form,
             },
             RequestContext(request)
         )
@@ -246,6 +278,22 @@ def reset_picture(request, slug=None):
     else:
         redrct = redirect('nonprofit-page', slug=page.username)
     return redrct
+
+
+@login_required
+def reset_album_activity(request, slug):
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+
+    if request.user.check_option('pages_photos__%s' % page.id):
+        if page.photo.name != page.photo.field.default:
+            page.photo = page.photo.field.default
+            page.save()
+
+    name = 'business-page' if page.type == 'BS' else 'nonprofit-page'
+    return redirect(name, slug=page.username)
 
 
 def leaderboard(request):

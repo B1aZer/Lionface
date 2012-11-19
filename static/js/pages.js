@@ -144,7 +144,7 @@ LionFace.Pages.prototype = {
             });
         });
 
-        /** upload form */
+        /** upload cover form */
         $('.cover_photo').hover(
                 function(){$('.upload_page').show();},
                 function(){$('.upload_page').hide();}
@@ -152,6 +152,41 @@ LionFace.Pages.prototype = {
 
         $(document).on('click','#upload_cover_picture',function(e){ 
             $('.upload_cover_form').show();
+        });
+        $('.upload_cover_form').hover(
+            function() {
+                $(this).find('div.ui-icon').fadeIn();
+            },
+            function() {
+                $(this).find('div.ui-icon').fadeOut();
+            }
+        ).find('div.ui-icon').click(function(event){
+            $('.upload_cover_form').fadeOut();
+            return false;
+        });
+
+        /** upload image form */
+        $('.page_image').hover(
+            function() {
+                $(this).find('div').fadeIn();
+            },
+            function() {
+                $(this).find('div').fadeOut();
+            }
+        ).find('#upload_album_image').click(function(event) {
+            $('.upload_album_form').show();
+            return false;
+        });
+        $('.upload_album_form').hover(
+            function() {
+                $(this).find('div.ui-icon').fadeIn();
+            },
+            function() {
+                $(this).find('div.ui-icon').fadeOut();
+            }
+        ).find('div.ui-icon').click(function(event){
+            $('.upload_album_form').fadeOut();
+            return false;
         });
 
         /** restrict image uploads */
