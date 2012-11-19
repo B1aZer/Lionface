@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'current_user',
     'search',
     'public',
+    'images',
     'account',
     'profile',
     'notification',

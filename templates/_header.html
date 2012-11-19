@@ -42,9 +42,9 @@
             onMouseOut="HideContent('8_{{ one_page.id }}'); return false;" style="position: relative;">
 			<!-- need set thumb in a tag -->
             {% if one_page.type == 'BS' %}
-                <a href="{% url business-page slug=one_page.username %}" class="nav_page"></a>
+                <a href="{% url business-page slug=one_page.username %}" class="nav_page" style="background-image: url('/{{ one_page.photo.thumb_name }}');"></a>
             {% else %}
-                <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page"></a>
+                <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page" style="background-image: url('/{{ one_page.photo.thumb_name }}');"></a>
             {% endif %}
 			<div class="page_settings" style="display: none;" id="8_{{ one_page.id }}">
 			<div class="page">

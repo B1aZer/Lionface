@@ -1432,7 +1432,7 @@ a.nav_notifications:hover {
 .page_image {
 	width: 90px; 
 	height: 90px; 
-	background: url(../images/noProfilePhoto.png) #EEE; 
+	background: #EEE; 
 	background-size: 90px 90px;
 	-moz-background-size: 90px 90px !important; 
 	margin: 10px; 
