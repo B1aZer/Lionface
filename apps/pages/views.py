@@ -528,6 +528,8 @@ def settings_admins(request, slug=None):
                 page.admins.add(admin)
             if removing:
                 page.admins.remove(admin)
+                options = admin.find_options('pages',page)
+                options.delete()
             if option:
                 if admin.check_option("%s__%s" % (option,page.id)):
                     admin.set_option("%s__%s" % (option,page.id),False)

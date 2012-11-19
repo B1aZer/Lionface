@@ -223,6 +223,34 @@ def check_pages_community(user,page=None):
         return user.get_community_pages_count()
     return user.check_option('pages_community__%s' % page.id)
 
+@register.filter(name="check_profile_eiv")
+def check_profile_eiv(user,current):
+    return user.check_visiblity('vie_profile',current)
+
+@register.filter(name="check_pages_eiv_private")
+def check_pages_eiv_private(user,current):
+    if user == current:
+        return False
+    else:
+        return user.check_option('vie_pages','Private')
+
+@register.simple_tag(takes_context=True)
+def check_three_arguments(context, *args, **kwargs):
+    """
+    Tag with >2 arguments
+    {% check_three_arguments profile_user page request.user as 'member_filter' %}
+    """
+    if len(args) > 3:
+        as_name = 'filter_value'
+        user = args[0]
+        page = args[1]
+        current = args[2]
+        name = "pages__%s" % page
+        if len(args) == 5:
+            as_name = args[-1]
+        context[as_name] = user.check_visiblity(name,current)
+    return ''
+
 @register.filter(name="get_community_pages_friends")
 def get_community_pages_friends(user,page):
     return user.get_community_pages_friends(page)

@@ -261,6 +261,9 @@ class Membership(models.Model):
     def get_name(self):
         return self.user.get_full_name()
 
+    def get_user(self):
+        return self.user
+
 
 
 

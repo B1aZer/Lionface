@@ -299,6 +299,14 @@ class UserProfile(User):
         except ObjectDoesNotExist:
             self.useroptions_set.create(name=name,value=value)
 
+    def find_options(self,name,page=None):
+        name = "option_%s" % name
+        options = self.useroptions_set.filter(name__startswith=name)
+        if page:
+            page_name = "__%s" % (page.id)
+            options = self.useroptions_set.filter(name__startswith=name,name__endswith=page_name)
+        return options
+
     def new_messages(self):
         return self.message_to.filter(viewed=False).count()
 
