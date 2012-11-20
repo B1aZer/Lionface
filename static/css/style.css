@@ -2138,7 +2138,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	margin: 5px;
 }
 
-.review:hover {
+.review:hover , .active_review{
 	background: #2ab4ea;
 	cursor: pointer;
 	color: #FFF;

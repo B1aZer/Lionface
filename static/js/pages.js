@@ -95,6 +95,10 @@ LionFace.Pages.prototype = {
         $(document).on('click','#postboxbutton',function(e) {
             e.preventDefault();     
             var url = "/pages/update/";
+            if ($(this).hasClass('feedback_post')) {
+                url = "/pages/feedback/";
+                var rating = get_int($('.final_review').attr('id'));
+            }
             var content = $('.postbox_textarea').val();
             if (content) {
                 make_request({
@@ -102,11 +106,17 @@ LionFace.Pages.prototype = {
                     data: {
                         'page_id': LionFace.User.page_id,
                         'content': content,
+                        'rating': rating,
                     },
                     callback:function(data) {
                         if (data.status == 'OK') {
                             $('.postbox_textarea').val('');
-                            self_class.load_page_feed();
+                            if (rating) {
+                                self_class.load_feedback_feed();
+                            }
+                            else {
+                                self_class.load_page_feed();
+                            }
                         }
                     }
                 });
@@ -489,10 +499,16 @@ LionFace.Pages.prototype = {
             });
         });         
     },
-    load_page_feed : function(elem, page) {
+    load_page_feed : function(elem, page, type) {
         var elem = elem || $('#page_feed');
         var page = page || 1;
-        var url = 'list_posts/'
+        var type = type || 'updates';
+        if (type == 'feedback') {
+            var url = 'list_feedback/';
+        }
+        else {
+            var url = 'list_posts/';
+        }
         var loading = $('<div class="large_loader"></div>');
         elem.html(loading);
         make_request({
@@ -519,6 +535,12 @@ LionFace.Pages.prototype = {
                 elem.html('');
             }
         })
+    },
+    load_feedback_feed : function(elem, page, type) {
+        var elem = elem || '';
+        var page = page || '';
+        var type = type || 'feedback';
+        this.load_page_feed(elem, page, type);
     }
 }
 

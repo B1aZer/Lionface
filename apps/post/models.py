@@ -9,6 +9,7 @@ from django.contrib.contenttypes import generic
 from django.db.models.signals import post_save, post_delete
 from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import comments
@@ -69,6 +70,8 @@ class Post(models.Model):
         try: return self.sharepost
         except Exception: pass
         try: return self.pagepost
+        except Exception: pass
+        try: return self.feedbackpost
         except Exception: pass
         return self
 
@@ -164,6 +167,66 @@ class FriendPost(Post):
     def privacy(self):
         return ""
 
+
+
+class FeedbackPost(Post):
+    content = models.CharField(max_length=5000)
+    page = models.ForeignKey(Pages, related_name='feedback_posts')
+    rating = models.IntegerField(validators=[MaxValueValidator(5),MinValueValidator(0)])
+
+    def render(self):
+        import bleach
+        from oembed.core import replace
+        def add_http(url):
+            if re.search('http://',url):
+                pass
+            else:
+                url = u"".join([u'http://', url])
+            return url
+        def rreplace(s, old, new, occurrence):
+            li = s.rsplit(old, occurrence)
+            return new.join(li)
+        # Clean
+        self.content = bleach.clean(self.content)
+        # Embed videos
+        self.content = replace(self.content,max_width=535,fixed_width=535)
+        # Linkify
+        self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
+
+        post_template = render_to_string('post/_pagefeedback.html',
+                { 'user':self.user,
+                    'page':self.page,
+                    'rating':self.rating,
+                    'content':mark_safe(self.content),
+                })
+
+        # replace last linebreak
+        post_template = rreplace(post_template,"\n","",1)
+
+        return post_template
+
+    def name(self):
+        return self._meta.verbose_name
+
+    def get_page_type(self):
+        return self.page.type
+
+    @property
+    def timestamp(self):
+        return self.date
+
+    @property
+    def post(self):
+        return self
+
+    def get_post(self):
+        return self.post_ptr
+
+    def get_owner(self):
+        return self.user
+
+    def privacy(self):
+        return 'P'
 
 
 class PagePost(Post):
@@ -306,7 +369,8 @@ class SharePost(Post):
             original = NewsItem.objects.get(id=self.id_news)
             original = original.post.get_inherited()
         except NewsItem.DoesNotExist:
-            original = False
+            original = Post.objects.get(id=self.id_news)
+            original = original.get_inherited()
         except:
             original = False
         return original

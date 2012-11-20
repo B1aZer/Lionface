@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import F
 from .forms import *
 from .models import *
-from post.models import PagePost
+from post.models import PagePost, FeedbackPost
 from tags.models import Tag
 from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -443,6 +443,40 @@ def update(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@login_required
+def feedback(request):
+    data = {'status':'FAIL'}
+    if request.method == 'POST' and 'page_id' in request.POST:
+        page_id = request.POST.get('page_id')
+        content = request.POST.get('content')
+        rating = request.POST.get('rating')
+        try:
+            page = Pages.objects.get(id=int(page_id))
+            if rating:
+                post = FeedbackPost(user=request.user, content=content, page = page, rating=rating)
+                post.save()
+
+                #Tags
+                hashtags = [word[1:] for word in content.split() if word.startswith('#')]
+
+                for hashtag in hashtags:
+                    try:
+                        tag = Tag.objects.get(name__iexact=hashtag)
+                        post.tags.add(tag)
+                    except ObjectDoesNotExist:
+                        post.tags.create(name=hashtag)
+                    except MultipleObjectsReturned:
+                        tags = Tag.objects.filter(name__iexact=hashtag)
+                        tag = [p for p in tags if not hasattr(p, 'user_tag')]
+                        if tag:
+                            post.tags.add(tag[0])
+
+                data['status'] = 'OK'
+        except Pages.DoesNotExist:
+            pass
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 def list_posts(request, slug=None):
     data = {'status':'FAIL'}
     if not slug:
@@ -451,6 +485,44 @@ def list_posts(request, slug=None):
         try:
             page_obj = Pages.objects.get(username=slug)
             items = page_obj.get_posts().order_by('-date')
+        except Pages.DoesNotExist:
+            raise Http404
+
+    # PAGINATION #
+    paginator = Paginator(items, 7)
+    items = paginator.page(1)
+
+    if request.method == 'GET':
+        page = request.GET.get('page', None)
+        if page:
+            try:
+                items = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                items = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                items = paginator.page(paginator.num_pages)
+        else:
+            page = 1
+
+    data['html'] = render_to_string('post/_page_feed.html',
+            {
+                'items':items,
+                'page':page,
+            }, context_instance=RequestContext(request))
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def list_feedback(request, slug=None):
+    data = {'status':'FAIL'}
+    if not slug:
+        HttpResponse(json.dumps(data), "application/json")
+    if slug:
+        try:
+            page_obj = Pages.objects.get(username=slug)
+            items = page_obj.get_feedback().order_by('-date')
         except Pages.DoesNotExist:
             raise Http404
 

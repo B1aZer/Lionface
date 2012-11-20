@@ -306,7 +306,9 @@ def delete(request, post_id = None):
                 if original.content_object.shared != 0:
                     original.content_object.shared -= 1
                     original.content_object.save()
-        if (post_type == 'page post' and post_model == 'post_pagepost') or post_model == 'post_post':
+        if (post_type == 'page post' and post_model == 'post_pagepost') \
+                or (post_type == 'feedback post' and post_model == 'post_feedbackpost') \
+                or post_model == 'post_post':
             obj = Post.objects.get(id=post_id)
             obj.newsitem_set.delete()
             obj.delete()
@@ -321,7 +323,7 @@ def share(request, post_id = None):
     data = {'status': 'OK'}
     if post_id:
         post_model = request.POST.get('post_model')
-        if post_model == 'post_post':
+        if post_model in ('post_post','post_pagepost', 'post_feedbackpost'):
             post = Post.objects.get(id=post_id)
         else:
             post = NewsItem.objects.get(id=post_id)

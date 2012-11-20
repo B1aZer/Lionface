@@ -109,6 +109,9 @@ class Pages(models.Model):
     def get_posts(self):
         return self.posts.all()
 
+    def get_feedback(self):
+        return self.feedback_posts.all()
+
     def get_admins(self):
         return self.admins.all()
 

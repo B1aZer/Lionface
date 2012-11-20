@@ -1,4 +1,14 @@
 {% load media %}
+<script>
+    LionFace.Pages.load_feedback_feed();
+    $(document).on('click','#postbox .review',function() {
+        $('.active_review').removeClass('active_review');
+        $('.final_review').removeClass('final_review');
+        $(this).addClass('final_review');
+        var rating = get_int($(this).attr('id'));
+        $('.review :lt('+rating+')').addClass('active_review');
+    });
+</script>
 <div class="float_left" align="center">
 	<div style="font-size: 14pt; padding: 5px;">Average Rating</div>
 	<div class="reviewON">4.5</div>
@@ -10,7 +20,12 @@
         <div id="postbox">
             <div style="padding: 10px;" align="center">
 				<div align="left">
-					<span style="color: #999;">Rating:</span> <div class="review">1</div><div class="review">2</div><div class="review">3</div><div class="review">4</div><div class="review">5</div>
+					<span style="color: #999;">Rating:</span> 
+                    <div id="rating1" class="review">1</div>
+                    <div id="rating2" class="review">2</div>
+                    <div id="rating3" class="review">3</div>
+                    <div id="rating4" class="review">4</div>
+                    <div id="rating5" class="review">5</div>
 				</div>
                 <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
 
@@ -21,7 +36,7 @@
                             </td>
                                     <td align="right">
 									<span style="color: #CCC; font-size: 8pt; margin: 4px;"><span style="margin: 4px;">#</span> <span style="margin: 4px;">embed</span> <span style="margin: 4px;">href</span></span>
-									<div class="attach">Attach</div> <a href="#" class="post" id="postboxbutton">Submit Feedback</a>
+									<div class="attach">Attach</div> <a href="#" class="post feedback_post" id="postboxbutton">Submit Feedback</a>
                                     </td>
                 </tr></table>
                 </div>
