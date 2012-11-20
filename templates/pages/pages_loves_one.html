@@ -25,9 +25,9 @@
                 <div>
                     {% block love_button %}
                     {% if request.user in page.get_lovers %}
-                        <a href="#" class="love love_button loved">Loved</a>
+                        <a href="#" class="love love_button loved" style="font-size: 8pt; border: 3px solid #F7F7F7;">Loved</a>
                     {% else %}
-                        <a href="#" class="love love_button">Love</a>
+                        <a href="#" class="love love_button" style="font-size: 8pt; border: 3px solid #F7F7F7;">Love</a>
                     {% endif %} 
                     {% endblock %}
                 </div>

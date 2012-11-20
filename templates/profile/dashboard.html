@@ -25,7 +25,7 @@
 			{% if request.user == profile_user %}
 			{% else %}
 				{% if profile_user|check_message_sending:request.user %}
-					<div style="margin: 10px 0; display: inline-block;" id="send_message"><a href="#" class="send_message">Send Message</a></div>
+					<div style="margin: 10px 8px; display: inline-block;" id="send_message"><a href="#" class="send_message">Send Message</a></div>
 				{% endif %}
 			{% endif %}
 			</td></tr></table>
@@ -75,7 +75,7 @@
 	</tr></table>
 </div>
 
-<div style="position: relative; top: -5px; width: 900px;" align="center">
+<div class="send_message_shadow" align="center">
 <form action="." method="post" class="send_message_form" style="display:none; text-align: left;" id="message_form">
     {% csrf_token %}
 

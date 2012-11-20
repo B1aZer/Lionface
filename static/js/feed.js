@@ -204,7 +204,7 @@ $(document).ready(function(){
       var last_link = link
 
       var form = $('<form id="foma" />');
-      form.html('<input type="text" id="editbox" name="tags"><input id="button_save" type="submit" name="submit">')
+      form.html('<input type="text" id="editbox" name="tags"><input id="button_save" type="submit" name="submit" class="blue_btn" value="Follow">')
       $('.tags').html(form);
       $('#editbox').focus(); 
 

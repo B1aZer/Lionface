@@ -18,12 +18,11 @@
 }
 
 .next_generation {
-	position: absolute; left: 0px; top: -28px;
-	background: #FFF; 
+	position: absolute; left: 10px; top: -15px;
 	padding: 6px 6px 3px 6px;
 	-moz-border-radius: 3px; border-radius: 3px;
 	font-size: 12pt;
-	color: #333;
+	color: #999;
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=75);
 	-moz-opacity: 0.75;
 	opacity: 0.75;
@@ -71,7 +70,7 @@ a.reset:hover {
 	width: 100%;	
 	-moz-box-shadow: inset 0 5px 10px -4px #333;
 	box-shadow: inset 0 5px 10px -4px #333; 
-	background:  url(../images/leaves.jpg) #3ea8d2;
+	background: transparent;
 	background-position: center center;
 	position: relative;
 
@@ -80,32 +79,53 @@ a.reset:hover {
 .white_opacity {
 	display: block; width: 400px; height: 275px; 
 	background: url('../images/white.png'); 
-	-moz-border-radius: 5px 5px 40px 5px; border-radius: 5px 5px 40px 5px; 
-	-moz-box-shadow: 0 8px 16px -8px #333; box-shadow: 0 8px 16px -8px #333;
+
 	padding: 17px;
 	position: relative;
 }
 
+.white_opacity:before, .white_opacity:after  
+{  
+    position: absolute;  
+    width: 40%;  
+    height: 10px;  
+    content: ' ';  
+    left: 22px;  
+    bottom: 26px;  
+    background: transparent;  
+    -webkit-transform: skew(-5deg) rotate(-5deg);  
+    -moz-transform: skew(-5deg) rotate(-5deg);  
+    -ms-transform: skew(-5deg) rotate(-5deg);  
+    -o-transform: skew(-5deg) rotate(-5deg);  
+    transform: skew(-5deg) rotate(-5deg);  
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
+    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
+    z-index: -1;  
+}  
+.white_opacity:after  
+{  
+    left: auto;  
+    right: 22px;  
+    -webkit-transform: skew(5deg) rotate(5deg);  
+    -moz-transform: skew(5deg) rotate(5deg);  
+    -ms-transform: skew(5deg) rotate(5deg);  
+    -o-transform: skew(5deg) rotate(5deg);  
+    transform: skew(5deg) rotate(5deg);  
+} 
+
 .center_container {
 	background: #3ea8d2;
 	display: block; height: 100%; width: 100%;
-	-moz-border-radius: 5px 5px 40px 5px; border-radius: 5px 5px 40px 5px;
+	border: 1px solid #EEE;
 }
 
-.photo_disclaimer {
-	position: absolute; left: 5px; bottom: 5px;
-	background: url('../images/white.png'); 
-	padding: 3px 6px 0 6px;
-	-moz-border-radius: 3px; border-radius: 3px;
-	font-size: 8pt;
-}
-
-.heart { !important; color: #fff; }
-.heart .dark_box { color: #FFF; font-size: 10pt; padding: 10px 10px 30px 10px; }
+.heart { !important; color: #555; }
+.heart .dark_box { color: #555; font-size: 10pt; padding: 10px 10px 30px 10px; }
 .heart .dark_box td { padding: 6px; }
 .heart input[type=submit] { border-color: #333; margin: 0 28px 0 25px; position: relative; left: -5px;}
-.heart input[type=text], .heart input[type=password] { border: 0px; padding: 5px; width: 175px; -moz-border:-radius: 3px; border-radius: 3px; background: #F7F7F7; }
-.heart input[type=text]:focus, .heart input[type=password]:focus { background: #FFF; }
+.heart input[type=text], .heart input[type=password] { border: 1px solid #CCC; padding: 5px; width: 175px; -moz-border:-radius: 3px; border-radius: 3px; background: #F7F7F7; }
+.heart input[type=text]:focus, .heart input[type=password]:focus { background: #FAFAFA; }
 
 .learn_more { 
 	padding: 12px 20px 10px 20px; 
@@ -239,7 +259,37 @@ a.reset:hover {
 	box-shadow: 0 2px 6px -2px #777;
 	-moz-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
+	position: relative;
 }
+.enabled_results:before, .enabled_results:after  
+{  
+    position: absolute;  
+    width: 40%;  
+    height: 10px;  
+    content: ' ';  
+    left: 22px;  
+    bottom: 18px;  
+    background: transparent;  
+    -webkit-transform: skew(-5deg) rotate(-5deg);  
+    -moz-transform: skew(-5deg) rotate(-5deg);  
+    -ms-transform: skew(-5deg) rotate(-5deg);  
+    -o-transform: skew(-5deg) rotate(-5deg);  
+    transform: skew(-5deg) rotate(-5deg);  
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);  
+    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);  
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);  
+    z-index: -1;  
+}  
+.enabled_results:after  
+{  
+    left: auto;  
+    right: 22px;  
+    -webkit-transform: skew(5deg) rotate(5deg);  
+    -moz-transform: skew(5deg) rotate(5deg);  
+    -ms-transform: skew(5deg) rotate(5deg);  
+    -o-transform: skew(5deg) rotate(5deg);  
+    transform: skew(5deg) rotate(5deg);  
+} 
 
 #login_box input[type=submit], .heart input[type=submit] {
  	display: inline-block;
@@ -400,7 +450,36 @@ a.reset:hover {
 }
 
 .micro_container {
-	width: 900px; background: #EEE; text-align: left; -moz-box-shadow: 0 4px 8px -4px #555; box-shadow: 0 4px 8px -4px #555;
+	width: 900px; background: #EEE; text-align: left; -moz-box-shadow: 0 4px 8px -4px #555; box-shadow: 0 4px 8px -4px #555; position: relative;
+}
+.micro_container:before, .micro_container:after  
+{  
+    position: absolute;  
+    width: 40%;  
+    height: 10px;  
+    content: ' ';  
+    left: 17px;  
+    bottom: 17px;  
+    background: transparent;  
+    -webkit-transform: skew(-5deg) rotate(-5deg);  
+    -moz-transform: skew(-5deg) rotate(-5deg);  
+    -ms-transform: skew(-5deg) rotate(-5deg);  
+    -o-transform: skew(-5deg) rotate(-5deg);  
+    transform: skew(-5deg) rotate(-5deg);  
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
+    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
+    z-index: -1;  
+}  
+.micro_container:after  
+{  
+    left: auto;  
+    right: 17px;  
+    -webkit-transform: skew(5deg) rotate(5deg);  
+    -moz-transform: skew(5deg) rotate(5deg);  
+    -ms-transform: skew(5deg) rotate(5deg);  
+    -o-transform: skew(5deg) rotate(5deg);  
+    transform: skew(5deg) rotate(5deg);  
 }
 
 .micro_center {
