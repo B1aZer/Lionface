@@ -153,42 +153,48 @@ class Pages(models.Model):
         except:
             return 0
 
+    def get_community_requests(self):
+        return Membership.objects.filter(page=self, is_confirmed=False)
+
+    def get_community_requests_emloyees(self):
+        return Membership.objects.filter(page=self, type='EM', is_confirmed=False)
+
     def get_members(self):
-        members = Membership.objects.filter(page=self)
+        members = Membership.objects.filter(page=self, is_confirmed=True)
         return members
 
     def get_emloyees_ordered(self):
-        members = Membership.objects.filter(page=self, type='EM')[:70]
+        members = Membership.objects.filter(page=self, type='EM', is_confirmed=True)[:70]
         users = [member.get_user() for member in members if not member.get_user().check_option('vie_pages','Private')]
         users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
         return users
 
     def get_interns_ordered(self):
-        members = Membership.objects.filter(page=self, type='IN')[:70]
+        members = Membership.objects.filter(page=self, type='IN', is_confirmed=True)[:70]
         users = [member.get_user() for member in members if not member.get_user().check_option('vie_pages','Private')]
         users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
         return users
 
     def get_volunteers_ordered(self):
-        members = Membership.objects.filter(page=self, type='VL')[:70]
+        members = Membership.objects.filter(page=self, type='VL', is_confirmed=True)[:70]
         users = [member.get_user() for member in members if not member.get_user().check_option('vie_pages','Private')]
         users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
         return users
 
     def get_emloyees_ordered_count(self):
-        members = Membership.objects.filter(page=self, type='EM').count()
+        members = Membership.objects.filter(page=self, type='EM', is_confirmed=True).count()
         return members
 
     def get_interns_ordered_count(self):
-        members = Membership.objects.filter(page=self, type='IN').count()
+        members = Membership.objects.filter(page=self, type='IN', is_confirmed=True).count()
         return members
 
     def get_volunteers_ordered_count(self):
-        members = Membership.objects.filter(page=self, type='VL').count()
+        members = Membership.objects.filter(page=self, type='VL', is_confirmed=True).count()
         return members
 
     def show_membership(self, user):
-        membership = Membership.objects.filter(page=self,user=user)
+        membership = Membership.objects.filter(page=self, user=user, is_confirmed=True)
         return membership
 
     def check_employees(self):
@@ -288,6 +294,7 @@ class Membership(models.Model):
     type = models.CharField(max_length='2', choices=MEMBERSHIP_TYPE)
     from_date = models.DateField()
     to_date = models.DateField(default=datetime.now)
+    is_confirmed = models.BooleanField(default=False)
 
     def get_type(self):
         mtype = [mtype for mtype in MEMBERSHIP_TYPE if mtype[0] == self.type]
@@ -299,6 +306,12 @@ class Membership(models.Model):
     def get_user(self):
         return self.user
 
+    def confirm(self):
+        self.is_confirmed = True
+        self.save()
+
+    def decline(self):
+        self.delete()
 
 
 

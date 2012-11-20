@@ -91,11 +91,24 @@
                         {% endif %}
                     </div>
                     {% endif %}
-                    <div style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-                        <table width="100%"><tr><td align="left"><a href="#">UserFull Name</a>: Jun 2010 - Present</td>
-                            <td align="right"><a href="#" class="profile_btn" style="position: relative; top: 0px;">Confirm</a> <a href="#" style="color: #AAA;">Deny</a></td></tr></table>
+                    {% if page.get_community_requests_emloyees and request.user|check_pages_community:page %}
+                    <div class="community_req_div" style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        <table width="100%">
+                            {% for comrequest in page.get_community_requests_emloyees %}
+                            <tr>
+                            <td align="left">
+                                <a href="{{ comrequest.get_user.get_absolute_url }}">{{ comrequest.get_user.get_full_name }}</a>: {{ comrequest.from_date }} - {{ comrequest.to_date }}
+                            </td>
+                            <td align="right">
+                                <a href="{% url pages.views.accept_community_request slug=page.username request_id=comrequest.id %}" class="profile_btn confirm_community_req" style="position: relative; top: 0px;">Confirm</a> 
+                                <a href="{% url pages.views.decline_community_request slug=page.username request_id=comrequest.id %}" class="deny_community_req" style="color: #AAA;">Deny</a>
+                            </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
                     </div>
                         <br /><br />
+                    {% endif %}
                 </div>
                 {% if request.user|check_pages_community:page %}
                 <input id="interns_checkbox" type="checkbox" class="community_checkbox" {% if page.check_interns %} checked {% endif %}/> 

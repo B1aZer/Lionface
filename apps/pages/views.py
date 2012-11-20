@@ -772,6 +772,38 @@ def hide_friend_request(request, slug=None, request_id=None):
 
 
 @login_required
+def accept_community_request(request, slug=None, request_id=None):
+    data = {'status':'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404 
+    if request_id:
+        try:
+            member = Membership.objects.get(id=int(request_id))
+            member.confirm()
+            data['html'] = render_to_string("pages/micro/_community_list.html",
+                    {
+                        'page':page,
+                    }, RequestContext(request))
+        except Membership.DoesNotExist:
+            raise Http404
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def decline_community_request(request, slug=None, request_id=None):
+    data = {'status':'OK'}
+    if request_id:
+        try:
+            member = Membership.objects.get(id=int(request_id))
+            member.decline()
+        except Membership.DoesNotExist:
+            raise Http404
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
 def friends_position(request, slug=None):
     data = {'status':'OK'}
     if request.method == 'POST':

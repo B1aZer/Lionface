@@ -498,6 +498,43 @@ LionFace.Pages.prototype = {
                 }
             });
         });         
+
+        $(document).on('click','.confirm_community_req',function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var tr = $(this).parents('tr');
+            var parent_div = $(this).parents('.community_req_div');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        tr.remove();
+                        if (!parent_div.find('tr').length) {
+                            parent_div.remove();   
+                        }
+                        $('#page_members_id').html(data.html);
+                    }
+                }
+            });
+        });
+
+        $(document).on('click','.deny_community_req',function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var tr = $(this).parents('tr');
+            var parent_div = $(this).parents('.community_req_div');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        tr.remove();
+                        if (!parent_div.find('tr').length) {
+                            parent_div.remove();   
+                        } 
+                    }
+                }
+            });
+        });
     },
     load_page_feed : function(elem, page, type) {
         var elem = elem || $('#page_feed');
