@@ -1,0 +1,13 @@
+{% load media %}
+{% include_media 'images.js' %}
+<div class="image_container" align="center">
+    <ul>
+    {% for rows in image_rows %}
+        {% include "images/li.html" %}
+    {% endfor %}
+    </ul>
+    <div class="view_more" style="display: none; text-align: center; margin-top: 25px;">
+        <div class="view_more_loader" style="display: none;"><img src="{% media_url 'images/loader.gif' %}"></div>
+        <a href="#">View more</a>
+    </div>
+</div>
