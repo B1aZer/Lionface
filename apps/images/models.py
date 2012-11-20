@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import post_save, post_delete
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
@@ -84,6 +85,31 @@ class Image(models.Model):
         self.owner.photo = self.image
         self.owner.save()
         return True
+
+
+def create_image(sender, instance, created, **kwargs):
+    if created:
+        instance.rating = instance.pk
+        instance.save()
+post_save.connect(
+    create_image,
+    sender=Image,
+    dispatch_uid='apps.images.signals.create_image'
+)
+
+
+def delete_image(sender, instance, **kwargs):
+    if instance.activity:
+        owner = instance.owner
+        owner.photo = owner.photo.field.default
+        owner.save()
+    instance.image.storage.delete(instance.image.thumb_path)
+    instance.image.delete(save=False)
+post_delete.connect(
+    delete_image,
+    sender=Image,
+    dispatch_uid='apps.images.signals.delete_image'
+)
 
 
 class ImageCounter(models.Model):
