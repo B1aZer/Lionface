@@ -152,6 +152,24 @@ class Pages(models.Model):
         members = Membership.objects.filter(page=self)
         return members
 
+    def get_emloyees_ordered(self):
+        members = Membership.objects.filter(page=self, type='EM')[:70]
+        users = [member.get_user() for member in members if not member.get_user().check_option('vie_pages','Private')]
+        users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
+        return users
+
+    def get_interns_ordered(self):
+        members = Membership.objects.filter(page=self, type='IN')[:70]
+        users = [member.get_user() for member in members if not member.get_user().check_option('vie_pages','Private')]
+        users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
+        return users
+
+    def get_volunteers_ordered(self):
+        members = Membership.objects.filter(page=self, type='VL')[:70]
+        users = [member.get_user() for member in members if not member.get_user().check_option('vie_pages','Private')]
+        users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
+        return users
+
     def show_membership(self, user):
         membership = Membership.objects.filter(page=self,user=user)
         return membership

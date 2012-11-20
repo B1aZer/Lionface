@@ -15,9 +15,19 @@ $(document).ready(function() {
                 <tr>
                     <td colspan="3">
                         <div id="select_community_{{page.id}}" style="display: none;">
-					<a href="#" id="volunteer_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era_{{ page.id }}'); HideContent('select_community_{{page.id}}'); return false;">+ Volunteer</a> 
-					<a href="#" id="intern_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era_{{ page.id }}'); HideContent('select_community_{{page.id}}'); return false;">+ Intern</a> 
-					<a href="#" id="employee_flag" class="profile_btn" style="margin: 7px;" onClick="ShowContent('select_era_{{ page.id }}'); HideContent('select_community_{{ page.id }}'); return false;">+ Employee</a>
+                    {% if page.type == 'NP' %}
+					<a href="#" id="volunteer_flag" class="profile_btn" 
+                        style="margin: 7px; {% if not page.check_volunteers %}display:none;{% endif %}" 
+                        onClick="ShowContent('select_era_{{ page.id }}'); HideContent('select_community_{{page.id}}'); return false;">+ Volunteer</a> 
+                    {% endif %}
+					<a href="#" id="intern_flag" class="profile_btn" 
+                        style="margin: 7px; {% if not page.check_interns %}display:none;{% endif %}" 
+                        onClick="ShowContent('select_era_{{ page.id }}'); HideContent('select_community_{{page.id}}'); return false;">+ Intern</a> 
+                    <a href="#" id="employee_flag" class="profile_btn" 
+                        style="margin: 7px; {% if not page.check_employees %}display:none;{% endif %}" 
+                        onClick="ShowContent('select_era_{{ page.id }}'); 
+                        HideContent('select_community_{{ page.id }}'); 
+                        return false;">+ Employee</a>
 					<a href="#" style="color: #AAA; font-size: 8pt;" onClick="HideContent('select_community_{{page.id}}'); return false;">Cancel</a>
                         </div>
                     </td>

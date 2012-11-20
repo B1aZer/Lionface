@@ -83,6 +83,9 @@ class UserProfile(User):
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
 
+    def get_thumb(self):
+        return "/%s" % self.photo.thumb_name
+
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0
 

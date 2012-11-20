@@ -853,8 +853,9 @@ LionFace.Site.prototype = {
             if (employee_flag) { member_type = 'EM'; }
             var from_date = $(this).parent().find('.former_member').val() || $(this).parent().find('.current_member').val();
             var to_date = $(this).parent().find('.date_to').val();
-            console.log(member_type);
-            console.log(from_date);
+            var from_date_former = $(this).parent().find('.former_member');
+            var from_date_current = $(this).parent().find('.current_member');
+            var to_date_form = $(this).parent().find('.date_to');
             if (member_type && from_date) {
                 make_request({
                     url:url,
@@ -867,7 +868,16 @@ LionFace.Site.prototype = {
                         if(data.status=='OK') {
                             if (data.redirect) {
                                 /*document.location.href = data.redirect;*/
-                                location.reload();
+                                /*location.reload();*/
+                                if ($('#page_members_id').length) {
+                                    $('#page_members_id').html(data.html);
+                                    from_date_former.val('') 
+                                    from_date_current.val('');
+                                    to_date_form.val('');
+                                }
+                                else {
+                                    history.go(0);
+                                }
                             }
                             else {
                                 create_message('Member saved','success');

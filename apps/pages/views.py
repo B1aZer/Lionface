@@ -812,7 +812,10 @@ def page_members(request, slug=None, member_id=None):
     user = request.user
     delete_member = request.POST.get('delete',None)
     if member_id:
-        member = Membership.objects.get(id=member_id)
+        try:
+            member = Membership.objects.get(id=member_id)
+        except Membership.DoesNotExist:
+            member = None
     if delete_member:
         if user == member.get_user():
             member.delete()
@@ -836,6 +839,10 @@ def page_members(request, slug=None, member_id=None):
                     member.save()
                     data['status'] = 'OK'
                     data['redirect'] = reverse('user-loves',args=(request.user,))
+                    data['html'] = render_to_string("pages/micro/_community_list.html",
+                    {
+                        'page':page,
+                    }, RequestContext(request))
             except:
                 pass
     return HttpResponse(json.dumps(data), "application/json")

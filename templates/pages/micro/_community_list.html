@@ -1,0 +1,17 @@
+{% load format_results %}
+                    <div id="page_members_id">
+{% for member in page|show_membership:request.user %}
+{% if not member.get_user|check_pages_eiv_private:request.user %}
+<div id="member_{{ member.id }}">
+<span style="font-size: 10pt; color: #555;">
+    {% if  member.get_user == request.user %}
+    <a href="{% url pages.views.page_members slug=page.username member_id=member.id %}" class="edit_member"  title="Remove" style="color: #AAA; font-size: 7pt; cursor: pointer;" onClick="ShowContent('edit_{{page.id}}'); return false;">Edit</a> 
+    {% endif %}
+    <span> {{ member.get_name }} </span>
+    <span style="color: #909e4a; font-size: 8pt;">confirmed</span> {{ member.get_type }}
+<br />
+{{ member.from_date }} to {{ member.to_date }}</span>
+</div>
+{% endif %}
+{% endfor %}
+                    </div>

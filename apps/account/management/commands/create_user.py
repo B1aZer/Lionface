@@ -6,7 +6,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         max_user = User.objects.count() + 1
-        for x in xrange(max_user,max_user+10):
+        for x in xrange(max_user,max_user+11):
             try:
                 max_user = x
                 username = 'admin%s' % max_user
@@ -16,8 +16,11 @@ class Command(BaseCommand):
                 user.save()
                 user = user.userprofile
                 # adding to love page
-                from pages.models import Pages
-                page = Pages.objects.get(id=10)
+                from pages.models import Pages, Membership
+                page = Pages.objects.get(id=13)
+                import datetime
+                from_date = datetime.date(2008, 6, 24)
+                #Membership.objects.create(user=user,page=page,type='IN',from_date=from_date)
                 page.users_loved.add(user)
                 page.loves += 1
                 page.save()
