@@ -70,7 +70,6 @@ class Pages(models.Model):
     text_interns = models.TextField(blank=True)
     has_volunteers = models.BooleanField(default=True)
     text_volunteers = models.TextField(blank=True)
-    admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
     members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
 
     class Meta:
@@ -121,6 +120,9 @@ class Pages(models.Model):
 
     def get_requests(self):
         return self.to_page.filter(is_hidden=False, is_accepted=False)
+
+    def get_requests_count(self):
+        return self.get_requests().count()
 
     def get_accepted_requests(self):
         return self.from_page.filter(is_hidden=False, is_accepted=True)
