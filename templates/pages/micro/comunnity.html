@@ -60,13 +60,14 @@
                     {% else %}   
                         <span style="color:#909E4A; font-size: 16pt;">Employees</span>
                     {% endif %}
-                    <span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: (total_confirmed)</span><br />
+                    <span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: {{ page.get_emloyees_ordered_count }}</span><br />
                 <div id="employees_div" {% if not page.check_employees %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
                         {% if page.text_employees %}
                             {{ page.text_employees|linebreaksbr }}
-                        {% else %}
+                        {% elif request.user|check_pages_community:page %}
                             Click to add text here. (optional)
+                        {% else %}
                         {% endif %} 
                     </div>
                     {% if page.get_emloyees_ordered %}
@@ -104,13 +105,14 @@
                 {% else %}   
                     <span style="color:#909E4A; font-size: 16pt;">Interns</span>
                 {% endif %}
-                <span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: (total_confirmed)</span><br />
+                <span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: {{ page.get_interns_ordered_count }}</span><br />
                 <div id="interns_div" {% if not page.check_interns %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
                         {% if page.text_interns %}
                             {{ page.text_interns|linebreaksbr }}
-                        {% else %}
+                        {% elif request.user|check_pages_community:page %}
                             Click to add text here. (optional)
+                        {% else %}
                         {% endif %} 
                     </div>
                     {% if page.get_interns_ordered %}
@@ -141,13 +143,15 @@
                     {% if request.user|check_pages_community:page %}
                     <input id="volunteers_checkbox" type="checkbox" class="community_checkbox" {% if page.check_volunteers %} checked {% endif %}/> 
                     {% endif %}
-                    <span style="color:#909E4A; font-size: 16pt;">Volunteers</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Volunteers: (total_confirmed)</span><br />
+                    <span style="color:#909E4A; font-size: 16pt;">Volunteers</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Volunteers: {{ page.get_volunteers_ordered_count }}</span><br />
                     <div id="volunteers_div" {% if not page.check_volunteers %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
                         {% if page.text_volunteers %}
                             {{ page.text_volunteers|linebreaksbr }}
-                        {% else %}
+                        {% elif request.user|check_pages_community:page %}
                             Click to add text here. (optional)
+                        {% else %}
+                        {# not com admin and no text #}
                         {% endif %} 
                     </div>
                     {% if page.get_volunteers_ordered %}

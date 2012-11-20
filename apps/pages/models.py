@@ -170,6 +170,18 @@ class Pages(models.Model):
         users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
         return users
 
+    def get_emloyees_ordered_count(self):
+        members = Membership.objects.filter(page=self, type='EM').count()
+        return members
+
+    def get_interns_ordered_count(self):
+        members = Membership.objects.filter(page=self, type='IN').count()
+        return members
+
+    def get_volunteers_ordered_count(self):
+        members = Membership.objects.filter(page=self, type='VL').count()
+        return members
+
     def show_membership(self, user):
         membership = Membership.objects.filter(page=self,user=user)
         return membership
