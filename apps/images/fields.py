@@ -30,11 +30,6 @@ class ImageWithThumbField(models.ImageField):
         })
         super(ImageWithThumbField, self).__init__(*args, **kwargs)
 
-    def delete(self, save=False):
-        ret = super(ImageWithThumbField, self).delete(save)
-        self.storage.delete(self.thumb_path)
-        return ret
-
 
 try:
     from south.modelsinspector import add_introspection_rules

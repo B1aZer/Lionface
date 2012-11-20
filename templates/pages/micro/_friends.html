@@ -20,7 +20,7 @@ $(document).ready(function() {
                         {% endif %}
                         > 
                     <a href="{{ friend.get_absolute_url }}">
-                        <img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" />
+                        <img src="/{{ friend.photo.thumb_name }}" width="30" height="30" />
                     </a>
                     <div class="friend_name" style="text-align: center; display:none;">{{ friend.name }}</div>
                 </div>
@@ -44,7 +44,7 @@ $(document).ready(function() {
                         {% endif %}
                         >
                         <a href="{{ friend.get_absolute_url }}">
-                            <img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" />
+                            <img src="/{{ friend.photo.thumb_name }}" width="30" height="30" />
                         </a>
                         <div class="friend_name" style="text-align: center; display:none;">{{ friend.name }}</div>
                     </div>

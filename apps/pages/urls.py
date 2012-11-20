@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import patterns, url
 import views
 
+
 urlpatterns = patterns('',
     url(r'^browse/$', views.page_browsing),
     url(r'^browse/(?P<page_type>\w+)/$', views.page_browsing, name="page-browse"),
@@ -35,6 +36,8 @@ urlpatterns = patterns('',
     url(r'^page/(?P<slug>\w+)/settings/$', views.settings),
     url(r'^page/(?P<slug>\w+)/settings_admins/$', views.settings_admins),
     url(r'^page/(?P<slug>\w+)/send_request/$', views.send_friend_request),
+    url(r'^page/(?P<slug>\w+)/images/$', views.images),
+    url(r'^page/(?P<slug>\w+)/images/ajax/$', views.images_ajax),
     url(r'^update/$', views.update),
 )
 

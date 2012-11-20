@@ -173,7 +173,11 @@ LionFace.Pages.prototype = {
             function() {
                 $(this).find('div').fadeOut();
             }
-        ).find('#upload_album_image').click(function(event) {
+        ).click(function(event) {
+            if (!$(document.elementFromPoint(event.clientX, event.clientY)).is('a')) {
+                window.location.href = $(this).data('url');
+            }
+        }).find('#upload_album_image').click(function(event) {
             $('.upload_album_form').show();
             return false;
         });
