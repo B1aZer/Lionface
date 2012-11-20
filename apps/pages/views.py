@@ -14,14 +14,16 @@ from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from PIL import Image
+from PIL import Image as pilImage
 from StringIO import StringIO
 import base64
 from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
+from django.contrib.contenttypes.models import ContentType
 
+from images.models import Image
 from images.forms import ImageForm
 
 
@@ -126,7 +128,7 @@ def page(request, slug=None):
             image = album_form.save(page)
             image.make_activity()
             try:
-                pil_object = Image.open(image.image.path)
+                pil_object = pilImage.open(image.image.path)
                 w, h = pil_object.size
                 x, y = 0, 0
                 if w > h:
@@ -152,14 +154,14 @@ def page(request, slug=None):
             # save to memory
             f = StringIO(image.read())
             # PIL image
-            img = Image.open(f)
+            img = pilImage.open(f)
             ( width, height) = img.size
             if width < target_width:
                 target_height = int(height * (1.0 * target_width / width))
                 img = img.resize( (target_width, target_height) )
             elif width > target_width:
                 target_height = int(height * (1.0 * target_width / width))
-                img.thumbnail((target_width,target_height), Image.ANTIALIAS)
+                img.thumbnail((target_width,target_height), pilImage.ANTIALIAS)
             else:
                 pass
             ( new_width, new_height) = img.size
@@ -242,7 +244,7 @@ def reposition(request, slug=None):
         imgstr = re.search(r'base64,(.*)', b64image).group(1)
         mem_image = StringIO(imgstr.decode('base64'))
         #image = page.cover_photo
-        img = Image.open(mem_image)
+        img = pilImage.open(mem_image)
         box = (0, top_pos, 900, top_pos+300)
         img = img.crop(box)
 
@@ -291,7 +293,8 @@ def reset_album_activity(request, slug):
         if page.photo.name != page.photo.field.default:
             page.photo = page.photo.field.default
             page.save()
-
+    if request.META['HTTP_REFERER']:
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
     name = 'business-page' if page.type == 'BS' else 'nonprofit-page'
     return redirect(name, slug=page.username)
 
@@ -918,6 +921,150 @@ def page_members(request, slug=None, member_id=None):
             except:
                 pass
     return HttpResponse(json.dumps(data), "application/json")
+
+
+def images(request, slug, rows_show=1):
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST' \
+     and 'album_image' in request.POST \
+     and request.user.is_authenticated() \
+     and request.user.check_option('pages_photos__%s' % page.id):
+        album_form = ImageForm(request.POST, request.FILES)
+        if album_form.is_valid():
+            image = album_form.save(page)
+            image.make_activity()
+            try:
+                pil_object = pilImage.open(image.image.path)
+                w, h = pil_object.size
+                x, y = 0, 0
+                if w > h:
+                    x, y, w, h = int((w-h)/2), 0, h, h
+                elif h > w:
+                    x, y, w, h = 0, int((h-w)/2), w, w
+                new_pil_object = pil_object \
+                    .crop((x, y, x+w, y+h)) \
+                    .resize((200, 200))
+                new_pil_object.save(image.image.thumb_path)
+            except:
+                pass
+            return redirect('pages.views.images', slug=page.username)
+    else:
+        album_form = ImageForm()
+
+    ctype = ContentType.objects.get_for_model(Pages)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
+    manage_perm = request.user.check_option('pages_photos__%s' % page.id) \
+     and request.user in page.get_admins()
+
+    return render_to_response(
+        'pages/images.html',
+        {
+            'page': page,
+            'album_form': album_form,
+            'image_rows': qs.get_rows(0, rows_show),
+            'total_rows': qs.total_rows(),
+            'photos_count': qs.count(),
+            'manage_perm': manage_perm,
+        },
+        RequestContext(request)
+    )
+
+
+def images_ajax(request, slug):
+    if not request.is_ajax():
+        raise Http404
+
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+
+    method = request.REQUEST.get('method', None)
+    if method not in ['more', 'activity', 'delete', 'change_position']:
+        raise Http404
+
+    ctype = ContentType.objects.get_for_model(Pages)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
+    manage_perm = request.user in page.get_admins() \
+     and request.user.check_option('pages_photos__%s' % page.id)
+
+    if method in ['activity', 'delete', 'change_position'] and not manage_perm:
+        raise Http404
+
+    data = {}
+    try:
+        if method == 'more':
+            try:
+                row = int(request.REQUEST.get('row', None))
+            except (TypeError, ValueError), e:
+                return HttpResponseBadRequest('Bad row was received.')
+            data['total_rows'] = qs.total_rows()
+            if row >= data['total_rows']:
+                return HttpResponseBadRequest('Row larger than total_rows.')
+            data['html'] = render_to_string('images/li.html', {
+                'rows': qs.get_row(row),
+                'manage_perm': manage_perm,
+            }, context_instance=RequestContext(request))
+        elif method == 'activity':
+            try:
+                image = qs.get(pk=request.REQUEST.get('pk', None))
+            except Image.DoesNotExist:
+                return HttpResponseBadRequest('Bad PK was received.')
+            image.make_activity()
+            page = Pages.objects.get(pk=page.pk)
+        elif method == 'delete':
+            try:
+                row = int(request.REQUEST.get('row', None)) - 1
+            except (TypeError, ValueError), e:
+                return HttpResponseBadRequest('Bad row was received.')
+            try:
+                image = qs.get(pk=request.REQUEST.get('pk', None))
+            except UserImages.DoesNotExist:
+                return HttpResponseBadRequest('Bad PK was received.')
+            image.delete()
+            if image.activity == True:
+                page = Pages.objects.get(pk=page.pk)
+            if row < qs.total_rows():
+                image_row = qs.get_row(row)[-1:]
+                manage_perm = request.user in page.get_admins() \
+                 and request.user.check_option('pages_photos__%s' % page.id)
+                data['html'] = render_to_string('images/li.html', {
+                    'rows': image_row,
+                    'manage_perm': manage_perm,
+                }, context_instance=RequestContext(request))
+        elif method == 'change_position':
+            try:
+                obj = qs.get(pk=request.REQUEST.get('pk', None))
+                if obj.activity:
+                    return HttpResponseBadRequest('Image with pk is actively.')
+            except Image.DoesNotExist as e:
+                return HttpResponseBadRequest('Bad pk was received.')
+            try:
+                instead = qs.get(pk=request.REQUEST.get('instead', None))
+                if instead.activity:
+                    return HttpResponseBadRequest('Image with instead is actively.')
+            except Image.DoesNotExist as e:
+                return HttpResponseBadRequest('Bad instead was received.')
+            obj.change_position(obj.rating, instead.rating)
+        else:
+            raise Http404
+        data['positions'] = qs.get_positions()
+        data['thumb_src'] = '/' + page.photo.thumb_name
+        data['photos_count'] = qs.count()
+    except Exception as e:
+        data['status'] = 'fail'
+        print e
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+
+
 
 
 

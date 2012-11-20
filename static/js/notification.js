@@ -89,7 +89,7 @@ LionFace.Notification.prototype = {
         ];
 
         $(document).on('click', selectors.join(','), function(e) {
-            var starter = document.elementFromPoint(e.clientX, e.clientY);  
+            var starter = document.elementFromPoint(e.clientX, e.clientY);
             if ($(starter).is('a')) {
                 return;
             }

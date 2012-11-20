@@ -1,0 +1,66 @@
+{% extends "pages/base.html" %}
+{% load media format_results %}
+
+{% block js %}
+<script>
+    LionFace.User['images_type'] = 'page';
+    LionFace.User['images_manage'] = {% if manage_perm %}true{% else %}false{% endif %};
+    LionFace.User['images_total_rows'] = {{ total_rows }};
+    LionFace.User['images_now_rows'] = {{ image_rows|length }};
+    LionFace.User['images_ajax'] = "{% url pages.views.images_ajax page.username %}";
+</script>
+{% endblock %}  
+
+{% block content %}
+<div class="content_area">
+    <div style="position: relative; display: block; z-index: 1;">
+        <table width="900">
+            <tr>
+                <td width="100" rowspan="2">
+                    <div class="page_image images_page_thumb" style="background-image: url('/{{ page.photo.thumb_name }}');cursor: pointer;" 
+data-url="{% url pages.views.images page.username %}">
+                    {% if request.user in page.get_admins and request.user|check_pages_photos:page %}
+                    <div style="position: absolute; bottom: 0px; display:none;">
+                        <a href="#" id="upload_album_image" class="upload" style="color: #555;">Upload</a>
+                        <a href="{% url pages.views.reset_album_activity slug=page.username %}" id="reset_album_image" class="upload" style="color: #555;">Clear</a>
+                    </div>
+                    {% endif %}
+                    </div>
+                </td>
+                <td valign="top">
+                    <div style="padding: 10px 0px; position: relative; top: 10px;">
+            {% if page.type == 'BS' %}
+                        <span style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</span> 
+                    {% else %}   
+                        <span style="color:#909E4A; font-size: 16pt;">{{ page.name }}</span> 
+                    {% endif %}
+                        {% if page.category == 'Undefined' %}
+                        {% else %}
+                        <span style="color: #999; margin: 0 8px;">{{ page.category }}</span>
+                        {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>
+                        <span id="photos_count">{{ photos_count }}</span> Photos
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div style="position: relative;">
+            <form action="." method="post" class="upload_album_form" enctype="multipart/form-data" style="display:none;">
+                <div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; margin: 12px 0 0 0; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
+                {% csrf_token %}
+                {{ album_form.image.errors }}
+                <label for="id_photo" style="margin-right: 10px;">Upload:</label>
+                {{ album_form.image }}
+                <input id="submit_album_image_btn" name="album_image" type="submit" class="blue_btn" value="Upload" />
+                <div class="ui-icon ui-icon-circle-close" style="position: absolute; right: 2px; top: 2px; display: none; cursor: pointer;"></div>
+                </div>
+            </form>
+        </div>
+    </div><br/><br/>
+    {% include "images/images.html" %}
+</div>
+{% endblock %}
