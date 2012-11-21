@@ -738,7 +738,15 @@ a.profile_btn:hover {
 }
 
 .image_container {
-	max-width: 878px; border: 1px solid #DDD; padding: 10px; color: #FFF; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; background: #FFF; position: relative;
+	max-width: 878px;
+	border: 1px solid #DDD;
+	padding: 10px;
+	color: #FFF;
+	-moz-box-shadow: 0 4px 8px -4px #777;
+	box-shadow: 0 4px 8px -4px #777;
+	background: #FFF;
+	position: relative;
+	text-align: center;
 }
 
 .image_container:before, .image_container:after  

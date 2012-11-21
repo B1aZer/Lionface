@@ -171,7 +171,7 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
     comment.user.follows.add(comment.content_object.get_post())
 comment_was_posted.connect(create_comment_notifiaction)
 
-
+'''
 def create_comment_image_notifiaction(sender, instance, created, **kwargs):
     if created:
         if instance.owner != instance.image.owner:
@@ -182,7 +182,7 @@ def create_comment_image_notifiaction(sender, instance, created, **kwargs):
                 content_object=instance.image
             ).save()
 post_save.connect(create_comment_image_notifiaction, sender=UserImageComments)
-
+'''
 
 def create_follow_notification(sender, instance, created, **kwargs):
     if created:

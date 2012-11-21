@@ -1,60 +1,9 @@
-import re, os.path
+import re
 
 from django import forms
 from django.forms import TextInput
-from django.db import IntegrityError
-
-from PIL import Image
 
 from account.models import *
-
-
-class ImageForm(forms.ModelForm):
-
-    class Meta:
-        model = UserProfile
-        fields = ('photo',)
-
-    # Add some custom validation to our image field and cropped our image
-    def clean_photo(self):
-        try:
-            image = self.cleaned_data['photo']
-        except KeyError:
-            raise forms.ValidationError("Couldn't read uploaded image")
-        if image == self.fields['photo'].initial:
-            raise forms.ValidationError("Please select file and send it")
-        if image.content_type == 'image/gif':
-            raise forms.ValidationError("Sorry! Gif is prohibited.")
-        if image._size > 1*1024*1024:
-            raise forms.ValidationError("Image file too large ( > 1mb )")
-        return image
-
-    def save(self, user):
-        try:
-            counter = UserImageCounter.objects.select_for_update().get(user=user)
-        except UserImageCounter.DoesNotExist as e:
-            try:
-                UserImageCounter.objects.create(user=user)
-                counter = UserImageCounter.objects.select_for_update().get(user=user)
-            except (IntegrityError, UserImageCounter.DoesNotExist) as e:
-                return None
-        counter.count += 1
-        number = counter.count
-        counter.save()
-        self.cleaned_data['photo'].name = '%s_%d%s' % (
-            user.username,
-            number,
-            os.path.splitext(self.cleaned_data['photo'].name)[1],
-        )
-        image = UserImage.objects.create(
-            image=self.cleaned_data['photo'],
-            owner=user
-        )
-        image_m2m = UserImages.objects.create(
-            image=image,
-            profile=user,
-        )
-        return (image, image_m2m)
 
 
 POSTING_DEFAULT = [('Public','Public'), ('Friends Only','Friends Only'),]

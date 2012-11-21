@@ -1,0 +1,69 @@
+{% extends 'profile/base.html' %}
+{% load media friends format_results %}
+
+{% block content_title %} {% endblock %}
+{% block content_middle %}{% endblock %}
+{% block content_subtitle %}{% endblock %}
+
+{% block dashboard %}
+	{% include "profile/dashboard.html" %}
+{% endblock %}
+
+{% block left_col %}
+<div onclick="window.open('/{{ profile_user.photo }}');return false;" 
+	class="noPhoto images_profile_thumb" style="background-image: url('/{{ profile_user.photo.thumb_name }}'); background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px; margin-bottom: 12px;">
+	{% if request.user == profile_user %}
+	<div style="position: relative; top: 4px; left: 72px; display: block; width: 126px; background: #FFF; z-index: 997;" align="center">
+		<a id="upload_picture" class="upload" style="display:none;">Upload</a><br />
+		<a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
+	</div>
+	{% endif %}
+	<div class="photos_count" align="center">
+		<div style="padding-top: 28px;">
+			<span id="photos_count">{{ photos_count }}</span> Photos
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block right_col %}
+<div style="padding: 10px; height: 45px;">
+	<div style="position: relative; top: 18px; left: 25px; color: #DDD;">
+	Whose woods these are I think I know, his house is in the village though. <i>- Robert Frost</i>
+	</div>
+</div>
+
+{% if request.user == profile_user %}
+<div style="position: relative;">
+<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -65px; height: 28px; padding: 18px; width: 662px;">
+	{% csrf_token %}
+	{{ form.image.errors }}
+	<label for="id_photo">Upload</label>
+	{{ form.image }}
+	<input name="image" type="submit" class="blue_btn" value="Upload" />
+	<input id="upload_cancel" type="button" class="blue_btn" value="Cancel" />
+</form>
+</div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function() {
+        LionFace.User['images_type'] = 'profile';
+        LionFace.User['images_manage'] = {% if request.user == profile_user %}true{% else %}false{% endif %};
+        LionFace.User['images_total_rows'] = {{ total_rows }};
+        LionFace.User['images_now_rows'] = {{ image_rows|length }};
+        LionFace.User['images_ajax'] = "{% url profile.views.images_ajax profile_user.username %}";
+        LionFace.User['images_comments_ajax'] = "{% url profile.views.images_comments_ajax profile_user.username %}";
+    });
+</script>
+{% endblock %}
+
+{% block center_col %}
+{% include_media 'profile.js' %}
+<div class="content_area">
+  {% include "images/images.html" %}
+</div>
+{% endblock %}
