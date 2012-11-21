@@ -848,10 +848,8 @@ a.profile_btn:hover {
 .image_zone_view {
 	position: relative;
 	float: left;
-	top: 1;
-	left: 1;
-	bottom: 1;
 	height: 100%;
+	text-align: center;
 }
 .image_zone_view .prev, .image_zone_view .next {
 	position: absolute;

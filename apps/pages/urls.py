@@ -44,6 +44,7 @@ urlpatterns = patterns('',
     url(r'^page/(?P<slug>\w+)/send_request/$', views.send_friend_request),
     url(r'^page/(?P<slug>\w+)/images/$', views.images),
     url(r'^page/(?P<slug>\w+)/images/ajax/$', views.images_ajax),
+    url(r'^page/(?P<slug>\w+)/images/ajax/comments/$', views.images_comments_ajax),
     url(r'^update/$', views.update),
 )
 

@@ -203,15 +203,10 @@ LionFace.Pages.prototype = {
         $(document).on('click','#upload_cover_picture',function(e){ 
             $('.upload_cover_form').show();
         });
-        $('.upload_cover_form').hover(
-            function() {
-                $(this).find('div.ui-icon').fadeIn();
-            },
-            function() {
-                $(this).find('div.ui-icon').fadeOut();
-            }
-        ).find('div.ui-icon').click(function(event){
-            $('.upload_cover_form').fadeOut();
+        $(document).on('click', '#cancel_cover_btn', function(event) {
+            $('.upload_cover_form').fadeOut(function(){
+                $('#id_cover_photo').val('');
+            });
             return false;
         });
 
@@ -231,15 +226,10 @@ LionFace.Pages.prototype = {
             $('.upload_album_form').show();
             return false;
         });
-        $('.upload_album_form').hover(
-            function() {
-                $(this).find('div.ui-icon').fadeIn();
-            },
-            function() {
-                $(this).find('div.ui-icon').fadeOut();
-            }
-        ).find('div.ui-icon').click(function(event){
-            $('.upload_album_form').fadeOut();
+        $(document).on('click', '#cancel_album_image_btn', function(event) {
+            $('.upload_album_form').fadeOut(function(){
+                $('#id_image').val('')
+            });
             return false;
         });
 
