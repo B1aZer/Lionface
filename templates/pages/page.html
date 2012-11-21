@@ -89,7 +89,7 @@
     <table width="900">
       <tr>
       <td width="100">
-        <div class="page_image" style="background-image: url('/{{ page.photo.thumb_name }}');cursor: pointer;" 
+        <div class="page_image" style="background-image: url('/{{ page.photo.thumb_name }}'); cursor: pointer;" 
 data-url="{% url pages.views.images page.username %}">
             {% if request.user in page.get_admins and request.user|check_pages_photos:page %}
             <div style="position: absolute; bottom: 0px; display:none;">

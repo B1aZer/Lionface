@@ -18,11 +18,11 @@
 }
 
 .next_generation {
-	position: absolute; left: 10px; top: -15px;
+	position: absolute; left: 12px; top: -15px;
 	padding: 6px 6px 3px 6px;
 	-moz-border-radius: 3px; border-radius: 3px;
 	font-size: 12pt;
-	color: #999;
+	color: #AAA;
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=75);
 	-moz-opacity: 0.75;
 	opacity: 0.75;
@@ -70,16 +70,18 @@ a.reset:hover {
 	width: 100%;	
 	-moz-box-shadow: inset 0 5px 10px -4px #333;
 	box-shadow: inset 0 5px 10px -4px #333; 
-	background: transparent;
-	background-position: center center;
+	background: url(../images/rainbow.png);
+	background-position: bottom center;
+	background-repeat: repeat-x;
+	-moz-background-size: 700px;
+	background-size: 700px;
 	position: relative;
 
 }
 
 .white_opacity {
 	display: block; width: 400px; height: 275px; 
-	background: url('../images/white.png'); 
-
+	background: transparent; 
 	padding: 17px;
 	position: relative;
 }
@@ -115,7 +117,14 @@ a.reset:hover {
 } 
 
 .center_container {
-	background: #3ea8d2;
+background: #3ea8d2; /* Old browsers */
+background: -moz-linear-gradient(top, #72dcea 0%, #3ea8d2 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#72dcea), color-stop(100%,#3ea8d2)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* IE10+ */
+background: linear-gradient(to bottom, #72dcea 0%,#3ea8d2 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72dcea', endColorstr='#3ea8d2',GradientType=0 ); /* IE6-9 */
 	display: block; height: 100%; width: 100%;
 	border: 1px solid #EEE;
 }
@@ -125,7 +134,7 @@ a.reset:hover {
 .heart .dark_box td { padding: 6px; }
 .heart input[type=submit] { border-color: #333; margin: 0 28px 0 25px; position: relative; left: -5px;}
 .heart input[type=text], .heart input[type=password] { border: 1px solid #CCC; padding: 5px; width: 175px; -moz-border:-radius: 3px; border-radius: 3px; background: #F7F7F7; }
-.heart input[type=text]:focus, .heart input[type=password]:focus { background: #FAFAFA; }
+.heart input[type=text]:focus, .heart input[type=password]:focus,.heart input[type=text]:hover, .heart input[type=password]:hover { background: #FDFDFD; }
 
 .learn_more { 
 	padding: 12px 20px 10px 20px; 
