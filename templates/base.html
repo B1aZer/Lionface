@@ -5,7 +5,7 @@
       xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{% block title %}{{ current_site.name }}{% endblock %}</title>
+    <title>{% block title %}Lionface.com{% endblock %}</title>
     {% include_media 'main.css' %}
     {% block css %}{% endblock %}
     <script>
@@ -37,8 +37,8 @@
 <meta property="og:url" content="http://www.lionface.org"/>
 <meta property="og:site_name" content="Lionface"/>
 
-<link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon/favicon.ico" />
-<link rel="icon" type="image/x-icon" href="/uploads/favicon/favicon.ico" />
+<link rel="shortcut icon" type="image/x-icon" href="{% media_url 'images/favicon.ico' %}" />
+<link rel="icon" type="image/x-icon" href="{% media_url 'images/favicon.ico' %}" />
 
 <!-- Google Analytics -->
 <script type="text/javascript">

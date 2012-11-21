@@ -941,6 +941,9 @@ def page_members(request, slug=None, member_id=None):
             member.from_date=from_date
             if to_date:
                 member.to_date=to_date
+                member.is_present = False
+            else:
+                member.is_present = True
             try:
                 if user == member.get_user():
                     member.save()

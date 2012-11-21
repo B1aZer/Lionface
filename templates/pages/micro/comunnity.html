@@ -79,8 +79,8 @@
                             emloyees_hidden
                             {% endif %}
                             ">
-                            <a href="{{ intern.get_absolute_url }}">
-                                <img src="{{ intern.get_thumb }}" width="36" height="36" />
+                            <a href="{{ employee.get_absolute_url }}">
+                                <img src="{{ employee.get_thumb }}" width="36" height="36" />
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ employee.get_full_name }}</div>
                         </div>
@@ -97,7 +97,7 @@
                             {% for comrequest in page.get_community_requests_emloyees %}
                             <tr>
                             <td align="left">
-                                <a href="{{ comrequest.get_user.get_absolute_url }}">{{ comrequest.get_user.get_full_name }}</a>: {{ comrequest.from_date }} - {{ comrequest.to_date }}
+                                <a href="{{ comrequest.get_user.get_absolute_url }}">{{ comrequest.get_user.get_full_name }}</a>: {{ comrequest.get_begin_date }} - {{ comrequest.get_end_date }}
                             </td>
                             <td align="right">
                                 <a href="{% url pages.views.accept_community_request slug=page.username request_id=comrequest.id %}" class="profile_btn confirm_community_req" style="position: relative; top: 0px;">Confirm</a> 

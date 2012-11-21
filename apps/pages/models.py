@@ -293,8 +293,18 @@ class Membership(models.Model):
     page = models.ForeignKey(Pages)
     type = models.CharField(max_length='2', choices=MEMBERSHIP_TYPE)
     from_date = models.DateField()
-    to_date = models.DateField(default=datetime.now)
+    to_date = models.DateField(null=True,blank=True)
     is_confirmed = models.BooleanField(default=False)
+    is_present = models.BooleanField(default=False)
+
+    def get_begin_date(self):
+        return self.from_date
+
+    def get_end_date(self):
+        if self.is_present:
+            return 'present'
+        else:
+            return self.to_date
 
     def get_type(self):
         mtype = [mtype for mtype in MEMBERSHIP_TYPE if mtype[0] == self.type]

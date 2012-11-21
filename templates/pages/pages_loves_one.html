@@ -47,7 +47,7 @@
                         {% endif %}
                         <span style="color: #909e4a; font-size: 8pt;">confirmed</span> {{ member.get_type }}
                         <br />
-                        {{ member.from_date }} to {{ member.to_date }}</span>
+                        {{ member.get_begin_date }} to {{ member.get_end_date }}</span>
                     </div>
                     {% endif %}
                     {% endfor %}
