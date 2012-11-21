@@ -8,6 +8,7 @@
     LionFace.User['images_total_rows'] = {{ total_rows }};
     LionFace.User['images_now_rows'] = {{ image_rows|length }};
     LionFace.User['images_ajax'] = "{% url pages.views.images_ajax page.username %}";
+    LionFace.User['images_comments_ajax'] = "{% url pages.views.images_comments_ajax page.username %}";
 </script>
 {% endblock %}  
 
@@ -29,10 +30,14 @@ data-url="{% url pages.views.images page.username %}">
                 </td>
                 <td valign="top">
                     <div style="padding: 10px 0px; position: relative; top: 10px;">
-            {% if page.type == 'BS' %}
-                        <span style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</span> 
+                    {% if page.type == 'BS' %}
+                        <a href="{{ page.get_absolute_url }}">
+                            <span style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</span>
+                        </a>
                     {% else %}   
-                        <span style="color:#909E4A; font-size: 16pt;">{{ page.name }}</span> 
+                        <a href="{{ page.get_absolute_url }}">
+                            <span style="color:#909E4A; font-size: 16pt;">{{ page.name }}</span>
+                        </a>
                     {% endif %}
                         {% if page.category == 'Undefined' %}
                         {% else %}
@@ -56,7 +61,7 @@ data-url="{% url pages.views.images page.username %}">
                 <label for="id_photo" style="margin-right: 10px;">Upload:</label>
                 {{ album_form.image }}
                 <input id="submit_album_image_btn" name="album_image" type="submit" class="blue_btn" value="Upload" />
-                <div class="ui-icon ui-icon-circle-close" style="position: absolute; right: 2px; top: 2px; display: none; cursor: pointer;"></div>
+                <input id="cancel_album_image_btn" type="button" class="blue_btn" value="Cancel" />
                 </div>
             </form>
         </div>

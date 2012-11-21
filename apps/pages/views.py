@@ -23,7 +23,7 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
 
-from images.models import Image
+from images.models import Image, ImageComments
 from images.forms import ImageForm
 
 
@@ -992,7 +992,8 @@ def images(request, slug, rows_show=1):
 
     ctype = ContentType.objects.get_for_model(Pages)
     qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
-    manage_perm = request.user.check_option('pages_photos__%s' % page.id) \
+    manage_perm = request.user.is_authenticated() \
+     and request.user.check_option('pages_photos__%s' % page.id) \
      and request.user in page.get_admins()
 
     return render_to_response(
@@ -1024,7 +1025,8 @@ def images_ajax(request, slug):
 
     ctype = ContentType.objects.get_for_model(Pages)
     qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
-    manage_perm = request.user in page.get_admins() \
+    manage_perm =request.user.is_authenticated() \
+     and request.user in page.get_admins() \
      and request.user.check_option('pages_photos__%s' % page.id)
 
     if method in ['activity', 'delete', 'change_position'] and not manage_perm:
@@ -1098,8 +1100,65 @@ def images_ajax(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+def images_comments_ajax(request, slug):
+    if not request.is_ajax():
+        raise Http404
 
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
 
+    method = request.REQUEST.get('method', None)
+    if method not in ['create', 'list', 'delete']:
+        raise Http404
 
+    ctype = ContentType.objects.get_for_model(Pages)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
+    manage_perm =request.user.is_authenticated() \
+     and request.user in page.get_admins() \
+     and request.user.check_option('pages_photos__%s' % page.id)
 
+    try:
+        image = qs.get(pk=request.REQUEST.get('pk', None))
+    except Image.DoesNotExist as e:
+        return HttpResponseBadRequest('Bad pk was received.')
+
+    if method in ['delete'] and not manage_perm:
+        raise Http404
+
+    data = {}
+    try:
+        if method == 'create':
+            try:
+                message = request.REQUEST['message']
+            except KeyError:
+                return HttpResponseBadRequest("Comment wasn't received.")
+            comment = ImageComments.objects.create(
+                image=image,
+                owner=request.user,
+                message=message
+            )
+        elif method == 'list':
+            pass
+        elif method == 'delete':
+            try:
+                comment = image.comments.get(pk=request.REQUEST.get('comment_pk', None))
+            except ImageComments.DoesNotExist as e:
+                return HttpResponseBadRequest('Bad comment_pk was received.')
+            comment.delete()
+        else:
+            raise Http404
+        data['comments'] = render_to_string('images/li_comment.html', {
+            'page': page,
+            'image': image,
+            'comments': image.comments.all(),
+            'manage_perm': manage_perm,
+        }, context_instance=RequestContext(request))
+    except Exception as e:
+        data['status'] = 'fail'
+        print e
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
 

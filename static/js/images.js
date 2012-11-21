@@ -2,6 +2,7 @@ LionFace.Images = function(options) {
     this.options = $.extend({
         'swap_images_delay': 500,
         'change_thumb_delay': 500,
+        'popup_fadeDuration': 500,
     }, options || {});;
     this.init();
 };
@@ -18,7 +19,7 @@ LionFace.Images.prototype = {
         if (!LionFace.User.is_anonymous && LionFace.User.images_manage) {
             this.bind_sorting();
         }
-        
+        this.bind_popup();
         this.bind_view_more_button();
     },
 
@@ -59,8 +60,8 @@ LionFace.Images.prototype = {
         $image_settings = $elem.find('#image_settings');
 
         $elem.click(function() {
-            //$(this).attr('popup', true);
-            //_this.popup_start(elem);
+            $(this).attr('popup', true);
+            _this.popup_start(elem);
             return false;
         });
         if ($image_settings.length != 1)
@@ -364,6 +365,341 @@ LionFace.Images.prototype = {
                 return false;
             });
         }
+    },
+
+    /** popup functions */
+
+    popup_enableKeyboard: function(options) {
+        var _this = this;
+        options = $.extend({
+            esc_only: false,
+        }, options || {});
+        function keyboard(event) {
+            var KEYCODE_ESC = 27;
+            var KEYCODE_LEFTARROW = 37;
+            var KEYCODE_RIGHTARROW = 39;
+            var keycode = event.keyCode;
+            var key = String.fromCharCode(keycode).toLowerCase();
+            if (keycode === KEYCODE_ESC) {
+                _this.popup_end();
+            }
+            if (!options.esc_only) {
+                if (key === 'p' || keycode === KEYCODE_LEFTARROW) {
+                    _this.popup_to_prev();
+                } else if (key === 'n' || keycode === KEYCODE_RIGHTARROW) {
+                    _this.popup_to_next();
+                }
+            }
+        }
+        this.popup_disableKeyboard();
+        $(document).on('keyup.keyboard', keyboard);
+    },
+
+    popup_disableKeyboard: function() {
+        $(document).off('.keyboard');
+    },
+
+    popup_to_prev: function() {
+        var now = $('.image_container li[popup=true]');
+        var next = undefined;
+        if ($('.image_container li').length > 1) {
+            if ($(now).prev().length > 0) {
+                next = $(now).prev();
+            } else {
+                next = $('.image_container li:last');
+            }
+            this.popup_change_item($(next));
+        }
+    },
+
+    popup_to_next: function() {
+        var now = $('.image_container li[popup=true]');
+        var next = undefined;
+        if ($('.image_container li').length > 1) {
+            if ($(now).next().length > 0) {
+                next = $(now).next();
+            } else {
+                next = $('.image_container li:first');
+            }
+            this.popup_change_item($(next));
+        }
+    },
+
+    popup_resize: function() {
+        $('.image_popup').css({
+            top: $(window).scrollTop() + 'px',
+            left: $(window).scrollLeft() + 'px'
+        });
+        $('.image_zone_view').width($('.image_zone').width() - 351);
+        $('.image_zone_view').find('.prev, .next').css({
+            'width': $('.image_zone').width()*0.2 + 'px',
+        }).find('img').css({
+            'margin-top': ($('.image_zone').height()-45)/2,
+        });
+        $('.image_zone_view .next').css({
+            'margin-left': $('.image_zone').width()*(1 - 0.2) - 351,
+        });
+        $('.image_zone_view .loader').css({
+            'line-height': $('.image_zone').height() + 'px',
+        });
+        $('.image_zone_info .scroll_area').height(
+            $('.image_zone_info').height()
+            - $('.image_zone_info .close').height()
+            - $('.image_zone_info .make_comment').height()
+            - 15
+        );
+        var image = $('.image_zone_view .image img');
+        if ($(image).length) {
+            var winw = $('.image_zone_view').width();
+            var winh = $('.image_zone_view').height();
+            var ratioX, ratioY, scale, newWidth, newHeight;
+            
+            ratioX = winw / $(image).width();
+            ratioY = winh / $(image).height();
+            scale = ratioX < ratioY ? ratioX : ratioY;
+            newWidth = parseInt($(image).width() * scale, 10);
+            newHeight = parseInt($(image).height() * scale, 10);
+            $(image).css({
+                "width": newWidth + "px",
+                "height": newHeight + "px",
+            }).attr({
+                "width": newWidth,
+                "height": newHeight
+            });
+        }
+        $(image).css({
+            'margin-top': ($('.image_zone_view').height() - $(image).height()) / 2,
+        });
+        return false;
+    },
+
+    popup_change_item: function(item, change) {
+        if (item == undefined)
+            return false;
+        if (change == undefined)
+            change = true;
+        var _this = this;
+        this.popup_resize();
+        $('.image_container li[popup=true]').attr('popup', false);
+        $(item).attr('popup', true);
+        $('.image_zone_view').find('.prev, .next').hide().find('img').hide();
+        $('.image_zone_view .image').hide().html('');
+        $('.image_zone_view .loader').show();
+        // load image
+        var image = $('<img>');
+        $(image).load(function() {
+            $('.image_zone_view .loader').hide();
+            $('.image_zone_view .image').show();
+            $('.image_zone_view').find('.prev, .next').show();
+            _this.popup_resize();
+        });
+        $('.image_zone_view .image').append( $(image) );
+        $(image).attr('src', $(item).find('div.image_album').data('original-url'));
+        // load comments
+        var $ul = $('.image_zone_info .comments ul');
+        $.ajax({
+            url: LionFace.User['images_comments_ajax'],
+            data: {
+                'method': 'list',
+                'pk': $(item).data('pk'),
+            },
+            beforeSend: function(jqXHR, settings) {
+                $ul.html('');
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 'ok') {
+                    _this.popup_refresh_comments($(data.comments).filter('li'));
+                }
+            },
+        });
+        // make comment
+        $('.image_zone_info .make_comment textarea').fadeOut(
+            _this.options.popup_fadeDuration,
+            function() {
+                $(this).val('').fadeIn(_this.options.popup_fadeDuration);
+            }
+        );
+    },
+
+    popup_refresh_comments: function($comments) {
+        var _this = this;
+        var $ul = $('.image_zone_info .comments ul');
+        $ul.fadeOut(200, function() {
+            $ul.html('');
+            $comments.each(function(index, item) {
+                var $item = $(item);
+                $ul.prepend($item);
+                if ($item.find('div.delete').length > 0) {
+                    $item.hover(
+                        function(event) {
+                            $item.find('div.delete').show();
+                        },
+                        function(event) {
+                            $item.find('div.delete').hide();
+                        }
+                    ).find('div.delete').click(function(event) {
+                        // delete comment
+                        $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
+                        .appendTo($('.image_popup')).dialog({
+                            resizable: false,
+                            height: 150,
+                            width: 400,
+                            modal: true,
+                            closeOnEscape: false,
+                            buttons: {
+                                "Delete": function() {
+                                    $.ajax({
+                                        url: LionFace.User['images_comments_ajax'],
+                                        type: 'POST',
+                                        data: {
+                                            'method': 'delete',
+                                            'comment_pk': $item.data('pk'),
+                                            'pk': $('.image_container li[popup=true]').data('pk'),
+                                        },
+                                        success: function(data, textStatus, jqXHR) {
+                                            if (data.status == 'ok') {
+                                                _this.popup_refresh_comments($(data.comments).filter('li'));
+                                            }
+                                        },
+                                    });
+                                    $(this).dialog('close');
+                                },
+                                "Cancel": function() {
+                                    $(this).dialog('close');
+                                }
+                            },
+                            open: function(event, ui) {
+                                _this.popup_disableKeyboard();
+                                var $dialog = $(this).parent();
+                                return;
+                                $dialog.find('.ui-dialog-titlebar').remove();
+                                $dialog.find(this).css({'overflow': 'hidden'});
+                                $dialog.find('.ui-dialog-buttonpane').css({
+                                    'border-width': 0,
+                                    'margin': 0,
+                                    'padding': 0,
+                                });
+                                $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
+                            },
+                            close: function(event, ui) {
+                                _this.popup_enableKeyboard();
+                                $(this).dialog('destroy').remove();
+                            },
+                            zIndex: 10002,
+                        });
+                        return false;
+                    });
+                }
+            });
+            $ul.fadeIn(200);
+        });
+    },
+
+    popup_start: function(item) {
+        $('.image_popup .image_zone, .image_popup .image_info').show();
+        $('.image_popup').fadeIn(this.options.popup_fadeDuration);
+        this.popup_enableKeyboard();
+        this.popup_change_item(item, false);
+        this.popup_start.overflow = $('body').css('overflow');
+        $('body').css({'overflow': 'hidden'});
+    },
+
+    popup_end: function() {
+        $('.image_popup .image_zone, .image_popup .image_info').hide();
+        $('.image_popup').fadeOut(this.options.popup_fadeDuration);
+        this.popup_disableKeyboard();
+        $('body').css({'overflow': this.popup_start.overflow});
+        this.popup_start.overflow = undefined;
+    },
+
+    bind_popup: function() {
+        var _this = this;
+        $(window).on('resize', this.popup_resize);
+        $(document).on('resize', this.popup_resize);
+        $('.image_overlay').click(function() {
+            _this.popup_end();
+            return false;
+        });
+        $('.image_zone_info .close a').click(function() {
+            _this.popup_end();
+            return false;
+        });
+        // arrows
+        $('.image_zone_view').find('.prev, .next').hover(
+            function(event) {
+                if ($('.image_container li').length > 1) {
+                    $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
+                }
+            },
+            function(event) {
+                if ($('.image_container li').length > 1) {
+                    $(this).find('img').fadeOut(_this.options.popup_fadeDuration);
+                }
+            }
+        ).mousemove(function(event) {
+            if ($('.image_container li').length > 1) {
+                $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
+            }
+        });
+        $('.image_zone_view .prev').click(function(event) {
+            _this.popup_to_prev();
+        });
+        $('.image_zone_view .next').click(function(event) {
+            _this.popup_to_next();
+        });
+        // textarea in make_comment
+        $('.image_zone_info .make_comment textarea').autosize({
+            callback: function(ta) {
+                _this.popup_resize();
+            },
+        }).focusin(function(event) {
+            _this.popup_enableKeyboard({
+                esc_only: true,
+            });
+        }).focusout(function(event) {
+            _this.popup_enableKeyboard();
+        }).keydown(function(event){
+            var
+            KEYCODE_ENTER = 13,
+            keycode = event.keyCode;
+            if (keycode == KEYCODE_ENTER) {
+                var
+                $this = $(this),
+                val = $this.val();
+                if (val.length > 0) {
+                    // add comment
+                    $.ajax({
+                        url: LionFace.User['images_comments_ajax'],
+                        type: 'POST',
+                        data: {
+                            'method': 'create',
+                            'message': val,
+                            'pk': $('.image_container li[popup=true]').data('pk'),
+                        },
+                        beforeSend: function(jqXHR, settings) {
+                            $this.data('val', val);
+                            $this.val(' ');
+                            $this.prop('disabled', true);
+                        },
+                        success: function(data, textStatus, jqXHR) {
+                            if (data.status == 'ok') {
+                                $this.val('');
+                                _this.popup_refresh_comments($(data.comments).filter('li'));
+                            } else {
+                                this.error(jqXHR, textStatus);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            $this.val($this.data('val'));
+                        },
+                        complete: function(jqXHR, textStatus) {
+                            $this.prop('disabled', false);
+                        },
+                    });
+                }
+                return false;
+            }
+        });
     },
 
 };
