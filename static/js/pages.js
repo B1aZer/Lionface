@@ -583,6 +583,48 @@ LionFace.Pages.prototype = {
                 }
             });
         });
+
+        $(document).on('click','.comm_req_date',function(e) {
+            e.preventDefault();
+            var url = 'community_date/';
+            var self = $(this);
+            var clone = self.clone();
+            if (self.hasClass('from_date_class')) {
+                var class_date = 'from_date';
+            }
+            else {
+                var class_date = 'to_date' ;
+            }
+            var id = get_int(self.attr('id'));
+            var input = $('<input>', { type:"text", id:id, class:"date_inline_edit"+" "+class_date, name:"from"});
+            input.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function(dateText,inst) {
+                    console.log(inst);
+                    console.log(dateText);
+                    make_request({ 
+                        url:url,
+                        data: {
+                            'date':dateText,
+                            'date_type':class_date,
+                            'id':inst.id,
+                        },
+                        callback: function(data) {
+                            if (data.status =='OK') {
+                                clone.html(data.html);
+                            }
+                        }
+                    });
+                },
+                onClose: function(dateText,inst) {
+                    input.replaceWith(clone);
+                },
+            });           
+            self.replaceWith(input);
+            input.focus();
+        });
+
     },
     load_page_feed : function(elem, page, type) {
         var elem = elem || $('#page_feed');

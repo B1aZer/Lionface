@@ -780,7 +780,7 @@ def accept_community_request(request, slug=None, request_id=None):
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
-        raise Http404 
+        raise Http404
     if request_id:
         try:
             member = Membership.objects.get(id=int(request_id))
@@ -906,6 +906,32 @@ def community_text(request, slug=None):
 
 
 @login_required
+def community_date(request, slug=None):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    date = request.POST.get('date',None)
+    date_type = request.POST.get('date_type',None)
+    member_id = request.POST.get('id',None)
+    try:
+        member = Membership.objects.get(id=member_id)
+    except Membership.DoesNotExist:
+        raise Http404
+    if date:
+        date = datetime.strptime(date, "%m/%d/%Y")
+        if date_type == 'from_date':
+            member.from_date = date
+        if date_type == 'to_date':
+            member.to_date = date
+        member.save()
+        data['status'] = 'OK'
+        data['html'] = datetime.strftime(date, "%b. %d, %Y")
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
 def page_members(request, slug=None, member_id=None):
     data = {'status':'FAIL'}
     try:
@@ -925,6 +951,7 @@ def page_members(request, slug=None, member_id=None):
             member = None
     if delete_member:
         if user == member.get_user():
+            member.get_user().set_option('pages_removed__%s' % page.id, datetime.today().strftime('%m/%d/%Y'))
             member.delete()
             data['status'] = 'OK'
             data['id'] = member_id
@@ -946,13 +973,21 @@ def page_members(request, slug=None, member_id=None):
                 member.is_present = True
             try:
                 if user == member.get_user():
-                    member.save()
-                    data['status'] = 'OK'
-                    data['redirect'] = reverse('user-loves',args=(request.user,))
-                    data['html'] = render_to_string("pages/micro/_community_list.html",
-                    {
-                        'page':page,
-                    }, RequestContext(request))
+                    if member.get_user().check_option('pages_removed__%s' % page.id):
+                        date_old = member.get_user().check_option('pages_removed__%s' % page.id)
+                        date1= datetime.strptime(date_old,"%m/%d/%Y")
+                        date2 = datetime.today()
+                        diff = date2 - date1
+                        if diff.days > 30:
+                            member.get_user().remove_option('pages_removed__%s' % page.id)
+                    if not member.get_user().check_option('pages_removed__%s' % page.id):
+                        member.save()
+                        data['status'] = 'OK'
+                        data['redirect'] = reverse('user-loves',args=(request.user,))
+                        data['html'] = render_to_string("pages/micro/_community_list.html",
+                        {
+                            'page':page,
+                        }, RequestContext(request))
             except:
                 pass
     return HttpResponse(json.dumps(data), "application/json")
