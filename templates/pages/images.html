@@ -2,7 +2,7 @@
 {% load media format_results %}
 
 {% block js %}
-<script>
+<script type="text/javascript">
     LionFace.User['images_type'] = 'page';
     LionFace.User['images_manage'] = {% if manage_perm %}true{% else %}false{% endif %};
     LionFace.User['images_total_rows'] = {{ total_rows }};

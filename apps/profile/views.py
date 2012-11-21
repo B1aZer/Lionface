@@ -1,16 +1,19 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from account.models import UserProfile, UserImage, UserImages
+from account.models import UserProfile
+from images.models import Image, ImageComments
 from messaging.models import Messaging
 from post.models import Albums
 from notification.models import Notification
 
 from messaging.forms import MessageForm
+from images.forms import ImageForm
 from .forms import *
 
 from django.db.models import F
@@ -22,6 +25,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
+
+from PIL import Image as pilImage
 
 try:
     import json
@@ -50,7 +55,7 @@ def timeline(request):
 
 @login_required
 @unblocked_users
-def profile_image(request, username, rows_show=4):
+def images(request, username, rows_show=4):
     try:
         profile_user = UserProfile.objects.get(username=username)
     except UserProfile.DoesNotExist:
@@ -60,30 +65,42 @@ def profile_image(request, username, rows_show=4):
     if not is_visible:
         raise Http404
 
-    if request.method == 'POST':
-        if 'image' in request.POST:
-            form = ImageForm(request.POST, request.FILES)
-            if form.is_valid():
-                ret = form.save(profile_user)
-                if ret is None:
-                    return HttpResponseBadRequest()
-                image, image_m2m = ret
-                image_m2m.make_activity()
-                return HttpResponseRedirect(request.path)
+    ctype = ContentType.objects.get_for_model(UserProfile)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
+    manage_perm = request.user == profile_user
+
+    if request.method == 'POST' and manage_perm:
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            image = form.save(profile_user)
+            image.make_activity()
+            try:
+                pil_object = pilImage.open(image.image.path)
+                w, h = pil_object.size
+                x, y = 0, 0
+                if w > h:
+                    x, y, w, h = int((w-h)/2), 0, h, h
+                elif h > w:
+                    x, y, w, h = 0, int((h-w)/2), w, w
+                new_pil_object = pil_object \
+                    .crop((x, y, x+w, y+h)) \
+                    .resize((200, 200))
+                new_pil_object.save(image.image.thumb_path)
+            except:
+                pass
+            return redirect('profile.views.images', username=profile_user.username)
     else:
         form = ImageForm()
 
-    image_rows = UserImages.objects.filter(profile=profile_user) \
-        .select_related('image').get_rows(0, rows_show)
-    total_rows = UserImages.objects.filter(profile=profile_user).total_rows()
-
     return render_to_response(
-        'profile/image.html',
+        'profile/images.html',
         {
             'profile_user': profile_user,
-            'image_rows': image_rows,
-            'total_rows': total_rows,
             'form': form,
+            'image_rows': qs.get_rows(0, rows_show),
+            'total_rows': qs.total_rows(),
+            'photos_count': qs.count(),
+            'manage_perm': manage_perm,
         },
         RequestContext(request)
     )
@@ -91,12 +108,9 @@ def profile_image(request, username, rows_show=4):
 
 @login_required
 @unblocked_users
-def profile_image_more(request, username):
-    row = request.POST.get('row', None)
-    try:
-        row = int(row)
-    except (TypeError, ValueError), e:
-        return HttpResponseBadRequest('Bad row was received.')
+def images_ajax(request, username):
+    if not request.is_ajax():
+        raise Http404
 
     try:
         profile_user = UserProfile.objects.get(username=username)
@@ -107,95 +121,78 @@ def profile_image_more(request, username):
     if not is_visible:
         raise Http404
 
-    total_rows = UserImages.objects.filter(profile=profile_user).total_rows()
-    if row >= total_rows:
-        return HttpResponseBadRequest('Row larger than total_rows.')
-    image_row = UserImages.objects.filter(profile=profile_user) \
-        .select_related('image').get_row(row)
-
-    data = {}
-    data['total_rows'] = total_rows
-    data['html'] = render_to_string('profile/image_li.html', {
-        'rows': image_row,
-        'profile_user': profile_user,
-    }, context_instance=RequestContext(request))
-    data['positions'] = UserImages.objects.filter(profile=profile_user) \
-        .get_positions()
-    data['status'] = 'ok'
-
-    return HttpResponse(json.dumps(data), "application/json")
-
-
-@login_required
-@unblocked_users
-def profile_image_primary(request, username):
-    if request.user.username != username:
+    method = request.REQUEST.get('method', None)
+    if method not in ['more', 'activity', 'delete', 'change_position']:
         raise Http404
-    profile_user = request.user
 
-    pk = request.POST.get('pk')
-    try:
-        image = UserImages.objects.filter(profile=profile_user).get(pk=pk)
-    except UserImages.DoesNotExist:
-        return HttpResponseBadRequest('Bad PK was received.')
+    ctype = ContentType.objects.get_for_model(UserProfile)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
+    manage_perm = request.user == profile_user
 
-    data = {}
-    try:
-        image.make_activity()
-        profile_user = UserProfile.objects.get(pk=profile_user.pk)
-        data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
-            'profile_user': profile_user,
-        }, context_instance=RequestContext(request))
-        data['positions'] = UserImages.objects.filter(profile=profile_user) \
-            .get_positions()
-    except Exception as e:
-        data['status'] = 'fail'
-        #data['errmsg'] = str(e)
-        print e
-    else:
-        data['status'] = 'ok'
-    return HttpResponse(json.dumps(data), "application/json")
-
-
-@login_required
-@unblocked_users
-def profile_image_delete(request, username):
-    if request.user.username != username:
+    if method in ['activity', 'delete', 'change_position'] and not manage_perm:
         raise Http404
-    profile_user = request.user
-
-    row = request.POST.get('row', None)
-    try:
-        row = int(row) - 1
-    except (TypeError, ValueError), e:
-        return HttpResponseBadRequest('Bad row was received.')
-    pk = request.POST.get('pk')
-    try:
-        image = UserImages.objects.filter(profile=profile_user).get(pk=pk)
-    except UserImages.DoesNotExist:
-        return HttpResponseBadRequest('Bad PK was received.')
 
     data = {}
     try:
-        image.delete()
-        if image.activity == True:
+        if method == 'more':
+            try:
+                row = int(request.REQUEST.get('row', None))
+            except (TypeError, ValueError), e:
+                return HttpResponseBadRequest('Bad row was received.')
+            data['total_rows'] = qs.total_rows()
+            if row >= data['total_rows']:
+                return HttpResponseBadRequest('Row larger than total_rows.')
+            data['html'] = render_to_string('images/li.html', {
+                'rows': qs.get_row(row),
+                'manage_perm': manage_perm,
+            }, context_instance=RequestContext(request))
+        elif method == 'activity':
+            try:
+                image = qs.get(pk=request.REQUEST.get('pk', None))
+            except Image.DoesNotExist:
+                return HttpResponseBadRequest('Bad PK was received.')
+            image.make_activity()
             profile_user = UserProfile.objects.get(pk=profile_user.pk)
-            data['backgroundImage'] = render_to_string('profile/image_thumb_url.html', {
-                'profile_user': profile_user,
-            }, context_instance=RequestContext(request))
-        if row < UserImages.objects.filter(profile=profile_user).total_rows():
-            image_row = UserImages.objects.filter(profile=profile_user) \
-                .select_related('image').get_row(row)[-1:]
-            data['html'] = render_to_string('profile/image_li.html', {
-                'rows': image_row,
-                'profile_user': profile_user,
-            }, context_instance=RequestContext(request))
-        data['photos_count'] = profile_user.all_images.count()
-        data['positions'] = UserImages.objects.filter(profile=profile_user) \
-            .get_positions()
+        elif method == 'delete':
+            try:
+                row = int(request.REQUEST.get('row', None)) - 1
+            except (TypeError, ValueError), e:
+                return HttpResponseBadRequest('Bad row was received.')
+            try:
+                image = qs.get(pk=request.REQUEST.get('pk', None))
+            except UserImages.DoesNotExist:
+                return HttpResponseBadRequest('Bad PK was received.')
+            image.delete()
+            if image.activity == True:
+                profile_user = UserProfile.objects.get(pk=profile_user.pk)
+            if row < qs.total_rows():
+                image_row = qs.get_row(row)[-1:]
+                manage_perm = request.user == profile_user
+                data['html'] = render_to_string('images/li.html', {
+                    'rows': image_row,
+                    'manage_perm': manage_perm,
+                }, context_instance=RequestContext(request))
+        elif method == 'change_position':
+            try:
+                obj = qs.get(pk=request.REQUEST.get('pk', None))
+                if obj.activity:
+                    return HttpResponseBadRequest('Image with pk is actively.')
+            except Image.DoesNotExist as e:
+                return HttpResponseBadRequest('Bad pk was received.')
+            try:
+                instead = qs.get(pk=request.REQUEST.get('instead', None))
+                if instead.activity:
+                    return HttpResponseBadRequest('Image with instead is actively.')
+            except Image.DoesNotExist as e:
+                return HttpResponseBadRequest('Bad instead was received.')
+            obj.change_position(obj.rating, instead.rating)
+        else:
+            raise Http404
+        data['positions'] = qs.get_positions()
+        data['thumb_src'] = '/' + profile_user.photo.thumb_name
+        data['photos_count'] = qs.count()
     except Exception as e:
         data['status'] = 'fail'
-        #data['errmsg'] = str(e)
     else:
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
@@ -203,41 +200,10 @@ def profile_image_delete(request, username):
 
 @login_required
 @unblocked_users
-def profile_image_change_position(request, username):
-    if request.user.username != username:
+def images_comments_ajax(request, username):
+    if not request.is_ajax():
         raise Http404
-    profile_user = request.user
 
-    try:
-        obj = UserImages.objects.filter(profile=profile_user) \
-            .get(pk=request.POST.get('pk', None))
-        if obj.activity:
-            return HttpResponseBadRequest('Image with pk is actively')
-    except UserImages.DoesNotExist as e:
-        return HttpResponseBadRequest('Bad pk was received.')
-    try:
-        instead = UserImages.objects.filter(profile=profile_user) \
-            .get(pk=request.POST.get('instead', None))
-        if instead.activity:
-            return HttpResponseBadRequest('Image with instead is actively')
-    except UserImages.DoesNotExist as e:
-        return HttpResponseBadRequest('Bad instead was received.')
-
-    data = {}
-    try:
-        obj.change_position(obj.rating, instead.rating)
-        data['positions'] = UserImages.objects.filter(profile=profile_user) \
-            .get_positions()
-    except Exception as e:
-        data['status'] = 'fail'
-    else:
-        data['status'] = 'ok'
-    return HttpResponse(json.dumps(data), "application/json")
-
-
-@login_required
-@unblocked_users
-def profile_image_comments_create(request, username):
     try:
         profile_user = UserProfile.objects.get(username=username)
     except UserProfile.DoesNotExist:
@@ -247,135 +213,49 @@ def profile_image_comments_create(request, username):
     if not is_visible:
         raise Http404
 
-    try:
-        message = request.REQUEST['message']
-    except KeyError:
-        return HttpResponseBadRequest("Comment wasn't received.")
+    method = request.REQUEST.get('method', None)
+    if method not in ['create', 'list', 'delete']:
+        raise Http404
+
+    ctype = ContentType.objects.get_for_model(UserProfile)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
+    manage_perm = request.user == profile_user
 
     try:
-        image = UserImages.objects.filter(profile=profile_user) \
-            .only('image') \
-            .select_related('image') \
-            .get(pk=request.REQUEST.get('pk', None)) \
-            .image
-    except UserImages.DoesNotExist as e:
+        image = qs.get(pk=request.REQUEST.get('pk', None))
+    except Image.DoesNotExist as e:
         return HttpResponseBadRequest('Bad pk was received.')
+
+    if method in ['delete'] and not manage_perm:
+        raise Http404
 
     data = {}
     try:
-        comment = UserImageComments.objects.create(
-            image=image,
-            owner=request.user,
-            message=message
-        )
-        data['comments'] = render_to_string('profile/image_comments_li.html', {
-            'image': image,
-            'comments': image.comments.select_related('owner'),
+        if method == 'create':
+            try:
+                message = request.REQUEST['message']
+            except KeyError:
+                return HttpResponseBadRequest("Comment wasn't received.")
+            comment = ImageComments.objects.create(
+                image=image,
+                owner=request.user,
+                message=message
+            )
+        elif method == 'list':
+            pass
+        elif method == 'delete':
+            try:
+                comment = image.comments.get(pk=request.REQUEST.get('comment_pk', None))
+            except ImageComments.DoesNotExist as e:
+                return HttpResponseBadRequest('Bad comment_pk was received.')
+            comment.delete()
+        else:
+            raise Http404
+        data['comments'] = render_to_string('images/li_comment.html', {
             'profile_user': profile_user,
-        }, context_instance=RequestContext(request))
-    except Exception as e:
-        data['status'] = 'fail'
-    else:
-        data['status'] = 'ok'
-    return HttpResponse(json.dumps(data), "application/json")
-
-
-@login_required
-@unblocked_users
-def profile_image_comments(request, username):
-    try:
-        profile_user = UserProfile.objects.get(username=username)
-    except UserProfile.DoesNotExist:
-        raise Http404
-
-    is_visible = profile_user.check_visiblity('profile_image', request.user)
-    if not is_visible:
-        raise Http404
-
-    try:
-        image = UserImages.objects.filter(profile=profile_user) \
-            .only('image') \
-            .select_related('image') \
-            .get(pk=request.REQUEST.get('pk', None)) \
-            .image
-    except UserImages.DoesNotExist as e:
-        return HttpResponseBadRequest('Bad pk was received.')
-
-    data = {}
-    try:
-        data['comments'] = render_to_string('profile/image_comments_li.html', {
             'image': image,
-            'comments': image.comments.select_related('owner'),
-            'profile_user': profile_user,
-        }, context_instance=RequestContext(request))
-    except Exception as e:
-        data['status'] = 'fail'
-    else:
-        data['status'] = 'ok'
-    return HttpResponse(json.dumps(data), "application/json")
-
-
-@login_required
-@unblocked_users
-def profile_image_comments_delete(request, username):
-    try:
-        profile_user = UserProfile.objects.get(username=username)
-    except UserProfile.DoesNotExist:
-        raise Http404
-
-    is_visible = profile_user.check_visiblity('profile_image', request.user)
-    if not is_visible:
-        raise Http404
-
-    try:
-        image = UserImages.objects.filter(profile=profile_user) \
-            .only('image') \
-            .select_related('image') \
-            .get(pk=request.REQUEST.get('pk', None)) \
-            .image
-    except UserImages.DoesNotExist as e:
-        return HttpResponseBadRequest('Bad pk was received.')
-
-    try:
-        comment = image.comments.get(pk=request.REQUEST.get('comment_pk', None))
-    except UserImageComments.DoesNotExist as e:
-        return HttpResponseBadRequest('Bad comment_pk was received.')
-
-    data = {}
-    try:
-        comment.delete()
-        data['comments'] = render_to_string('profile/image_comments_li.html', {
-            'image': image,
-            'comments': image.comments.select_related('owner'),
-            'profile_user': profile_user,
-        }, context_instance=RequestContext(request))
-    except Exception as e:
-        print e
-        data['status'] = 'fail'
-    else:
-        data['status'] = 'ok'
-    return HttpResponse(json.dumps(data), "application/json")
-
-
-def profile_image_comments_notification(request, username):
-    if request.user.username != username:
-        raise Http404
-    profile_user = request.user
-
-    try:
-        image = UserImages.objects.filter(profile=profile_user) \
-            .only('image') \
-            .select_related('image') \
-            .get(pk=request.REQUEST.get('pk', None)) \
-            .image
-    except UserImageComments.DoesNotExist as e:
-        return HttpResponseBadRequest('Bad pk was received.')
-
-    data = {}
-    try:
-        data['html'] = render_to_string('profile/image_notification.html', {
-            'image': image,
-            'profile_user': profile_user,
+            'comments': image.comments.all(),
+            'manage_perm': manage_perm,
         }, context_instance=RequestContext(request))
     except Exception as e:
         data['status'] = 'fail'
@@ -387,27 +267,37 @@ def profile_image_comments_notification(request, username):
 #@login_required
 @unblocked_users
 #@default_user
-def profile(request, username='admin'):
+def profile(request, username):
     try:
         profile_user = UserProfile.objects.get(username=username)
     except UserProfile.DoesNotExist:
         raise Http404
 
-    form = ImageForm()
     form_mess = MessageForm()
     form_mess.fields['content'].widget.attrs['rows'] = 7
 
     if request.method == 'POST':
-
-        if 'image' in request.POST:
-            form = ImageForm(request.POST, request.FILES)
-            if form.is_valid():
-                ret = form.save(profile_user)
-                if ret is None:
-                    return HttpResponseBadRequest()
-                image, image_m2m = ret
-                image_m2m.make_activity()
-                return HttpResponseRedirect(request.path)
+        form = ImageForm(request.POST, request.FILES)
+        if request.user.is_authenticated() \
+         and 'image' in request.POST \
+         and form.is_valid():
+            image = form.save(profile_user)
+            image.make_activity()
+            try:
+                pil_object = pilImage.open(image.image.path)
+                w, h = pil_object.size
+                x, y = 0, 0
+                if w > h:
+                    x, y, w, h = int((w-h)/2), 0, h, h
+                elif h > w:
+                    x, y, w, h = 0, int((h-w)/2), w, w
+                new_pil_object = pil_object \
+                    .crop((x, y, x+w, y+h)) \
+                    .resize((200, 200))
+                new_pil_object.save(image.image.thumb_path)
+            except:
+                pass
+            return redirect('profile.views.profile', username=profile_user.username)
 
         if 'message' in request.POST:
             form_mess = MessageForm(request.POST)
@@ -417,7 +307,9 @@ def profile(request, username='admin'):
                 mess = Messaging(user=request.user,user_to=user_to,content=content)
                 mess.save()
                 return HttpResponseRedirect(request.path)
-
+    else:
+        form = ImageForm()
+        
 
     if request.method == 'GET' and 'albums' in request.GET:
         """Albums view"""
