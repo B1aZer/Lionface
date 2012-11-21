@@ -262,6 +262,8 @@ def get_community_friends_for(user,page):
 
 @register.filter(name="show_membership")
 def show_membership(page,user):
+    if user.is_anonymous():
+        return []
     return page.show_membership(user)
 
 

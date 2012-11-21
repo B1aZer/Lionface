@@ -1,0 +1,10 @@
+<tr>
+<td align="left">
+    {% if comrequest.is_new %}<span>New</span>{% endif %}
+    <a href="{{ comrequest.get_user.get_absolute_url }}">{{ comrequest.get_user.get_full_name }}</a>: {{ comrequest.get_begin_date }} - {{ comrequest.get_end_date }}
+</td>
+<td align="right">
+    <a href="{% url pages.views.accept_community_request slug=page.username request_id=comrequest.id %}" class="profile_btn confirm_community_req" style="position: relative; top: 0px;">Confirm</a> 
+    <a href="{% url pages.views.decline_community_request slug=page.username request_id=comrequest.id %}" class="deny_community_req" style="color: #AAA;">Deny</a>
+</td>
+</tr>

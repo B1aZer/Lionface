@@ -56,6 +56,46 @@ LionFace.Pages.prototype = {
         /** love counts */
         // moved to site.js
 
+        /** collapsable reqeusts micro community */
+        $(document).on('click','#emloyees_req_collapse',function(e) {
+            e.preventDefault();
+            var self = $(this)
+            if (!self.data('toggled')) {
+                self.data('toggled',true);
+                $('#emplyees_past_table').slideDown();
+            }
+            else {
+                self.data('toggled',false);
+                $('#emplyees_past_table').slideUp();
+            }
+        });
+        
+        $(document).on('click','#interns_req_collapse',function(e) {
+            e.preventDefault();
+            var self = $(this)
+            if (!self.data('toggled')) {
+                self.data('toggled',true);
+                $('#interns_past_table').slideDown();
+            }
+            else {
+                self.data('toggled',false);
+                $('#interns_past_table').slideUp();
+            }
+        });
+
+        $(document).on('click','#volunteers_req_collapse',function(e) {
+            e.preventDefault();
+            var self = $(this)
+            if (!self.data('toggled')) {
+                self.data('toggled',true);
+                $('#volunteers_past_table').slideDown();
+            }
+            else {
+                self.data('toggled',false);
+                $('#volunteers_past_table').slideUp();
+            }
+        });
+
     },
 
     bind_page_functions : function() {
@@ -508,11 +548,18 @@ LionFace.Pages.prototype = {
             var url = $(this).attr('href');
             var tr = $(this).parents('tr');
             var parent_div = $(this).parents('.community_req_div');
+            var parent_table = $(this).parents('table');
             make_request({
                 url:url,
                 callback: function(data) {
                     if (data.status == 'OK') {
                         tr.remove();
+                        if (!parent_table.find('tr').length) {
+                            if (parent_table.hasClass('past_table')) {
+                                parent_div.find('.req_collapse').remove();
+                            }
+                            parent_table.remove();
+                        } 
                         if (!parent_div.find('tr').length) {
                             parent_div.remove();   
                         }
@@ -527,14 +574,21 @@ LionFace.Pages.prototype = {
             var url = $(this).attr('href');
             var tr = $(this).parents('tr');
             var parent_div = $(this).parents('.community_req_div');
+            var parent_table = $(this).parents('table');
             make_request({
                 url:url,
                 callback: function(data) {
                     if (data.status == 'OK') {
                         tr.remove();
+                        if (!parent_table.find('tr').length) {
+                            if (parent_table.hasClass('past_table')) {
+                                parent_div.find('.req_collapse').remove();
+                            }
+                            parent_table.remove();
+                        } 
                         if (!parent_div.find('tr').length) {
                             parent_div.remove();   
-                        } 
+                        }
                     }
                 }
             });

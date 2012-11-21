@@ -5,6 +5,10 @@
     $('.interns_hidden').hide();
     $('.emloyees_hidden').hide();
     $('.volunteers_hidden').hide();
+    if (LionFace.User.is_anonymous) {
+        $('#community_add_button').hide();
+    }
+    $('#comm_req_count').hide();
 </script>
 
 <div class="page_center">
@@ -55,12 +59,14 @@
                 {% if request.user|check_pages_community:page %}
                 <input id="employees_checkbox" type="checkbox" class="community_checkbox" {% if page.check_employees %} checked {% endif %}/>
                 {% endif %}
-                    {% if page.type == 'BS' %}
-                        <span style="color:#3ea8d2; font-size: 16pt;">Employees</span>
-                    {% else %}   
-                        <span style="color:#909E4A; font-size: 16pt;">Employees</span>
-                    {% endif %}
+                    {% if page.check_employees or request.user|check_pages_community:page %}
+                        {% if page.type == 'BS' %}
+                            <span style="color:#3ea8d2; font-size: 16pt;">Employees</span>
+                        {% else %}   
+                            <span style="color:#909E4A; font-size: 16pt;">Employees</span>
+                        {% endif %}
                     <span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: {{ page.get_emloyees_ordered_count }}</span><br />
+                    {% endif %}
                 <div id="employees_div" {% if not page.check_employees %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
                         {% if page.text_employees %}
@@ -93,17 +99,17 @@
                     {% endif %}
                     {% if page.get_community_requests_emloyees and request.user|check_pages_community:page %}
                     <div class="community_req_div" style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        {% if page.get_community_requests_emloyees_past_count %}
+                        <a href="#" id="emloyees_req_collapse" class="req_collapse"> collapsable past {{page.get_community_requests_emloyees_past_count}}</a>
+                        {% endif %}
+                        <table id="emplyees_past_table" class="past_table" width="100%" style="display:none">
+                            {% for comrequest in page.get_community_requests_emloyees_past %}
+                            {% include 'pages/micro/_community_req.html' %}
+                            {% endfor %}
+                        </table>
                         <table width="100%">
-                            {% for comrequest in page.get_community_requests_emloyees %}
-                            <tr>
-                            <td align="left">
-                                <a href="{{ comrequest.get_user.get_absolute_url }}">{{ comrequest.get_user.get_full_name }}</a>: {{ comrequest.get_begin_date }} - {{ comrequest.get_end_date }}
-                            </td>
-                            <td align="right">
-                                <a href="{% url pages.views.accept_community_request slug=page.username request_id=comrequest.id %}" class="profile_btn confirm_community_req" style="position: relative; top: 0px;">Confirm</a> 
-                                <a href="{% url pages.views.decline_community_request slug=page.username request_id=comrequest.id %}" class="deny_community_req" style="color: #AAA;">Deny</a>
-                            </td>
-                            </tr>
+                            {% for comrequest in page.get_community_requests_emloyees_present %}
+                            {% include 'pages/micro/_community_req.html' %}
                             {% endfor %}
                         </table>
                     </div>
@@ -113,12 +119,14 @@
                 {% if request.user|check_pages_community:page %}
                 <input id="interns_checkbox" type="checkbox" class="community_checkbox" {% if page.check_interns %} checked {% endif %}/> 
                 {% endif %}
-       			{% if page.type == 'BS' %}
-                    <span style="color:#3ea8d2; font-size: 16pt;">Interns</span>
-                {% else %}   
-                    <span style="color:#909E4A; font-size: 16pt;">Interns</span>
-                {% endif %}
-                <span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: {{ page.get_interns_ordered_count }}</span><br />
+                    {% if page.check_interns or request.user|check_pages_community:page %}
+                        {% if page.type == 'BS' %}
+                            <span style="color:#3ea8d2; font-size: 16pt;">Interns</span>
+                        {% else %}   
+                            <span style="color:#909E4A; font-size: 16pt;">Interns</span>
+                        {% endif %}
+                        <span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: {{ page.get_interns_ordered_count }}</span><br />
+                    {% endif %}
                 <div id="interns_div" {% if not page.check_interns %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
                         {% if page.text_interns %}
@@ -148,7 +156,24 @@
                         <a href="#" class="community_see_more interns_link"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
                         {% endif %}
                     </div>
-                        <br /><br ?>
+                    {% endif %}
+                    {% if page.get_community_requests_interns and request.user|check_pages_community:page %}
+                    <div class="community_req_div" style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        {% if page.get_community_requests_interns_past_count %}
+                        <a href="#" id="interns_req_collapse" class="req_collapse"> collapsable past {{page.get_community_requests_interns_past_count}}</a>
+                        {% endif %}
+                        <table id="interns_past_table" class="past_table" width="100%" style="display:none">
+                            {% for comrequest in page.get_community_requests_interns_past %}
+                            {% include 'pages/micro/_community_req.html' %}
+                            {% endfor %}
+                        </table>
+                        <table width="100%">
+                            {% for comrequest in page.get_community_requests_interns_present %}
+                            {% include 'pages/micro/_community_req.html' %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                        <br /><br />
                     {% endif %}
                 </div>
        			{% if page.type == 'BS' %}
@@ -156,7 +181,10 @@
                     {% if request.user|check_pages_community:page %}
                     <input id="volunteers_checkbox" type="checkbox" class="community_checkbox" {% if page.check_volunteers %} checked {% endif %}/> 
                     {% endif %}
-                    <span style="color:#909E4A; font-size: 16pt;">Volunteers</span><span style="color: #999; font-size: 9pt;"> Confirmed Current Volunteers: {{ page.get_volunteers_ordered_count }}</span><br />
+                    {% if page.check_volunteers or request.user|check_pages_community:page %}
+                    <span style="color:#909E4A; font-size: 16pt;">Volunteers</span>
+                    <span style="color: #999; font-size: 9pt;"> Confirmed Current Volunteers: {{ page.get_volunteers_ordered_count }}</span><br />
+                    {% endif %}
                     <div id="volunteers_div" {% if not page.check_volunteers %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
                         {% if page.text_volunteers %}
@@ -187,6 +215,24 @@
                         <a href="#" class="community_see_more volunteers_link"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
                         {% endif %}
                     </div>
+                    {% endif %}
+                    {% if page.get_community_requests_volunteers and request.user|check_pages_community:page %}
+                    <div class="community_req_div" style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        {% if page.get_community_requests_volunteers_past_count %}
+                        <a href="#" id="volunteers_req_collapse" class="req_collapse"> collapsable past {{page.get_community_requests_volunteers_past_count}}</a>
+                        {% endif %}
+                        <table id="volunteers_past_table" class="past_table" width="100%" style="display:none">
+                            {% for comrequest in page.get_community_requests_volunteers_past %}
+                            {% include 'pages/micro/_community_req.html' %}
+                            {% endfor %}
+                        </table>
+                        <table width="100%">
+                            {% for comrequest in page.get_community_requests_volunteers_present %}
+                            {% include 'pages/micro/_community_req.html' %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                        <br /><br />
                     {% endif %}
                 </div>
                 {% endif %}

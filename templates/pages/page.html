@@ -137,7 +137,11 @@ data-url="{% url pages.views.images page.username %}">
         <a href="#" id="discussions" class="page_btn business_btn">Discussions</a>
         <a href="#" id="reviews" class="page_btn business_btn">Feedback</a>
         <a href="#" id="calendar" class="page_btn business_btn">Calendar</a>
-        <a href="#" id="comunnity" class="page_btn business_btn">Comunnity</a>
+        <a href="#" id="comunnity" class="page_btn business_btn">Comunnity 
+            {% if page.get_community_requests_count_new %}
+            <span id="comm_req_count">{{page.get_community_requests_count_new}}</span>
+            {% endif %}
+        </a>
   </div>
   
 

@@ -5,6 +5,7 @@ from django.db.models.signals import m2m_changed
 from django.db.models import F
 from datetime import datetime
 import logging
+import cPickle
 
 from images.fields import ImageWithThumbField
 
@@ -156,8 +157,90 @@ class Pages(models.Model):
     def get_community_requests(self):
         return Membership.objects.filter(page=self, is_confirmed=False)
 
+    def get_community_requests_past(self):
+        requests = Membership.objects.filter(page=self, is_confirmed=False, is_present=False)
+        return requests
+
+    def get_community_requests_present(self):
+        return Membership.objects.filter(page=self, is_confirmed=False, is_present=True)
+
+    def get_community_requests_count(self):
+        return self.get_community_requests().count()
+
+    def get_community_requests_count_new(self):
+        return self.get_community_requests().filter(is_new=True).count()
+
     def get_community_requests_emloyees(self):
         return Membership.objects.filter(page=self, type='EM', is_confirmed=False)
+
+    def get_community_requests_emloyees_past(self, update=True):
+        requests = Membership.objects.filter(page=self, type='EM', is_confirmed=False, is_present=False)
+        pickle_str = cPickle.dumps(requests)
+        if update:
+            requests.update(is_new=False)
+        requests = cPickle.loads(pickle_str)
+        return requests
+
+    def get_community_requests_emloyees_past_count(self):
+        return self.get_community_requests_emloyees_past(False).count()
+
+    def get_community_requests_emloyees_present(self):
+        requests = Membership.objects.filter(page=self, type='EM', is_confirmed=False, is_present=True)
+        pickle_str = cPickle.dumps(requests)
+        requests.update(is_new=False)
+        requests = cPickle.loads(pickle_str)
+        return requests
+
+    def get_community_requests_emloyees_present_count(self):
+        return self.get_community_requests_emloyees_present().count()
+
+    def get_community_requests_interns(self):
+        return Membership.objects.filter(page=self, type='IN', is_confirmed=False)
+
+    def get_community_requests_interns_past(self, update=True):
+        requests = Membership.objects.filter(page=self, type='IN', is_confirmed=False, is_present=False)
+        pickle_str = cPickle.dumps(requests)
+        if update:
+            requests.update(is_new=False)
+        requests = cPickle.loads(pickle_str)
+        return requests
+
+    def get_community_requests_interns_past_count(self):
+        return self.get_community_requests_interns_past(False).count()
+
+    def get_community_requests_interns_present(self):
+        requests = Membership.objects.filter(page=self, type='IN', is_confirmed=False, is_present=True)
+        pickle_str = cPickle.dumps(requests)
+        requests.update(is_new=False)
+        requests = cPickle.loads(pickle_str)
+        return requests
+
+    def get_community_requests_interns_present_count(self):
+        return self.get_community_requests_interns_present().count()
+
+    def get_community_requests_volunteers(self):
+        return Membership.objects.filter(page=self, type='VL', is_confirmed=False)
+
+    def get_community_requests_volunteers_past(self, update=True):
+        requests = Membership.objects.filter(page=self, type='VL', is_confirmed=False, is_present=False)
+        pickle_str = cPickle.dumps(requests)
+        if update:
+            requests.update(is_new=False)
+        requests = cPickle.loads(pickle_str)
+        return requests
+
+    def get_community_requests_volunteers_past_count(self):
+        return self.get_community_requests_volunteers_past(False).count()
+
+    def get_community_requests_volunteers_present(self):
+        requests = Membership.objects.filter(page=self, type='VL', is_confirmed=False, is_present=True)
+        pickle_str = cPickle.dumps(requests)
+        requests.update(is_new=False)
+        requests = cPickle.loads(pickle_str)
+        return requests
+
+    def get_community_requests_volunteers_present_count(self):
+        return self.get_community_requests_volunteers_present().count()
 
     def get_members(self):
         members = Membership.objects.filter(page=self, is_confirmed=True)
@@ -296,6 +379,7 @@ class Membership(models.Model):
     to_date = models.DateField(null=True,blank=True)
     is_confirmed = models.BooleanField(default=False)
     is_present = models.BooleanField(default=False)
+    is_new = models.BooleanField(default=True)
 
     def get_begin_date(self):
         return self.from_date
@@ -315,6 +399,10 @@ class Membership(models.Model):
 
     def get_user(self):
         return self.user
+
+    def old(self):
+        self.is_new = False
+        self.save()
 
     def confirm(self):
         self.is_confirmed = True
