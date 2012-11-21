@@ -18,7 +18,7 @@
 <!--onclick="window.open('/{{ profile_user.photo }}');return false;"-->
 <div class="noPhoto_shadow">
 <div {% if profile_user|check_profile_image_visibility:request.user %}
-onclick="window.location.href = '{% url profile.views.profile_image profile_user.username %}';return false;" 
+onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;" 
 {% endif %}
 	class="noPhoto" style="background-image: url('/{{ profile_user.photo.thumb_name }}'); background-size: 200px 200px; -moz-background-size: 200px 200px !important;">
 		{% if request.user == profile_user %}
@@ -32,9 +32,9 @@ onclick="window.location.href = '{% url profile.views.profile_image profile_user
 <div style="position: relative;">
 <form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
 	{% csrf_token %}
-	{{ form.photo.errors }}
+	{{ form.image.errors }}
 	<p><label for="id_photo">Upload</label></p>
-	{{ form.photo }}
+	{{ form.image }}
 	<p>
 		<input id="submit_img_btn" name="image" type="submit" class="blue_btn" value="Upload" />
 		<input id="upload_cancel" type="button" class="blue_btn" value="Cancel" />

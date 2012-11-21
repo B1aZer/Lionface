@@ -223,7 +223,6 @@ MEDIA_BUNDLES = (
     ),
     ('profile.js',
         'js/profile.js',
-        'js/profile.images.js',
     ),
     ('notification.js',
         'js/notification.js',

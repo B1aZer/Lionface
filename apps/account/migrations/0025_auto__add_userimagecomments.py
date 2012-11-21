@@ -44,7 +44,7 @@ class Migration(SchemaMigration):
         'account.userimage': {
             'Meta': {'object_name': 'UserImage'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('account.fields.ImageWithThumbField', [], {'max_length': '100'}),
+            'image': ('images.fields.ImageWithThumbField', [], {'max_length': '100'}),
             'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'my_images'", 'to': "orm['account.UserProfile']"}),
             'profiles': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'all_images'", 'symmetrical': 'False', 'through': "orm['account.UserImages']", 'to': "orm['account.UserProfile']"})
         },
@@ -93,7 +93,7 @@ class Migration(SchemaMigration):
             'friends': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'friends_rel_+'", 'to': "orm['account.UserProfile']"}),
             'hidden': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'hidden_from'", 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
             'optional_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': "'200'"}),
-            'photo': ('account.fields.ImageWithThumbField', [], {'default': "'uploads/images/noProfilePhoto.png'", 'max_length': '100'}),
+            'photo': ('images.fields.ImageWithThumbField', [], {'default': "'uploads/images/noProfilePhoto.png'", 'max_length': '100'}),
             'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
         },
         'auth.group': {

@@ -59,7 +59,9 @@ LionFace.Profile.prototype = {
         });  
 
         $('#upload_cancel').click(function(event) {
-            $('.upload_form').hide();
+            $('.upload_form').fadeOut(function(){
+                $('#id_image').val('');
+            });
         });
 
         $("#reset_picture").click(function(event){

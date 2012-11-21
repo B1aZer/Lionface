@@ -4,6 +4,7 @@ from django.contrib.auth import login, authenticate
 import re, datetime
 import pytz
 
+
 class LoginForm(forms.Form):
     email = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'or username'}))
     password = forms.CharField(max_length=20, min_length=4, widget=forms.PasswordInput())

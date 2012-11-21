@@ -12,6 +12,7 @@ LionFace.Images.prototype = {
 
     init : function() {
         var _this = this;
+        $('.image_popup').appendTo($('body'));
         $('.image_container li').each(function(index, elem) {
             _this.create_settings(elem);
         });
@@ -30,6 +31,7 @@ LionFace.Images.prototype = {
             var src = $('<div></div>').css({
                 'backgroundImage': 'url('+src+')',
             }).css('backgroundImage');
+            console.log( $(selector) );
             $(selector).each(function(index, elem) {
                 if ($(this).css('backgroundImage') == src)
                     return;
@@ -46,11 +48,14 @@ LionFace.Images.prototype = {
         }
     },
 
-    refresh_photos_count: function(count) {
+    set_photos_count: function(count) {
         if (count != undefined) {
-            $('#photos_count').fadeOut(function() {
-                $(this).html(count).fadeIn();
-            });
+            var $elem = $('#photos_count');
+            if ($elem.html() != count) {
+                $elem.fadeOut(function() {
+                    $(this).html(count).fadeIn();
+                });
+            }
         }
     },
 
@@ -103,7 +108,7 @@ LionFace.Images.prototype = {
                             _this.sort_images();
                         });
                         _this.set_new_thumb(data.thumb_src);
-                        _this.refresh_photos_count(data.photos_count);
+                        _this.set_photos_count(data.photos_count);
                     }
                 },
             });
@@ -138,7 +143,7 @@ LionFace.Images.prototype = {
                             }, 500);
                         });
                         _this.set_new_thumb(data.thumb_src);
-                        _this.refresh_photos_count(data.photos_count);
+                        _this.set_photos_count(data.photos_count);
                     }
                 },
             });
@@ -297,7 +302,7 @@ LionFace.Images.prototype = {
                             if (data.status == 'ok') {
                                 _this.set_positions_images(data.positions);
                                 _this.set_new_thumb(data.thumb_src);
-                                _this.refresh_photos_count(data.photos_count);
+                                _this.set_photos_count(data.photos_count);
                             } else {
                                 _this.sort_images();
                             }
@@ -346,7 +351,7 @@ LionFace.Images.prototype = {
                             });
                             _this.set_positions_images(data.positions);
                             _this.set_new_thumb(data.thumb_src);
-                            _this.refresh_photos_count(data.photos_count);
+                            _this.set_photos_count(data.photos_count);
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

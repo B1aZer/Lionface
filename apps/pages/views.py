@@ -958,16 +958,21 @@ def page_members(request, slug=None, member_id=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
-def images(request, slug, rows_show=1):
+def images(request, slug, rows_show=4):
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
 
+    ctype = ContentType.objects.get_for_model(Pages)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
+    manage_perm = request.user.is_authenticated() \
+     and request.user.check_option('pages_photos__%s' % page.id) \
+     and request.user in page.get_admins()
+
     if request.method == 'POST' \
      and 'album_image' in request.POST \
-     and request.user.is_authenticated() \
-     and request.user.check_option('pages_photos__%s' % page.id):
+     and manage_perm:
         album_form = ImageForm(request.POST, request.FILES)
         if album_form.is_valid():
             image = album_form.save(page)
@@ -989,12 +994,6 @@ def images(request, slug, rows_show=1):
             return redirect('pages.views.images', slug=page.username)
     else:
         album_form = ImageForm()
-
-    ctype = ContentType.objects.get_for_model(Pages)
-    qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
-    manage_perm = request.user.is_authenticated() \
-     and request.user.check_option('pages_photos__%s' % page.id) \
-     and request.user in page.get_admins()
 
     return render_to_response(
         'pages/images.html',
@@ -1094,7 +1093,6 @@ def images_ajax(request, slug):
         data['photos_count'] = qs.count()
     except Exception as e:
         data['status'] = 'fail'
-        print e
     else:
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
@@ -1157,7 +1155,6 @@ def images_comments_ajax(request, slug):
         }, context_instance=RequestContext(request))
     except Exception as e:
         data['status'] = 'fail'
-        print e
     else:
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
