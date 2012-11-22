@@ -203,6 +203,8 @@ def delete_dated_notifications(sender, instance, using, **kwargs):
     notf = Notification.objects.filter(content_type__pk=post_type.id, object_id=original.id)
     notf.delete()
 pre_delete.connect(delete_dated_notifications, sender=Post)
+pre_delete.connect(delete_dated_notifications, sender=PagePost)
+pre_delete.connect(delete_dated_notifications, sender=FeedbackPost)
 pre_delete.connect(delete_dated_notifications, sender=NewsItem)
 
 

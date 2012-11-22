@@ -293,6 +293,17 @@ class Pages(models.Model):
     def check_volunteers(self):
         return self.has_volunteers
 
+    def get_rating(self):
+        overall_rating = 0
+        rating_posts = self.feedback_posts.all()
+        rating_count = rating_posts.count()
+        rating_all = [post.rating for post in rating_posts]
+        for rate in rating_all:
+            overall_rating += rate
+        if rating_count > 0:
+            overall_rating = overall_rating * 1.0 /rating_count
+        return overall_rating
+
     @models.permalink
     def get_absolute_url(self):
         if self.type == 'BS':

@@ -123,7 +123,7 @@
                     {% if item.get_type != 'friend post' and item.get_owner == request.user %}
                     <a href="#" class="toggle_settings" >Settings</a> 
                     {% endif %}
-                <a href="javascript:LionFace.Site.del_post_single({{item.id}});">Delete</a>
+                <a href="javascript:del_post_single({{item.id}});">Delete</a>
                 {% endif %}
                 {% if item.type == "P" %}
                 <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>

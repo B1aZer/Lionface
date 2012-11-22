@@ -641,4 +641,14 @@ def change_album_postion_ondelete(sender, instance, **kwargs):
         albums.update(position=F('position') - 1)
 post_delete.connect(change_album_postion_ondelete, sender=Albums)
 
+def remove_all_comments(sender, instance, **kwargs):
+    """ remove comments
+    after removing post, pk for post remains in objects model
+    this is not good"""
+    comms = comments.get_model().objects.filter(
+            content_type = ContentType.objects.get_for_model(instance),
+            object_pk = instance.pk,
+            site__pk = settings.SITE_ID)
+    comms.delete()
+post_delete.connect(remove_all_comments, sender=Post)
 
