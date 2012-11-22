@@ -300,6 +300,15 @@ class UserProfile(User):
         except ObjectDoesNotExist:
             self.useroptions_set.create(name=name,value=value)
 
+    def remove_option(self,name):
+        name = "option_%s" % name
+        try:
+            option = self.useroptions_set.get(name=name)
+            option.delete()
+            return True
+        except ObjectDoesNotExist:
+            return False
+
     def find_options(self,name,page=None):
         name = "option_%s" % name
         options = self.useroptions_set.filter(name__startswith=name)
