@@ -302,6 +302,7 @@ class Pages(models.Model):
             overall_rating += rate
         if rating_count > 0:
             overall_rating = overall_rating * 1.0 /rating_count
+        overall_rating = "{0:.1f}".format(overall_rating)
         return overall_rating
 
     @models.permalink

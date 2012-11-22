@@ -1194,3 +1194,31 @@ def images_comments_ajax(request, slug):
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
 
+
+def count_agrees(request, item_id):
+    data = {'status' : 'FAIL'}
+    try:
+        post = FeedbackPost.objects.get(id=item_id)
+    except FeedbackPost.DoesNotExist:
+        raise Http404
+    if request.user not in post.get_voted():
+        post.agrees += 1
+        post.voted.add(request.user)
+        post.save()
+        data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def count_disagrees(request, item_id):
+    data = {'status' : 'FAIL'}
+    try:
+        post = FeedbackPost.objects.get(id=item_id)
+    except FeedbackPost.DoesNotExist:
+        raise Http404
+    if request.user not in post.get_voted():
+        post.disagrees += 1
+        post.voted.add(request.user)
+        post.save()
+        data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+

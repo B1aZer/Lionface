@@ -173,6 +173,9 @@ class FeedbackPost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='feedback_posts')
     rating = models.IntegerField(validators=[MaxValueValidator(5),MinValueValidator(0)])
+    agrees = models.IntegerField(default=0)
+    disagrees = models.IntegerField(default=0)
+    voted = models.ManyToManyField(UserProfile, related_name='feedback_votes', null=True, blank=True)
 
     def render(self):
         import bleach
@@ -224,6 +227,15 @@ class FeedbackPost(Post):
 
     def get_owner(self):
         return self.user
+
+    def get_agreed(self):
+        return self.agrees
+
+    def get_disagreed(self):
+        return self.disagrees
+
+    def get_voted(self):
+        return self.voted.all()
 
     def privacy(self):
         return 'P'
@@ -579,6 +591,7 @@ def add_post_to_followings(sender, instance, created, **kwargs):
         instance.user.follows.add(instance)
 post_save.connect(add_post_to_followings, sender=ContentPost)
 post_save.connect(add_post_to_followings, sender=PagePost)
+post_save.connect(add_post_to_followings, sender=FeedbackPost)
 
 
 def update_news_feeds(sender, instance, created, **kwargs):

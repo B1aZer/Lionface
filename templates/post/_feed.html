@@ -27,6 +27,13 @@
                 <a href="javascript:LionFace.Site.share_post({{ item.id }});">Share</a> {% ifequal item.shared 0 %} {% else %} 
 					<span style="color: #555; padding: 2px;">{{ item.shared }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
             </span>
+            {% if item.get_type == 'feedback post' %}
+            <a href="{% url pages.views.count_agrees item_id=item.id %}" class="feedback_opinion agrees" style="color: #555; padding: 2px;">Agree</a>
+            <span class="feedback_agreed_count" {% if not item.get_agreed %} style="display:none" {% endif %}>{{ item.get_agreed }}</span>
+            <span style="color: transparent;"> -- </span>
+            <a href="{% url pages.views.count_disagrees item_id=item.id %}" class="feedback_opinion disagrees" style="color: #555; padding: 2px;">Disagree</a>
+            <span class="feedback_disagreed_count" {% if not item.get_disagreed %} style="display:none" {% endif %}>{{ item.get_disagreed }}</span>
+            {% endif %}
             {% if news_feed and item.user|has_friend:request.user and not request.user|in_hidden:item.user %}
             <a href="#" class="hide_feed">Hide Feed</a>
             {% endif %}
@@ -103,7 +110,7 @@
             {% if not del_false %}
             <!--This will fire on news feed-->
                 {% if item.get_owner.id == request.user.id  or item.get_post.user_to.id == request.user.id %}
-                    {% if item.get_type != 'friend post' and item.get_owner == request.user %}
+                    {% if item.get_type != 'friend post' and item.get_type != 'feedback post' and item.get_owner == request.user %}
                     <a href="#" class="toggle_settings" >Settings</a> 
                     {% endif %}
                     {% if item.get_type == 'friend post' and item.user != request.user %}

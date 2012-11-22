@@ -7,7 +7,7 @@
         {% if query %}
             {% for result in page.object_list %}
 				<div class="result">
-                <div class="result_post">
+                <div class="result_tags">
                   {{ result.object|format_tag:request }}
                 </div>
 				</div>

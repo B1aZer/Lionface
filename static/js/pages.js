@@ -439,6 +439,30 @@ LionFace.Pages.prototype = {
             }
         }); 
 
+        $(document).on('click','.feedback_opinion',function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var self = $(this);
+            if (self.hasClass('agrees')) {
+                var count = self.siblings('.feedback_agreed_count');
+            }
+            else {
+                var count = self.siblings('.feedback_disagreed_count');
+            }
+            var value = parseInt(count.html());
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        value = value + 1;
+                        count.html(value);
+                        if (value == 1) {
+                            count.show();
+                        }
+                    }
+                }
+            });
+        });
 
     },
     /*
