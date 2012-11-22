@@ -293,7 +293,7 @@ def reset_album_activity(request, slug):
         if page.photo.name != page.photo.field.default:
             page.photo = page.photo.field.default
             page.save()
-    if request.META['HTTP_REFERER']:
+    if 'HTTP_REFERER' in request.META:
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
     name = 'business-page' if page.type == 'BS' else 'nonprofit-page'
     return redirect(name, slug=page.username)
