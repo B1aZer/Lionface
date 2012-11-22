@@ -1,10 +1,13 @@
 from django.db import models
-from account.models import *
-from post.models import *
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save, pre_delete, post_delete
 from django.contrib.comments.signals import comment_was_posted
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+
+from account.models import *
+from post.models import *
+from pages.models import Pages
+from images.models import Image, ImageComments
 
 
 NOTIFICATION_TYPES = (
@@ -62,12 +65,14 @@ class Notification(models.Model):
             if original_notfs.count():
                 original_notfs.update(read=True)
         if self.type == 'MI':
-            original_notfs = Notification.objects.filter(user=self.user, \
-                    type='CI', \
-                    object_id = self.content_object.id,
-                    read = False)
-            if original_notfs.count():
-                original_notfs.update(read=True)
+            Notification.objects \
+                .filter(
+                    user=self.user,
+                    type='CI',
+                    object_id=self.content_object.id,
+                    read=False
+                ) \
+                .update(read=True)
         if self.type == 'MF':
             original_notfs = Notification.objects.filter(user=self.user, \
                     type='FC', \
@@ -171,18 +176,37 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
     comment.user.follows.add(comment.content_object.get_post())
 comment_was_posted.connect(create_comment_notifiaction)
 
-'''
-def create_comment_image_notifiaction(sender, instance, created, **kwargs):
+
+def create_comment_image_notification(sender, instance, created, **kwargs):
     if created:
         if instance.owner != instance.image.owner:
-            Notification.objects.create(
-                user=instance.image.owner,
-                type='CI',
-                other_user=instance.owner,
-                content_object=instance.image
-            ).save()
-post_save.connect(create_comment_image_notifiaction, sender=UserImageComments)
-'''
+            data = {
+                'user': instance.image.owner,
+                'type': 'CI',
+                'other_user': instance.owner,
+                'content_object': instance.image,
+            }
+            Notification.objects.create(**data)
+post_save.connect(create_comment_image_notification, sender=ImageComments)
+
+
+def delete_comment_image_notification(sender, instance, **kwargs):
+    if instance.owner != instance.image.owner:
+        try:
+            ctype = ContentType.objects.get_for_model(Image)
+            data = {
+                'user': instance.image.owner,
+                'type': 'CI',
+                'other_user': instance.owner,
+                'content_type': ctype,
+                'object_id': instance.image.id,
+            }
+            notif = Notification.objects.filter(**data)[:1].get()
+            notif.delete()
+        except Notification.DoesNotExist:
+            pass
+#post_delete.connect(delete_comment_image_notification, sender=ImageComments)
+
 
 def create_follow_notification(sender, instance, created, **kwargs):
     if created:

@@ -192,7 +192,7 @@ class FeedbackPost(Post):
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
-        self.content = replace(self.content,max_width=535,fixed_width=535)
+        self.content = replace(self.content,max_width=527,fixed_width=527)
         # Linkify
         self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
 
@@ -261,7 +261,7 @@ class PagePost(Post):
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
-        self.content = replace(self.content,max_width=535,fixed_width=535)
+        self.content = replace(self.content,max_width=527,fixed_width=527)
         # Linkify
         self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
 
@@ -322,7 +322,7 @@ class ContentPost(Post):
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
-        self.content = replace(self.content,max_width=535,fixed_width=535)
+        self.content = replace(self.content,max_width=527,fixed_width=527)
         # Linkify
         self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
 
