@@ -20,10 +20,10 @@ class Command(BaseCommand):
                 page = Pages.objects.get(id=13)
                 import datetime
                 from_date = datetime.date(2008, 6, 24)
-                #Membership.objects.create(user=user,page=page,type='IN',from_date=from_date)
-                page.users_loved.add(user)
-                page.loves += 1
-                page.save()
+                Membership.objects.create(user=user,page=page,type='IN',from_date=from_date)
+                #page.users_loved.add(user)
+                #page.loves += 1
+                #page.save()
             except:
                 self.stdout.write('Error on: %s:%s' % (username,email))
                 continue

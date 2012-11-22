@@ -887,7 +887,7 @@ LionFace.Site.prototype = {
                         }
                         else {
                             create_message('Error during saving','error');
-                            from_date_former.val('') 
+                            from_date_former.val('');
                             from_date_current.val('');
                             to_date_form.val('');
                         }

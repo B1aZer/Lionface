@@ -9,6 +9,9 @@
         $('#community_add_button').hide();
     }
     $('#comm_req_count').hide();
+    {% if page.get_community_requests_count > 20 %}
+        $('#live_search').show();
+    {% endif %}
 </script>
 
 <div class="page_center">

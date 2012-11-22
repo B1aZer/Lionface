@@ -2542,6 +2542,10 @@ a.show_more_friends, a.business_friends_show, a.nonprofits_friends_show {
 	font-size: 8pt; color: #999; padding: 4px; position: relative; top: 4px;
 }
 
+.matched_name {
+    background : #ff0;
+}
+
 /* Schools */
 
 a.find_school:link, a.find_school:visited, a.find_school:active {

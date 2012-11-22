@@ -280,6 +280,10 @@ class Pages(models.Model):
         membership = Membership.objects.filter(page=self, user=user, is_confirmed=True)
         return membership
 
+    def show_connections(self, user):
+        membership = Membership.objects.filter(page=self, user=user)
+        return membership
+
     def check_employees(self):
         return self.has_employees
 

@@ -266,5 +266,11 @@ def show_membership(page,user):
         return []
     return page.show_membership(user)
 
+@register.filter(name="show_connections")
+def show_connections(page,user):
+    if user.is_anonymous():
+        return []
+    return page.show_connections(user)
+
 
 
