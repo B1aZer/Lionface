@@ -1,12 +1,16 @@
 {% for comment in comments %}
-    <li data-pk="{{ comment.pk }}">
+    <li data-pk="{{ comment.pk }}" style="width: 100%; height: auto;">
         {% if page %}
           {% if comment.owner == request.user or manage_perm %}
-            <div class="delete"><a href="#" class="ui-icon ui-icon-circle-close" title="Delete this comment"></a></div>
+            <div class="delete" style="display: none;">
+                <a href="#" class="ui-icon ui-icon-circle-close" title="Delete this comment"></a>
+            </div>
           {% endif %}
         {% else %}
           {% if comment.owner == request.user or image.owner == request.user %}
-            <div class="delete"><a href="#" class="ui-icon ui-icon-circle-close" title="Delete this comment"></a></div>
+            <div class="delete" style="display: none;">
+                <a href="#" class="ui-icon ui-icon-circle-close" title="Delete this comment"></a>
+            </div>
           {% endif %}
         {% endif %}
         <a href="{{ comment.owner.get_absolute_url }}">

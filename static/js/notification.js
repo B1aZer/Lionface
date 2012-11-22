@@ -36,7 +36,6 @@ LionFace.Notification.prototype = {
             callback: function(data) {
                 $elem.removeClass("large_loader")
                 if (data.html != undefined) {
-                    console.log( data.html );
                     $elem.html(data.html);
                     make_excerpts();
                 }
@@ -53,7 +52,7 @@ LionFace.Notification.prototype = {
             return;
         var $elem = $('.right_content');
         $.ajax({
-            url: '/' + LionFace.User.username + '/image/comments/notification/',
+            url: '/images/notifications/',
             data: {
                 'pk': pk,
             },
@@ -63,6 +62,8 @@ LionFace.Notification.prototype = {
             success: function(data, textStatus, jqXHR) {
                 if (data.status == 'ok') {
                     $elem.html(data.html);
+                    LionFace.User['images_comments_ajax'] = data.images_comments_ajax;
+                    LionFace.Images.popup_comments_list($($elem.find('.image_container')));
                 } else {
                     this.error(jqXHR, textStatus);
                 }
