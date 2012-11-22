@@ -501,22 +501,7 @@ LionFace.Images.prototype = {
         $('.image_zone_view .image').append( $(image) );
         $(image).attr('src', $(item).find('div.image_album').data('original-url'));
         // load comments
-        var $ul = $('.image_zone_info .comments ul');
-        $.ajax({
-            url: LionFace.User['images_comments_ajax'],
-            data: {
-                'method': 'list',
-                'pk': $(item).data('pk'),
-            },
-            beforeSend: function(jqXHR, settings) {
-                $ul.html('');
-            },
-            success: function(data, textStatus, jqXHR) {
-                if (data.status == 'ok') {
-                    _this.popup_refresh_comments($(data.comments).filter('li'));
-                }
-            },
-        });
+        this.popup_comments_list($(item));
         // make comment
         $('.image_zone_info .make_comment textarea').fadeOut(
             _this.options.popup_fadeDuration,
@@ -526,9 +511,9 @@ LionFace.Images.prototype = {
         );
     },
 
-    popup_refresh_comments: function($comments) {
-        var _this = this;
-        var $ul = $('.image_zone_info .comments ul');
+    popup_comments_refresh: function($comments) {
+        var _this = this,
+         $ul = $('.comments ul');
         $ul.fadeOut(200, function() {
             $ul.html('');
             $comments.each(function(index, item) {
@@ -543,55 +528,7 @@ LionFace.Images.prototype = {
                             $item.find('div.delete').hide();
                         }
                     ).find('div.delete').click(function(event) {
-                        // delete comment
-                        $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
-                        .appendTo($('.image_popup')).dialog({
-                            resizable: false,
-                            height: 150,
-                            width: 400,
-                            modal: true,
-                            closeOnEscape: false,
-                            buttons: {
-                                "Delete": function() {
-                                    $.ajax({
-                                        url: LionFace.User['images_comments_ajax'],
-                                        type: 'POST',
-                                        data: {
-                                            'method': 'delete',
-                                            'comment_pk': $item.data('pk'),
-                                            'pk': $('.image_container li[popup=true]').data('pk'),
-                                        },
-                                        success: function(data, textStatus, jqXHR) {
-                                            if (data.status == 'ok') {
-                                                _this.popup_refresh_comments($(data.comments).filter('li'));
-                                            }
-                                        },
-                                    });
-                                    $(this).dialog('close');
-                                },
-                                "Cancel": function() {
-                                    $(this).dialog('close');
-                                }
-                            },
-                            open: function(event, ui) {
-                                _this.popup_disableKeyboard();
-                                var $dialog = $(this).parent();
-                                return;
-                                $dialog.find('.ui-dialog-titlebar').remove();
-                                $dialog.find(this).css({'overflow': 'hidden'});
-                                $dialog.find('.ui-dialog-buttonpane').css({
-                                    'border-width': 0,
-                                    'margin': 0,
-                                    'padding': 0,
-                                });
-                                $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
-                            },
-                            close: function(event, ui) {
-                                _this.popup_enableKeyboard();
-                                $(this).dialog('destroy').remove();
-                            },
-                            zIndex: 10002,
-                        });
+                        _this.popup_comments_delete($item);
                         return false;
                     });
                 }
@@ -615,6 +552,116 @@ LionFace.Images.prototype = {
         this.popup_disableKeyboard();
         $('body').css({'overflow': this.popup_start.overflow});
         this.popup_start.overflow = undefined;
+    },
+
+    popup_comments_add: function($textarea) {
+        var _this = this,
+        $ul = $('.comments ul'),
+        val = $textarea.val();
+        if (val.length < 1)
+            return;
+        $.ajax({
+            url: LionFace.User['images_comments_ajax'],
+            type: 'POST',
+            data: {
+                'method': 'create',
+                'message': val,
+                'pk': $ul.data('image-pk'),
+            },
+            beforeSend: function(jqXHR, settings) {
+                $textarea.data('val', val);
+                $textarea.val(' ');
+                $textarea.prop('disabled', true);
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 'ok') {
+                    $textarea.val('');
+                    _this.popup_comments_refresh($(data.comments).filter('li'));
+                } else {
+                    this.error(jqXHR, textStatus);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                $textarea.val($textarea.data('val'));
+            },
+            complete: function(jqXHR, textStatus) {
+                $textarea.prop('disabled', false);
+            },
+        });
+    },
+
+    popup_comments_list: function($item) {
+        var _this = this,
+        $ul = $('.comments ul');
+        $ul.data('image-pk', $item.data('pk'));
+        $.ajax({
+            url: LionFace.User['images_comments_ajax'],
+            data: {
+                'method': 'list',
+                'pk': $ul.data('image-pk'),
+            },
+            beforeSend: function(jqXHR, settings) {
+                $ul.html('');
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 'ok') {
+                    _this.popup_comments_refresh($(data.comments).filter('li'));
+                }
+            },
+        });
+    },
+
+    popup_comments_delete: function($item) {
+        var _this = this,
+        $ul = $('.comments ul');
+        $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
+         .appendTo($('.image_popup')).dialog({
+            resizable: false,
+            height: 150,
+            width: 400,
+            modal: true,
+            closeOnEscape: false,
+            buttons: {
+                "Delete": function() {
+                    $.ajax({
+                        url: LionFace.User['images_comments_ajax'],
+                        type: 'POST',
+                        data: {
+                            'method': 'delete',
+                            'comment_pk': $item.data('pk'),
+                            'pk': $ul.data('image-pk'),
+                        },
+                        success: function(data, textStatus, jqXHR) {
+                            if (data.status == 'ok') {
+                                _this.popup_comments_refresh($(data.comments).filter('li'));
+                            }
+                        },
+                    });
+                    $(this).dialog('close');
+                },
+                "Cancel": function() {
+                    $(this).dialog('close');
+                }
+            },
+            open: function(event, ui) {
+                _this.popup_disableKeyboard();
+                var $dialog = $(this).parent();
+                return;
+                $dialog.find('.ui-dialog-titlebar').remove();
+                $dialog.find(this).css({'overflow': 'hidden'});
+                $dialog.find('.ui-dialog-buttonpane').css({
+                    'border-width': 0,
+                    'margin': 0,
+                    'padding': 0,
+                });
+                $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
+            },
+            close: function(event, ui) {
+                _this.popup_enableKeyboard();
+                $(this).dialog('destroy').remove();
+            },
+            zIndex: 10002,
+        });
     },
 
     bind_popup: function() {
@@ -668,40 +715,7 @@ LionFace.Images.prototype = {
             KEYCODE_ENTER = 13,
             keycode = event.keyCode;
             if (keycode == KEYCODE_ENTER) {
-                var
-                $this = $(this),
-                val = $this.val();
-                if (val.length > 0) {
-                    // add comment
-                    $.ajax({
-                        url: LionFace.User['images_comments_ajax'],
-                        type: 'POST',
-                        data: {
-                            'method': 'create',
-                            'message': val,
-                            'pk': $('.image_container li[popup=true]').data('pk'),
-                        },
-                        beforeSend: function(jqXHR, settings) {
-                            $this.data('val', val);
-                            $this.val(' ');
-                            $this.prop('disabled', true);
-                        },
-                        success: function(data, textStatus, jqXHR) {
-                            if (data.status == 'ok') {
-                                $this.val('');
-                                _this.popup_refresh_comments($(data.comments).filter('li'));
-                            } else {
-                                this.error(jqXHR, textStatus);
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            $this.val($this.data('val'));
-                        },
-                        complete: function(jqXHR, textStatus) {
-                            $this.prop('disabled', false);
-                        },
-                    });
-                }
+                _this.popup_comments_add($(this));
                 return false;
             }
         });

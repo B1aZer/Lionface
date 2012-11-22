@@ -226,6 +226,7 @@ MEDIA_BUNDLES = (
     ),
     ('notification.js',
         'js/notification.js',
+        'js/images.js',
     ),
     ('messages.js',
         'js/messages.js',

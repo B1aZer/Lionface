@@ -244,9 +244,6 @@ def images_comments_ajax(request, username):
     except Image.DoesNotExist as e:
         return HttpResponseBadRequest('Bad pk was received.')
 
-    if method in ['delete'] and not manage_perm:
-        raise Http404
-
     data = {}
     try:
         if method == 'create':
@@ -266,6 +263,8 @@ def images_comments_ajax(request, username):
                 comment = image.comments.get(pk=request.REQUEST.get('comment_pk', None))
             except ImageComments.DoesNotExist as e:
                 return HttpResponseBadRequest('Bad comment_pk was received.')
+            if request.user not in [profile_user, comment.owner]:
+                raise Http404
             comment.delete()
         else:
             raise Http404
