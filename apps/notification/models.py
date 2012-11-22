@@ -193,10 +193,12 @@ post_save.connect(create_follow_notification, sender=Relationship)
 
 def delete_dated_notifications(sender, instance, using, **kwargs):
     """Deleting for posts and comments [through newsitem object]"""
+    #from celery.contrib import rdb
+    #rdb.set_trace()
     if sender is Post:
         original = instance.get_inherited()
     else:
-        original = instance
+        original = instance.get_post()
     post_type = ContentType.objects.get_for_model(original)
     notf = Notification.objects.filter(content_type__pk=post_type.id, object_id=original.id)
     notf.delete()

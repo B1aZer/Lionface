@@ -49,7 +49,6 @@ def notifications(request, username=None):
                 }, context_instance=RequestContext(request))
             return HttpResponse(json.dumps(data), "application/json")
 
-
     return render_to_response(
         'notification/notifications.html',
         {

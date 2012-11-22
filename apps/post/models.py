@@ -229,6 +229,7 @@ class FeedbackPost(Post):
         return 'P'
 
 
+
 class PagePost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='posts')
@@ -366,11 +367,13 @@ class SharePost(Post):
     def get_original_post(self):
         """Return last shared object(child)"""
         try:
-            original = NewsItem.objects.get(id=self.id_news)
-            original = original.post.get_inherited()
-        except NewsItem.DoesNotExist:
-            original = Post.objects.get(id=self.id_news)
-            original = original.get_inherited()
+            if (isinstance(self.content_object,PagePost) or isinstance(self.content_object,FeedbackPost)) \
+                and not self.newsitem_set.all():
+                original = Post.objects.get(id=self.id_news)
+                original = original.get_inherited()
+            else:
+                original = NewsItem.objects.get(id=self.id_news)
+                original = original.post.get_inherited()
         except:
             original = False
         return original
