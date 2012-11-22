@@ -42,6 +42,10 @@ a img, a:active img, a:visted img, a:hover img {
 
 h3 { text-align: center; font-size: 16px; }
 
+iframe {	border: 1px solid #CCC;	padding: 4px;
+	-moz-box-shadow: 0 4px 8px -4px #333;
+	box-shadow: 0 4px 8px -4px #333;;}
+
 /* News Feed */
 
 #editbox { width: 100px; margin-right: 5px; padding: 3px; border: 1px solid #CCC; }
