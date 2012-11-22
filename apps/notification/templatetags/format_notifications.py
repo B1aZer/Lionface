@@ -17,7 +17,7 @@ def format_notification(notification):
         return render_to_string('notification/_friend_accept.html', data)
     if notification.type == 'CS':
         return render_to_string('notification/_comment_submitted.html', data)
-    if notification.type == 'CI':
+    if notification.type in ['CI', 'MI']:
         return render_to_string('notification/_comment_image.html', data)
     if notification.type == 'PS':
         return render_to_string('notification/_shared_post.html', data)
@@ -31,8 +31,6 @@ def format_notification(notification):
         return render_to_string('notification/_follow_shared.html', data)
     if notification.type == 'MC':
         return render_to_string('notification/_comment_multiple.html', data)
-    if notification.type == 'MI':
-        return render_to_string('notification/_comment_image_multiple.html', data)
     if notification.type == 'MF':
         return render_to_string('notification/_follow_comment_multiple.html', data)
     if notification.type == 'MS':

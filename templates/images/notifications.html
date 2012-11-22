@@ -1,0 +1,25 @@
+<style type="text/css">
+.image_zone_info {
+    width: 100%;
+}
+.image_zone_info .scroll_area {
+    width: 100%;
+    background-color: black;
+}
+</style>
+<div class="image_container" data-pk={{ image.pk }}>
+    <div style="background: url('/{{ image.image.thumb_name }}') #FFF;" class="image_album" style="text-align: center;"></div>
+    <div class="image_zone_info">
+        <div class="scroll_area">
+            <div class="comments">
+                <ul style="width: 100%;"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="make_comment">
+        <div class="thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF;"></div>
+        <form>
+            <textarea name="add_comment_text" placeholder="Add comment..." style="width: 600px; height: 51px; margin-top: 15px;"></textarea>
+        </form>
+    </div>
+</div>
