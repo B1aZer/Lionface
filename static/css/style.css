@@ -619,8 +619,9 @@ a.profile_btn:hover {
 .image_album {
 	background-size: 200px 200px; -moz-background-size: 200px 200px !important; 
  	width: 200px; height: 200px; border: 1px solid #E7E7E7;
-	position: relative;
+	position: relative; top: -6px;
 	z-index: 999;
+	margin: 5px;
 }
 
 .ui-state-default:before, .ui-state-default:after  
@@ -655,7 +656,7 @@ a.profile_btn:hover {
 
 .ui-state-default {
 	margin: 10px 3px 10px 3px;
-	padding: 5px 0 5px 0;
+	padding: 5px 0;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	border: 1px solid transparent;
@@ -682,6 +683,7 @@ a.profile_btn:hover {
 	display: inline-block;
 	list-style-type: none;
 	width: 900px;
+	position: relative; left: 3px;
 }
 
 .image_container ul li {
@@ -2044,6 +2046,26 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 
 /* Pages */
 
+.dis_topics {
+	padding:  8px 5px 8px 15px;
+	margin: 5px 0;
+	border: 1px solid #EEE;
+	-moz-border-radius: 5px 0 0 5px;
+	border-radius: 5px 0 0 5px;
+	background: #fafafa;
+	width: 250px;
+	position: relative; left: -15px;
+	cursor: pointer;
+	display: block;
+	text-align: left;
+}
+
+.dis_topics:hover {
+	background: #FFF;
+	color: #F58;
+	border-color: #DDD;
+}
+
 a.love:link, a.love:active, a.love:visited { 
 	display: inline-block; 
 	padding: 8px 12px 6px 12px; 
@@ -2616,3 +2638,79 @@ a.school_nav:hover {
     padding: 5px;
 } 
 
+/* Chat */
+
+.chat { 
+	background: #FFF; /* Old browsers */
+	background: -moz-linear-gradient(top, #FFF 0%, #eeeeee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #FFF 0%,#eeeeee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #CCC; 
+	width: 184px; 
+	padding: 6px 8px 7px 8px; 
+	display: inline-block;
+	cursor: pointer;
+	color: #777;
+	-moz-box-shadow: 0 4px 8px -4px #999;
+	box-shadow: 0 4px 8px -4px #999;
+}
+
+.chat:hover {
+	border-color: #AAA;
+	color: #333;
+}
+
+.online {
+	display: inline-block; height: 8px; width: 8px; -moz-border-radius: 50%; border-radius: 50%; background: #94da55; margin-right: 4px;
+}
+
+.chat_container {
+	display: block;
+	width: 200px; min-height: 50px;
+	position: fixed; left: 5px; bottom: 30px;
+	border: 1px solid #CCC;
+	background: #FFF;
+	-moz-box-shadow: 0 4px 8px -4px #999;
+	box-shadow: 0 4px 8px -4px #999;
+}
+
+.chat_container li {
+	list-style: none;
+	padding: 4px 8px;
+	cursor: pointer;
+	padding: 8px 8px 4px 8px;
+	border-top: 1px solid #EEE;
+	border-bottom: 1px solid #FFF;
+	color: #777;
+
+}
+
+.chat_container li:hover {
+	background: #FFF; /* Old browsers */
+	background: -moz-linear-gradient(top, #FFF 0%, #eeeeee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #FFF 0%,#eeeeee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
+	border-color: #CCC;
+	cursor: pointer;
+	color: #000;
+}
+
+.chat_off {
+	font-size: 8pt; color: #AAA;
+}
+
+.chat_off:hover {
+	color: #900;
+}
+
+.chat_enter {
+	padding: 6px 4px; border: 1px solid #CCC; margin: 4px 0px 0px 0px; width: 192px; position: relative; left: -1px;
+}

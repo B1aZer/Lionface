@@ -1,7 +1,7 @@
 {% load format_results %}
 {% for row in rows %}
 <li class="ui-state-default" data-position="{{ row.rating }}" data-pk="{{ row.pk }}">
-    <div style="background-image: url('/{{ row.image.thumb_name }}');" data-original-url="/{{ row.image.name }}" class="image_album">
+    <div style="background: url('/{{ row.image.thumb_name }}') #FFF;" data-original-url="/{{ row.image.name }}" class="image_album">
         {% if manage_perm %}
         <div id="image_settings">
             <a href="#" data-activity="{% if row.activity %}1{% else %}0{% endif %}" id="make_primary" style="float: left;" title="Make Primary Photo">+</a>

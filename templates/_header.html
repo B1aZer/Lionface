@@ -6,7 +6,7 @@
     <div class="left_links">
       <ul>
         <li><a href="{% url profile.views.profile username=request.user.username %}" style="font-size: 12pt;" class="header_profile_image">
-			<div class="images_profile_thumb" style="background: url('/{{ request.user.photo.thumb_name }}'); background-size: 34px 34px;"></div>
+			<div class="images_profile_thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF; background-size: 34px 34px;"></div>
 			 {{ request.user.first_name }}</a></li>
         <li><a href="{% url profile.views.feed username=request.user.username %}">News Feed</a></li>
         <li><a href="{% url pages.views.main %}">Pages</a></li>
@@ -42,19 +42,19 @@
             onMouseOut="HideContent('8_{{ one_page.id }}'); return false;" style="position: relative;">
 			<!-- need set thumb in a tag -->
             {% if one_page.type == 'BS' %}
-                <a href="{% url business-page slug=one_page.username %}" class="nav_page{% if page == one_page %} images_page_thumb{% endif %}" style="background-image: url('/{{ one_page.photo.thumb_name }}');"></a>
+                <a href="{% url business-page slug=one_page.username %}" class="nav_page{% if page == one_page %} images_page_thumb{% endif %}" style="background: url('/{{ one_page.photo.thumb_name }}') #FFF;"></a>
             {% else %}
-                <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page{% if page == one_page %} images_page_thumb{% endif %}" style="background-image: url('/{{ one_page.photo.thumb_name }}');"></a>
+                <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page{% if page == one_page %} images_page_thumb{% endif %}" style="background: url('/{{ one_page.photo.thumb_name }}') #FFF;"></a>
             {% endif %}
 			<div class="page_settings" style="display: none;" id="8_{{ one_page.id }}">
 			<div class="page">
 				<div class="one_page_name">{{ one_page.name }}</div>
-                {% if request.user|check_pages_basics:one_page or request.user|check_pages_admins:one_page %}
+				<div style="display: inline-block; background: #F58; color: #FFF; padding: 4px 7px 2px 7px; margin: 4px; -moz-border-radius: 3px; border-radius: 3px;">{{ one_page.loves }}</div> <span style="color: #F58">Loves</span>
+                <table width="100%" style="background: #F7F7F7; height: 17px;"><tr><td width="50%"><div >Friends: {{ one_page.get_friends_count }}</div></td><td width="50%">
+                <div >Pending: {{ one_page.get_community_requests_count }}</div></td></tr></table>
+				{% if request.user|check_pages_basics:one_page or request.user|check_pages_admins:one_page %}
                 <a href="{% url pages.views.settings slug=one_page.username %}">Settings</a> 
                 {% endif %}
-                <div style="display: inline-block; color: #F58; padding: 4px;">{{ one_page.loves }}</div>
-                <div >friends: {{ one_page.get_friends_count }}</div>
-                <div >community requests: {{ one_page.get_community_requests_count }}</div>
             </div></div>
 		</div>
 	</div>
@@ -62,7 +62,7 @@
 {% endfor %}
 
 
-	<div style="position: absolute; right: -45px; top: 90px; width: 35px; z-index: 100; text-align: left;">
+	<div style="position: absolute; right: -45px; top: 92px; width: 35px; z-index: 100; text-align: left;">
         
 		<a href="{% url messaging.views.messages request.user.username %}" id="messages_id_notif" class="nav_messages" title=" Messages ">
             {% if request.user.new_messages > 0 %} <span class="count">{{request.user.new_messages}}</span> {% endif %}

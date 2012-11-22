@@ -100,7 +100,7 @@
                     {% if page.get_community_requests_emloyees and request.user|check_pages_community:page %}
                     <div class="community_req_div" style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
                         {% if page.get_community_requests_emloyees_past_count %}
-                        <a href="#" id="emloyees_req_collapse" class="req_collapse"> collapsable past {{page.get_community_requests_emloyees_past_count}}</a>
+                        <a href="#" id="emloyees_req_collapse" class="req_collapse"> Past Requests: {{page.get_community_requests_emloyees_past_count}}</a>
                         {% endif %}
                         <table id="emplyees_past_table" class="past_table" width="100%" style="display:none">
                             {% for comrequest in page.get_community_requests_emloyees_past %}
@@ -115,7 +115,7 @@
                     </div>
                         <br /><br />
                     {% endif %}
-                </div>
+                </div><br /><br />
                 {% if request.user|check_pages_community:page %}
                 <input id="interns_checkbox" type="checkbox" class="community_checkbox" {% if page.check_interns %} checked {% endif %}/> 
                 {% endif %}
@@ -160,7 +160,7 @@
                     {% if page.get_community_requests_interns and request.user|check_pages_community:page %}
                     <div class="community_req_div" style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
                         {% if page.get_community_requests_interns_past_count %}
-                        <a href="#" id="interns_req_collapse" class="req_collapse"> collapsable past {{page.get_community_requests_interns_past_count}}</a>
+                        <a href="#" id="interns_req_collapse" class="req_collapse"> Past Requests: {{page.get_community_requests_interns_past_count}}</a>
                         {% endif %}
                         <table id="interns_past_table" class="past_table" width="100%" style="display:none">
                             {% for comrequest in page.get_community_requests_interns_past %}
@@ -219,7 +219,7 @@
                     {% if page.get_community_requests_volunteers and request.user|check_pages_community:page %}
                     <div class="community_req_div" style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
                         {% if page.get_community_requests_volunteers_past_count %}
-                        <a href="#" id="volunteers_req_collapse" class="req_collapse"> collapsable past {{page.get_community_requests_volunteers_past_count}}</a>
+                        <a href="#" id="volunteers_req_collapse" class="req_collapse"> Past Requests: {{page.get_community_requests_volunteers_past_count}}</a>
                         {% endif %}
                         <table id="volunteers_past_table" class="past_table" width="100%" style="display:none">
                             {% for comrequest in page.get_community_requests_volunteers_past %}

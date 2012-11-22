@@ -38,28 +38,46 @@
 		<div style="line-height: 13pt; padding: 15px 0;">
 		There are three primary goals of Lionface: maintain an environment free of visual clutter (specifically in regards to advertisements), protect and respect people's privacy down to the smallest detail, and contribute to the community in a meaningful and positive way.
 		<br /><br />
-		Lionface is built in Python.
+		Lionface is built in Python Django.
 		<br /><br />
 		<a href="#">Visit our Page</a><br /><br />
 		
 <div style="padding: 10px 25px 25px 25px; width: 600px; background: #F7F7F7; position: relative; left: -25px;">
-		<div class="micro_title_small" style="color: #3ea8d2; border: 0px;">Our Team</div>
+		<div class="micro_title_small" style="color: #F58; border: 0px;">Our Team</div>
 				<div class="team_bio"><table><tr><td><img src="{% media_url 'images/nick.jpg' %}" width="90" height="90" /></td>
 					<td valign="top"><span class="bio_name">Nick Clark</span> <span class="bio_title">Founder</span>
-					<br /> Nick has liked lions ever since he held a little cub this one time in Africa. He enjoys aesthetic designs and systems thinking. At the core of his being, he believes that everyone deserves to be happy. He works to fulfill this vision.</td></tr></table></div>
+					<br /> Nick has liked lions ever since he held a little cub this one time in Africa. He enjoys aesthetic designs and applied systems thinking. At the core of his being he believes that everyone deserves to be happy, and he works to fulfill this vision.</td></tr></table></div>
 				<div class="team_bio"><table><tr><td><img src="{% media_url 'images/noProfilePhoto.png' %}" width="90" height="90" /></td>
 					<td valign="top"><span class="bio_name">Christina Standberry</span> <span class="bio_title">Co-Founder</span>
 					<br />content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content </td></tr></table></div>
 </div><br />
-
-		<div class="micro_title_small" style="border: 0px;">Degree of Separation</div><br />
-		Degree of Separation represents the number of people that separate you from any given person on Lionface. For example, the Degree of Separation between you and your friend is 0 because you know them directly. The Degree of Separation between you and your friend's friend is 1, because your fried stands between you and them. Your friend's friend's friend and you have a Degree of Separation of 2, and so on.<br /><br />
 		<div class="micro_title_small">Albums</div><br />
-		Albums on Lionface are more comprehensive than traditional. Instead of just compiling images into Albums, say from a trip to Germany, you can attach multiple photos (and videos) to a post, write what you want, and then compile those posts into Albums. You could have a post for your first day in Germany, with photos and videos, and then a post from your visit to Hiedelberg Castle in another post - attach these posts to your Germany Album, and the presentation and organization becomes much cleaner and more efficient. Or, have an Album just for your poetry, or favorite websites.<br /><br />
+		Albums on Lionface are more comprehensive than traditional. Instead of just compiling images into Albums, say from a trip to Germany, you can attach multiple photos (and videos) to a post, write what you want, and then compile those posts into Albums. You could have a post for your first day in Germany, with photos and videos, and then a post from your visit to Hiedelberg Castle in another post, attach these posts to your Germany Album and the presentation and organization becomes much cleaner and more efficient. Or, have an Album just for your poetry, or favorite websites.<br /><br />
 		<span style="color: #BBB;">Lionface does not currently support videos directly. Videos can be embedded from sites like Youtube and Vimeo.</span><br /><br />
-		<div class="micro_title_small">Posts</div><br />
-		Posting on Lionface is pretty typical, but there are a few new features. First, you can add tags to posts (and Follow a person's public posts), similar to Twitter. You can embed videos from sites like Youtube and Vimeo, or TED.com. You can also use standard HTML to create links within your post (see an HTML tutorial for details).<br /><br />
-		Posts can also be attached to albums, as we said above. Post can contain <i>multiple</i> photos. We also hope you'll enjoy the initmate control you'll have over your posts via the privacy settings.<br /><br />
+		<div class="micro_title_small">Degree of Separation</div><br />
+		Degree of Separation represents the number of people that separate you from any given person on Lionface. For example, the Degree of Separation between you and your friend is 0 because you know them directly. The Degree of Separation between you and your friend's friend is 1, because your friend stands between you and them. Your friend's friend's friend and you have a Degree of Separation of 2, and so on.<br /><br />
+		<div class="micro_title_small">Pages</div><br />
+		Pages are an important feature of Lionface, and there's a lot you can do with them.<br />
+			<div style="padding: 5px 20px;">
+				<span style="font-weight: bold;">Loving</span> By loving a Page, you'll receive a Page's Updates in your news feed, and they will be listed under your Loves tab on your profile. You'll also have access to their Discussions, Calendar and Community pages.<br /><br /><span style="color: #777;"> If you're trying to Love a Business Page, and the Business is listed as <span style="color: #900;">inactive,</span> then go ahead and Love the Page anyway. You will be added to their waiting list, and when they become active again your Love will be added to their tally, their updates will appear in your news feed, they will be listed under your Loves tab on your profile, and you'll have access to their Discussions, Calendar and Community Pages.</span>
+			</div>
+			<div style="padding: 5px 20px;">
+				<span style="font-weight: bold;">Updates</span> Pages can post Updates, which you'll receive in your news feed.
+			</div>
+			<div style="padding: 5px 20px;">
+				<span style="font-weight: bold;">Discussions</span> Here you can discuss topics related to the Page.<br />
+				If you are an Admin, there are special privacy settings that allow discussions to take place between your Page and other Pages (that you're friends with) or with the other Admins, Employees, Interns or Volunteers of your Page.
+			</div>
+			<div style="padding: 5px 20px;">
+				<span style="font-weight: bold;">Feedback</span> Businesses and Nonprofits alike need our feedback to grow and improve their organization.
+			</div>
+			<div style="padding: 5px 20px;">
+				<span style="font-weight: bold;">Calendar</span> This is a great feature that allows us all to keep up with events in real time.
+			</div>
+			<div style="padding: 5px 20px;">
+				<span style="font-weight: bold;">Community</span> You can identify yourself with a Page as either an Employee or Intern, or if it's a Nonprofit, as a volunteer. If you're a Page Admin, you can add other Pages as friends. Users who have allowed their Loves to be publicly visible on Pages are also shown here.
+			</div>
+<br />
 		<div class="micro_title_small">Feedback</div><br />
 		Please send us <a href="{% url public.views.feedback %}">Feedback</a>.
 

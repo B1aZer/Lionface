@@ -30,7 +30,7 @@
         <a href="javascript:;" onClick="return false;" class="tagged {% if tag.active %} filterON {%else%} filter {% endif %}" {% if tag.active %} title=" Turn filter off. " {%else%} title=" Turn filter on. " {% endif %}>{{ tag.name }}<span class="remove_tag" style="float:right; display:none;" title="Remove Tag">x</span></a>
         {% empty %}
         {% endfor %}
-        <a href="javascript:;" class="filter tags"><span class="add_tag">+ Follow</span></a>
+        <a href="javascript:;" class="filter tags"><span class="add_tag">Add +</span></a>
 {% endblock %}
 
 {% block right_col %}

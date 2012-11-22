@@ -30,7 +30,7 @@
                 <a class="profile_btn page_remove_friend" href="{% url pages.views.remove_friend_page slug=page.username %}" style="cursor: pointer;">- Remove</a>
                 {% endif %}
                 {% if request.user|get_community_friends_for:page %}
-                <a class="profile_btn page_add_friend" href="{% url pages.views.send_friend_request slug=page.username %}" style="cursor: pointer;">+ Add</a>
+                <a class="profile_btn page_add_friend" href="{% url pages.views.send_friend_request slug=page.username %}" style="cursor: pointer;">+ Add Page</a>
                 {% endif %}
             </div>
         </div>
@@ -89,7 +89,7 @@
     <table width="900">
       <tr>
       <td width="100">
-        <div class="page_image" style="background-image: url('/{{ page.photo.thumb_name }}'); cursor: pointer;" 
+        <div class="page_image" style="background: url('/{{ page.photo.thumb_name }}') #FFF; cursor: pointer;" 
 data-url="{% url pages.views.images page.username %}">
             {% if request.user in page.get_admins and request.user|check_pages_photos:page %}
             <div style="position: absolute; bottom: 0px; display:none;">
