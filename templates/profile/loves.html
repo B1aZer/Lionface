@@ -10,8 +10,13 @@
 {% endblock %}
 
 {% block left_col %}
+<<<<<<< HEAD
 <div  onclick="window.location.href = '{% url profile.views.profile_image profile_user.username %}';return false;" 
     class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; background-size: 200px 200px; -moz-background-size: 200px 200px !important;"></div>
+=======
+<div  onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;" 
+    class="noPhoto" style="background-image: url('/{{ profile_user.photo.thumb_name }}'); background-size: 200px 200px; -moz-background-size: 200px 200px !important;"></div>
+>>>>>>> 74c823d49829b891abbd78958bc6466df33b3880
 
     <div style="position: relative; left: 0px; z-index: 100;">
 

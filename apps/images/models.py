@@ -79,6 +79,7 @@ class Image(models.Model):
                 .get()
         self.__class__.objects \
             .filter(owner_type=self.owner_type, owner_id=self.owner_id) \
+            .filter(activity=True) \
             .update(activity=False)
         selflock.activity = True
         selflock.save()

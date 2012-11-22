@@ -108,6 +108,24 @@ def images(request, username, rows_show=4):
 
 @login_required
 @unblocked_users
+def images_reset(request, username):
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
+
+    if profile_user.username == request.user.username:
+        if profile_user.photo.name != profile_user.photo.field.default:
+            profile_user.photo = profile_user.photo.field.default
+            profile_user.save()
+
+    if 'HTTP_REFERER' in request.META:
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+    return redirect('profile.views.images', username=profile_user.username)
+
+
+@login_required
+@unblocked_users
 def images_ajax(request, username):
     if not request.is_ajax():
         raise Http404
@@ -596,20 +614,6 @@ def related_users(request,username):
         RequestContext(request)
     )
 
-@login_required
-def reset_picture(request, username):
-    profile = request.user
-    if profile != request.user:
-        raise Http404
-    UserImages.objects.filter(profile=profile).filter(activity=True) \
-        .update(activity=False)
-    profile.photo = [field.default
-        for field in UserProfile._meta.fields if field.name == 'photo'
-    ][0]
-    profile.save()
-    if request.META['HTTP_REFERER']:
-        return HttpResponseRedirect(request.META['HTTP_REFERER'])
-    return redirect('profile.views.profile', username=profile.username)
 
 @login_required
 @unblocked_users

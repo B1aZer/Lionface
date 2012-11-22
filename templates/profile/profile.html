@@ -24,7 +24,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 		{% if request.user == profile_user %}
 		<div style="position: relative; top: 165px; display: block; width: 200px;" align="center">
 			<a id="upload_picture" class="upload" style="display:none;">Upload</a>
-			<a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
+			<a href="{% url profile.views.images_reset username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
 		</div>
 		{% endif %}
 </div></div>
