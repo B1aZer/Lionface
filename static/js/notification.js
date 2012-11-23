@@ -64,6 +64,34 @@ LionFace.Notification.prototype = {
                     $elem.html(data.html);
                     LionFace.User['images_comments_ajax'] = data.images_comments_ajax;
                     LionFace.Images.popup_comments_list($($elem.find('.image_container')));
+                    LionFace.Images.popup_comments_bind_make_comment();
+                    $('.image_container .image_album').click(function(){
+                        var
+                         $this = $(this),
+                         $loader = $this.parent().find('#loader'),
+                         $image = $('<img>'),
+                         dhide = $.Deferred(),
+                         dload = $.Deferred();
+
+                        $this.fadeOut(function(){
+                            $loader.fadeIn(dhide.resolve);
+                        });
+                        $image.load(dload.resolve);
+                        $image.attr('src', $this.data('original-url'));
+                        $.when(dhide, dload).then(function(){
+                            $loader.fadeOut(function() {
+                                $this.css({
+                                    'margin': '5px;',
+                                    'width': '100%',
+                                    'cursor': 'default',
+                                }).html($image).fadeIn();
+                                $image.css({
+                                    'width': '100%',
+                                });
+                                $this.height($image.height());
+                            });
+                        });
+                    });
                 } else {
                     this.error(jqXHR, textStatus);
                 }

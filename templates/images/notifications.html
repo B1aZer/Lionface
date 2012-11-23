@@ -1,14 +1,17 @@
+{% load media %}
 <style type="text/css">
 .image_zone_info {
     width: 100%;
 }
 .image_zone_info .scroll_area {
     width: 100%;
-    background-color: black;
 }
 </style>
 <div class="image_container" data-pk={{ image.pk }}>
-    <div style="background: url('/{{ image.image.thumb_name }}') #FFF;" class="image_album" style="text-align: center;"></div>
+    <div style="background: #FFF; margin: 5px auto 5px auto;" data-original-url="/{{ image.image.name }}" class="image_album">
+        <img src="/{{ image.image.thumb_name }}" />
+    </div>
+    <img id="loader" src="{% media_url 'images/loader.gif' %}" style="display: none; margin: auto;" />
     <div class="image_zone_info">
         <div class="scroll_area">
             <div class="comments">
