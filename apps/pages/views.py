@@ -924,6 +924,7 @@ def community_date(request, slug=None):
         if date_type == 'from_date':
             member.from_date = date
         if date_type == 'to_date':
+            member.is_present = False
             member.to_date = date
         member.save()
         data['status'] = 'OK'
