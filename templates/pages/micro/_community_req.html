@@ -1,7 +1,7 @@
 <tr class="community_request_class">
 <td align="left">
     {% if comrequest.is_new %}<span style="color: #FFF; padding: 4px 7px 1px 7px; background: #900; -moz-border-radius: 3px; border-radius: 3px;">New</span>{% endif %}
-    <a class="req_full_name" href="{{ comrequest.get_user.get_absolute_url }}">{{ comrequest.get_user.get_full_name }}</a>: <span id="req_from_date_{{comrequest.id}}" class="comm_req_date from_date_class">{{ comrequest.get_begin_date|date:"m/Y" }}</span> - <span id="req_to_date_{{comrequest.id}}" class="comm_req_date to_date_class">{% firstof comrequest.get_end_date|date:"m/Y" comrequest.get_end_date %}</span>
+    <a class="req_full_name" href="{{ comrequest.get_user.get_absolute_url }}">{{ comrequest.get_user.get_full_name }}</a>: <span id="req_from_date_{{comrequest.id}}" class="comm_req_date from_date_class">{{ comrequest.get_begin_date|date:"M. Y" }}</span> - <span id="req_to_date_{{comrequest.id}}" class="comm_req_date to_date_class">{% firstof comrequest.get_end_date|date:"M. Y" comrequest.get_end_date %}</span>
 </td>
 <td align="right">
     <a href="{% url pages.views.accept_community_request slug=page.username request_id=comrequest.id %}" class="profile_btn confirm_community_req" style="position: relative; top: 0px;">Confirm</a> 

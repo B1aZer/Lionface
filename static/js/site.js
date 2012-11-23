@@ -843,6 +843,7 @@ LionFace.Site.prototype = {
         });
                         
         $(document).on('click','.save_member', function(e) {
+            var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
             var member_type = false;
             var url = $(this).attr('href');
             if (edit_member_url) {
@@ -851,8 +852,19 @@ LionFace.Site.prototype = {
             if (volunteer_flag) { member_type = 'VL'; }
             if (intern_flag) { member_type = 'IN'; }
             if (employee_flag) { member_type = 'EM'; }
-            var from_date = $(this).parent().find('.former_member').val() || $(this).parent().find('.current_member').val();
-            var to_date = $(this).parent().find('.date_to').val();
+            var from_date_month = $(this).parent().find('.former_member.month_select').val() || $(this).parent().find('.current_member.month_select').val();
+            var from_date_year = $(this).parent().find('.former_member.year_select').val() || $(this).parent().find('.current_member.year_select').val();
+            from_date_month = monthtext.indexOf(from_date_month) + 1;
+            var from_date = from_date_month + '/' + from_date_year;
+            var to_date_month = $(this).parent().find('.date_to.month_select').val();
+            var to_date_year = $(this).parent().find('.date_to.year_select').val();
+            to_date_month = monthtext.indexOf(to_date_month) + 1;
+            if (to_date_year && to_date_month) {
+                var to_date = to_date_month + '/' + to_date_year;
+            }
+            else {
+                var to_date = '';
+            }
             var from_date_former = $(this).parent().find('.former_member');
             var from_date_current = $(this).parent().find('.current_member');
             var to_date_form = $(this).parent().find('.date_to');
@@ -867,13 +879,11 @@ LionFace.Site.prototype = {
                     callback: function (data) {
                         if(data.status=='OK') {
                             if (data.redirect) {
-                                /*document.location.href = data.redirect;*/
-                                /*location.reload();*/
                                 if ($('#page_members_id').length) {
                                     $('#page_members_id').html(data.html);
-                                    from_date_former.val('') 
-                                    from_date_current.val('');
-                                    to_date_form.val('');
+                                    /*from_date_former.val('') */
+                                    /*from_date_current.val('');*/
+                                    /*to_date_form.val('');*/
                                 }
                                 else {
                                     history.go(0);
@@ -881,15 +891,15 @@ LionFace.Site.prototype = {
                             }
                             else {
                                 create_message('Member saved','success');
-                                $('.former_member').val('')
-                                $('.current_member').val('');
+                                /*$('.former_member').val('')*/
+                                /*$('.current_member').val('');*/
                             }
                         }
                         else {
                             create_message('Error during saving','error');
-                            from_date_former.val('');
-                            from_date_current.val('');
-                            to_date_form.val('');
+                            /*from_date_former.val('');*/
+                            /*from_date_current.val('');*/
+                            /*to_date_form.val('');*/
                         }
                     }
                 });
@@ -899,7 +909,6 @@ LionFace.Site.prototype = {
 
 
         $(document).on('click','#remove_member', function(e) {
-        console.log('taaak' + edit_member_url);
             if (edit_member_url) {
                 make_request({
                     url:edit_member_url,
@@ -915,7 +924,29 @@ LionFace.Site.prototype = {
             }
         });
 
-    }
+    },
+    /* month year selects */
+    datedropdown : function(monthfield, yearfield){
+        var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+        var today=new Date()
+        var monthfield=$('.'+monthfield);
+        var yearfield=$('.'+yearfield);
+        monthfield.each(function() {
+            var month = $(this).get(0);
+            for (var m=0; m<12; m++) month.options[m]=new Option(monthtext[m], monthtext[m])
+            month.options[today.getMonth()]=new Option(monthtext[today.getMonth()], monthtext[today.getMonth()], true, true) 
+        });
+
+        yearfield.each(function() {
+            var year = $(this).get(0);
+            var thisyear=today.getFullYear();
+            for (var y=0; y<80; y++){
+                year.options[y]=new Option(thisyear, thisyear)
+                thisyear-=1
+            }
+            year.options[0]=new Option(today.getFullYear(), today.getFullYear(), true, true)
+        })
+    } 
 }
 
 $(function() {         

@@ -186,9 +186,6 @@ class FeedbackPost(Post):
             else:
                 url = u"".join([u'http://', url])
             return url
-        def rreplace(s, old, new, occurrence):
-            li = s.rsplit(old, occurrence)
-            return new.join(li)
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
@@ -204,7 +201,7 @@ class FeedbackPost(Post):
                 })
 
         # replace last linebreak
-        post_template = rreplace(post_template,"\n","",1)
+        post_template = post_template.strip()
 
         return post_template
 
@@ -255,7 +252,6 @@ class PagePost(Post):
             else:
                 url = u"".join([u'http://', url])
             return url
-        def rreplace(s, old, new, occurrence):
             li = s.rsplit(old, occurrence)
             return new.join(li)
         # Clean
@@ -272,7 +268,7 @@ class PagePost(Post):
                 })
 
         # replace last linebreak
-        post_template = rreplace(post_template,"\n","",1)
+        post_template = post_template.strip()
 
         return post_template
 

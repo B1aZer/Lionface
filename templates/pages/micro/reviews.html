@@ -8,6 +8,7 @@
         var rating = get_int($(this).attr('id'));
         $('.review :lt('+rating+')').addClass('active_review');
     });
+    $('.postbox_textarea').autosize();
 </script>
 <div class="float_left" align="center">
 	<div style="font-size: 14pt; padding: 5px;">Average Rating</div>

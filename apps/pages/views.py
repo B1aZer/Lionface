@@ -951,15 +951,15 @@ def page_members(request, slug=None, member_id=None):
             member = None
     if delete_member:
         if user == member.get_user():
-            member.get_user().set_option('pages_removed__%s' % page.id, datetime.today().strftime('%m/%d/%Y'))
+            #member.get_user().set_option('pages_removed__%s' % page.id, datetime.today().strftime('%m/%d/%Y'))
             member.delete()
             data['status'] = 'OK'
             data['id'] = member_id
     else:
         if from_date and member_type:
-            from_date = datetime.strptime(from_date, "%m/%d/%Y")
+            from_date = datetime.strptime(from_date, "%m/%Y")
             if to_date:
-                to_date = datetime.strptime(to_date, "%m/%d/%Y")
+                to_date = datetime.strptime(to_date, "%m/%Y")
             if not member:
                 member = Membership()
                 member.user=user

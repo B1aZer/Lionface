@@ -10,7 +10,7 @@
     <span> {{ member.get_name }} </span>
     <span style="color: #909e4a; font-size: 8pt;">confirmed</span> {{ member.get_type }}
 <br />
-{{ member.get_begin_date|date:"m/Y" }} to {% firstof member.get_end_date|date:"m/Y" member.get_end_date %}</span>
+{{ member.get_begin_date|date:"M. Y" }} to {% firstof member.get_end_date|date:"M. Y" member.get_end_date %}</span>
 </div>
 {% endif %}
 {% endfor %}

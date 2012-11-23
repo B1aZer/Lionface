@@ -1,5 +1,6 @@
 from django import forms
 from .models import *
+from .date_widget import MonthYearWidget
 
 BUSINESS_CATEGORY = (
     ('Undefined', 'Undefined'),
@@ -152,6 +153,7 @@ class ImageUploadForm(forms.ModelForm):
             raise forms.ValidationError("Image file too large ( > 3mb )")
         return image
 
+
 class PageSettingsForm(forms.ModelForm):
 
     class Meta:
@@ -160,7 +162,6 @@ class PageSettingsForm(forms.ModelForm):
         widgets = {
             'username' : forms.TextInput(attrs={'readonly':'readonly'}),
         }
-
 
     def __init__(self, *args, **kwargs):
         super(PageSettingsForm, self).__init__(*args, **kwargs)
@@ -171,5 +172,11 @@ class PageSettingsForm(forms.ModelForm):
                 self.fields['category'].widget = forms.Select(choices=BUSINESS_CATEGORY)
             else:
                 self.fields['category'].widget = forms.Select(choices=NONPROFIT_CATEGORY)
+
+
+class MembersForm(forms.Form):
+    date_from =  forms.DateField(widget=MonthYearWidget(attrs={'class':'date_from former_member'}))
+    date_current =  forms.DateField(widget=MonthYearWidget(attrs={'class':'date_from current_member'}))
+    date_to =  forms.DateField(widget=MonthYearWidget(attrs={'class':'date_to'}))
 
 

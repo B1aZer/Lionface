@@ -1,7 +1,6 @@
 ##next###
 ### DoS ###
 loop problem
-contetnt.object.id
 
 deleting sharing origin wont delete children
 wrong privacy on deleted
