@@ -402,7 +402,7 @@ class Membership(models.Model):
 
     def get_end_date(self):
         if self.is_present:
-            return 'present'
+            return 'Present'
         else:
             return self.to_date
 
@@ -425,6 +425,7 @@ class Membership(models.Model):
         self.save()
 
     def decline(self):
+        self.get_user().set_option('pages_removed__%s__%s' % (self.page.id, self.type), datetime.today().strftime('%m/%d/%Y'))
         self.delete()
 
 

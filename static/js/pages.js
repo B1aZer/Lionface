@@ -610,19 +610,21 @@ LionFace.Pages.prototype = {
             });
         });
 
+        var clone;
+        var class_date;
         $(document).on('click','.comm_req_date',function(e) {
             e.preventDefault();
-            var url = 'community_date/';
             var self = $(this);
-            var clone = self.clone();
+            clone = self.clone();
             if (self.hasClass('from_date_class')) {
-                var class_date = 'from_date';
+                class_date = 'from_date';
             }
             else {
-                var class_date = 'to_date' ;
+                class_date = 'to_date' ;
             }
             var id = get_int(self.attr('id'));
-            var input = $('<input>', { type:"text", id:id, class:"date_inline_edit"+" "+class_date, name:"from"});
+            /*var input_month = $('<select>', { id:id, class:"date_inline_month"+" "+class_date});*/
+            /*var input_year = $('<select>', { id:id, class:"date_inline_year"+" "+class_date});*/
             /**
             input.datepicker({
                 changeMonth: true,
@@ -649,8 +651,44 @@ LionFace.Pages.prototype = {
                 },
             });           
             */
-            self.replaceWith(input);
-            input.focus();
+            self.replaceWith('<span id="'+ id +'">' +
+            '<select class="date_from former_member month_select"></select> ' +
+            '<select class="date_from former_member year_select"></select>' +
+            '<a href="#" class="member_button_save">save</a> <a href="#" class="member_button_cancel">cancel</a>' +
+            '</span>');
+            LionFace.Site.datedropdown("month_select", "year_select");
+            /*input_month.focus();*/
+        });
+
+        $(document).on('click','.member_button_save',function(e) {
+            var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+            e.preventDefault();
+            var parent = $(this).parent();
+            var url = 'community_date/';
+            var id = get_int($(this).parent().attr('id'));
+            var date_month = $(this).parent().find('.month_select').val();
+            var date_year = $(this).parent().find('.year_select').val(); 
+            date_month = monthtext.indexOf(date_month) + 1;
+            var dateText = date_month + '/' + date_year;
+            make_request({ 
+                        url:url,
+                        data: {
+                            'date':dateText,
+                            'date_type':class_date,
+                            'id':id,
+                        },
+                        callback: function(data) {
+                            if (data.status =='OK') {
+                                clone.html(data.html);
+                                parent.replaceWith(clone);
+                            }
+                        }
+                    }); 
+        });
+
+        $(document).on('click','.member_button_cancel',function(e) {
+            e.preventDefault();
+            $(this).parent().replaceWith(clone);
         });
         
         /*live_search*/

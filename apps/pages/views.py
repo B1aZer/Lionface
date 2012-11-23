@@ -920,14 +920,14 @@ def community_date(request, slug=None):
     except Membership.DoesNotExist:
         raise Http404
     if date:
-        date = datetime.strptime(date, "%m/%d/%Y")
+        date = datetime.strptime(date, "%m/%Y")
         if date_type == 'from_date':
             member.from_date = date
         if date_type == 'to_date':
             member.to_date = date
         member.save()
         data['status'] = 'OK'
-        data['html'] = datetime.strftime(date, "%b. %d, %Y")
+        data['html'] = datetime.strftime(date, "%b. %Y")
     return HttpResponse(json.dumps(data), "application/json")
 
 
@@ -939,6 +939,7 @@ def page_members(request, slug=None, member_id=None):
     except Pages.DoesNotExist:
         raise Http404
     member = None
+    new = False
     member_type = request.POST.get('member_type',None)
     from_date = request.POST.get('from_date',None)
     to_date = request.POST.get('to_date',None)
@@ -951,7 +952,6 @@ def page_members(request, slug=None, member_id=None):
             member = None
     if delete_member:
         if user == member.get_user():
-            #member.get_user().set_option('pages_removed__%s' % page.id, datetime.today().strftime('%m/%d/%Y'))
             member.delete()
             data['status'] = 'OK'
             data['id'] = member_id
@@ -962,6 +962,7 @@ def page_members(request, slug=None, member_id=None):
                 to_date = datetime.strptime(to_date, "%m/%Y")
             if not member:
                 member = Membership()
+                new = True
                 member.user=user
                 member.page=page
             member.type=member_type
@@ -973,14 +974,14 @@ def page_members(request, slug=None, member_id=None):
                 member.is_present = True
             try:
                 if user == member.get_user():
-                    if member.get_user().check_option('pages_removed__%s' % page.id):
-                        date_old = member.get_user().check_option('pages_removed__%s' % page.id)
+                    if member.get_user().check_option('pages_removed__%s__%s' % (page.id,member.type)):
+                        date_old = member.get_user().check_option('pages_removed__%s__%s' % (page.id,member.type))
                         date1= datetime.strptime(date_old,"%m/%d/%Y")
                         date2 = datetime.today()
                         diff = date2 - date1
-                        if diff.days > 30:
-                            member.get_user().remove_option('pages_removed__%s' % page.id)
-                    if not member.get_user().check_option('pages_removed__%s' % page.id):
+                        if diff.days >= 30:
+                            member.get_user().remove_option('pages_removed__%s__%s' % (page.id,member.type))
+                    if not (member.get_user().check_option('pages_removed__%s__%s' % (page.id,member.type)) and new):
                         member.save()
                         data['status'] = 'OK'
                         data['redirect'] = reverse('user-loves',args=(request.user,))
@@ -988,6 +989,9 @@ def page_members(request, slug=None, member_id=None):
                         {
                             'page':page,
                         }, RequestContext(request))
+                    else:
+                        data['message'] = 'Previous request denied. Unable to make new request for %s days.' % (30 - diff.days)
+
             except:
                 pass
     return HttpResponse(json.dumps(data), "application/json")

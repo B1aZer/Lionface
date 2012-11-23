@@ -136,6 +136,9 @@ function create_message(message,type) {
         var message = $('<li>', { 'class':type}).html(message); 
         $('.messages').html(message);
     }
+    else {
+        $('.messages').html('');
+    }
 }
 
 LionFace.Site = function() {
@@ -843,6 +846,7 @@ LionFace.Site.prototype = {
         });
                         
         $(document).on('click','.save_member', function(e) {
+            create_message();
             var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
             var member_type = false;
             var url = $(this).attr('href');
@@ -894,6 +898,9 @@ LionFace.Site.prototype = {
                                 /*$('.former_member').val('')*/
                                 /*$('.current_member').val('');*/
                             }
+                        }
+                        else if (data.message) {
+                            create_message(data.message);
                         }
                         else {
                             create_message('Error during saving','error');
