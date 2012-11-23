@@ -44,6 +44,11 @@ class Notification(models.Model):
     # Friend request type
     friend_request = models.ForeignKey(FriendRequest, null=True)
 
+    # for comments
+    related_type = models.ForeignKey(ContentType, blank=True, null=True, related_name='notification_set2')
+    related_id = models.PositiveIntegerField(blank=True, null=True)
+    related_object = generic.GenericForeignKey('related_type', 'related_id')
+
     # General other user (used for Friend Accept, etc)
     other_user = models.ForeignKey(UserProfile, null=True, related_name='other_user')
 
@@ -185,6 +190,7 @@ def create_comment_image_notification(sender, instance, created, **kwargs):
                 'type': 'CI',
                 'other_user': instance.owner,
                 'content_object': instance.image,
+                'related_object': instance,
             }
             Notification.objects.create(**data)
 post_save.connect(create_comment_image_notification, sender=ImageComments)
@@ -193,19 +199,21 @@ post_save.connect(create_comment_image_notification, sender=ImageComments)
 def delete_comment_image_notification(sender, instance, **kwargs):
     if instance.owner != instance.image.owner:
         try:
-            ctype = ContentType.objects.get_for_model(Image)
             data = {
                 'user': instance.image.owner,
                 'type': 'CI',
                 'other_user': instance.owner,
-                'content_type': ctype,
+                'content_type': ContentType.objects.get_for_model(Image),
                 'object_id': instance.image.id,
+                'related_type': ContentType.objects.get_for_model(ImageComments),
+                'related_id': instance.id,
+                'read': False,
             }
-            notif = Notification.objects.filter(**data)[:1].get()
+            notif = Notification.objects.get(**data)
             notif.delete()
         except Notification.DoesNotExist:
             pass
-#post_delete.connect(delete_comment_image_notification, sender=ImageComments)
+post_delete.connect(delete_comment_image_notification, sender=ImageComments)
 
 
 def create_follow_notification(sender, instance, created, **kwargs):
@@ -232,7 +240,7 @@ pre_delete.connect(delete_dated_notifications, sender=FeedbackPost)
 pre_delete.connect(delete_dated_notifications, sender=NewsItem)
 
 
-def update_notification_count(sender, instance, created, **kwargs):
+def update_notification_count(sender, instance, **kwargs):
     """ merge unread notifications to one """
     if instance.type in ('CS','CI','FC','PS','FS'):
         if instance.type == 'CS': notification_type = 'MC'
@@ -250,12 +258,23 @@ def update_notification_count(sender, instance, created, **kwargs):
             object_ids = [instance.content_object.id]
             object_id = instance.content_object.id
             content_object = instance.content_object
-        notfs =  Notification.objects.filter(user=instance.user, \
-                content_type=instance.content_type, \
-                type = instance.type, \
-                object_id__in = object_ids, \
-                read = False).order_by('-date')
-        if notfs.count() > 1:
+        data = {
+            'user': instance.user,
+            'type': instance.type,
+            'content_type': instance.content_type,
+            'object_id__in': object_ids,
+            'read': False,
+        }
+        notfs =  Notification.objects.filter(**data)
+        notfs_cnt = notfs.count()
+        if notfs_cnt == 1:
+            if instance.type == 'CI':
+                data['type'] = notification_type
+                mnotf = Notification.objects.filter(**data)
+                if mnotf.count() > 0:
+                    mnotf.delete()
+                    notfs.filter(hidden=True).update(hidden=False)
+        elif notfs_cnt > 1:
             # check if M for this comment already exist and have not yet been read
             notf = Notification.objects.filter(user=instance.user, \
                     type=notification_type, \
@@ -281,12 +300,9 @@ def update_notification_count(sender, instance, created, **kwargs):
                     if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
                         obj.extra_set.create(user_id=instance.other_user.id)
             # hide all original notifications
-            original_notfs = Notification.objects.filter(user=instance.user, \
-                    type=instance.type, \
-                    object_id__in = object_ids, \
-                    read = False)
-            if original_notfs.count():
-                original_notfs.update(hidden=True)
+            Notification.objects.filter(**data) \
+                .filter(hidden=False) \
+                .update(hidden=True)
     if instance.type in ('FF','PP'):
         if instance.type == 'FF': notification_type = 'FM'
         if instance.type == 'PP': notification_type = 'MP'
@@ -326,6 +342,7 @@ def update_notification_count(sender, instance, created, **kwargs):
             if original_notfs.count():
                 original_notfs.update(hidden=True)
 post_save.connect(update_notification_count, sender=Notification)
+post_delete.connect(update_notification_count, sender=Notification)
 
 
 class Extra(models.Model):
