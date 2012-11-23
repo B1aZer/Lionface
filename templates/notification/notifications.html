@@ -4,7 +4,8 @@
 {% block content %}
     <div class="content_area notifications">
         <div id="profile_top">
-            <div class="left">{% block content_title %} <a href="{{ request.user.get_absolute_url }}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | Notifications{% endblock %}</div>
+			<table width="100%" height="100%"><tr><td valign="bottom">
+            <div class="left">{% block content_title %} <a href="{{ request.user.get_absolute_url }}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | Notifications{% endblock %}</div></td></tr></table>
             <div class="right" style="color: #555;">{% block content_subtitle %}{% endblock %}</div>
         </div>
         <div style="clear: both;"></div>

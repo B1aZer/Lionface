@@ -1,5 +1,10 @@
 {% spaceless %}
-<span class="reviewON" style="margin: 0px 8px 0 0;">{{ rating }}</span> <a href='{{ user.get_absolute_url }}'>{{ user.get_full_name }}</a> 
+<span class="reviewON" style="margin: 0px 8px 0 0;">{{ rating }}</span> <a href='{{ user.get_absolute_url }}'>{{ user.get_full_name }}</a> <span style="color: #AAA;">left feedback for</span>
+{% if page.type == 'BS' %}
+                    <a href="{{ page.get_absolute_url }}" style="color:#3ea8d2; font-size: 10pt;">{{ page.name }}</a> 
+                {% else %}   
+                    <a href="{{ page.get_absolute_url }}" style="color:#909E4A; font-size: 10pt;">{{ page.name }}</a> 
+                {% endif %}
 <br />
 <div class='post_content'> {{ content }}</div>
 {% endspaceless %}

@@ -8,18 +8,24 @@
 }
 </style>
 <div class="image_container" data-pk={{ image.pk }}>
+	<table width="100%"><tr><td valign="top">
     <div style="background: url('/{{ image.image.thumb_name }}') #FFF;" class="image_album" style="text-align: center;"></div>
-    <div class="image_zone_info">
-        <div class="scroll_area">
-            <div class="comments">
-                <ul style="width: 100%;"></ul>
-            </div>
-        </div>
-    </div>
+	</td><td valign="top">
+
     <div class="make_comment">
         <div class="thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF;"></div>
         <form>
-            <textarea name="add_comment_text" placeholder="Add comment..." style="width: 600px; height: 51px; margin-top: 15px;"></textarea>
+            <textarea name="add_comment_text" placeholder="Add comment..." style="width: 388px; height: 44px; padding: 5px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; margin-top: 15px;"></textarea>
         </form>
     </div>
+
+    <div class="image_zone_info">
+        <div class="scroll_area" style="background: #FFF;">
+            <div class="comments" style="width: 400px; position: relative; left: -8px;">
+                <ul style="width: 400px;"></ul>
+            </div>
+        </div>
+    </div>
+
+	</td></tr></table>
 </div>
