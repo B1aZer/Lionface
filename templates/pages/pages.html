@@ -1,7 +1,7 @@
     {% for row in pages %}
         <tr>
         {% for page in row %}
-            <td>
+            <td align="left">
                 {% if page.type == 'BS' %}
                 <a href="{% url business-page slug=page.username %}"> <img src="/{{ page.photo.thumb_name }}" alt="{{page.id}}" width="200" height="200"  /></a>
                 {% else %}   
@@ -12,13 +12,15 @@
         </tr> 
         <tr>
         {% for page in row %}
-            <td>
+            <td align="left"">
+				<div style="background: #FAFAFA; position: relative; top: -10px; padding: 6px 8px 2px 8px; -moz-border-riadu: 5px; border-radius: 5px; border: 1px solid #EEE; display: block; width: 182px;">
                 {% if page.type == 'BS' %}
-                    <span style="color:#3ea8d2">{{ page.name }}</span><br />
+                    <span style="color:#3ea8d2; font-size: 11pt;">{{ page.name }}</span><br />
                 {% else %}   
-                    <span style="color:#909E4A">{{ page.name }}</span><br />
+                    <span style="color:#909E4A; font-size: 11pt;">{{ page.name }}</span><br />
                 {% endif %}
                 <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span>
+				</div>
             </td>
         {% endfor %}
         </tr> 

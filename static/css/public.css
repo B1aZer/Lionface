@@ -496,6 +496,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72dcea', end
 	color: #F9C;
 }
 
-.help_text { font-size: 8pt; color: #DDD; }
+.help_text { font-size: 8pt; color: #900; }
 
 .dark_box .errorlist { font-weight: normal; padding: 2px; font-size: 10pt; }

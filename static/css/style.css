@@ -621,7 +621,7 @@ a.profile_btn:hover {
 }
 
 .image_album {
-	background-size: 200px 200px; -moz-background-size: 200px 200px !important; 
+	-webkit-background-size: 200px 200px !important; -moz-background-size: 200px 200px !important;background-size: 200px 200px; 
  	width: 200px; height: 200px; border: 1px solid #E7E7E7;
 	position: relative; top: -6px;
 	z-index: 999;
@@ -902,8 +902,9 @@ a.profile_btn:hover {
 }
 .image_zone_info .scroll_area .owner .thumb {
 	float: left;
-	background-size: 50px, 50px;
+	-webkit-background-size: 50px 50px;
 	-moz-background-size: 50px 50px;
+	background-size: 50px, 50px;
 	width: 50px; height: 50px;
 	margin: 0 auto auto 10px;
 	border: 1px solid #AAA;
@@ -949,8 +950,9 @@ a.profile_btn:hover {
 }
 .image_zone_info .scroll_area .comments .thumb {
 	float: left;
-	background-size: 32px, 32px;
 	-moz-background-size: 32px, 32px;
+	-webkit-background-size: 32px 32px;
+	background-size: 32px, 32px;
 	width: 32px; height: 32px;
 	margin: 4px auto 4px 4px;
 	border: 1px solid #AAA;
@@ -984,8 +986,9 @@ a.profile_btn:hover {
 .image_zone_info .make_comment .thumb {
 	float: left;
 	margin: 0px auto auto 15px;
-	background-size: 32px, 32px;
+	-webkit-background-size: 32px, 32px;
 	-moz-background-size: 32px, 32px;
+	background-size: 32px, 32px;
 	width: 32px; height: 32px;
 	border: 1px solid #AAA;
 	-moz-border-radius: 3px;
@@ -1448,8 +1451,9 @@ a.send_message:hover {
 	border: 1px solid #CCC;
 	border-width: 0 0 1px 0;
 	background: #333;
-	background-size: 450px 50px;
+	-webkit-background-size: 450px, 50px;
 	-moz-background-size: 450px 50px !important; 
+	background-size: 450px 50px;
 	background-position: center center;
 	-moz-box-shadow: 0 4px 8px -2px #333;
 	box-shadow: 0 4px 8px -4px #333;
@@ -1493,8 +1497,9 @@ a.send_message:hover {
 
 .header_profile_image div {
 	display: inline-block; 
-	background-size: 34px 34px;
 	-moz-background-size: 34px 34px !important; 
+	-moz-background-size: 34px 34px !important; 
+	background-size: 34px 34px;
 	background-repeat: no-repeat;
 	background-position: center center;
 	width: 34px; height: 34px; 
@@ -1550,8 +1555,9 @@ a.nav_page:link, a.nav_page:active, a.nav_page:visited {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	background: url(../images/noThumb.png) #FAFAFA;
-	background-size: 30px 30px;
+	-webkit-background-size: 30px 30px !important; 
 	-moz-background-size: 30px 30px !important; 
+	background-size: 30px 30px;
 
 }
 
@@ -1636,8 +1642,9 @@ a.nav_messages:link, a.nav_messages:active, a.nav_messages:visited {
 	background: url(../images/IconMessages.png) #F7F7F7;
 	background-position: center center;
 	background-repeat: no-repeat;
-	background-size: 18px 18px;
+	-webkit-background-size: 18px 18px !important; 
 	-moz-background-size: 18px 18px !important; 
+	background-size: 18px 18px;
 
 }
 
@@ -1645,8 +1652,9 @@ a.nav_notifications:link, a.nav_notifications:active, a.nav_notifications:visite
 	background: url(../images/IconNotifications.png) #F7F7F7;
 	background-position: center center;
 	background-repeat: no-repeat;
-	background-size: 18px 18px;
+	-webkit-background-size: 18px 18px !important; 
 	-moz-background-size: 18px 18px !important; 
+	background-size: 18px 18px;
 
 }
 
@@ -1654,8 +1662,9 @@ a.nav_messages:hover {
 	background: url(../images/IconMessages.png) #FFF;
 	background-position: center center;
 	background-repeat: no-repeat;
-	background-size: 18px 18px;
+	-webkit-background-size: 18px 18px !important; 
 	-moz-background-size: 18px 18px !important; 
+	background-size: 18px 18px; 
 
 }
 
@@ -1663,8 +1672,9 @@ a.nav_notifications:hover {
 	background: url(../images/IconNotifications.png) #FFF;
 	background-position: center center;
 	background-repeat: no-repeat;
-	background-size: 18px 18px;
+	-webkit-background-size: 18px 18px !important; 
 	-moz-background-size: 18px 18px !important; 
+	background-size: 18px 18px;
 
 }
 
@@ -1683,8 +1693,9 @@ a.nav_notifications:hover {
 	width: 90px; 
 	height: 90px; 
 	background: #EEE; 
-	background-size: 90px 90px;
+	-webkit-background-size: 90px 90px !important; 
 	-moz-background-size: 90px 90px !important; 
+	background-size: 90px 90px;
 	margin: 10px; 
 	position: relative; top: 7px;
 	border: 1px solid #CCC;
@@ -1761,7 +1772,7 @@ a.nav_notifications:hover {
 .result .subtext { font-size: 8pt; color: #999; line-height: 10pt; }
 
 .link_loader { width: 16px; height: 16px; float: left; background: url(../images/link_loader.gif) center no-repeat; }
-.large_loader { background: url(../images/loader.gif); background-size: 64px 64px; -moz-background-size: 64px 64px !important; 
+.large_loader { background: url(../images/loader.gif); -webkit-background-size: 64px 64px !important; -moz-background-size: 64px 64px !important; background-size: 64px 64px;  
  width: 600px; height: 64px; margin: auto; padding: 50px; background-position: center center; background-repeat: no-repeat; }
 
 .DoS {
@@ -1794,8 +1805,9 @@ a.nav_notifications:hover {
 
 .link-output:hover {
 	background: url(../images/arrow.png) #FFF;
+	-webkit-background-size: 20px 20px !important;
+	-moz-background-size: 20px 20px !important;
 	background-size: 20px 20px;
-	-moz-background-size: 20px 20px !important; 
 	background-position: center right; 
 	background-repeat: no-repeat;
 	cursor: pointer;
@@ -1874,8 +1886,9 @@ a.new_notification, span.new_notification {
 
 .message:hover {
 	background: url(../images/arrow.png) #FFF;
-	background-size: 20px 20px;
+	-webkit-background-size: 20px 20px !important; 
 	-moz-background-size: 20px 20px !important; 
+	background-size: 20px 20px;
 	background-position: center right; 
 	background-repeat: no-repeat;
 	-moz-border-radius: 3px 0 0 3px;
