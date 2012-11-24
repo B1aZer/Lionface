@@ -8,22 +8,21 @@
 }
 </style>
 <div class="image_container" data-pk={{ image.pk }}>
-    <div style="background: #FFF; margin: 5px auto 5px auto;"
-data-original-url="/{{ image.image.name }}" data-thumb-url="/{{ image.image.thumb_name }}" data-image="thumb" class="image_album">
-        <img src="/{{ image.image.thumb_name }}" />
-    </div>
-    <img id="loader" src="{% media_url 'images/loader.gif' %}" style="display: none; margin: auto;" />
-    <div class="image_zone_info">
-        <div class="scroll_area">
-            <div class="comments">
-                <ul style="width: 100%;"></ul>
+    <table width="100%"><tr><td valign="top">
+        <div style="background: url('/{{ image.image.thumb_name }}') #FFF; cursor: default;" class="image_album" style="text-align: center;"></div>
+    </td><td valign="top">
+        <div class="make_comment">
+            <div class="thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF;"></div>
+            <form>
+                <textarea name="add_comment_text" placeholder="Add comment..." style="width: 388px; height: 44px; padding: 5px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; margin-top: 15px;"></textarea>
+            </form>
+        </div>
+        <div class="image_zone_info">
+            <div class="scroll_area" style="background: #FFF;">
+                <div class="comments" style="width: 400px; position: relative; left: -8px;">
+                    <ul style="width: 445px;"></ul>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="make_comment">
-        <div class="thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF;"></div>
-        <form>
-            <textarea name="add_comment_text" placeholder="Add comment..." style="width: 388px; height: 44px; padding: 5px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; margin-top: 15px;"></textarea>
-        </form>
-    </div>
+    </td></tr></table>
 </div>
