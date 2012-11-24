@@ -24,6 +24,7 @@ try:
 except ImportError:
     import simplejson as json
 
+
 def feed(request, user_id = None):
     data = {}
     news_feed_flag = False
@@ -117,6 +118,36 @@ def feed(request, user_id = None):
     data['page'] = page
 
     return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def love(request):
+    try:
+        post = Post.objects \
+            .select_related() \
+            .get(pk=request.REQUEST.get('pk', None))
+    except Post.DoesNotExist:
+        return HttpResponseBadRequest('Bad PK was received.')
+
+    data = {}
+    try:
+        if request.user.posts_loved.filter(pk=post.pk).count():
+            post.loves -= 1
+            post.save()
+            request.user.posts_loved.remove(post)
+            data['type'] = 'down'
+        else:
+            post.loves += 1
+            post.save()
+            request.user.posts_loved.add(post)
+            data['type'] = 'up'
+        data['count'] = post.loves
+    except Exception as e:
+        data['status'] = 'fail'
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def timeline(request,post_num=5):

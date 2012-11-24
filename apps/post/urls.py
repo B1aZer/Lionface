@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, url
 import views
 
 urlpatterns = patterns('',
+    url(r'love/$', views.love),
     url(r'change_settings/$', views.change_settings),
     url(r'del/(?P<post_id>\d+)/$', views.delete),
     url(r'dlcom/(?P<message_id>\d+)/$', views.delete_own_comment),

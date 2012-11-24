@@ -292,6 +292,32 @@ LionFace.Site.prototype = {
 
     },
 
+    love_post: function(pk) {
+        $item = $('#love_post_'+pk);
+        $.ajax({
+            url: '/posts/love/',
+            data: {
+                'pk': pk,
+            },
+            beforeSend: function(jqXHR, settings) {
+                $item.fadeOut();
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 'ok') {
+                    $item.find('.post_love_count').html(data.count);
+                    if (data.type == 'up') {
+                        $item.find('a').html('Loved');
+                    } else if (data.type == 'down') {
+                        $item.find('a').html('Love');
+                    }
+                }
+            },
+            complete: function(jqXHR, textStatus) {
+                $item.fadeIn();
+            },
+        });
+    },
+
     share_post: function (elem) { 
         if (LionFace.User.is_anonymous) {
             return

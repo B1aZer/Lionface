@@ -52,6 +52,8 @@ class CustomQuerySet(QuerySet):
 class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
     user_to = models.ForeignKey(UserProfile,  related_name='user_to', null=True, blank=True)
+    users_loved = models.ManyToManyField(UserProfile, related_name='posts_loved', null=True, blank=True)
+    loves = models.PositiveIntegerField(default=0)
     following = models.ManyToManyField(UserProfile,  related_name='follows', null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
@@ -150,6 +152,9 @@ class Post(models.Model):
         is_removed = False,
         ).exclude(user__in=user.get_blocked()).count()
         return value
+
+    def get_lovers(self):
+        return self.users_loved.all()
 
 
 class FriendPost(Post):
