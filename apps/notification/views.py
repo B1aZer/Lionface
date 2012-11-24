@@ -43,17 +43,14 @@ def notifications(request, username=None):
                 # If page is out of range (e.g. 9999), deliver last page of results.
                 result_list = paginator.page(paginator.num_pages)
 
-            data = render_to_string('notification/left.html',
-                {
-                    'notifications':result_list,
-                }, context_instance=RequestContext(request))
+            data = render_to_string('notification/left.html', {
+                'notifications': result_list,
+            }, context_instance=RequestContext(request))
             return HttpResponse(json.dumps(data), "application/json")
 
-    return render_to_response(
-        'notification/notifications.html',
-        {
-            'notifications': result_list,
-            'not_count': Notification.objects.filter(user=request.user,read=False).count()
-        },
-        RequestContext(request)
-    )
+    return render_to_response('notification/notifications.html', {
+        'notifications': result_list,
+        'not_count': Notification.objects \
+            .filter(user=request.user,read=False) \
+            .count(),
+    },  RequestContext(request))

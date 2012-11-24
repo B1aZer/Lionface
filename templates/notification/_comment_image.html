@@ -1,11 +1,13 @@
+{% load format_notifications %}
+
 {% if notification.type == 'MI' %}
 <li class="comment_image notification {type: 'comment image', id: '{{ notification.content_object.id }}'}">
     <div style="padding: 15px;" class="link-output">
         <span {% if notification.new_one %} class="new_notification"{% endif %}>
           {% if notification.people_counter == 1 %}
-              1 person
+              1 person{% if events_count %} ({{events_count}} events){% endif %}
           {% else %}
-              {{ notification.people_counter }} people
+              {{ notification.people_counter }} people{% if events_count %} ({{events_count}} events){% endif %}
           {% endif %}
         </span><br /><span style="color: #777; text-decoration: underline;">commented</span> on your image.
     </div>
