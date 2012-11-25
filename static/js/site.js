@@ -306,9 +306,13 @@ LionFace.Site.prototype = {
                 if (data.status == 'ok') {
                     $item.find('.post_love_count').html(data.count);
                     if (data.type == 'up') {
-                        $item.find('a').html('Loved');
+                        $item.find('a').html('Loved').css({
+                            'color': $item.data('loved-color'),
+                        });
                     } else if (data.type == 'down') {
-                        $item.find('a').html('Love');
+                        $item.find('a').html('Love').css({
+                            'color': $item.data('love-color'),
+                        });
                     }
                 }
             },

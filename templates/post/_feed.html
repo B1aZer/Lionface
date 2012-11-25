@@ -19,9 +19,13 @@
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>
-            <span id="love_post_{{ item.get_post.id }}">
-                <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});">Love{% if request.user in item.get_post.get_lovers %}d{% endif %}</a>
-                <span style="color: #555; padding: 2px;" class="post_love_count">{{ item.get_post.loves }}</span>
+            <span id="love_post_{{ item.get_post.id }}" data-love-color="#2AB4EA" data-loved-color="#F58">
+                {% if request.user in item.get_post.get_lovers %}
+                <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});" style="color: #F58;">Loved</a>
+                {% else %}
+                <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});">Love</a>
+                {% endif %}
+                <span style="color: #555; padding: 2px;" class="post_love_count">{% ifnotequal item.get_post.loves 0 %}{{ item.get_post.loves }}{% endifnotequal %}</span>
                 <span style="color: transparent;"> - | - </span>
             </span>
             <span id="hide_comment_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
