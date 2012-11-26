@@ -12,7 +12,7 @@
 	  </td>
 	</tr>
     <tr>
-      <td align="right" width="200">{{ signup_form.full_name.label }}:<br /><span class="help_text">{{ signup_form.full_name.help_text }}</span></td>
+      <td align="right" width="200">{{ signup_form.full_name.label }}:<br /><span style="color: #BBB;">{{ signup_form.full_name.help_text }}</span></td>
       <td align="right">{{ signup_form.full_name }} {{ signup_form.full_name.errors }}</td>
 	  <td width="20"><img src="{% media_url 'images/check.png' %}" width="20" /></td>
     </tr>
@@ -32,7 +32,7 @@
 	  <td width="20"></td>
     </tr>
     <tr>
-      <td align="right">{{ signup_form.username.label }}:<br /><span class="help_text">{{ signup_form.username.help_text }}</span></td>
+      <td align="right">{{ signup_form.username.label }}:<br /><span style="color: #BBB;">{{ signup_form.username.help_text }}</span></td>
       <td align="right">{{ signup_form.username }} {{ signup_form.username.errors }}</td>
 	  <td width="20"></td>
     </tr>
