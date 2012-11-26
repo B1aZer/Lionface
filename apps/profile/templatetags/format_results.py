@@ -218,6 +218,12 @@ def check_pages_updates(user,page):
         return False
     return user.check_option('pages_updates__%s' % page.id)
 
+@register.filter(name="check_pages_calendar")
+def check_pages_calendar(user,page):
+    if user.is_anonymous():
+        return False
+    return user.check_option('pages_calendar__%s' % page.id)
+
 @register.filter(name="check_pages_community")
 def check_pages_community(user,page=None):
     if user.is_anonymous():

@@ -11,6 +11,11 @@
         LionFace.User.options['pages_community__'+{{ page.id }}] = false;
     {% endif %} 
 </script>
+
+<!--includes for calendar micro page-->
+<link rel='stylesheet' type='text/css' href='{% media_url 'fullcalendar.css' %}' />
+<link rel='stylesheet' type='text/css' href='{% media_url 'fullcalendar.print.css' %}' media='print' />
+<script type='text/javascript' src='{% media_url 'fullcalendar.js' %}'></script>
 {% endblock %}  
 
 {% block content %}

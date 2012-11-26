@@ -157,6 +157,7 @@ class Post(models.Model):
         return self.users_loved.all()
 
 
+
 class FriendPost(Post):
     friend = models.ForeignKey(UserProfile)
 

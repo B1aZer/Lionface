@@ -18,8 +18,11 @@
 Include JQuery Core (Required for calendar plugin)
 ** This is our IE fix version which enables drag-and-drop to work correctly in IE. See README file in js/jquery-core folder. **
 -->
-<script type="text/javascript" src="{% media_url 'calendar.jquery.core.js' %}"></script>
-<script type="text/javascript" src="{% media_url 'calendar.jquery.ui.js' %}"></script>
+{% include_media 'main.js' %}
+{% include_media 'user.js' %}
+<!--<script type="text/javascript" src="{% media_url 'calendar.jquery.core.js' %}"></script>-->
+<!--<script type="text/javascript" src="{% media_url 'calendar.jquery.core.js' %}"></script>-->
+<!--<script type="text/javascript" src="{% media_url 'calendar.jquery.ui.js' %}"></script>-->
 <script type="text/javascript" src="{% media_url 'calendar.colorpicker.js' %}"></script>
 <script type="text/javascript" src="{% media_url 'calendar.jshashtable.js' %}"></script>
 <script type="text/javascript" src="{% media_url 'calendar.qtip.js' %}"></script>
