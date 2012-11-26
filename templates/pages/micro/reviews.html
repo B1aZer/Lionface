@@ -1,12 +1,12 @@
 {% load media %}
 <script>
     LionFace.Pages.load_feedback_feed();
-    $(document).on('click','#postbox .review',function() {
+    $(document).on('mouseenter','#postbox .review',function() {
         $('.active_review').removeClass('active_review');
-        $('.final_review').removeClass('final_review');
-        $(this).addClass('final_review');
         var rating = get_int($(this).attr('id'));
         $('.review :lt('+rating+')').addClass('active_review');
+        $('.final_review').removeClass('final_review');
+        $(this).addClass('final_review');
     });
     $('.postbox_textarea').autosize();
 </script>

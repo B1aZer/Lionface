@@ -178,9 +178,8 @@ class FeedbackPost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='feedback_posts')
     rating = models.IntegerField(validators=[MaxValueValidator(5),MinValueValidator(0)])
-    agrees = models.IntegerField(default=0)
-    disagrees = models.IntegerField(default=0)
-    voted = models.ManyToManyField(UserProfile, related_name='feedback_votes', null=True, blank=True)
+    agreed = models.ManyToManyField(UserProfile, related_name='feedback_votes_agreed', null=True, blank=True)
+    disagreed = models.ManyToManyField(UserProfile, related_name='feedback_votes_disagreed', null=True, blank=True)
 
     def render(self):
         import bleach
@@ -231,13 +230,16 @@ class FeedbackPost(Post):
         return self.user
 
     def get_agreed(self):
-        return self.agrees
+        return self.agreed.count()
 
     def get_disagreed(self):
-        return self.disagrees
+        return self.disagreed.count()
 
-    def get_voted(self):
-        return self.voted.all()
+    def get_agreed_list(self):
+        return self.agreed.all()
+
+    def get_disagreed_list(self):
+        return self.disagreed.all()
 
     def privacy(self):
         return 'P'

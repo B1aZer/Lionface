@@ -133,33 +133,40 @@ LionFace.Pages.prototype = {
 
         /** update button */
         $(document).on('click','#postboxbutton',function(e) {
+            create_message();
             e.preventDefault();     
             var url = "/pages/update/";
+            var rating = false;
             if ($(this).hasClass('feedback_post')) {
                 url = "/pages/feedback/";
-                var rating = get_int($('.final_review').attr('id'));
+                rating = get_int($('.final_review').attr('id'));
             }
             var content = $('.postbox_textarea').val();
-            if (content) {
-                make_request({
-                    url:url,
-                    data: {
-                        'page_id': LionFace.User.page_id,
-                        'content': content,
-                        'rating': rating,
-                    },
-                    callback:function(data) {
-                        if (data.status == 'OK') {
-                            $('.postbox_textarea').val('');
-                            if (rating) {
-                                self_class.load_feedback_feed();
-                            }
-                            else {
-                                self_class.load_page_feed();
+            if (rating) {
+                if (content) {
+                    make_request({
+                        url:url,
+                        data: {
+                            'page_id': LionFace.User.page_id,
+                            'content': content,
+                            'rating': rating,
+                        },
+                        callback:function(data) {
+                            if (data.status == 'OK') {
+                                $('.postbox_textarea').val('');
+                                if (rating) {
+                                    self_class.load_feedback_feed();
+                                }
+                                else {
+                                    self_class.load_page_feed();
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
+            }
+            else {
+                create_message('Please, provide a valid rating.','error');
             }
         });
 
@@ -445,19 +452,42 @@ LionFace.Pages.prototype = {
             var self = $(this);
             if (self.hasClass('agrees')) {
                 var count = self.siblings('.feedback_agreed_count');
+                var new_label = 'Agreed';
+                var old_label = 'Agree';
+                var sibling = self.siblings('.disagrees');
+                var sibling_count = self.siblings('.feedback_disagreed_count');
             }
             else {
                 var count = self.siblings('.feedback_disagreed_count');
+                var new_label = 'Disagreed';
+                var old_label = 'Disagree';
+                var sibling = self.siblings('.agrees');
+                var sibling_count = self.siblings('.feedback_agreed_count');
             }
             var value = parseInt(count.html());
             make_request({
                 url:url,
                 callback: function(data) {
                     if (data.status == 'OK') {
+                        self.html(new_label);
+                        sibling.hide();
+                        sibling_count.hide();
                         value = value + 1;
                         count.html(value);
                         if (value == 1) {
                             count.show();
+                        }
+                    }
+                    if (data.status == 'change') {
+                        sibling.show();
+                        if (parseInt(sibling_count.html())) {
+                            sibling_count.show();
+                        }
+                        self.html(old_label);
+                        value = value - 1;
+                        count.html(value);
+                        if (!value) {
+                            count.hide();
                         }
                     }
                 }

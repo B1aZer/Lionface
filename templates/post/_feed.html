@@ -43,11 +43,23 @@
                 <span style="color: transparent;"> - | - </span>
             </span>
             {% if item.get_type == 'feedback post' %}
+            {% if request.user in item.get_agreed_list %}
+            <a href="{% url pages.views.count_agrees item_id=item.id %}" class="feedback_opinion agrees" style="color: #555; padding: 2px;">Agreed</a>
+            {% elif request.user in item.get_disagreed_list %}
+            <a href="{% url pages.views.count_agrees item_id=item.id %}" class="feedback_opinion agrees" style="color: #555; padding: 2px; display:none;">Agree</a>
+            {% else %}
             <a href="{% url pages.views.count_agrees item_id=item.id %}" class="feedback_opinion agrees" style="color: #555; padding: 2px;">Agree</a>
-            <span class="feedback_agreed_count" {% if not item.get_agreed %} style="display:none" {% endif %}>{{ item.get_agreed }}</span>
-            <span style="color: transparent;"> -- </span>
+            {% endif %}
+            <span class="feedback_agreed_count" {% if not item.get_agreed or request.user in item.get_disagreed_list %} style="display:none;" {% endif %}>{{ item.get_agreed }}</span>
+            <span style="color: transparent; {% if request.user in item.get_disagreed_list %} display:none; {% endif %}"> -- </span>
+            {% if request.user in item.get_disagreed_list %}
+            <a href="{% url pages.views.count_disagrees item_id=item.id %}" class="feedback_opinion disagrees" style="color: #555; padding: 2px;">Disagreed</a>
+            {% elif request.user in item.get_agreed_list %}
+            <a href="{% url pages.views.count_disagrees item_id=item.id %}" class="feedback_opinion disagrees" style="color: #555; padding: 2px; display:none;">Disagree</a>
+            {% else %}
             <a href="{% url pages.views.count_disagrees item_id=item.id %}" class="feedback_opinion disagrees" style="color: #555; padding: 2px;">Disagree</a>
-            <span class="feedback_disagreed_count" {% if not item.get_disagreed %} style="display:none" {% endif %}>{{ item.get_disagreed }}</span>
+            {% endif %}
+            <span class="feedback_disagreed_count" {% if not item.get_disagreed or request.user in item.get_agreed_list %} style="display:none;" {% endif %}>{{ item.get_disagreed }}</span>
             {% endif %}
             {% if news_feed and item.user|has_friend:request.user and not request.user|in_hidden:item.user %}
             <a href="#" class="hide_feed">Hide Feed</a>

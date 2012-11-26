@@ -1206,11 +1206,14 @@ def count_agrees(request, item_id):
         post = FeedbackPost.objects.get(id=item_id)
     except FeedbackPost.DoesNotExist:
         raise Http404
-    if request.user not in post.get_voted():
-        post.agrees += 1
-        post.voted.add(request.user)
+    if request.user not in post.get_agreed_list():
+        #post.agrees += 1
+        post.agreed.add(request.user)
         post.save()
         data['status'] = 'OK'
+    else:
+        post.agreed.remove(request.user)
+        data['status'] = 'change'
     return HttpResponse(json.dumps(data), "application/json")
 
 
@@ -1220,10 +1223,13 @@ def count_disagrees(request, item_id):
         post = FeedbackPost.objects.get(id=item_id)
     except FeedbackPost.DoesNotExist:
         raise Http404
-    if request.user not in post.get_voted():
-        post.disagrees += 1
-        post.voted.add(request.user)
+    if request.user not in post.get_disagreed_list():
+        #post.disagrees += 1
+        post.disagreed.add(request.user)
         post.save()
         data['status'] = 'OK'
+    else:
+        post.disagreed.remove(request.user)
+        data['status'] = 'change'
     return HttpResponse(json.dumps(data), "application/json")
 
