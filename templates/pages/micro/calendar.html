@@ -4,6 +4,10 @@
 <script>
 $(document).ready(function(){
 
+        $("#time1, #time2").timePicker({
+            show24Hours: false,
+            });
+
         function create_dialog(date) {
             var month = parseInt(date.getMonth())+1;
             $('#when').val(date.getDate() + '/' + month + '/' + date.getFullYear());
@@ -21,7 +25,23 @@ $(document).ready(function(){
 		var y = date.getFullYear();
 		
 		$('#calendar_micro').fullCalendar({
+            allDayDefault: false,
+            header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+                
 			editable: true,
+
+            /*
+            {
+					allDay: false,
+					title: 'Lunch',
+					end: '2012-11-27 16:30:00',
+					start: '2012-11-27 14:30:00',
+				},    
+            */
 
 			events: {
                 url: '{% url pages.views.get_events slug=page.username %}',
@@ -37,36 +57,137 @@ $(document).ready(function(){
                 //console.log(view);
                 console.log(date);
                 create_dialog(date);
+            },
+            eventClick: function(calEvent, jsEvent, view) {
+
+                    $("#show_title").html('');
+                    $("#show_date").html('');
+                    $("#show_date_end").html('');
+                    $("#show_description").html('');
+
+                    $("#show_title").html(calEvent.title);
+                    $("#show_date").html($.fullCalendar.formatDate( calEvent.start, 'ddd, MMMM dd hh:mm'));
+                    if (calEvent.end) {
+                        $("#show_date_end").html($.fullCalendar.formatDate( calEvent.end, 'ddd, MMMM dd hh:mm'));
+                    }
+                    if (calEvent.description) {
+                        $("#show_description").html(calEvent.description);
+                        console.log(calEvent.description);
+                    }
+                    $("#show-event-form").dialog( "open" );
+
+            },
+            eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+
+                    var url = '{% url pages.views.change_event slug=page.username %}';
+                    var data = {
+                            'id':event.id,
+                            'name':event.title,
+                            'allday':allDay
+                        }
+                    if (event.start) {
+                        data['start'] = $.fullCalendar.formatDate( event.start, 'u');
+                    }
+                    if (event.end) {
+                        data['end'] = $.fullCalendar.formatDate( event.end, 'u');
+                    }
+                    if (event.description) {
+                        data['desc'] = event.description;
+                    }
+
+                    make_request({
+                        url:url,
+                        data:data ,
+                        callback: function(data) {
+                            if (data.status == 'OK') {
+                            }
+                            else {
+                                revertFunc();
+                            }
+                        }
+                    });
+
+            },
+            eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
+
+                    if (!confirm("is this okay?")) {
+                        revertFunc();
+                    }
+
             }
+                       
                 
 		});
 
         $("#add-event-form").dialog({
             autoOpen: false,
             modal: true,
+            width: 500,
             buttons: {
                 'Add Event': function() {
 
                     var what = jQuery.trim($("#what").val());
                     var when = jQuery.trim($("#when").val());
+                    var allday = $("#allday").prop('checked');
+                    var desc = jQuery.trim($("#desc").val());
+                    var time1 = jQuery.trim($("#time1").val());
+                    var time2 = jQuery.trim($("#time2").val());
                 
                     if(what == ""){
                         alert("Please enter a short event description into the \"what\" field.");
                     }else{
                         var reggie = /(\d+)\/(\d+)\/(\d+)/;
                         var dateArray = reggie.exec(when); 
-                        var month = dateArray[2]-1 
-                        var event_date = new Date(dateArray[3], month, dateArray[1]);
+                        var month = dateArray[2]-1;
+                        var year = dateArray[3];
+                        var day = dateArray[1];
+                        var event_date = new Date(year, month, day);
+                        if (time1) {
+                            var regh = /(\d+):/
+                            var arrh = regh.exec(time1); 
+                            var hour = parseInt(arrh[1]);
+                            if (time1.indexOf('PM') !== -1 ) {
+                                hour = hour + 12;
+                            }
+
+                            var regm = /:(\d+)/
+                            var arrm = regm.exec(time1); 
+                            var mins = parseInt(arrm[1]);
+
+                            event_date = new Date(year, month, day, hour, mins);
+                        }
                         var url = '{% url pages.views.add_events slug=page.username %}';
+                        var evento = { title: what, start: event_date, allDay: false }
+                        if (time2) {
+                            var regh = /(\d+):/
+                            var arrh = regh.exec(time2); 
+                            var hour = parseInt(arrh[1]);
+                            if (time2.indexOf('PM') !== -1 ) {
+                                hour = hour + 12;
+                            }
+
+                            var regm = /:(\d+)/
+                            var arrm = regm.exec(time2); 
+                            var mins = parseInt(arrm[1]);
+
+                            var event_end = new Date(year, month, day, hour, mins);
+                            console.log('end:' + event_end)
+                            evento['end'] = event_end;
+                        }
+
                         make_request({
                             url:url,
                             data:{
                                 'name':what,
                                 'date':when,
+                                'allday':allday,
+                                'desc':desc,
+                                'time1':time1,
+                                'time2':time2,
                             },
                             callback: function(data) {
                                 if (data.status == 'OK') {
-                                    $('#calendar_micro').fullCalendar('renderEvent', { title: what, start: event_date, allDay: true }, true );
+                                    $('#calendar_micro').fullCalendar('renderEvent', evento, true );
                                 }
                             }
                         });
@@ -78,7 +199,7 @@ $(document).ready(function(){
                     }
                     
                 },
-                Cancel: function() {
+                'Cancel': function() {
                     $(this).dialog('close');
                 }
             },
@@ -86,20 +207,40 @@ $(document).ready(function(){
             },
             close: function() {
             }
-        });             
+        }); 
+
+        $("#show-event-form").dialog({
+            autoOpen: false,
+            width: 350,
+            modal: true, 
+            buttons: {
+                'Ok': function() {
+                    $(this).dialog('close');
+                } 
+            }
+
+        });
+
+        /** show time */
+        $(document).on('change','#allday',function() {
+            if ($(this).prop('checked')) {
+                $('#choose_time').hide();
+                $("#time1, #time2").val('');
+            }
+            else {
+                $('#choose_time').show();
+            }
+        });
 });
 </script>
 
+    <!--/////////CSS/////////-->
+
 <style>
         label, input { display:block; }
-        input.text { margin-bottom:12px; width:95%; padding: .4em; }
+        input.text { margin-bottom:12px; padding: .4em; }
         fieldset { padding:0; border:0; margin-top:25px; }
-        h1 { font-size: 1.2em; margin: .6em 0; }
-        div#users-contain { width: 350px; margin: 20px 0; }
-        div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
-        div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
         .ui-dialog .ui-state-error { padding: .3em; }
-        .validateTips { border: 1px solid transparent; padding: 0.3em; }
 </style>
 
 
@@ -110,7 +251,6 @@ $(document).ready(function(){
 <div id='calendar_micro'></div>
 
 <div id="add-event-form" title="Add New Event">
-    <p class="validateTips">All form fields are required.</p>
     <form>
     <fieldset>
         <table style="width:100%; padding:5px;">
@@ -119,7 +259,7 @@ $(document).ready(function(){
                     <label for="name">When:</label>
                 </td>
                 <td>
-                    <input type="text" name="when" id="when" class="text ui-widget-content ui-corner-all" style="margin-bottom:12px; width:95%; padding: .4em;"/>
+                    <input type="text" name="when" id="when" class="text ui-widget-content ui-corner-all" />
                 </td>
             </tr>
             <tr>
@@ -127,11 +267,71 @@ $(document).ready(function(){
                     <label for="name">What:</label>
                 </td>
                 <td>
-                    <input type="text" name="what" id="what" class="text ui-widget-content ui-corner-all" style="margin-bottom:12px; width:95%; padding: .4em;"/>
+                    <input type="text" name="what" id="what" class="text ui-widget-content ui-corner-all" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="desc">Desc:</label>
+                </td>
+                <td>
+                    <textarea type="text" name="desc" id="desc" class="text ui-widget-content ui-corner-all" style="margin: 0px; width: 192px; height: 30px;" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="allday">All day</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="allday" id="allday" checked="checked">
+                </td>
+            </tr>
+            <tr id="choose_time" style="display:none">
+                <td>
+                    <label>Time:</label>
+                </td>
+                <td>
+                    <input type="text" id="time1" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF"> 
+                </td>
+                <td>
+                    <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF"> 
                 </td>
             </tr>
         </table>
     </fieldset>
     </form>
+</div>
+
+<div id="show-event-form" title="Event Information">
+    <table>
+        <tr>
+            <td>
+                Title:
+            </td>
+            <td id="show_title">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Date:
+            </td>
+            <td id="show_date">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                End:
+            </td>
+            <td id="show_date_end">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Description:
+            </td>
+            <td id="show_description">
+            </td>
+        </tr>
+    </table>
 </div>
 

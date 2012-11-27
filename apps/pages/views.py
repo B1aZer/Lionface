@@ -10,6 +10,7 @@ from .forms import *
 from .models import *
 from post.models import PagePost, FeedbackPost
 from tags.models import Tag
+from agenda.models import Events
 from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -17,6 +18,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as pilImage
 from StringIO import StringIO
 import base64
+import dateutil.parser
 from datetime import datetime
 
 from django.contrib import messages
@@ -1242,10 +1244,25 @@ def add_events(request, slug):
         raise Http404
     name = request.POST.get('name',None)
     date = request.POST.get('date',None)
+    allday = request.POST.get('allday',None)
+    desc = request.POST.get('desc',None)
+    time1 = request.POST.get('time1',None)
+    time2 = request.POST.get('time2',None)
     if date:
-        date = datetime.strptime(date, "%d/%m/%Y")
+        date_beg = datetime.strptime(date, "%d/%m/%Y")
         if name:
-            page.events_set.create(name=name,date=date)
+            event = Events(page=page)
+            event.name=name
+            event.date=date_beg
+            if time1:
+                time1 = datetime.strptime(date + ' ' + time1, "%d/%m/%Y %I:%M %p")
+                event.date=time1
+            if time2:
+                time2 = datetime.strptime(date + ' ' + time2, "%d/%m/%Y %I:%M %p")
+                event.date_end=time2
+            if desc:
+                event.description=desc
+            event.save()
             data['status']='OK'
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -1255,8 +1272,44 @@ def get_events(request, slug):
     except Pages.DoesNotExist:
         raise Http404
     events = page.events_set.all()
-    data = [{'id':event.id,
-            'title':event.name,
-            'start':event.date.strftime("%Y-%m-%d"),
-            } for event in events]
+    data = []
+    for event in events:
+        ev = {
+                'id':event.id,
+                'title':event.name,
+                'start':event.date.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+        if event.date_end:
+            ev['end'] = event.date_end.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            ev['allDay'] = 'true'
+        if event.description:
+            ev['description'] = event.description
+        data.append(ev)
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def change_event(request, slug):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    event_id = request.POST.get('id',None)
+    start = request.POST.get('start',None)
+    end = request.POST.get('end',None)
+    try:
+        event = page.events_set.get(id=event_id)
+    except Events.DoesNotExist:
+        raise Http404
+    if start:
+        start = dateutil.parser.parse(start)
+        event.date = start
+        event.save()
+        data['status']='OK'
+    if end:
+        end = dateutil.parser.parse(end)
+        event.date_end = end
+        event.save()
+        data['status']='OK'
     return HttpResponse(json.dumps(data), "application/json")

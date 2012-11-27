@@ -264,6 +264,12 @@ MEDIA_BUNDLES = (
     ('fullcalendar.js',
         'js/fullcalendar.min.js',
     ),
+    ('timePicker.css',
+        'css/timePicker.css',
+    ),
+    ('timePicker.js',
+        'js/jquery.timePicker.min.js',
+    ),
 )
 
 HAYSTACK_SITECONF = 'search_sites'
