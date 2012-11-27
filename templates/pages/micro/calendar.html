@@ -3,53 +3,135 @@
 
 <script>
 $(document).ready(function(){
-         var date = new Date();
+
+        function create_dialog(date) {
+            var month = parseInt(date.getMonth())+1;
+            $('#when').val(date.getDate() + '/' + month + '/' + date.getFullYear());
+            //$('#when').val($.fullCalendar.formatDate( date, 'ddd, MMMM dd'));
+            console.log(date);
+            
+            $("#when").prop("disabled", true);
+            $( "#add-event-form" ).dialog( "open" );
+        }
+
+
+        var date = new Date();
 		var d = date.getDate();
 		var m = date.getMonth();
 		var y = date.getFullYear();
-        var calendar = $('#calendar_micro');
 		
 		$('#calendar_micro').fullCalendar({
 			editable: true,
-			events: [
-				{
-					title: 'All Day Event',
-					start: new Date(y, m, 1)
-				},
-				{
-					title: 'Long Event',
-					start: new Date(y, m, d-5),
-					end: new Date(y, m, d-2)
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: new Date(y, m, d-3, 16, 0),
-					allDay: false
-				},
-				{
-					title: 'Birthday Party',
-					start: new Date(y, m, d+1, 19, 0),
-					end: new Date(y, m, d+1, 22, 30),
-					allDay: false
-				},
-				{
-					title: 'Click for Google',
-					start: new Date(y, m, 28),
-					end: new Date(y, m, 29),
-					url: 'http://google.com/'
-				}
-			],
+
+			events: {
+                url: '{% url pages.views.get_events slug=page.username %}',
+                type: 'GET',
+                error: function() {
+                    alert('there was an error while fetching events!');
+                },
+            },
             dayClick: function(date, allDay, jsEvent, view) {
-                calendar.fullCalendar('renderEvent', { title: 'YOUR TITLE', start: date, allDay: true }, true );
+                //calendar.fullCalendar('renderEvent', { title: 'YOUR TITLE', start: date, allDay: true }, true );
+                //console.log(allDay);
+                //console.log(jsEvent);
+                //console.log(view);
+                console.log(date);
+                create_dialog(date);
             }
                 
-		});    
+		});
+
+        $("#add-event-form").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                'Add Event': function() {
+
+                    var what = jQuery.trim($("#what").val());
+                    var when = jQuery.trim($("#when").val());
+                
+                    if(what == ""){
+                        alert("Please enter a short event description into the \"what\" field.");
+                    }else{
+                        var reggie = /(\d+)\/(\d+)\/(\d+)/;
+                        var dateArray = reggie.exec(when); 
+                        var month = dateArray[2]-1 
+                        var event_date = new Date(dateArray[3], month, dateArray[1]);
+                        var url = '{% url pages.views.add_events slug=page.username %}';
+                        make_request({
+                            url:url,
+                            data:{
+                                'name':what,
+                                'date':when,
+                            },
+                            callback: function(data) {
+                                if (data.status == 'OK') {
+                                    $('#calendar_micro').fullCalendar('renderEvent', { title: what, start: event_date, allDay: true }, true );
+                                }
+                            }
+                        });
+
+                        $(this).dialog('close');
+                        $("#what").val('');
+                        $("#when").val('');
+
+                    }
+                    
+                },
+                Cancel: function() {
+                    $(this).dialog('close');
+                }
+            },
+            open: function(event, ui){
+            },
+            close: function() {
+            }
+        });             
 });
 </script>
+
+<style>
+        label, input { display:block; }
+        input.text { margin-bottom:12px; width:95%; padding: .4em; }
+        fieldset { padding:0; border:0; margin-top:25px; }
+        h1 { font-size: 1.2em; margin: .6em 0; }
+        div#users-contain { width: 350px; margin: 20px 0; }
+        div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+        div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+        .ui-dialog .ui-state-error { padding: .3em; }
+        .validateTips { border: 1px solid transparent; padding: 0.3em; }
+</style>
+
 
 {% if request.user|check_pages_calendar:page %}
 <label for="update_post">Automatically post an Update 24 hours before any event.</label>
 <input type="checkbox" name="update_post" id="update_post">
 {% endif %}
 <div id='calendar_micro'></div>
+
+<div id="add-event-form" title="Add New Event">
+    <p class="validateTips">All form fields are required.</p>
+    <form>
+    <fieldset>
+        <table style="width:100%; padding:5px;">
+            <tr>
+                <td>
+                    <label for="name">When:</label>
+                </td>
+                <td>
+                    <input type="text" name="when" id="when" class="text ui-widget-content ui-corner-all" style="margin-bottom:12px; width:95%; padding: .4em;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name">What:</label>
+                </td>
+                <td>
+                    <input type="text" name="what" id="what" class="text ui-widget-content ui-corner-all" style="margin-bottom:12px; width:95%; padding: .4em;"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    </form>
+</div>
+

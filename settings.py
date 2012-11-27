@@ -149,6 +149,7 @@ INSTALLED_APPS = (
     'oembed',
     'degrees',
     'pages',
+    'agenda',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -1233,3 +1233,30 @@ def count_disagrees(request, item_id):
         data['status'] = 'change'
     return HttpResponse(json.dumps(data), "application/json")
 
+
+def add_events(request, slug):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    name = request.POST.get('name',None)
+    date = request.POST.get('date',None)
+    if date:
+        date = datetime.strptime(date, "%d/%m/%Y")
+        if name:
+            page.events_set.create(name=name,date=date)
+            data['status']='OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+def get_events(request, slug):
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    events = page.events_set.all()
+    data = [{'id':event.id,
+            'title':event.name,
+            'start':event.date.strftime("%Y-%m-%d"),
+            } for event in events]
+    return HttpResponse(json.dumps(data), "application/json")
