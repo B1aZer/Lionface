@@ -227,6 +227,9 @@ class FeedbackPost(Post):
     def get_post(self):
         return self.post_ptr
 
+    def get_type(self):
+        return self._meta.verbose_name
+
     def get_owner(self):
         return self.user
 
@@ -285,6 +288,9 @@ class PagePost(Post):
 
     def get_page_type(self):
         return self.page.type
+
+    def get_type(self):
+        return self._meta.verbose_name
 
     @property
     def timestamp(self):

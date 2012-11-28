@@ -142,7 +142,7 @@ LionFace.Pages.prototype = {
                 rating = get_int($('.final_review').attr('id'));
             }
             var content = $('.postbox_textarea').val();
-            if (rating) {
+            if (rating || !$(this).hasClass('feedback_post')) {
                 if (content) {
                     make_request({
                         url:url,

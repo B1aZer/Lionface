@@ -294,6 +294,30 @@ $(document).ready(function(){
             });
         });
 
+        /** show map */
+        $(document).on('change','#showmap',function() {
+            var value = $(this).prop('checked');
+            if (value) {
+                $('#map_td').show();
+                initialize();
+            }
+            else {
+                $('#map_td').hide();
+            }
+        });
+
+        /** google maps */
+        function initialize() {
+            var mapOptions = {
+              center: new google.maps.LatLng(-34.397, 150.644),
+              zoom: 8,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map_canvas"),
+                mapOptions);
+        }
+        
+
 });
 </script>
 
@@ -352,7 +376,15 @@ $(document).ready(function(){
                     <input type="checkbox" name="allday" id="allday" checked="checked">
                 </td>
             </tr>
-            <tr id="choose_time" style="display:none">
+            <tr>
+                <td>
+                    <label for="allday">Show map</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="showmap" id="showmap">
+                </td>
+            </tr>
+            <tr id="choose_time" style="display:none;">
                 <td>
                     <label>Time:</label>
                 </td>
@@ -361,6 +393,11 @@ $(document).ready(function(){
                 </td>
                 <td>
                     <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"> 
+                </td>
+            </tr>
+            <tr id="map_td" style="display:none;" >
+                <td colspan="3" style="height: 200px;">
+                    <div id="map_canvas" style="width:100%; height:100%"></div>
                 </td>
             </tr>
         </table>
