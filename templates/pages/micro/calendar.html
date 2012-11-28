@@ -308,11 +308,16 @@ $(document).ready(function(){
 
 
 {% if request.user|check_pages_calendar:page %}
-<label for="update_post">Automatically post an Update 24 hours before any event.</label>
+<div style="padding: 10px 10px 8px 10px;">
+<table width="100%"><tr><td width="20" align="left" valign="middle">
 <input type="checkbox" name="update_post" id="update_post"
     {% if page.update_option %}
         checked="checked"
-    {% endif %}>
+    {% endif %} style="position: relative; top: -2px;">
+</td><td align="left" valign="middle">
+<label for="update_post">Automatically post an <span style="color: #A70;">Update</span> 24 hours before any event.</label>
+</td></tr></table>
+</div>
 {% endif %}
 <div id='calendar_micro'></div>
 
