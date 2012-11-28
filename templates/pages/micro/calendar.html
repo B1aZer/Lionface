@@ -1,6 +1,5 @@
 {% load media format_results %}
 
-
 <script>
 $(document).ready(function(){
 
@@ -18,11 +17,81 @@ $(document).ready(function(){
             $( "#add-event-form" ).dialog( "open" );
         }
 
+        function change_event(event, change, callback) {
+            if (!event) {
+                return;
+            }
+            var change = change || false;
+            var callback = callback || false;
+            if (change) {
+                var url = '{% url pages.views.change_event slug=page.username %}';
+            }
+            else {
+                var url = '{% url pages.views.add_events slug=page.username %}';
+            }
+            var evento = {
+                        'name':event.title,
+                        'allday':event.allDay,
+            }
+            if (event.start) {
+                evento['start'] = $.fullCalendar.formatDate( event.start, 'u');
+            }
+            if (event.end) {
+                evento['end'] = $.fullCalendar.formatDate( event.end, 'u');
+            }
+            if (event.description) {
+                evento['desc'] = event.description;
+            }
+            if (event.id) {
+                evento['id'] = event.id;
+            }
+            if (change == 'delete') {
+                evento['del'] = true;
+            }
+            make_request({
+                url:url,
+                data:evento,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        if (!change) {
+                            console.log('creating');
+                            $('#calendar_micro').fullCalendar('renderEvent', event );
+                        }
+                        if (data.id) {
+                            console.log('iding');
+                            event.id = data.id;
+                        }
+                        if (change == 'delete') {
+                            console.log('deleting:' + event.id );
+                            $('#calendar_micro').fullCalendar( 'removeEvents' , event.id );
+                            /* strange bug, event wont disappear after creating */
+                            $('#calendar_micro').fullCalendar( 'refetchEvents' );
+                        }
+                    }
+                    else {
+                        if (callback) {
+                            callback();
+                        }
+                    }
+                }
+            });
+        }
 
         var date = new Date();
 		var d = date.getDate();
 		var m = date.getMonth();
 		var y = date.getFullYear();
+
+        /**
+        console.log(clicked_event);
+        var clicked_event = {};
+        console.log('clicked');
+        console.log(clicked_event);
+        */
+
+
+        //permission
+        var editable = LionFace.User.options['pages_calendar__'+LionFace.User.page_id];
 		
 		$('#calendar_micro').fullCalendar({
             allDayDefault: false,
@@ -31,9 +100,7 @@ $(document).ready(function(){
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
 			},
-                
-			editable: true,
-
+			editable: editable,
             /*
             {
 					allDay: false,
@@ -42,7 +109,6 @@ $(document).ready(function(){
 					start: '2012-11-27 14:30:00',
 				},    
             */
-
 			events: {
                 url: '{% url pages.views.get_events slug=page.username %}',
                 type: 'GET',
@@ -51,12 +117,9 @@ $(document).ready(function(){
                 },
             },
             dayClick: function(date, allDay, jsEvent, view) {
-                //calendar.fullCalendar('renderEvent', { title: 'YOUR TITLE', start: date, allDay: true }, true );
-                //console.log(allDay);
-                //console.log(jsEvent);
-                //console.log(view);
-                console.log(date);
-                create_dialog(date);
+                if (LionFace.User.options['pages_calendar__'+LionFace.User.page_id]) {
+                    create_dialog(date);
+                }
             },
             eventClick: function(calEvent, jsEvent, view) {
 
@@ -66,53 +129,44 @@ $(document).ready(function(){
                     $("#show_description").html('');
 
                     $("#show_title").html(calEvent.title);
-                    $("#show_date").html($.fullCalendar.formatDate( calEvent.start, 'ddd, MMMM dd hh:mm'));
+                    $("#show_date").html($.fullCalendar.formatDate( calEvent.start, 'ddd, MMMM dd hh:mm TT'));
                     if (calEvent.end) {
-                        $("#show_date_end").html($.fullCalendar.formatDate( calEvent.end, 'ddd, MMMM dd hh:mm'));
+                        $("#show_date_end").html($.fullCalendar.formatDate( calEvent.end, 'ddd, MMMM dd hh:mm TT'));
                     }
                     if (calEvent.description) {
                         $("#show_description").html(calEvent.description);
-                        console.log(calEvent.description);
                     }
                     $("#show-event-form").dialog( "open" );
+                    //clicked_event['id'] = calEvent.id; 
+                    $("#show-event-form").data('eventObj',calEvent);
 
             },
             eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
-
-                    var url = '{% url pages.views.change_event slug=page.username %}';
-                    var data = {
-                            'id':event.id,
-                            'name':event.title,
-                            'allday':allDay
-                        }
-                    if (event.start) {
-                        data['start'] = $.fullCalendar.formatDate( event.start, 'u');
-                    }
-                    if (event.end) {
-                        data['end'] = $.fullCalendar.formatDate( event.end, 'u');
-                    }
-                    if (event.description) {
-                        data['desc'] = event.description;
-                    }
-
-                    make_request({
-                        url:url,
-                        data:data ,
-                        callback: function(data) {
-                            if (data.status == 'OK') {
-                            }
-                            else {
-                                revertFunc();
-                            }
-                        }
-                    });
-
+                change_event(event,true,revertFunc);
             },
             eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
+                if (dayDelta > 0) {
+                    var d = event.start.getDate();
+                    var m = event.start.getMonth();
+                    var y = event.start.getFullYear();
+                    var H = event.start.getHours();
+                    var M = event.start.getMinutes()
+                    var He = event.end.getHours();
+                    var Me = event.end.getMinutes()
+                    for (var i=1; i<= dayDelta; i++) {
+                        var new_event = { title: event.title, 
+                                            start:new Date(y, m, d+i, H, M), 
+                                            end: new Date(y, m, d+i, He, Me), 
+                                            allDay: event.allDay }
 
-                    if (!confirm("is this okay?")) {
-                        revertFunc();
+                        change_event(new_event);
                     }
+                    revertFunc();
+                    
+                }
+                else {
+                    change_event(event,true,revertFunc);
+                }
 
             }
                        
@@ -142,6 +196,7 @@ $(document).ready(function(){
                         var year = dateArray[3];
                         var day = dateArray[1];
                         var event_date = new Date(year, month, day);
+                        var event_end = '';
                         if (time1) {
                             var regh = /(\d+):/
                             var arrh = regh.exec(time1); 
@@ -156,8 +211,7 @@ $(document).ready(function(){
 
                             event_date = new Date(year, month, day, hour, mins);
                         }
-                        var url = '{% url pages.views.add_events slug=page.username %}';
-                        var evento = { title: what, start: event_date, allDay: false }
+                        var evento = { title: what, start: event_date, allDay: allday }
                         if (time2) {
                             var regh = /(\d+):/
                             var arrh = regh.exec(time2); 
@@ -171,30 +225,20 @@ $(document).ready(function(){
                             var mins = parseInt(arrm[1]);
 
                             var event_end = new Date(year, month, day, hour, mins);
-                            console.log('end:' + event_end)
                             evento['end'] = event_end;
                         }
 
-                        make_request({
-                            url:url,
-                            data:{
-                                'name':what,
-                                'date':when,
-                                'allday':allday,
-                                'desc':desc,
-                                'time1':time1,
-                                'time2':time2,
-                            },
-                            callback: function(data) {
-                                if (data.status == 'OK') {
-                                    $('#calendar_micro').fullCalendar('renderEvent', evento, true );
-                                }
-                            }
-                        });
+                        change_event(evento);
 
                         $(this).dialog('close');
                         $("#what").val('');
                         $("#when").val('');
+                        $("#desc").val('');
+
+                        $("#time1").val('');
+                        $("#time2").val('');
+                        $("#allday").prop('checked',true);
+                        $('#choose_time').hide();
 
                     }
                     
@@ -214,6 +258,10 @@ $(document).ready(function(){
             width: 350,
             modal: true, 
             buttons: {
+                'Delete': function() {
+                    change_event($(this).data('eventObj'),'delete');
+                    $(this).dialog('close');
+                }, 
                 'Ok': function() {
                     $(this).dialog('close');
                 } 
@@ -231,6 +279,21 @@ $(document).ready(function(){
                 $('#choose_time').show();
             }
         });
+
+        /** update posts option */
+        $(document).on('change','#update_post',function() {
+            var url = '{% url pages.views.post_update_change slug=page.username %}';
+            var value = $(this).prop('checked');
+            make_request({
+                url:url,
+                data:{
+                    'value':value,
+                },
+                callback: function() {
+                }
+            });
+        });
+
 });
 </script>
 
@@ -246,7 +309,10 @@ $(document).ready(function(){
 
 {% if request.user|check_pages_calendar:page %}
 <label for="update_post">Automatically post an Update 24 hours before any event.</label>
-<input type="checkbox" name="update_post" id="update_post">
+<input type="checkbox" name="update_post" id="update_post"
+    {% if page.update_option %}
+        checked="checked"
+    {% endif %}>
 {% endif %}
 <div id='calendar_micro'></div>
 
@@ -291,10 +357,10 @@ $(document).ready(function(){
                     <label>Time:</label>
                 </td>
                 <td>
-                    <input type="text" id="time1" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF"> 
+                    <input type="text" id="time1" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"> 
                 </td>
                 <td>
-                    <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF"> 
+                    <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"> 
                 </td>
             </tr>
         </table>

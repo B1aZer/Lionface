@@ -72,6 +72,7 @@ class Pages(models.Model):
     has_volunteers = models.BooleanField(default=True)
     text_volunteers = models.TextField(blank=True)
     members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
+    post_update = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Page"
@@ -304,6 +305,9 @@ class Pages(models.Model):
             overall_rating = overall_rating * 1.0 /rating_count
         overall_rating = "{0:.1f}".format(overall_rating)
         return overall_rating
+
+    def update_option(self):
+        return self.post_update
 
     @models.permalink
     def get_absolute_url(self):

@@ -1243,27 +1243,24 @@ def add_events(request, slug):
     except Pages.DoesNotExist:
         raise Http404
     name = request.POST.get('name',None)
-    date = request.POST.get('date',None)
+    date = request.POST.get('start',None)
     allday = request.POST.get('allday',None)
     desc = request.POST.get('desc',None)
-    time1 = request.POST.get('time1',None)
-    time2 = request.POST.get('time2',None)
+    end = request.POST.get('end',None)
     if date:
-        date_beg = datetime.strptime(date, "%d/%m/%Y")
+        date_beg = dateutil.parser.parse(date)
         if name:
             event = Events(page=page)
             event.name=name
             event.date=date_beg
-            if time1:
-                time1 = datetime.strptime(date + ' ' + time1, "%d/%m/%Y %I:%M %p")
-                event.date=time1
-            if time2:
-                time2 = datetime.strptime(date + ' ' + time2, "%d/%m/%Y %I:%M %p")
-                event.date_end=time2
+            if end and allday != 'true':
+                time1 = dateutil.parser.parse(end)
+                event.date_end=time1
             if desc:
                 event.description=desc
             event.save()
             data['status']='OK'
+            data['id']=event.id
     return HttpResponse(json.dumps(data), "application/json")
 
 def get_events(request, slug):
@@ -1298,6 +1295,7 @@ def change_event(request, slug):
     event_id = request.POST.get('id',None)
     start = request.POST.get('start',None)
     end = request.POST.get('end',None)
+    delete = request.POST.get('del',None)
     try:
         event = page.events_set.get(id=event_id)
     except Events.DoesNotExist:
@@ -1312,4 +1310,23 @@ def change_event(request, slug):
         event.date_end = end
         event.save()
         data['status']='OK'
+    if delete:
+        event.delete()
+        data['status']='OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def post_update_change(request, slug):
+    data = {'status':'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    value = request.POST.get('value',None)
+    if value == 'true':
+        page.post_update = True
+        page.save()
+    if value == 'false':
+        page.post_update = False
+        page.save()
     return HttpResponse(json.dumps(data), "application/json")

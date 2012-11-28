@@ -10,6 +10,11 @@
     {% else %}
         LionFace.User.options['pages_community__'+{{ page.id }}] = false;
     {% endif %} 
+    {% if request.user|check_pages_calendar:page %}
+        LionFace.User.options['pages_calendar__'+{{ page.id }}] = true;
+    {% else %}
+        LionFace.User.options['pages_calendar__'+{{ page.id }}] = false;
+    {% endif %} 
 </script>
 
 <!--includes for calendar micro page-->
