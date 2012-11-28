@@ -80,6 +80,7 @@ a.filter:hover, a.sub_filter:hover {
 }
 
 
+
 a.filterON:link, a.filterON:active, a.filterON:visited { 
 	position: relative; 
 	display: block; 
@@ -628,7 +629,25 @@ a.profile_btn:hover {
 	margin: 5px;
 }
 
-.ui-state-default:before, .ui-state-default:after  
+.ui-datepicker-calendar .ui-state-default {
+	margin: 0;
+}
+
+.album_shadow:active {
+	-moz-box-shadow: 0 17px 8px -8px #777;
+	box-shadow: 0 17px 8px -8px #777;
+	background: #DDD;
+}
+
+.album_shadow {
+	position: relative;
+	margin: 0 4px;
+	padding: 4px 0px;
+	borde: 1px solid #DDD;
+	background: #EEE;
+}
+
+.album_shadow:before, .album_shadow:after  
 {  
     position: absolute;  
     width: 95px;  
@@ -647,7 +666,7 @@ a.profile_btn:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);  
     z-index: 1;  
 }  
-.ui-state-default:after  
+.album_shadow:after  
 {  
     right: auto;  
     left: 10px;  
@@ -666,16 +685,6 @@ a.profile_btn:hover {
 	border: 1px solid transparent;
 	background: transparent;
 	position: relative;
-}
-
-.ui-datepicker-calendar .ui-state-default {
-	margin: 0;
-}
-
-.ui-state-default:active {
-	-moz-box-shadow: 0 17px 8px -8px #777;
-	box-shadow: 0 17px 8px -8px #777;
-	background: #DDD;
 }
 
 .image_album:hover {
@@ -1743,7 +1752,8 @@ a.nav_notifications:hover {
 .auto_subtext { 
 	font-size: 8pt;
 	line-height: 8pt;
-	color: #CCC;
+	color: #777;
+	padding: 0 0 4px 0;
 }
 
 .result_related, .result_post, .result_search {
@@ -2120,14 +2130,7 @@ a.loved:hover {
 }
 
 .love_business {
-	background: #3ea8d2; /* Old browsers */
-	background: -moz-linear-gradient(top, #72dcea 0%, #3ea8d2 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#72dcea), color-stop(100%,#3ea8d2)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #72dcea 0%,#3ea8d2 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72dcea', endColorstr='#3ea8d2',GradientType=0 ); /* IE6-9 */
+	background: #2ab4ea;
 }
 
 .love_nonprofit {
@@ -2203,16 +2206,9 @@ a.business_btn:link, a.business_btn:active, a.business_btn:visited {
 {
 	color: #FFF;
 	text-decoration: none;
-	background: #3ea8d2; /* Old browsers */
-	background: -moz-linear-gradient(top, #72dcea 0%, #3ea8d2 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#72dcea), color-stop(100%,#3ea8d2)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #72dcea 0%,#3ea8d2 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72dcea', endColorstr='#3ea8d2',GradientType=0 ); /* IE6-9 */
-	-moz-box-shadow: inset 0 0px 10px -5px #777, inset 0 2px 4px -2px #777;
-	box-shadow: inset 0 0px 10px -5px #777, inset 0 2px 4px -2px #777; 
+	background: #2ab4ea;
+	-moz-box-shadow: inset 0 0px 10px -5px #777, inset 0 2px 4px -2px #999;
+	box-shadow: inset 0 0px 10px -5px #777, inset 0 2px 4px -2px #999; 
 
 }
 
@@ -2324,7 +2320,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 }
 
 .create_business {
-	color: #3ea8d2;
+	color: #2ab4ea;
 }
 
 .create_nonprofit {

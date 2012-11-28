@@ -1,6 +1,6 @@
 {% load format_results %}
 {% for row in rows %}
-<li class="ui-state-default" data-position="{{ row.rating }}" data-pk="{{ row.pk }}">
+<li class="album_shadow" data-position="{{ row.rating }}" data-pk="{{ row.pk }}">
     <div style="background: url('/{{ row.image.thumb_name }}') #FFF;" data-original-url="/{{ row.image.name }}" class="image_album">
         {% if manage_perm %}
         <div id="image_settings">
