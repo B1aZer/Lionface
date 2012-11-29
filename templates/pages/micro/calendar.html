@@ -3,6 +3,7 @@
 <script>
 $(document).ready(function(){
 
+
         $("#time1, #time2").timePicker({
             show24Hours: false,
             });
@@ -41,6 +42,9 @@ $(document).ready(function(){
             }
             if (event.description) {
                 evento['desc'] = event.description;
+            }
+            if (event.coords) {
+                evento['coords'] = JSON.stringify(event.coords);
             }
             if (event.id) {
                 evento['id'] = event.id;
@@ -136,7 +140,19 @@ $(document).ready(function(){
                     if (calEvent.description) {
                         $("#show_description").html(calEvent.description);
                     }
+                    if (calEvent.coords) {
+                        $('#show_location').show();
+                        GM2.deleteOverlays();
+                        for (i in calEvent.coords) {
+                            var newLatlng = new google.maps.LatLng(calEvent.coords[i].lat,calEvent.coords[i].lng);
+                            GM2.placeMarker(newLatlng, map2);
+                        }
+                    }
+                    else {
+                        $('#show_location').hide();
+                    }
                     $("#show-event-form").dialog( "open" );
+                    GM2.check_resize(map2);
                     //clicked_event['id'] = calEvent.id; 
                     $("#show-event-form").data('eventObj',calEvent);
 
@@ -228,6 +244,19 @@ $(document).ready(function(){
                             evento['end'] = event_end;
                         }
 
+                        /*locations*/
+                        var coords = [];
+                        if (GM1.markersArray.length) {
+                            for (i in GM1.markersArray) { 
+                                var coord = {
+                                    'lat':GM1.markersArray[i].getPosition().lat(),
+                                    'lng':GM1.markersArray[i].getPosition().lng(),
+                                }
+                                coords.push(coord);
+                            }
+                            evento['coords'] = coords;
+                        }
+
                         change_event(evento);
 
                         $(this).dialog('close');
@@ -255,7 +284,7 @@ $(document).ready(function(){
 
         $("#show-event-form").dialog({
             autoOpen: false,
-            width: 350,
+            width: 450,
             modal: true, 
             buttons: {
                 'Delete': function() {
@@ -298,24 +327,111 @@ $(document).ready(function(){
         $(document).on('change','#showmap',function() {
             var value = $(this).prop('checked');
             if (value) {
-                $('#map_td').show();
-                initialize();
+                $('.map_tr').show();
+                GM1.check_resize(map);
             }
             else {
-                $('#map_td').hide();
+                $('.map_tr').hide();
             }
         });
 
+        $(document).on('click','#find_location',function(e) {
+            e.preventDefault();
+            GM1.codeAddress();
+        }); 
+
+        $(document).on('click','#del_locations',function(e) {
+            e.preventDefault();
+            GM1.deleteOverlays();
+        }); 
+
         /** google maps */
-        function initialize() {
-            var mapOptions = {
-              center: new google.maps.LatLng(-34.397, 150.644),
-              zoom: 8,
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map(document.getElementById("map_canvas"),
-                mapOptions);
+        GM  = function () {
+            this.geocoder = null;
+            this.markersArray = [];
+            this.map = null;
         }
+
+
+        GM.prototype = {
+            init : function(element_id) {
+                var self = this;
+                var element_id = element_id || false;
+                self.geocoder = new google.maps.Geocoder();
+                var mapOptions = {
+                  center: new google.maps.LatLng(40.7142, -74.0064),
+                  zoom: 8,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                if (element_id) {
+                    map2 = new google.maps.Map(document.getElementById(element_id),
+                        mapOptions);
+                }
+                else {
+                    map = new google.maps.Map(document.getElementById("map_canvas"),
+                        mapOptions);
+                }
+            },
+            add_listeners : function() {
+                var self = this;
+                google.maps.event.addListener(map, 'click', function(event) {
+                    self.placeMarker(event.latLng, map);
+                });
+            },
+            placeMarker : function (location, map, id, title, desc, icon) {
+                var self = this;
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    id:id,
+                })
+                self.markersArray.push(marker);
+            },
+            codeAddress : function() {
+                var self = this;
+                var address = jQuery.trim($("#location").val());
+                self.geocoder.geocode( { 'address': address}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(results[0].geometry.location);
+                        var geocode = results[0].geometry.location;
+                        //console.log(iminit.geocode);
+                        //iminit.savePoint(iminit.geocode);
+                        //iminit.deleteOverlays();
+                        //self.placeMarker(geocode);
+                        //iminit.addCoord(iminit.geocode);
+                    } else {
+                        //var reason="<a class=\"close\" data-dismiss=\"alert\">×</a> <strong>Warning!</strong>" + status;
+                        //$("#loc_error").html(reason).addClass("alert").fadeIn();
+                    }
+                });
+            },
+            check_resize : function(map) {
+                google.maps.event.trigger(map, 'resize');
+                map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
+            },
+            deleteOverlays : function() {
+                var self = this;
+                if (self.markersArray) {
+                    for (i in self.markersArray) {
+                        self.markersArray[i].setMap(null);
+                    }
+                    self.markersArray.length = 0;
+                    //$("#lat").val('0');
+                    //$("#lng").val('0');
+
+                }
+            },
+        }
+
+        GM1 = new GM();
+        GM1.init();
+        GM1.add_listeners();
+
+        GM2 = new GM();
+        GM2.init('view_map_canvas');
+        
+
+
         
 
 });
@@ -324,7 +440,6 @@ $(document).ready(function(){
     <!--/////////CSS/////////-->
 
 <style>
-        label, input { display:block; }
         input.text { margin-bottom:12px; padding: .4em; }
         fieldset { padding:0; border:0; margin-top:25px; }
         .ui-dialog .ui-state-error { padding: .3em; }
@@ -400,7 +515,19 @@ $(document).ready(function(){
                     <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"> 
                 </td>
             </tr>
-            <tr id="map_td" style="display:none;" >
+            <tr class="map_tr" style="display:none;" >
+                <td>
+                    <label for="allday">Location</label>
+                </td>
+                <td>
+                    <span>
+                        <input type="text" name="location" id="location">
+                        <a href="#" id="find_location">find</a>
+                        <a href="#" id="del_locations">deleteAll</a>
+                    </span>
+                </td>
+            </tr>
+            <tr id="map_td" class="map_tr" style="display:none;" >
                 <td colspan="3" style="height: 200px;">
                     <div id="map_canvas" style="width:100%; height:100%"></div>
                 </td>
@@ -438,6 +565,14 @@ $(document).ready(function(){
                 Description:
             </td>
             <td id="show_description">
+            </td>
+        </tr>
+        <tr id="show_location">
+            <td>
+                Location:
+            </td>
+            <td style="height: 200px; width:300px;">
+                <div id="view_map_canvas" style="width:100%; height:100%"></div>
             </td>
         </tr>
     </table>

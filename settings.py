@@ -306,7 +306,7 @@ CELERYBEAT_SCHEDULE = {
     },
     "update_page_event": {
         "task": "pages.tasks.UpdatePageEvent",
-        "schedule": timedelta(minutes=10),
+        "schedule": timedelta(minutes=30),
     },
 }
 

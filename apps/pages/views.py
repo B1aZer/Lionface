@@ -10,7 +10,7 @@ from .forms import *
 from .models import *
 from post.models import PagePost, FeedbackPost
 from tags.models import Tag
-from agenda.models import Events
+from agenda.models import Events, Locations
 from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -1247,6 +1247,7 @@ def add_events(request, slug):
     allday = request.POST.get('allday',None)
     desc = request.POST.get('desc',None)
     end = request.POST.get('end',None)
+    coords = request.POST.get('coords',None)
     if date:
         date_beg = dateutil.parser.parse(date)
         if name:
@@ -1259,6 +1260,11 @@ def add_events(request, slug):
             if desc:
                 event.description=desc
             event.save()
+            if coords:
+                coords = json.loads(coords)
+                for coord in coords:
+                    loc = Locations(lat = coord.get('lat'), lng = coord.get('lng'), event = event)
+                    loc.save()
             data['status']='OK'
             data['id']=event.id
     return HttpResponse(json.dumps(data), "application/json")
@@ -1282,6 +1288,8 @@ def get_events(request, slug):
             ev['allDay'] = 'true'
         if event.description:
             ev['description'] = event.description
+        if event.get_locations().count():
+            ev['coords'] = event.get_locations_list()
         data.append(ev)
     return HttpResponse(json.dumps(data), "application/json")
 
