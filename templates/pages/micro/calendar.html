@@ -146,6 +146,7 @@ $(document).ready(function(){
                         for (i in calEvent.coords) {
                             var newLatlng = new google.maps.LatLng(calEvent.coords[i].lat,calEvent.coords[i].lng);
                             GM2.placeMarker(newLatlng, map2);
+                            map2.setCenter(newLatlng);
                         }
                     }
                     else {
