@@ -146,7 +146,6 @@ $(document).ready(function(){
                         for (i in calEvent.coords) {
                             var newLatlng = new google.maps.LatLng(calEvent.coords[i].lat,calEvent.coords[i].lng);
                             GM2.placeMarker(newLatlng, map2);
-                            map2.setCenter(newLatlng);
                         }
                     }
                     else {
@@ -154,6 +153,9 @@ $(document).ready(function(){
                     }
                     $("#show-event-form").dialog( "open" );
                     GM2.check_resize(map2);
+                    if (newLatlng) {
+                        map2.setCenter(newLatlng);
+                    }
                     //clicked_event['id'] = calEvent.id; 
                     $("#show-event-form").data('eventObj',calEvent);
 
