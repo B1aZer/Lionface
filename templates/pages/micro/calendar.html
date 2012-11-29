@@ -268,6 +268,9 @@ $(document).ready(function(){
                         $("#time2").val('');
                         $("#allday").prop('checked',true);
                         $('#choose_time').hide();
+                        GM1.deleteOverlays();
+                        $("#showmap").prop('checked',false);
+                        $('.map_tr').hide();
 
                     }
                     
