@@ -252,6 +252,10 @@ $(document).ready(function(){
                             var event_end = new Date(year, month, day, hour, mins);
                             evento['end'] = event_end;
                         }
+                        
+                        if (desc) {
+                            evento['description'] = desc;
+                        }
 
                         /*locations*/
                         var coords = [];
