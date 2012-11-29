@@ -1248,6 +1248,7 @@ def add_events(request, slug):
     desc = request.POST.get('desc',None)
     end = request.POST.get('end',None)
     coords = request.POST.get('coords',None)
+    privacy = request.POST.get('privacy','public')
     if date:
         date_beg = dateutil.parser.parse(date)
         if name:
@@ -1259,6 +1260,8 @@ def add_events(request, slug):
                 event.date_end=time1
             if desc:
                 event.description=desc
+            if privacy:
+                pass
             event.save()
             if coords:
                 coords = json.loads(coords)

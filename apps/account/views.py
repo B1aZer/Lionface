@@ -46,6 +46,10 @@ def login(request, template_name='public/home.html'):
         if form.is_valid():
             user = form.login(request)
             if user is not None:
+                # timezone
+                usp = user.userprofile
+                usp.timezone = form.cleaned_data.get('tzone')
+                usp.save()
                 path = request.POST.get('next',None)
                 if path:
                     return redirect(path)

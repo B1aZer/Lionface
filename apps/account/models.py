@@ -80,6 +80,7 @@ class UserProfile(User):
     filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
+    timezone = models.CharField(max_length='200', blank=True)
 
     def get_thumb(self):
         return "/%s" % self.photo.thumb_name
