@@ -462,6 +462,18 @@ class UserProfile(User):
             comm_pages = [one_page for one_page in comm_pages if one_page not in sum_pages]
         return len(comm_pages)
 
+    def get_user_roles_for(self, page):
+        roles = ['P']
+        if self in page.get_admins():
+            roles.append('A')
+        if self.membership_set.filter(page=page,type='EM').count():
+            roles.append('E')
+        if self.membership_set.filter(page=page,type='VL').count():
+            roles.append('E')
+        if self.membership_set.filter(page=page,type='IN').count():
+            roles.append('I')
+        return roles
+
     @models.permalink
     def get_absolute_url(self):
         return ('profile.views.profile', [str(self.username)])

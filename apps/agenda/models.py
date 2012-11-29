@@ -1,12 +1,22 @@
 from django.db import models
 from pages.models import Pages
 
+PRIVACY_SET = (
+    ('P','Public'),
+    ('A','Admins'),
+    ('E','Employees'),
+    ('I','Interns'),
+    ('V','Volunteers'),
+)
+
+
 class Events(models.Model):
     page = models.ForeignKey(Pages)
     name = models.CharField(max_length='200')
     date = models.DateTimeField()
     date_end = models.DateTimeField(null=True, blank=True)
     description = models.TextField(blank=True)
+    privacy = models.CharField(max_length=20, choices=PRIVACY_SET, default='P')
 
     def __repr__(self):
         return '<Event %s> %s' % (self.id, self.name)
@@ -21,6 +31,9 @@ class Events(models.Model):
                 'lng':loc.lng
                 } for loc in self.locations_set.all()]
         return locs
+
+    def get_privacy(self):
+        return self.privacy.split(',')
 
 class Locations(models.Model):
     event = models.ForeignKey(Events)

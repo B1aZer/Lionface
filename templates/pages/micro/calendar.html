@@ -531,11 +531,11 @@ $(document).ready(function(){
                     <input type="radio" name="privacy" id="privacy_inhouse" value="inhouse"/> inhouse
                     <input type="radio" name="privacy" id="privacy_public" value="public" checked="checked"/> public
                     <div id="event_privacy" style="display:none;">
-                        <input type="checkbox" class="privacy_opt" name="privacy_admins" id="privacy_admins" /> Admins
-                        <input type="checkbox" class="privacy_opt" name="privacy_employees" id="privacy_employees" /> Employees
-                        <input type="checkbox" class="privacy_opt" name="privacy_interns" id="privacy_interns" /> Interns
+                        <input type="checkbox" class="privacy_opt" name="admins" id="privacy_admins" /> Admins
+                        <input type="checkbox" class="privacy_opt" name="employees" id="privacy_employees" /> Employees
+                        <input type="checkbox" class="privacy_opt" name="interns" id="privacy_interns" /> Interns
                         {% if page.type == 'NP' %}
-                        <input type="checkbox" class="privacy_opt" name="privacy_volunteers" id="privacy_volunteers" /> Volunteers
+                        <input type="checkbox" class="privacy_opt" name="volunteers" id="privacy_volunteers" /> Volunteers
                         {% endif %}
                     </div>
                 </td>

@@ -1260,8 +1260,13 @@ def add_events(request, slug):
                 event.date_end=time1
             if desc:
                 event.description=desc
-            if privacy:
-                pass
+            if privacy != 'public':
+                privacies = json.loads(privacy)
+                pr = [pr[0].upper() for pr in privacies]
+                pr = ','.join(pr)
+                event.privacy = pr
+            else:
+                event.privacy = 'P'
             event.save()
             if coords:
                 coords = json.loads(coords)
@@ -1279,7 +1284,9 @@ def get_events(request, slug):
         raise Http404
     events = page.events_set.all()
     data = []
+    roles = request.user.get_user_roles_for(page)
     for event in events:
+        append = False
         ev = {
                 'id':event.id,
                 'title':event.name,
@@ -1293,7 +1300,11 @@ def get_events(request, slug):
             ev['description'] = event.description
         if event.get_locations().count():
             ev['coords'] = event.get_locations_list()
-        data.append(ev)
+        for role in roles:
+            if role in event.get_privacy():
+                append = True
+        if append:
+            data.append(ev)
     return HttpResponse(json.dumps(data), "application/json")
 
 
