@@ -72,6 +72,9 @@ $(document).ready(function(){
                 evento['privacy'] = 'public';
                 event['className'] = 'event-public';
             }
+            if (event.pages) {
+                evento['pages'] = JSON.stringify(event.pages);
+            }
             if (event.id) {
                 evento['id'] = event.id;
             }
@@ -177,6 +180,13 @@ $(document).ready(function(){
                     else {
                         $('#show_location').hide();
                     }
+                    if (calEvent.tagged) {
+                        $('#tagged_pages').show();
+                        $('#show_tagged').html(calEvent.tagged);
+                    }
+                    else {
+                        $('#tagged_pages').hide();
+                    }
                     $("#show-event-form").dialog( "open" );
                     $("#show-event-form").dialog( "option", "title", calEvent.title );
                     GM2.check_resize(map2);
@@ -231,6 +241,7 @@ $(document).ready(function(){
                     var desc = jQuery.trim($("#desc").val());
                     var time1 = jQuery.trim($("#time1").val());
                     var time2 = jQuery.trim($("#time2").val());
+                    var pages = jQuery.trim($('#page_name_input').val());
                 
                     if(what == ""){
                         alert("Please enter a short event description into the \"what\" field.");
@@ -300,7 +311,11 @@ $(document).ready(function(){
                                 privacy.push($(e).attr('name'));
                             });
                             evento['privacy'] = privacy;
-                            console.log(privacy);
+                        }
+
+                        if (pages) {
+                            pages = $.map(pages.split(","), $.trim);
+                            evento['pages'] = pages;
                         }
 
                         change_event(evento);
@@ -313,12 +328,13 @@ $(document).ready(function(){
                         $("#time1").val('');
                         $("#time2").val('');
                         $("#location").val('');
+                        GM1.deleteOverlays();
                         $('.privacy_opt:checked').each(function() {
                             $(this).prop('checked',false);
                         });
                         $('#privacy_public').prop('checked',true);
                         $('#event_privacy').hide();
-                        GM1.deleteOverlays();
+                        $('#page_name_input').val('');
 
                     }
                     
@@ -472,6 +488,46 @@ $(document).ready(function(){
 
         GM2 = new GM();
         GM2.init('view_map_canvas');
+
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+            return split( term ).pop();
+        }    
+        /** Autocomplete for pages */
+        var url_auto = '{% url search.views.auto_calendar slug=page.username %}';
+        $("#page_name_input")
+            // don't navigate away from the field on tab when selecting an item
+            .bind( "keydown", function( event ) {
+                if ( event.keyCode === $.ui.keyCode.TAB &&
+                        $( this ).data( "autocomplete" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                source: function( request, response ) {
+                    $.getJSON( url_auto, {
+                        term: extractLast( request.term )
+                    }, response );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    return false;
+                }
+                
+            }); 
         
 
 
@@ -559,6 +615,14 @@ $(document).ready(function(){
 					To: <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"/> 
                 </td>
             </tr>
+            <tr id="choose_page" >
+                <td>
+                    <label>Page:</label>
+                </td>
+                <td>
+					<input type="text" id="page_name_input" size="30" class="text ui-widget-content ui-corner-all" autocomplete="OFF" /> 
+                </td>
+            </tr>
             <tr class="map_tr" >
                 <td>
                     <label for="location">Location <span style="color: #AAA; font-size: 8pt;">(optional)</span></label>
@@ -609,6 +673,13 @@ $(document).ready(function(){
                 Description:
             </td>
             <td id="show_description">
+            </td>
+        </tr>
+        <tr id="tagged_pages">
+            <td>
+                Tagged Pages:
+            </td>
+            <td id="show_tagged">
             </td>
         </tr>
         <tr id="show_location">

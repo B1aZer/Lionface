@@ -10,6 +10,11 @@ import cPickle
 from images.fields import ImageWithThumbField
 
 
+REQUEST_TYPE = (
+        ('ER','Event Request'),
+        ('PR','Page Request'),
+)
+
 PAGE_TYPE = (
         ('BS','Business Page'),
         ('NP','Nonprofit Page'),
@@ -24,6 +29,8 @@ MEMBERSHIP_TYPE = (
 class PageRequest(models.Model):
     from_page = models.ForeignKey('Pages', related_name='from_page')
     to_page = models.ForeignKey('Pages', related_name='to_page')
+    event = models.ForeignKey('agenda.Events', related_name='from_event', null=True, blank=True)
+    type = models.CharField(max_length='2', choices=REQUEST_TYPE, default='PR')
     date = models.DateTimeField(auto_now_add=True)
     is_hidden = models.BooleanField(default=False)
     is_accepted = models.BooleanField(default=False)
@@ -32,9 +39,14 @@ class PageRequest(models.Model):
         unique_together = ("from_page", "to_page")
 
     def accept(self):
-        self.from_page.friends.add(self.to_page)
-        self.is_accepted = True
-        self.save()
+        if self.type == 'PR':
+            self.from_page.friends.add(self.to_page)
+            self.is_accepted = True
+            self.save()
+        else:
+            self.event.tagged.add(self.to_page)
+            self.delete()
+
 
     def hide(self):
         self.is_hidden = True
@@ -124,13 +136,16 @@ class Pages(models.Model):
         return comm_admins
 
     def get_requests(self):
-        return self.to_page.filter(is_hidden=False, is_accepted=False)
+        return self.to_page.filter(is_hidden=False, is_accepted=False, type='PR')
 
     def get_requests_count(self):
         return self.get_requests().count()
 
     def get_accepted_requests(self):
-        return self.from_page.filter(is_hidden=False, is_accepted=True)
+        return self.from_page.filter(is_hidden=False, is_accepted=True, type='PR')
+
+    def get_events_requests(self):
+        return self.to_page.filter(is_hidden=False, is_accepted=False, type='ER')
 
     def get_friends(self):
         return self.friends.all()

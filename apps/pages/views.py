@@ -1249,6 +1249,7 @@ def add_events(request, slug):
     end = request.POST.get('end',None)
     coords = request.POST.get('coords',None)
     privacy = request.POST.get('privacy','public')
+    pages = request.POST.get('pages',None)
     if date:
         date_beg = dateutil.parser.parse(date)
         if name:
@@ -1273,16 +1274,29 @@ def add_events(request, slug):
                 for coord in coords:
                     loc = Locations(lat = coord.get('lat'), lng = coord.get('lng'), event = event)
                     loc.save()
+            if pages:
+                pages = json.loads(pages)
+                pages = set(pages)
+                for pg in pages:
+                    page_name = pg.strip()
+                    if page_name:
+                        try:
+                            spage = Pages.objects.get(username=page_name)
+                            pr = PageRequest(from_page = page, to_page = spage, type = 'ER', event = event)
+                            pr.save()
+                        except Pages.DoesNotExist:
+                            pass
             data['status']='OK'
             data['id']=event.id
     return HttpResponse(json.dumps(data), "application/json")
+
 
 def get_events(request, slug):
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    events = page.events_set.all()
+    events = page.tagged_in.all()
     data = []
     roles = request.user.get_user_roles_for(page)
     for event in events:
@@ -1310,6 +1324,9 @@ def get_events(request, slug):
                 classes = classes + 'event-interns '
             if privacy == 'V':
                 classes = classes + 'event-volunteers '
+        if event.get_tagged_pages():
+            ev['tagged'] = ", ".join(event.get_tagged_pages(page))
+            classes = classes + 'event-shared '
         if classes:
             ev['className'] = classes
         for role in roles:
@@ -1345,8 +1362,10 @@ def change_event(request, slug):
         event.save()
         data['status']='OK'
     if delete:
-        event.delete()
-        data['status']='OK'
+        if event.page == page:
+            event.delete()
+            data['status']='OK'
+
     return HttpResponse(json.dumps(data), "application/json")
 
 

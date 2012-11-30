@@ -1,3 +1,4 @@
+{% load format_results %}
 <div id="page_friend_requests" style="text-align:center; width: 100%;">
 <div style="position: absolute; right: 0px; top: 50px;">
 {% if request.user in page.get_community_admins %}
@@ -14,6 +15,16 @@
                 <div style="display: block;" class="page_rqst">
                     <span> <a href="{{reqst.to_page.get_absolute_url }}">{{reqst.to_page.name }}</a> has accepted this Page as a friend. </span>
                     <a href="{% url pages.views.hide_friend_request slug=page.username request_id=reqst.id %}" style="color: #999;">hide</a>
+                </div>
+            {% endfor %} 
+{% endif %}
+{% if request.user|check_pages_calendar:page %}
+            {% for reqst in page.get_events_requests %}
+                <div style="display: block;" class="page_rqst">
+                    <span> <a href="{{reqst.to_page.get_absolute_url }}">{{reqst.to_page.name }}</a> has listed this Page in calendar event - {{reqst.event.name }}. </span>
+                    <a href="{% url pages.views.hide_friend_request slug=page.username request_id=reqst.id %}" style="color: #999;">hide</a>
+                    <a href="{% url pages.views.accept_friend_request slug=page.username request_id=reqst.id %}" class="blue_btn" style="color: #FFF; margin: 0 5px;">Accept</a>
+                    <a href="{% url pages.views.decline_friend_request slug=page.username request_id=reqst.id %}" style="color: #999;">Decline</a>
                 </div>
             {% endfor %} 
 {% endif %}

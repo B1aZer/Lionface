@@ -12,6 +12,7 @@ PRIVACY_SET = (
 
 class Events(models.Model):
     page = models.ForeignKey(Pages)
+    tagged = models.ManyToManyField(Pages, related_name="tagged_in", null=True, blank=True)
     name = models.CharField(max_length='200')
     date = models.DateTimeField()
     date_end = models.DateTimeField(null=True, blank=True)
@@ -34,6 +35,20 @@ class Events(models.Model):
 
     def get_privacy(self):
         return self.privacy.split(',')
+
+    def get_tagged_pages(self, page=None):
+        tagged = []
+        if self.tagged.count() > 1:
+            if page:
+                tagged = [pg.name for pg in self.tagged.all() if pg != page]
+            else:
+                tagged = [pg.name for pg in self.tagged.all() if pg != self.page]
+        return tagged
+
+    def save(self, *args, **kwargs):
+        """ Adding page to tagged """
+        super(Events, self).save(*args, **kwargs)
+        self.tagged.add(self.page)
 
 class Locations(models.Model):
     event = models.ForeignKey(Events)

@@ -25,6 +25,7 @@ class CustumSearchView(SearchView):
 
         return extra
 
+
 @login_required
 def auto_complete(request):
     term = request.GET.get('term',None)
@@ -37,6 +38,7 @@ def auto_complete(request):
         dic = {'label':user._get_full_name(),'value':user.username,'id':user.id}
         dics.append(dic)
     return HttpResponse(json.dumps(dics), "application/json")
+
 
 @login_required
 def auto_pages(request, slug=None):
@@ -57,3 +59,19 @@ def auto_pages(request, slug=None):
             dics.append(dic)
     return HttpResponse(json.dumps(dics), "application/json")
 
+
+@login_required
+def auto_calendar(request, slug=None):
+    data = []
+    pages = []
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    term = request.GET.get('term',None)
+    if term:
+        pages =  Pages.objects.filter(name__icontains=term).exclude(id=page.id).all()
+    for pg in pages:
+        dic = {'label':pg.name,'value':pg.username,'id':pg.id}
+        data.append(dic)
+    return HttpResponse(json.dumps(data), "application/json")
