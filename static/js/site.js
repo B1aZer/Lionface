@@ -328,20 +328,45 @@ LionFace.Site.prototype = {
         }
         var url = "/posts/share/" + elem + "/";
         var meta = $('.post_'+elem).metadata(); 
+        var post = $('.post_'+elem);
 
-        make_request({
-            url:url,
-            data:{
-                'post_type':meta.type,
-                'post_model':meta.model,
-            },
-            callback: function(data) {
-                if (data.status == 'OK') {
-                    $('.post_'+elem).find('.share_text').html('<span class="shared"> Shared </span>');
-                    $('.post_'+elem).find('.share_text').show();
-                }
+        if (post.find('.share_to').length) {
+            var shared_div = post.find('.share_to');
+            shared_div.show();
+            if (shared_div.is(":visible")) {
+                var share_val = shared_div.find('.share_to_select').val();
+                make_request({
+                    url:url,
+                    data:{
+                        'post_type':meta.type,
+                        'post_model':meta.model,
+                        'share_to': share_val,
+                    },
+                    callback: function(data) {
+                        if (data.status == 'OK') {
+                            $('.post_'+elem).find('.share_text').html('<span class="shared"> Shared </span>');
+                            $('.post_'+elem).find('.share_text').show();
+                            shared_div.hide();
+                        }
+                    }
+                });    
             }
-        });    
+        }
+        else {
+            make_request({
+                url:url,
+                data:{
+                    'post_type':meta.type,
+                    'post_model':meta.model,
+                },
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        $('.post_'+elem).find('.share_text').html('<span class="shared"> Shared </span>');
+                        $('.post_'+elem).find('.share_text').show();
+                    }
+                }
+            });    
+        }
 
     },          
 

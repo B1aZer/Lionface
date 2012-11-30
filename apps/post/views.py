@@ -354,10 +354,19 @@ def share(request, post_id = None):
     data = {'status': 'OK'}
     if post_id:
         post_model = request.POST.get('post_model')
+        share_to = request.POST.get('share_to', None)
         if post_model in ('post_post','post_pagepost', 'post_feedbackpost'):
-            post = Post.objects.get(id=post_id)
+            try:
+                post = Post.objects.get(id=post_id)
+            except:
+                data['status'] = 'FAIL'
+                return HttpResponse(json.dumps(data), "application/json")
         else:
-            post = NewsItem.objects.get(id=post_id)
+            try:
+                post = NewsItem.objects.get(id=post_id)
+            except:
+                data['status'] = 'FAIL'
+                return HttpResponse(json.dumps(data), "application/json")
         post_type = post.get_post().get_inherited()
         #if post already shared before
         if isinstance(post_type, SharePost):
