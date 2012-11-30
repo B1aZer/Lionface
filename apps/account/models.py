@@ -466,11 +466,11 @@ class UserProfile(User):
         roles = ['P']
         if self in page.get_admins():
             roles.append('A')
-        if self.membership_set.filter(page=page,type='EM').count():
+        if self.membership_set.filter(page=page,type='EM', is_confirmed=True).count():
             roles.append('E')
-        if self.membership_set.filter(page=page,type='VL').count():
+        if self.membership_set.filter(page=page,type='VL', is_confirmed=True).count():
             roles.append('E')
-        if self.membership_set.filter(page=page,type='IN').count():
+        if self.membership_set.filter(page=page,type='IN', is_confirmed=True).count():
             roles.append('I')
         return roles
 
