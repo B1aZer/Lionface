@@ -641,5 +641,19 @@ table.fc-border-separate {
 .fc-agenda .ui-resizable-resizing { /* TODO: better selector */
 	_overflow: hidden;
 	}
-	
-	
+
+#event_privacy {
+	padding: 6px 8px; margin: 4px 0; width: 250px; background: #EEE; -moz-border-radius: 3px; border-radius: 3px; position: relative; left: -8px;
+}
+
+#add-event-form input, #add-event-form textarea {
+	padding: 4px;
+	border: 1px solid #CCC;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #F7F7F7;
+}
+
+#add-event-form input:focus, #add-event-form textarea:focus {
+	background: #FFF;
+}

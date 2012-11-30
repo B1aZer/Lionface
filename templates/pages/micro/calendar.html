@@ -499,6 +499,7 @@ $(document).ready(function(){
 </td></tr></table>
 </div>
 {% endif %}
+
 <div id='calendar_micro'></div>
 
 <div id="add-event-form" title="Add New Event">
@@ -514,8 +515,8 @@ $(document).ready(function(){
                 </td>
             </tr>
             <tr>
-                <td>
-                    <label for="name">What:</label>
+                <td style="padding: 8px 0;">
+                    <label for="name">Event Title:</label>
                 </td>
                 <td>
                     <input type="text" name="what" id="what" class="text ui-widget-content ui-corner-all" />
@@ -523,21 +524,22 @@ $(document).ready(function(){
             </tr>
             <tr>
                 <td>
-                    <label for="desc">Desc:</label>
+                    <label for="desc">Description:</label>
                 </td>
                 <td>
-                    <textarea type="text" name="desc" id="desc" class="text ui-widget-content ui-corner-all" style="margin: 0px; width: 192px; height: 30px;" />
+                    <textarea type="text" name="desc" id="desc" class="text ui-widget-content ui-corner-all" style="margin: 0px; width: 300px; height: 80px;" />
                 </td>
             </tr>
             <tr>
-                <td>
+                <td width="30%"> 
                     <label for="desc">Privacy:</label>
                 </td>
-                <td>
-                    <input type="radio" name="privacy" id="privacy_inhouse" value="inhouse"/> inhouse
-                    <input type="radio" name="privacy" id="privacy_public" value="public" checked="checked"/> public
+                <td style="padding: 8px 0;" width="70%">
+ 					<input type="radio" name="privacy" id="privacy_public" value="public" checked="checked"/> Public
+                    <input type="radio" name="privacy" id="privacy_inhouse" value="inhouse"/> In-House
+                   
                     <div id="event_privacy" style="display:none;">
-                        <input type="checkbox" class="privacy_opt" name="admins" id="privacy_admins" /> Admins
+                        <input type="checkbox" checked="checked" class="privacy_opt" name="admins" id="privacy_admins" /> Admins
                         <input type="checkbox" class="privacy_opt" name="employees" id="privacy_employees" /> Employees
                         <input type="checkbox" class="privacy_opt" name="interns" id="privacy_interns" /> Interns
                         {% if page.type == 'NP' %}
@@ -551,15 +553,13 @@ $(document).ready(function(){
                     <label>Time:</label>
                 </td>
                 <td>
-                    <input type="text" id="time1" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"/> 
-                </td>
-                <td>
-                    <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"/> 
+                    From: <input type="text" id="time1" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"/> 
+					To: <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"/> 
                 </td>
             </tr>
             <tr class="map_tr" >
                 <td>
-                    <label for="location">Location</label>
+                    <label for="allday">Location <span style="color: #AAA; font-size: 8pt;">(optional)</span></label>
                 </td>
                 <td>
                     <span>
@@ -583,7 +583,7 @@ $(document).ready(function(){
     <table>
         <tr>
             <td>
-                Title:
+                Event Title:
             </td>
             <td id="show_title">
             </td>
