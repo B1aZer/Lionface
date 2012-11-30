@@ -332,7 +332,6 @@ LionFace.Site.prototype = {
 
         if (post.find('.share_to').length) {
             var shared_div = post.find('.share_to');
-            shared_div.show();
             if (shared_div.is(":visible")) {
                 var share_val = shared_div.find('.share_to_select').val();
                 make_request({
@@ -351,6 +350,7 @@ LionFace.Site.prototype = {
                     }
                 });    
             }
+            shared_div.show();
         }
         else {
             make_request({

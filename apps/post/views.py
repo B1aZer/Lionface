@@ -6,6 +6,7 @@ from django.template import RequestContext,loader
 from .models import *
 from account.models import UserProfile
 from tags.models import Tag
+from pages.models import Pages
 
 from tasks import DeleteNewsFeeds
 
@@ -161,6 +162,7 @@ def timeline(request,post_num=5):
         RequestContext(request)
     )
 
+
 @login_required
 def save(request):
     data = {'status': 'OK'}
@@ -198,6 +200,7 @@ def save(request):
 
     return HttpResponse(json.dumps(data), "application/json")
 
+
 def follow(request):
     data = {'status': 'OK'}
     if request.method == 'POST' and 'post_id' in request.POST:
@@ -234,6 +237,7 @@ def follow(request):
                 data['status'] = "FAIL"
                 data['html'] = "Sorry no such post"
     return HttpResponse(json.dumps(data), "application/json")
+
 
 def show(request):
     data = {'status': 'OK'}
@@ -292,6 +296,7 @@ def show(request):
 
     return HttpResponse(json.dumps(data), "application/json")
 
+
 @login_required
 def delete_own_comment(request, message_id):
     #import pdb;pdb.set_trace()
@@ -304,6 +309,7 @@ def delete_own_comment(request, message_id):
         data['status'] = 'removed'
         data['id'] = message_id
     return HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def delete(request, post_id = None):
@@ -349,12 +355,24 @@ def delete(request, post_id = None):
         DeleteNewsFeeds.delay(post,user=owner)
     return HttpResponse(json.dumps(data), "application/json")
 
+
 @login_required
 def share(request, post_id = None):
     data = {'status': 'OK'}
     if post_id:
         post_model = request.POST.get('post_model')
         share_to = request.POST.get('share_to', None)
+        import pdb;pdb.set_trace()
+        if share_to:
+            if share_to == 'profile':
+                share_to = None
+            else:
+                try:
+                    page = Pages.objects.get(id=int(share_to))
+                except:
+                    data['status'] = 'FAIL'
+                    return HttpResponse(json.dumps(data), "application/json")
+
         if post_model in ('post_post','post_pagepost', 'post_feedbackpost'):
             try:
                 post = Post.objects.get(id=post_id)
@@ -386,11 +404,15 @@ def share(request, post_id = None):
                 shared.save()
         else:
             #normal post
-            post = SharePost(user = post_type.user , user_to=request.user , content = post.render(), id_news = post.id, content_object = post_type)
+            if page:
+                post = PageSharePost(user = post_type.user , page=page , content = post.render(), content_object = post_type)
+            else:
+                post = SharePost(user = post_type.user , user_to=request.user , content = post.render(), id_news = post.id, content_object = post_type)
             post_type.shared +=1
             post_type.save()
             post.save()
     return HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def toggle_privacy(request):
@@ -406,6 +428,7 @@ def toggle_privacy(request):
             post.save()
             data['status'] = 'OK'
     return  HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def change_settings(request):
@@ -461,6 +484,7 @@ def change_settings(request):
             if hasattr(post,'albums_set'):
                 post.albums_set.clear()
     return  HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def test(request):
