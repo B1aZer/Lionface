@@ -1255,7 +1255,7 @@ def add_events(request, slug):
             event = Events(page=page)
             event.name=name
             event.date=date_beg
-            if end and allday != 'true':
+            if end:
                 time1 = dateutil.parser.parse(end)
                 event.date_end=time1
             if desc:
@@ -1286,6 +1286,7 @@ def get_events(request, slug):
     data = []
     roles = request.user.get_user_roles_for(page)
     for event in events:
+        classes = ''
         append = False
         ev = {
                 'id':event.id,
@@ -1294,12 +1295,23 @@ def get_events(request, slug):
             }
         if event.date_end:
             ev['end'] = event.date_end.strftime("%Y-%m-%d %H:%M:%S")
-        else:
-            ev['allDay'] = 'true'
         if event.description:
             ev['description'] = event.description
         if event.get_locations().count():
             ev['coords'] = event.get_locations_list()
+        for privacy in event.get_privacy():
+            if privacy == 'P':
+                classes = classes + 'event-public '
+            if privacy == 'A':
+                classes = classes + 'event-admins '
+            if privacy == 'E':
+                classes = classes + 'event-employees '
+            if privacy == 'I':
+                classes = classes + 'event-interns '
+            if privacy == 'V':
+                classes = classes + 'event-volunteers '
+        if classes:
+            ev['className'] = classes
         for role in roles:
             if role in event.get_privacy():
                 append = True

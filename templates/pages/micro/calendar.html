@@ -16,6 +16,7 @@ $(document).ready(function(){
             
             $("#when").prop("disabled", true);
             $( "#add-event-form" ).dialog( "open" );
+            GM1.check_resize(map);
         }
 
         function change_event(event, change, callback) {
@@ -48,9 +49,28 @@ $(document).ready(function(){
             }
             if (event.privacy) {
                 evento['privacy'] = JSON.stringify(event.privacy);
+                var classes = '';
+                for (var prv in event.privacy) {
+                    if (event.privacy[prv] == 'admins') {
+                        classes = classes + 'event-admins ';
+                    }
+                    if (event.privacy[prv] == 'employees') {
+                        classes = classes + 'event-employees ';
+                    }
+                    if (event.privacy[prv] == 'interns') {
+                        classes = classes + 'event-interns ';
+                    }
+                    if (event.privacy[prv] == 'volunteers') {
+                        classes = classes + 'event-volunteers ';
+                    }
+                }
+                if (classes) {
+                    event['className'] = classes;
+                }
             }
             else {
                 evento['privacy'] = 'public';
+                event['className'] = 'event-public';
             }
             if (event.id) {
                 evento['id'] = event.id;
@@ -149,7 +169,7 @@ $(document).ready(function(){
                     if (calEvent.coords) {
                         $('#show_location').show();
                         GM2.deleteOverlays();
-                        for (i in calEvent.coords) {
+                        for (var i in calEvent.coords) {
                             var newLatlng = new google.maps.LatLng(calEvent.coords[i].lat,calEvent.coords[i].lng);
                             GM2.placeMarker(newLatlng, map2);
                         }
@@ -158,6 +178,7 @@ $(document).ready(function(){
                         $('#show_location').hide();
                     }
                     $("#show-event-form").dialog( "open" );
+                    $("#show-event-form").dialog( "option", "title", calEvent.title );
                     GM2.check_resize(map2);
                     if (newLatlng) {
                         map2.setCenter(newLatlng);
@@ -207,14 +228,17 @@ $(document).ready(function(){
 
                     var what = jQuery.trim($("#what").val());
                     var when = jQuery.trim($("#when").val());
-                    var allday = $("#allday").prop('checked');
                     var desc = jQuery.trim($("#desc").val());
                     var time1 = jQuery.trim($("#time1").val());
                     var time2 = jQuery.trim($("#time2").val());
                 
                     if(what == ""){
                         alert("Please enter a short event description into the \"what\" field.");
-                    }else{
+                    }
+                    else if ($('#privacy_inhouse').prop('checked') && !$('.privacy_opt:checked').length) {
+                        alert("Please choose privacy settings.");
+                    }
+                    else{
                         var reggie = /(\d+)\/(\d+)\/(\d+)/;
                         var dateArray = reggie.exec(when); 
                         var month = dateArray[2]-1;
@@ -236,7 +260,7 @@ $(document).ready(function(){
 
                             event_date = new Date(year, month, day, hour, mins);
                         }
-                        var evento = { title: what, start: event_date, allDay: allday }
+                        var evento = { title: what, start: event_date, allDay: false }
                         if (time2) {
                             var regh = /(\d+):/
                             var arrh = regh.exec(time2); 
@@ -260,7 +284,7 @@ $(document).ready(function(){
                         /*locations*/
                         var coords = [];
                         if (GM1.markersArray.length) {
-                            for (i in GM1.markersArray) { 
+                            for ( var i in GM1.markersArray) { 
                                 var coord = {
                                     'lat':GM1.markersArray[i].getPosition().lat(),
                                     'lng':GM1.markersArray[i].getPosition().lng(),
@@ -287,11 +311,13 @@ $(document).ready(function(){
 
                         $("#time1").val('');
                         $("#time2").val('');
-                        $("#allday").prop('checked',true);
-                        $('#choose_time').hide();
+                        $("#location").val('');
+                        $('.privacy_opt:checked').each(function() {
+                            $(this).prop('checked',false);
+                        });
+                        $('#privacy_public').prop('checked',true);
+                        $('#event_privacy').hide();
                         GM1.deleteOverlays();
-                        $("#showmap").prop('checked',false);
-                        $('.map_tr').hide();
 
                     }
                     
@@ -322,17 +348,6 @@ $(document).ready(function(){
 
         });
 
-        /** show time */
-        $(document).on('change','#allday',function() {
-            if ($(this).prop('checked')) {
-                $('#choose_time').hide();
-                $("#time1, #time2").val('');
-            }
-            else {
-                $('#choose_time').show();
-            }
-        });
-
         /** update posts option */
         $(document).on('change','#update_post',function() {
             var url = '{% url pages.views.post_update_change slug=page.username %}';
@@ -345,19 +360,6 @@ $(document).ready(function(){
                 callback: function() {
                 }
             });
-        });
-
-        /** show map */
-        $(document).on('change','#showmap',function() {
-            var value = $(this).prop('checked');
-            if (value) {
-                $('.map_tr').show();
-                GM1.check_resize(map);
-            }
-            else {
-                $('.map_tr').hide();
-                GM1.deleteOverlays();
-            }
         });
 
         /* show privacy */
@@ -451,7 +453,7 @@ $(document).ready(function(){
             deleteOverlays : function() {
                 var self = this;
                 if (self.markersArray) {
-                    for (i in self.markersArray) {
+                    for (var i in self.markersArray) {
                         self.markersArray[i].setMap(null);
                     }
                     self.markersArray.length = 0;
@@ -544,23 +546,7 @@ $(document).ready(function(){
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <label for="allday">All day</label>
-                </td>
-                <td>
-                    <input type="checkbox" name="allday" id="allday" checked="checked"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="allday">Show map</label>
-                </td>
-                <td>
-                    <input type="checkbox" name="showmap" id="showmap"/>
-                </td>
-            </tr>
-            <tr id="choose_time" style="display:none;">
+            <tr id="choose_time" >
                 <td>
                     <label>Time:</label>
                 </td>
@@ -571,9 +557,9 @@ $(document).ready(function(){
                     <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"/> 
                 </td>
             </tr>
-            <tr class="map_tr" style="display:none;" >
+            <tr class="map_tr" >
                 <td>
-                    <label for="allday">Location</label>
+                    <label for="location">Location</label>
                 </td>
                 <td>
                     <span>
@@ -583,7 +569,7 @@ $(document).ready(function(){
                     </span>
                 </td>
             </tr>
-            <tr id="map_td" class="map_tr" style="display:none;" >
+            <tr id="map_td" class="map_tr">
                 <td colspan="3" style="height: 200px;">
                     <div id="map_canvas" style="width:100%; height:100%"></div>
                 </td>
