@@ -300,6 +300,7 @@ $(document).ready(function(){
                                 privacy.push($(e).attr('name'));
                             });
                             evento['privacy'] = privacy;
+                            console.log(privacy);
                         }
 
                         change_event(evento);
@@ -367,6 +368,7 @@ $(document).ready(function(){
             var value = $(this).prop('checked');
             if (value) {
                 $('#event_privacy').show();
+                $('#privacy_admins').prop('checked','true');
             }
         });
         $(document).on('change','#privacy_public',function() {
@@ -539,7 +541,7 @@ $(document).ready(function(){
                     <input type="radio" name="privacy" id="privacy_inhouse" value="inhouse"/> In-House
                    
                     <div id="event_privacy" style="display:none;">
-                        <input type="checkbox" checked="checked" class="privacy_opt" name="admins" id="privacy_admins" /> Admins
+                        <input type="checkbox" class="privacy_opt" name="admins" id="privacy_admins" /> Admins
                         <input type="checkbox" class="privacy_opt" name="employees" id="privacy_employees" /> Employees
                         <input type="checkbox" class="privacy_opt" name="interns" id="privacy_interns" /> Interns
                         {% if page.type == 'NP' %}
