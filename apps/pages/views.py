@@ -1242,9 +1242,11 @@ def add_events(request, slug):
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
+    event_id = request.POST.get('id',None)
     name = request.POST.get('name',None)
     date = request.POST.get('start',None)
     allday = request.POST.get('allday',None)
+    delete = request.POST.get('del',None)
     desc = request.POST.get('desc',None)
     end = request.POST.get('end',None)
     coords = request.POST.get('coords',None)
@@ -1253,7 +1255,10 @@ def add_events(request, slug):
     if date:
         date_beg = dateutil.parser.parse(date)
         if name:
-            event = Events(page=page)
+            if event_id:
+                event = page.events_set.get(id=event_id)
+            else:
+                event = Events(page=page)
             event.name=name
             event.date=date_beg
             if end:
@@ -1274,6 +1279,9 @@ def add_events(request, slug):
                 for coord in coords:
                     loc = Locations(lat = coord.get('lat'), lng = coord.get('lng'), event = event)
                     loc.save()
+            else:
+                locs = Locations.objects.filter(event = event)
+                locs.delete()
             if pages:
                 pages = json.loads(pages)
                 pages = set(pages)
@@ -1282,10 +1290,16 @@ def add_events(request, slug):
                     if page_name:
                         try:
                             spage = Pages.objects.get(username=page_name)
-                            pr = PageRequest(from_page = page, to_page = spage, type = 'ER', event = event)
-                            pr.save()
+                            req_count = PageRequest.objects.filter(from_page = page, to_page = spage, type = 'ER', event = event).count()
+                            if not req_count:
+                                pr = PageRequest(from_page = page, to_page = spage, type = 'ER', event = event)
+                                pr.save()
                         except Pages.DoesNotExist:
                             pass
+            if delete:
+                if event.page == page:
+                    event.delete()
+            data['status']='OK'
             data['status']='OK'
             data['id']=event.id
     return HttpResponse(json.dumps(data), "application/json")
@@ -1325,10 +1339,14 @@ def get_events(request, slug):
             if privacy == 'V':
                 classes = classes + 'event-volunteers '
         if event.get_tagged_pages():
-            ev['tagged'] = ", ".join(event.get_tagged_pages(page))
+            links = ["<a href=\"%s\">%s</a>" % (a.get_absolute_url(), a.name) for a in event.get_tagged_pages(page)]
+            page_names = [p.username for p in event.get_tagged_pages()]
+            ev['tagged'] = ", ".join(links)
+            ev['page_names'] = ", ".join(page_names)
             classes = classes + 'event-shared '
         if classes:
             ev['className'] = classes
+            ev['privacy'] = ",".join(event.get_privacy())
         for role in roles:
             if role in event.get_privacy():
                 append = True

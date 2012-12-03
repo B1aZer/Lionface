@@ -8,7 +8,26 @@ $(document).ready(function(){
             show24Hours: false,
             });
 
+        function clean_add_form() {
+            $("#what").val('');
+            $("#when").val('');
+            $("#desc").val('');
+
+            $("#time1").val('');
+            $("#time2").val('');
+            $("#location").val('');
+            GM1.deleteOverlays();
+            $('.privacy_opt:checked').each(function() {
+                $(this).prop('checked',false);
+            });
+            $('#privacy_public').prop('checked',true);
+            $('#event_privacy').hide();
+            $('#page_name_input').val('');
+        }
         function create_dialog(date) {
+
+            clean_add_form();
+
             var month = parseInt(date.getMonth())+1;
             $('#when').val(date.getDate() + '/' + month + '/' + date.getFullYear());
             //$('#when').val($.fullCalendar.formatDate( date, 'ddd, MMMM dd'));
@@ -17,6 +36,7 @@ $(document).ready(function(){
             $("#when").prop("disabled", true);
             $( "#add-event-form" ).dialog( "open" );
             GM1.check_resize(map);
+            map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
         }
 
         function change_event(event, change, callback) {
@@ -25,12 +45,7 @@ $(document).ready(function(){
             }
             var change = change || false;
             var callback = callback || false;
-            if (change) {
-                var url = '{% url pages.views.change_event slug=page.username %}';
-            }
-            else {
-                var url = '{% url pages.views.add_events slug=page.username %}';
-            }
+            var url = '{% url pages.views.add_events slug=page.username %}';
             var evento = {
                         'name':event.title,
                         'allday':event.allDay,
@@ -98,6 +113,8 @@ $(document).ready(function(){
                             console.log('deleting:' + event.id );
                             $('#calendar_micro').fullCalendar( 'removeEvents' , event.id );
                             /* strange bug, event wont disappear after creating */
+                        }
+                        if (change) {
                             $('#calendar_micro').fullCalendar( 'refetchEvents' );
                         }
                     }
@@ -110,18 +127,117 @@ $(document).ready(function(){
             });
         }
 
+        function add_event() {
+            var what = jQuery.trim($("#what").val());
+            var when = jQuery.trim($("#when").val());
+            var desc = jQuery.trim($("#desc").val());
+            var time1 = jQuery.trim($("#time1").val());
+            var time2 = jQuery.trim($("#time2").val());
+            var pages = jQuery.trim($('#page_name_input').val());
+        
+            if(what == ""){
+                alert("Please enter a short event description into the \"what\" field.");
+            }
+            else if ($('#privacy_inhouse').prop('checked') && !$('.privacy_opt:checked').length) {
+                alert("Please choose privacy settings.");
+            }
+            else{
+                var reggie = /(\d+)\/(\d+)\/(\d+)/;
+                var dateArray = reggie.exec(when); 
+                var month = dateArray[2]-1;
+                var year = dateArray[3];
+                var day = dateArray[1];
+                var event_date = new Date(year, month, day);
+                var event_end = '';
+                if (time1) {
+                    var regh = /(\d+):/
+                    var arrh = regh.exec(time1); 
+                    var hour = parseInt(arrh[1]);
+                    if (time1.indexOf('PM') !== -1 ) {
+                        hour = hour + 12;
+                    }
+                    else {
+                        if (hour == 12) {
+                            hour = 0 ;
+                        }
+                    }
+
+                    var regm = /:(\d+)/
+                    var arrm = regm.exec(time1); 
+                    var mins = parseInt(arrm[1]);
+
+                    event_date = new Date(year, month, day, hour, mins);
+                }
+                var evento = { title: what, start: event_date, allDay: false }
+                if (time2) {
+                    var regh = /(\d+):/
+                    var arrh = regh.exec(time2); 
+                    var hour = parseInt(arrh[1]);
+                    if (time2.indexOf('PM') !== -1 ) {
+                        hour = hour + 12;
+                    }
+                    else {
+                        if (hour == 12) {
+                            hour = 0 ;
+                        }
+                    }
+
+                    var regm = /:(\d+)/
+                    var arrm = regm.exec(time2); 
+                    var mins = parseInt(arrm[1]);
+
+                    var event_end = new Date(year, month, day, hour, mins);
+                    evento['end'] = event_end;
+                }
+                
+                if (desc) {
+                    evento['description'] = desc;
+                }
+                if ($("#show-event-form").data('eventObj')) {
+                    evento['id'] = $("#show-event-form").data('eventObj').id;
+                }
+
+                /*locations*/
+                var coords = [];
+                if (GM1.markersArray.length) {
+                    for ( var i in GM1.markersArray) { 
+                        var coord = {
+                            'lat':GM1.markersArray[i].getPosition().lat(),
+                            'lng':GM1.markersArray[i].getPosition().lng(),
+                        }
+                        coords.push(coord);
+                    }
+                    evento['coords'] = coords;
+                }
+
+                if ($('#privacy_inhouse').prop('checked')) {
+                    var privacy = [];
+                    $('.privacy_opt:checked').each(function(i,e) {
+                        privacy.push($(e).attr('name'));
+                    });
+                    evento['privacy'] = privacy;
+                }
+
+                if (pages) {
+                    pages = $.map(pages.split(","), $.trim);
+                    evento['pages'] = pages;
+                }
+
+                if ($("#show-event-form").data('eventObj')) {
+                    change_event(evento,true);
+                }
+                else {
+                    change_event(evento);
+                }
+                $("#add-event-form").dialog('close');
+
+            }
+        }
+
         var date = new Date();
 		var d = date.getDate();
 		var m = date.getMonth();
 		var y = date.getFullYear();
-
-        /**
-        console.log(clicked_event);
-        var clicked_event = {};
-        console.log('clicked');
-        console.log(clicked_event);
-        */
-
 
         //permission
         var editable = LionFace.User.options['pages_calendar__'+LionFace.User.page_id];
@@ -134,14 +250,6 @@ $(document).ready(function(){
 				right: 'month,agendaWeek,agendaDay'
 			},
 			editable: editable,
-            /*
-            {
-					allDay: false,
-					title: 'Lunch',
-					end: '2012-11-27 16:30:00',
-					start: '2012-11-27 14:30:00',
-				},    
-            */
 			events: {
                 url: '{% url pages.views.get_events slug=page.username %}',
                 type: 'GET',
@@ -151,6 +259,8 @@ $(document).ready(function(){
             },
             dayClick: function(date, allDay, jsEvent, view) {
                 if (LionFace.User.options['pages_calendar__'+LionFace.User.page_id]) {
+                    // link to current event
+                    $("#show-event-form").removeData('eventObj');
                     create_dialog(date);
                 }
             },
@@ -160,6 +270,7 @@ $(document).ready(function(){
                     $("#show_date").html('');
                     $("#show_date_end").html('');
                     $("#show_description").html('');
+
 
                     $("#show_title").html(calEvent.title);
                     $("#show_date").html($.fullCalendar.formatDate( calEvent.start, 'ddd, MMMM dd hh:mm TT'));
@@ -190,12 +301,70 @@ $(document).ready(function(){
                     $("#show-event-form").dialog( "open" );
                     $("#show-event-form").dialog( "option", "title", calEvent.title );
                     GM2.check_resize(map2);
+                    map2.setCenter(new google.maps.LatLng(40.7142, -74.0064));
                     if (newLatlng) {
                         map2.setCenter(newLatlng);
                     }
                     //clicked_event['id'] = calEvent.id; 
                     $("#show-event-form").data('eventObj',calEvent);
 
+                    //edit form
+                    clean_add_form();
+                    $("#when").val($.fullCalendar.formatDate( calEvent.start, 'dd/MM/yyyy'));
+                    $("#when").prop("disabled", true);
+                    $('#what').val($("#show_title").html());
+                    $("#desc").val($("#show_description").html());
+                    $("#time1").val($.fullCalendar.formatDate( calEvent.start, 'hh:mm TT'));
+                    if (calEvent.end) {
+                        $("#time2").val($.fullCalendar.formatDate( calEvent.end, 'hh:mm TT'));
+                    }
+                    if (calEvent.coords) {
+                        GM1.deleteOverlays();
+                        for (var i in calEvent.coords) {
+                            var newLatlng = new google.maps.LatLng(calEvent.coords[i].lat,calEvent.coords[i].lng);
+                            GM1.placeMarker(newLatlng, map);
+                        }
+                    }
+                    else {
+                        map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
+                    }
+                    if (calEvent.page_names) {
+                        $('#page_name_input').val(calEvent.page_names);
+                    }
+                    if (!calEvent.privacy) {
+                        $('#privacy_public').prop('checked',true);
+                        $('#event_privacy').hide();
+                    }
+                    else {
+                        if (calEvent.privacy.indexOf('P') >= 0){
+                            $('#privacy_public').prop('checked',true);
+                            $('#event_privacy').hide();
+                        }
+                        if (calEvent.privacy.indexOf('A') >= 0){
+                            $('#privacy_public').prop('checked',false);
+                            $('#privacy_inhouse').prop('checked',true);
+                            $('#privacy_admins').prop('checked',true);
+                            $('#event_privacy').show();
+                        }
+                        if (calEvent.privacy.indexOf('E') >= 0){
+                            $('#privacy_public').prop('checked',false);
+                            $('#privacy_inhouse').prop('checked',true);
+                            $('#privacy_employees').prop('checked',true);
+                            $('#event_privacy').show();
+                        }
+                        if (calEvent.privacy.indexOf('I') >= 0){
+                            $('#privacy_public').prop('checked',false);
+                            $('#privacy_inhouse').prop('checked',true);
+                            $('#privacy_interns').prop('checked',true);
+                            $('#event_privacy').show();
+                        }
+                        if (calEvent.privacy.indexOf('V') >= 0){
+                            $('#privacy_public').prop('checked',false);
+                            $('#privacy_inhouse').prop('checked',true);
+                            $('#privacy_volunteers').prop('checked',true);
+                            $('#event_privacy').show();
+                        }
+                    }
             },
             eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
                 change_event(event,true,revertFunc);
@@ -225,7 +394,6 @@ $(document).ready(function(){
                 }
 
             }
-                       
                 
 		});
 
@@ -234,110 +402,8 @@ $(document).ready(function(){
             modal: true,
             width: 500,
             buttons: {
-                'Add Event': function() {
-
-                    var what = jQuery.trim($("#what").val());
-                    var when = jQuery.trim($("#when").val());
-                    var desc = jQuery.trim($("#desc").val());
-                    var time1 = jQuery.trim($("#time1").val());
-                    var time2 = jQuery.trim($("#time2").val());
-                    var pages = jQuery.trim($('#page_name_input').val());
-                
-                    if(what == ""){
-                        alert("Please enter a short event description into the \"what\" field.");
-                    }
-                    else if ($('#privacy_inhouse').prop('checked') && !$('.privacy_opt:checked').length) {
-                        alert("Please choose privacy settings.");
-                    }
-                    else{
-                        var reggie = /(\d+)\/(\d+)\/(\d+)/;
-                        var dateArray = reggie.exec(when); 
-                        var month = dateArray[2]-1;
-                        var year = dateArray[3];
-                        var day = dateArray[1];
-                        var event_date = new Date(year, month, day);
-                        var event_end = '';
-                        if (time1) {
-                            var regh = /(\d+):/
-                            var arrh = regh.exec(time1); 
-                            var hour = parseInt(arrh[1]);
-                            if (time1.indexOf('PM') !== -1 ) {
-                                hour = hour + 12;
-                            }
-
-                            var regm = /:(\d+)/
-                            var arrm = regm.exec(time1); 
-                            var mins = parseInt(arrm[1]);
-
-                            event_date = new Date(year, month, day, hour, mins);
-                        }
-                        var evento = { title: what, start: event_date, allDay: false }
-                        if (time2) {
-                            var regh = /(\d+):/
-                            var arrh = regh.exec(time2); 
-                            var hour = parseInt(arrh[1]);
-                            if (time2.indexOf('PM') !== -1 ) {
-                                hour = hour + 12;
-                            }
-
-                            var regm = /:(\d+)/
-                            var arrm = regm.exec(time2); 
-                            var mins = parseInt(arrm[1]);
-
-                            var event_end = new Date(year, month, day, hour, mins);
-                            evento['end'] = event_end;
-                        }
-                        
-                        if (desc) {
-                            evento['description'] = desc;
-                        }
-
-                        /*locations*/
-                        var coords = [];
-                        if (GM1.markersArray.length) {
-                            for ( var i in GM1.markersArray) { 
-                                var coord = {
-                                    'lat':GM1.markersArray[i].getPosition().lat(),
-                                    'lng':GM1.markersArray[i].getPosition().lng(),
-                                }
-                                coords.push(coord);
-                            }
-                            evento['coords'] = coords;
-                        }
-
-                        if ($('#privacy_inhouse').prop('checked')) {
-                            var privacy = [];
-                            $('.privacy_opt:checked').each(function(i,e) {
-                                privacy.push($(e).attr('name'));
-                            });
-                            evento['privacy'] = privacy;
-                        }
-
-                        if (pages) {
-                            pages = $.map(pages.split(","), $.trim);
-                            evento['pages'] = pages;
-                        }
-
-                        change_event(evento);
-
-                        $(this).dialog('close');
-                        $("#what").val('');
-                        $("#when").val('');
-                        $("#desc").val('');
-
-                        $("#time1").val('');
-                        $("#time2").val('');
-                        $("#location").val('');
-                        GM1.deleteOverlays();
-                        $('.privacy_opt:checked').each(function() {
-                            $(this).prop('checked',false);
-                        });
-                        $('#privacy_public').prop('checked',true);
-                        $('#event_privacy').hide();
-                        $('#page_name_input').val('');
-
-                    }
-                    
+                'Save': function() {
+                    add_event();
                 },
                 'Cancel': function() {
                     $(this).dialog('close');
@@ -354,9 +420,27 @@ $(document).ready(function(){
             width: 450,
             modal: true, 
             buttons: {
-                'Delete': function() {
-                    change_event($(this).data('eventObj'),'delete');
+                'Edit': function() {
+                    var self = $(this);
                     $(this).dialog('close');
+
+                    var buttons = $( "#add-event-form" ).dialog( "option", "buttons" );
+                    buttons['Delete'] = function() {
+                        change_event(self.data('eventObj'),'delete');
+                        $( "#add-event-form" ).dialog('close');
+                    }
+                    $( "#add-event-form" ).dialog( "option", "buttons", buttons );
+                    $( "#add-event-form" ).dialog( "open" );
+
+                    GM1.check_resize(map);
+                    if (!$(this).data('eventObj').coords) {
+                        map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
+                    }
+                    else {
+                        var coord = $(this).data('eventObj').coords.pop();
+                        map.setCenter(new google.maps.LatLng(coord.lat,coord.lng));
+                    }
+
                 }, 
                 'Ok': function() {
                     $(this).dialog('close');
@@ -401,6 +485,8 @@ $(document).ready(function(){
 
         $(document).on('click','#del_locations',function(e) {
             e.preventDefault();
+            var event = $("#show-event-form").data('eventObj');
+            delete event.coords;
             GM1.deleteOverlays();
         }); 
 
@@ -466,7 +552,6 @@ $(document).ready(function(){
             },
             check_resize : function(map) {
                 google.maps.event.trigger(map, 'resize');
-                map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
             },
             deleteOverlays : function() {
                 var self = this;

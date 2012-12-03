@@ -39,6 +39,19 @@
 
 <link rel="shortcut icon" type="image/x-icon" href="{% media_url 'images/favicon.ico' %}" />
 <link rel="icon" type="image/x-icon" href="{% media_url 'images/favicon.ico' %}" />
+<style>
+@font-face {
+	font-family: "Kievit-Custom";
+	src: url('fonts/Kievit-Custom.eot');
+    src: local(my_font), url('{% media_url 'css/fonts/Kievit-Custom.ttf' %}') format('opentype');
+}
+@font-face {
+	font-family: "Kievit-Custom";
+	src: url('fonts/Kievit-Bold-Custom.eot');
+    src: local(my_font), url('{% media_url 'css/fonts/Kievit-Bold-Custom.ttf' %}') format('opentype');
+	font-weight: bold;
+}  
+</style>
 
 <!-- Google Analytics -->
 <script type="text/javascript">

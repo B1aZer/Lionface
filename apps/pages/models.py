@@ -35,9 +35,6 @@ class PageRequest(models.Model):
     is_hidden = models.BooleanField(default=False)
     is_accepted = models.BooleanField(default=False)
 
-    class Meta:
-        unique_together = ("from_page", "to_page")
-
     def accept(self):
         if self.type == 'PR':
             self.from_page.friends.add(self.to_page)
@@ -45,7 +42,8 @@ class PageRequest(models.Model):
             self.save()
         else:
             self.event.tagged.add(self.to_page)
-            self.delete()
+            self.is_accepted = True
+            self.save()
 
 
     def hide(self):

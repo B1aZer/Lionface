@@ -40,9 +40,9 @@ class Events(models.Model):
         tagged = []
         if self.tagged.count() > 1:
             if page:
-                tagged = [pg.name for pg in self.tagged.all() if pg != page]
+                tagged = [pg for pg in self.tagged.all() if pg != page]
             else:
-                tagged = [pg.name for pg in self.tagged.all() if pg != self.page]
+                tagged = [pg for pg in self.tagged.all() if pg != self.page]
         return tagged
 
     def save(self, *args, **kwargs):
