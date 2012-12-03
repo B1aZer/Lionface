@@ -22,7 +22,7 @@
 	padding: 6px 6px 3px 6px;
 	-moz-border-radius: 3px; border-radius: 3px;
 	font-size: 12pt;
-	color: #AAA;
+	color: #FFF;
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=75);
 	-moz-opacity: 0.75;
 	opacity: 0.75;
@@ -70,11 +70,9 @@ a.reset:hover {
 	width: 100%;	
 	-moz-box-shadow: inset 0 5px 10px -4px #333;
 	box-shadow: inset 0 5px 10px -4px #333; 
-	background: url(../images/rainbow.png);
+	background: url('../images/rainbow.png');
 	background-position: bottom center;
 	background-repeat: repeat-x;
-	-moz-background-size: 700px;
-	background-size: 700px;
 	position: relative;
 
 }
@@ -86,47 +84,48 @@ a.reset:hover {
 	position: relative;
 }
 
-.white_opacity:before, .white_opacity:after  
+.left_shadow, .right_shadow 
 {  
     position: absolute;  
     width: 40%;  
     height: 10px;  
     content: ' ';  
     left: 22px;  
-    bottom: 26px;  
+    bottom: 24px;  
     background: transparent;  
-    -webkit-transform: skew(-5deg) rotate(-5deg);  
-    -moz-transform: skew(-5deg) rotate(-5deg);  
-    -ms-transform: skew(-5deg) rotate(-5deg);  
-    -o-transform: skew(-5deg) rotate(-5deg);  
-    transform: skew(-5deg) rotate(-5deg);  
+    -webkit-transform: skew(-4deg) rotate(-4deg);  
+    -moz-transform: skew(-4deg) rotate(-4deg);  
+    -ms-transform: skew(-4deg) rotate(-4deg);  
+    -o-transform: skew(-4deg) rotate(-4deg);  
+    transform: skew(-4deg) rotate(-4deg);  
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
     -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
     box-shadow: 0 6px 12px rgba(0, 0, 0, 1);  
-    z-index: -1;  
 }  
-.white_opacity:after  
+.right_shadow  
 {  
     left: auto;  
     right: 22px;  
-    -webkit-transform: skew(5deg) rotate(5deg);  
-    -moz-transform: skew(5deg) rotate(5deg);  
-    -ms-transform: skew(5deg) rotate(5deg);  
-    -o-transform: skew(5deg) rotate(5deg);  
-    transform: skew(5deg) rotate(5deg);  
+    -webkit-transform: skew(4deg) rotate(4deg);  
+    -moz-transform: skew(4deg) rotate(4deg);  
+    -ms-transform: skew(4deg) rotate(4deg);  
+    -o-transform: skew(4deg) rotate(4deg);  
+    transform: skew(4deg) rotate(4deg);  
 } 
 
 .center_container {
-background: #3ea8d2; /* Old browsers */
-background: -moz-linear-gradient(top, #72dcea 0%, #3ea8d2 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#72dcea), color-stop(100%,#3ea8d2)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* IE10+ */
-background: linear-gradient(to bottom, #72dcea 0%,#3ea8d2 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72dcea', endColorstr='#3ea8d2',GradientType=0 ); /* IE6-9 */
-	display: block; height: 100%; width: 100%;
+	background: #3ea8d2; /* Old browsers */
+	background: -moz-linear-gradient(top, #72dcea 0%, #3ea8d2 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#72dcea), color-stop(100%,#3ea8d2)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #72dcea 0%,#3ea8d2 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #72dcea 0%,#3ea8d2 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72dcea', endColorstr='#3ea8d2',GradientType=0 ); /* IE6-9 */
+	display: block; height: 275px; width: 400px;
 	border: 1px solid #EEE;
+	z-index: 999;
+	position: absolute; left: 17px; top: 17px;
 }
 
 .heart { !important; color: #555; }
@@ -323,6 +322,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#72dcea', end
 #login_box input[type=submit]:active {
 	color #F58;
 	background: #DDD;
+}
+
+.heart input[type=submit] {
+	padding: 8px 15px 8px 15px;
 }
 
 #login_box input[type=submit]:hover, .heart input[type=submit]:hover { 
