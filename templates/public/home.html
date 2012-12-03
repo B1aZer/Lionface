@@ -3,7 +3,7 @@
 
 {% block css %}
 <style>
-body {background: #EEE;}
+body { background: #EEE;}
 </style>
 {% endblock %}
 
@@ -17,10 +17,10 @@ body {background: #EEE;}
     <div class="content_area">
 <table width="100%" height="450"><tr><td>
 <table width="900"><tr><td width="450" align="left">
-	<div class="white_opacity" style="text-align: center;">
+	<div class="white_opacity" style="text-align: center;"><div class="right_shadow"></div><div class="left_shadow"></div>
 			<div class="next_generation" style="top: -10px;">The Next Generation in Social Networking</div>
-			<div style="position: absolute; left: 17px; bottom: -5px; color: #FFF; font-size: 8pt;">Built in Python Django</div>
-			<a href="{% url account.views.login %}" style="border: 0px none;"><div class="center_container">
+			<div style="position: absolute; left: 17px; bottom: -5px; color: #FFF; font-size: 8pt; 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=75); -moz-opacity: 0.75; opacity: 0.75;">Built in Python Django</div>
+			<a href="{% url account.views.login %}" style="border: 0px none;"><div class="center_container" style="z-index: 999;">
 		<table width="100%" height="300"><tr><td>
       		<img src="{% media_url 'images/logo300.png' %}" border="0"/>
 		</td></tr></table>
