@@ -93,6 +93,9 @@ $(document).ready(function(){
             if (event.id) {
                 evento['id'] = event.id;
             }
+            if (event.clone) {
+                evento['clone'] = 'True';
+            }
             if (change == 'delete') {
                 evento['del'] = true;
             }
@@ -103,15 +106,12 @@ $(document).ready(function(){
                 callback: function(data) {
                     if (data.status == 'OK') {
                         if (!change) {
-                            console.log('creating');
                             $('#calendar_micro').fullCalendar('renderEvent', event );
                         }
                         if (data.id) {
-                            console.log('iding');
                             event.id = data.id;
                         }
                         if (change == 'delete') {
-                            console.log('deleting:' + event.id );
                             $('#calendar_micro').fullCalendar( 'removeEvents' , event.id );
                             /* strange bug, event wont disappear after creating */
                         }
@@ -261,6 +261,9 @@ $(document).ready(function(){
             eventRender: function(event, element) {
                 if (event.description) {
                     element.find('div.fc-event-content').append("<div class=\"fc-event-description\">" + event.description + "</div>");
+                }
+                if (event.owner_id != LionFace.User.page_id) {
+                    event.editable = false;
                 }
             },
             dayClick: function(date, allDay, jsEvent, view) {
@@ -433,9 +436,16 @@ $(document).ready(function(){
                         var new_event = { title: event.title, 
                                             start:new Date(y, m, d+i, H, M), 
                                             end: new Date(y, m, d+i, He, Me), 
-                                            allDay: event.allDay }
+                                            allDay: event.allDay,
+                                            privacy: event.privacy,
+                                            coords: event.coords,
+                                            className: event.className,
+                                            pages: $.map(event.page_names.split(","), $.trim),
+                                            owner_id: event.owner_id,
+                                            clone: true,
+                                        }
 
-                        change_event(new_event);
+                        change_event(new_event, true);
                     }
                     revertFunc();
                     

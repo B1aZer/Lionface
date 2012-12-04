@@ -1245,13 +1245,14 @@ def add_events(request, slug):
     event_id = request.POST.get('id',None)
     name = request.POST.get('name',None)
     date = request.POST.get('start',None)
-    allday = request.POST.get('allday',None)
+    #allday = request.POST.get('allday',None)
     delete = request.POST.get('del',None)
     desc = request.POST.get('desc',None)
     end = request.POST.get('end',None)
     coords = request.POST.get('coords',None)
     privacy = request.POST.get('privacy','public')
     pages = request.POST.get('pages',None)
+    clone = request.POST.get('clone',None)
     if date:
         date_beg = dateutil.parser.parse(date)
         if name:
@@ -1291,10 +1292,13 @@ def add_events(request, slug):
                     if page_name:
                         try:
                             spage = Pages.objects.get(username=page_name)
-                            req_count = PageRequest.objects.filter(from_page = page, to_page = spage, type = 'ER', event = event).count()
-                            if not req_count:
-                                pr = PageRequest(from_page = page, to_page = spage, type = 'ER', event = event)
-                                pr.save()
+                            if not clone:
+                                req_count = PageRequest.objects.filter(from_page = page, to_page = spage, type = 'ER', event = event).count()
+                                if not req_count:
+                                    pr = PageRequest(from_page = page, to_page = spage, type = 'ER', event = event)
+                                    pr.save()
+                            else:
+                                event.tagged.add(spage)
                         except Pages.DoesNotExist:
                             pass
             if delete:
