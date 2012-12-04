@@ -255,6 +255,8 @@ class PagePost(Post):
     page = models.ForeignKey(Pages, related_name='posts')
 
     def render(self):
+        if hasattr(self, 'pagesharepost'):
+            return self.pagesharepost.render()
         import bleach
         from oembed.core import replace
         def add_http(url):
@@ -312,13 +314,14 @@ class PagePost(Post):
 
 
 class PageSharePost(PagePost):
+    id_news = models.IntegerField(default=0)
     content_type = models.ForeignKey(ContentType, null=True, blank=True)
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     # news item add ?
 
     def name(self):
-        return "Shared Post"
+        return "pageshare post"
 
     def privacy(self):
         return getattr(self.content_object,'type',"")
@@ -343,7 +346,7 @@ class PageSharePost(PagePost):
     def render(self):
         #import pdb;pdb.set_trace()
         return mark_safe("""<a href='%s'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
-                            <div class='share_content'>%s</div>""" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content_object.user.get_absolute_url(), self.content_object.user.get_full_name(), self.content))
+                            <div class='share_content'>%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
 
 class ContentPost(Post):

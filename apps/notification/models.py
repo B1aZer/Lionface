@@ -24,6 +24,7 @@ NOTIFICATION_TYPES = (
     ('MI', 'Multiple Image Comment'),
     ('MF', 'Multiple Comment Following'),
     ('MS', 'Multiple Shared'),
+    ('MD', 'Multiple Page Shared'),
     ('MM', 'Multiple Shared Following'),
     ('FM', 'Multiple Following Acquired'),
     ('MP', 'Multiple Profile Post'),
@@ -85,8 +86,11 @@ class Notification(models.Model):
                     read = False)
             if original_notfs.count():
                 original_notfs.update(read=True)
-        if self.type == 'MS':
-            object_ids = [x.id for x in SharePost.objects.filter(object_id = self.content_object.id)]
+        if self.type in ['MS','MD']:
+            if self.type == 'MD':
+                object_ids = [x.id for x in PageSharePost.objects.filter(object_id = self.content_object.id)]
+            else:
+                object_ids = [x.id for x in SharePost.objects.filter(object_id = self.content_object.id)]
             original_notfs = Notification.objects.filter(user=self.user, \
                     type='PS', \
                     object_id__in = object_ids,
@@ -157,6 +161,7 @@ def create_share_notifiaction(sender, instance, created, **kwargs):
     #adding to following list
     instance.user_to.follows.add(instance)
 post_save.connect(create_share_notifiaction, sender=SharePost)
+post_save.connect(create_share_notifiaction, sender=PageSharePost)
 
 
 def create_comment_notifiaction(sender, comment, request, **kwargs):
@@ -251,7 +256,11 @@ def update_notification_count(sender, instance, **kwargs):
         # check if notification for this object already exist
         if instance.type in ('PS','FS'):
             # get all shrepost's ids for parent (contentpost)
-            object_ids = [x.id for x in SharePost.objects.filter(object_id = instance.content_object.get_original_post().id)]
+            if isinstance(instance.content_object, PageSharePost):
+                object_ids = [x.id for x in PageSharePost.objects.filter(object_id = instance.content_object.get_original_post().id)]
+                notification_type = 'MD'
+            else:
+                object_ids = [x.id for x in SharePost.objects.filter(object_id = instance.content_object.get_original_post().id)]
             object_id = instance.content_object.get_original_post().id
             content_object = instance.content_object.get_original_post()
         else:

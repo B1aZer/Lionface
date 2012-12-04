@@ -263,6 +263,14 @@ def show(request):
                 return HttpResponse(json.dumps(data), "application/json")
             items = NewsItem.objects.filter(post=share_post)
 
+        if post_type == 'pageshare post':
+            try:
+                items = Post.objects.filter(id=int(post_id))
+            except ObjectDoesNotExist:
+                data['html'] = "Sorry no such post"
+                return HttpResponse(json.dumps(data), "application/json")
+
+
         if post_type == 'comment post':
             if post_model == 'post_post':
                 try:
@@ -279,11 +287,11 @@ def show(request):
 
         if post_type in ('shared_multiple','profile_multiple'):
             from notification.models import Extra
-            post_ids = [x.item_id for x in Extra.objects.filter(notification__id = post_id)]
+            post_ids = [x.item_id for x in Extra.objects.filter(notification__id = post_id) if x.item_id]
             #post_ids = post_id.replace('[','').replace(']','').split(',')
             #post_ids = [x.id for x in SharePost.objects.filter(object_id = int(post_id))]
             if post_ids:
-                items = Post.objects.get_news_post(post_ids)
+                items = Post.objects.filter(id__in=post_ids)
 
         if len(items) > 0:
                 t = loader.get_template('post/_feed.html')
@@ -362,7 +370,6 @@ def share(request, post_id = None):
     if post_id:
         post_model = request.POST.get('post_model')
         share_to = request.POST.get('share_to', None)
-        import pdb;pdb.set_trace()
         if share_to:
             if share_to == 'profile':
                 share_to = None
@@ -387,25 +394,35 @@ def share(request, post_id = None):
                 return HttpResponse(json.dumps(data), "application/json")
         post_type = post.get_post().get_inherited()
         #if post already shared before
-        if isinstance(post_type, SharePost):
+        if isinstance(post_type, SharePost) or hasattr(post_type, 'pagesharepost'):
             #post = post_type.get_original_post().post.get_inherited()
-            post = post_type.content_object
+            if hasattr(post_type, 'pagesharepost'):
+                share_post = post_type.pagesharepost
+                post = share_post.content_object
+            else:
+                post = post_type.content_object
             if post:
                 #if origanl post was not deleted
-                shared = SharePost(user = post_type.content_object.user , user_to=request.user , content = post_type.content, id_news = post_id, content_object = post )
+                if share_to:
+                    shared = PageSharePost(user = post.user , user_to=request.user , page=page , content = post_type.content, id_news = post_id, content_object = post )
+                else:
+                    shared = SharePost(user = post.user , user_to=request.user , content = post_type.content, id_news = post_id, content_object = post )
                 post.shared += 1
                 post.save()
                 shared.save()
             else:
                 #if was
-                shared = SharePost(user = post_type.user , user_to=request.user , content = post_type.content, id_news = post_id, content_object = post_type )
+                if share_to:
+                    shared = PageSharePost(user = post_type.user , user_to=request.user , page=page , content = post_type.content, id_news = post_id, content_object = post_type )
+                else:
+                    shared = SharePost(user = post_type.user , user_to=request.user , content = post_type.content, id_news = post_id, content_object = post_type )
                 post_type.shared +=1
                 post_type.save()
                 shared.save()
         else:
             #normal post
-            if page:
-                post = PageSharePost(user = post_type.user , page=page , content = post.render(), content_object = post_type)
+            if share_to:
+                post = PageSharePost(user = post_type.user , user_to=request.user , page=page , content = post.render(), id_news = post.id, content_object = post_type)
             else:
                 post = SharePost(user = post_type.user , user_to=request.user , content = post.render(), id_news = post.id, content_object = post_type)
             post_type.shared +=1
