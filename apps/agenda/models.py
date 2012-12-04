@@ -26,6 +26,10 @@ class Events(models.Model):
         locs = self.locations_set.all()
         return locs
 
+    def remove_locations(self):
+        self.get_locations().delete()
+        return True
+
     def get_locations_list(self):
         locs = [{
                 'lat':loc.lat,

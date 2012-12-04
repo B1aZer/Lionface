@@ -96,6 +96,7 @@ $(document).ready(function(){
             if (change == 'delete') {
                 evento['del'] = true;
             }
+            event['owner_id'] = LionFace.User.page_id;
             make_request({
                 url:url,
                 data:evento,
@@ -257,6 +258,11 @@ $(document).ready(function(){
                     alert('there was an error while fetching events!');
                 },
             },
+            eventRender: function(event, element) {
+                if (event.description) {
+                    element.find('div.fc-event-content').append("<div class=\"fc-event-description\">" + event.description + "</div>");
+                }
+            },
             dayClick: function(date, allDay, jsEvent, view) {
                 if (LionFace.User.options['pages_calendar__'+LionFace.User.page_id]) {
                     // link to current event
@@ -271,6 +277,34 @@ $(document).ready(function(){
                     $("#show_date_end").html('');
                     $("#show_description").html('');
 
+                    var edit_buttons  = $("#show-event-form").dialog( "option", "buttons" );
+                    if (editable && calEvent.owner_id == LionFace.User.page_id) {
+                        edit_buttons['Edit'] = function() {
+                            $("#show-event-form").dialog('close');
+
+                            var buttons = $( "#add-event-form" ).dialog( "option", "buttons" );
+                            buttons['Delete'] = function() {
+                                change_event($("#show-event-form").data('eventObj'),'delete');
+                                $( "#add-event-form" ).dialog('close');
+                            }
+                            $( "#add-event-form" ).dialog( "option", "buttons", buttons );
+                            $( "#add-event-form" ).dialog( "open" );
+
+                            GM1.check_resize(map);
+                            if (!$(this).data('eventObj').coords) {
+                                map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
+                            }
+                            else {
+                                var coord = $(this).data('eventObj').coords.pop();
+                                map.setCenter(new google.maps.LatLng(coord.lat,coord.lng));
+                            }
+                                     
+                        } 
+                    }
+                    else {
+                        delete  edit_buttons['Edit'];
+                    }
+                    $( "#show-event-form" ).dialog( "option", "buttons", edit_buttons );
 
                     $("#show_title").html(calEvent.title);
                     $("#show_date").html($.fullCalendar.formatDate( calEvent.start, 'ddd, MMMM dd hh:mm TT'));
@@ -420,28 +454,6 @@ $(document).ready(function(){
             width: 450,
             modal: true, 
             buttons: {
-                'Edit': function() {
-                    var self = $(this);
-                    $(this).dialog('close');
-
-                    var buttons = $( "#add-event-form" ).dialog( "option", "buttons" );
-                    buttons['Delete'] = function() {
-                        change_event(self.data('eventObj'),'delete');
-                        $( "#add-event-form" ).dialog('close');
-                    }
-                    $( "#add-event-form" ).dialog( "option", "buttons", buttons );
-                    $( "#add-event-form" ).dialog( "open" );
-
-                    GM1.check_resize(map);
-                    if (!$(this).data('eventObj').coords) {
-                        map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
-                    }
-                    else {
-                        var coord = $(this).data('eventObj').coords.pop();
-                        map.setCenter(new google.maps.LatLng(coord.lat,coord.lng));
-                    }
-
-                }, 
                 'Ok': function() {
                     $(this).dialog('close');
                 } 

@@ -1276,6 +1276,7 @@ def add_events(request, slug):
             event.save()
             if coords:
                 coords = json.loads(coords)
+                event.remove_locations()
                 for coord in coords:
                     loc = Locations(lat = coord.get('lat'), lng = coord.get('lng'), event = event)
                     loc.save()
@@ -1300,7 +1301,6 @@ def add_events(request, slug):
                 if event.page == page:
                     event.delete()
             data['status']='OK'
-            data['status']='OK'
             data['id']=event.id
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -1318,6 +1318,7 @@ def get_events(request, slug):
         append = False
         ev = {
                 'id':event.id,
+                'owner_id':event.page.id,
                 'title':event.name,
                 'start':event.date.strftime("%Y-%m-%d %H:%M:%S"),
             }
