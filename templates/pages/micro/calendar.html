@@ -332,6 +332,23 @@ $(document).ready(function(){
                     else {
                         $('#tagged_pages').hide();
                     }
+                    if (calEvent.privacy) {
+                        $('#privacy_settings').show()
+                        var value = '';
+                        if (calEvent.privacy.indexOf('P') >= 0) value = value + ' Public,';
+                        if (calEvent.privacy.indexOf('A') >= 0) value = value + ' Admins,';
+                        if (calEvent.privacy.indexOf('E') >= 0) value = value + ' Employees,';
+                        if (calEvent.privacy.indexOf('I') >= 0) value = value + ' Interns,';
+                        if (calEvent.privacy.indexOf('V') >= 0) value = value + ' Volunteers,';
+                        // remove last comma
+                        var comma = value.lastIndexOf(",")
+                        if (comma) value = value.substr(0,comma)
+                        $('#show_privacy').html(jQuery.trim(value));
+                    }
+                    else {
+                        $('#privacy_settings').hide()
+                    }
+                    //show
                     $("#show-event-form").dialog( "open" );
                     $("#show-event-form").dialog( "option", "title", calEvent.title );
                     GM2.check_resize(map2);
@@ -498,7 +515,9 @@ $(document).ready(function(){
         $(document).on('click','#del_locations',function(e) {
             e.preventDefault();
             var event = $("#show-event-form").data('eventObj');
-            delete event.coords;
+            if (event) {
+                delete event.coords;
+            }
             GM1.deleteOverlays();
         }); 
 
@@ -553,11 +572,11 @@ $(document).ready(function(){
                         var geocode = results[0].geometry.location;
                         //console.log(iminit.geocode);
                         //iminit.savePoint(iminit.geocode);
-                        //iminit.deleteOverlays();
-                        //self.placeMarker(geocode);
+                        self.deleteOverlays();
+                        self.placeMarker(geocode, map);
                         //iminit.addCoord(iminit.geocode);
                     } else {
-                        //var reason="<a class=\"close\" data-dismiss=\"alert\">×</a> <strong>Warning!</strong>" + status;
+                       //var reason="<a class=\"close\" data-dismiss=\"alert\">×</a> <strong>Warning!</strong>" + status;
                         //$("#loc_error").html(reason).addClass("alert").fadeIn();
                     }
                 });
@@ -785,6 +804,13 @@ $(document).ready(function(){
             </td>
             <td style="height: 200px; width:300px;">
                 <div id="view_map_canvas" style="width:100%; height:100%"></div>
+            </td>
+        </tr>
+        <tr id="privacy_settings">
+            <td>
+                Privacy:
+            </td>
+            <td id="show_privacy">
             </td>
         </tr>
     </table>

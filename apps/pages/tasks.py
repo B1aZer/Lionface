@@ -30,6 +30,6 @@ class UpdatePageEvent(Task):
             events = page.events_set.filter(date__gte=afterday,date__lte=period)
             if events.count() > 0:
                 for event in events:
-                    post = PagePost(user=page.user, content='event soon: %s' % event.name, page = page)
+                    post = PagePost(user=page.user, content="There's an event in 24 hours: %s <br /> Description: %s" % (event.name, event.description), page = page)
                     post.save()
 tasks.register(UpdatePageEvent)
