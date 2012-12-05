@@ -753,31 +753,31 @@ $(document).ready(function(){
     <fieldset>
         <table style="width:100%; padding:5px;">
             <tr>
-                <td>
-                    <label for="name">When:</label>
+                <td align="right">
+                    <label for="name" style="top: -7px;">Date:</label>
                 </td>
                 <td>
                     <input type="text" name="when" id="when" class="text ui-widget-content ui-corner-all" />
                 </td>
             </tr>
-            <tr>
-                <td style="padding: 8px 0;">
-                    <label for="name">Event Title:</label>
+            <tr style="padding: 8px 0;">
+                <td align="right">
+                    <label for="name" style="top: -7px;">Event Title:</label>
                 </td>
                 <td>
                     <input type="text" name="what" id="what" class="text ui-widget-content ui-corner-all" />
                 </td>
             </tr>
             <tr>
-                <td>
-                    <label for="desc">Description:</label>
+                <td align="right">
+                    <label for="desc" style="top: -7px;">Description:</label>
                 </td>
                 <td>
                     <textarea type="text" name="desc" id="desc" class="text ui-widget-content ui-corner-all" style="margin: 0px; width: 300px; height: 80px;" />
                 </td>
             </tr>
             <tr>
-                <td width="30%"> 
+                <td width="30%" align="right"> 
                     <label for="desc">Privacy:</label>
                 </td>
                 <td style="padding: 8px 0;" width="70%">
@@ -805,31 +805,31 @@ $(document).ready(function(){
                     Sharing
                 </td>
             </tr>
-            <tr id="choose_time" >
-                <td>
-                    <label>Time:</label>
+            <tr id="choose_time">
+                <td align="right">
+                    <label style="top: -7px;">Time:</label>
                 </td>
                 <td>
                     From: <input type="text" id="time1" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"/> 
 					To: <input type="text" id="time2" size="10" class="text ui-widget-content ui-corner-all" autocomplete="OFF" readonly="readonly"/> 
                 </td>
             </tr>
-            <tr id="choose_page" >
-                <td>
-                    <label>Page:</label>
+            <tr id="choose_page">
+                <td align="right">
+                    <label style="top: -7px;">Tag a Page:<br /><span style="color: #AAA; font-size: 8pt;">(optional)</span></label>
                 </td>
                 <td>
 					<input type="text" id="page_name_input" size="30" class="text ui-widget-content ui-corner-all" autocomplete="OFF" /> 
                 </td>
             </tr>
-            <tr class="map_tr" >
-                <td>
-                    <label for="location">Location <span style="color: #AAA; font-size: 8pt;">(optional)</span></label>
+            <tr class="map_tr">
+                <td align="right">
+                    <label for="location">Location<br /><span style="color: #AAA; font-size: 8pt;">(optional)</span></label>
                 </td>
                 <td>
                     <span>
                         <input type="text" name="location" id="location">
-                        <a href="#" id="find_location">find</a>
+                        <a href="#" id="find_location" class="blue_btn" style="color: #FFF;">find</a>
                         <a href="#" id="del_locations">deleteAll</a>
                     </span>
                 </td>
@@ -847,51 +847,48 @@ $(document).ready(function(){
 <div id="show-event-form" title="Event Information" class="not-dialog" style="display:none">
     <table>
         <tr>
-            <td>
-                Event Title:
+            <td align="right">
+                <label>Event Title:</label>
             </td>
             <td id="show_title">
             </td>
         </tr>
         <tr>
-            <td>
-                Date:
+            <td align="right">
+                <label>Begins:</label>
             </td>
             <td id="show_date">
             </td>
         </tr>
         <tr>
-            <td>
-                End:
+            <td align="right">
+                <label>Ends:</label>
             </td>
             <td id="show_date_end">
             </td>
         </tr>
         <tr>
-            <td>
-                Description:
+            <td align="right">
+                <label>Description:</label>
             </td>
             <td id="show_description">
             </td>
         </tr>
         <tr id="tagged_pages">
-            <td>
-                Tagged Pages:
+            <td align="right">
+                <label>Tagged Pages:</label>
             </td>
             <td id="show_tagged">
             </td>
         </tr>
         <tr id="show_location">
-            <td>
-                Location:
-            </td>
-            <td style="height: 200px; width:300px;">
+            <td colspan="2">
                 <div id="view_map_canvas" style="width:100%; height:100%"></div>
             </td>
         </tr>
         <tr id="privacy_settings">
-            <td>
-                Privacy:
+            <td align="right">
+                <label>Privacy:</label>
             </td>
             <td id="show_privacy">
             </td>

@@ -657,3 +657,17 @@ table.fc-border-separate {
 #add-event-form input:focus, #add-event-form textarea:focus {
 	background: #FFF;
 }
+
+div.event-admins,div.event-employees,div.event-interns,div.event-volunteers {
+	background: #333;
+	padding: 3px 0;
+}
+
+#add-event-form td, #show-event-form td {
+	padding: 8px;
+}
+
+#add-event-form label, #show-event-form label {
+	position: relative; left: -8px;
+	color: #F58;
+}
