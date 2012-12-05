@@ -36,7 +36,14 @@ jQuery(document).ajaxSend(function(event, xhr, settings) {
     if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
         xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
     }
-});              
+});
+
+/** parents selector */
+//$('.foo,.bar').filter(':parents(.baz)');
+jQuery.expr[':'].parents = function(a,i,m){
+    return jQuery(a).parents(m[3]).length < 1;
+};
+
 
 function make_request(input) {
     var url = input.url;
@@ -405,6 +412,17 @@ LionFace.Site.prototype = {
                     if (data.status == 'removed') {
                         $('#comment_'+data.id).fadeOut();
                     }
+                    /** only for calendar events */
+                    var event = $("#show-event-form").data('eventObj');
+                    if (event) {
+                        console.log('pre_delete');
+                        console.log(event);
+                        var html_list = $(event.comment_list);
+                        html_list.find('#comment_' + data.id).remove();
+                        event.comment_list = html_list.html();
+                        console.log('post_delete');
+                        console.log(event);
+                    }
                 },
                 error: function() {
                     alert('Unable to delete data.');
@@ -417,11 +435,13 @@ LionFace.Site.prototype = {
         if (LionFace.User.is_anonymous) {
             return
         }
+        var event = $("#show-event-form").data('eventObj');
+        var data = $('#comment_form_'+form_id+' form').serialize();
         $('#comment_form_'+form_id+' form input.submit-preview').remove();
         url = '/posts/test/'
         make_request({
             url: url,
-            data: $('#comment_form_'+form_id+' form').serialize(),
+            data: data,
             callback: function(html) {
                 if ($('#comment_form_'+form_id).closest('.comment_container').find('.comment_list:last').length) {
                     $('#comment_form_'+form_id).closest('.comment_container').find('.comment_list:last').after(html.html);
@@ -432,6 +452,25 @@ LionFace.Site.prototype = {
                 $('#comment_form_'+form_id+' form textarea').val('');
                 /** following mark */
                 $('#comment_form_'+form_id).closest('.result').find('.follow_post').html('Unfollow');
+
+                /** only for calendar events */
+                if (event) {
+                    //event.comment_list.push(html.html);
+                        console.log('pre_add');
+                        console.log(event);
+                    var html_list = $(event.comment_list);
+                    if (html_list.find('#comments').length) {
+                        html_list.find('#comments').append(html.html);
+                    }
+                    else {
+                        html_list.html('<dl id="comments"></dl>');
+                        html_list.find('#comments').append(html.html);
+                    }
+                    
+                    event.comment_list = html_list.html();
+                        console.log('post_add');
+                        console.log(event);
+                }
 
             },
             errorback: function () {

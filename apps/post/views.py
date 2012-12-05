@@ -508,7 +508,6 @@ def test(request):
     data = {'status': 'OK'}
     from django.contrib.comments.views.comments import post_comment
     commented = post_comment(request)
-
     #hack for finding comment's id
     location = commented.__getitem__('location')
     position = location.find('?c=') + 3

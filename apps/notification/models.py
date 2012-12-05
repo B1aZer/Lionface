@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
 from account.models import *
+from agenda.models import *
 from post.models import *
 from pages.models import Pages
 from images.models import Image, ImageComments
@@ -166,24 +167,29 @@ post_save.connect(create_share_notifiaction, sender=PageSharePost)
 
 def create_comment_notifiaction(sender, comment, request, **kwargs):
     news_post = comment.content_object
-    #creating notification for owner if following
-    if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.get_post().following.all() \
-            and comment.user not in news_post.get_owner().get_blocked():
-        Notification(user=comment.content_object.get_post().get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
-    #create notifiactions for all followers of this post
-    try:
-        post = news_post.get_post()
-        if post.following.all():
-            for user in post.following.all():
-                if user <> comment.user and user <> post.get_owner() \
-                        and comment.user not in user.get_blocked():
-                    Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
-    except:
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.warning('Error in notifications')
-    #adding this post to following list
-    comment.user.follows.add(comment.content_object.get_post())
+    if isinstance(news_post,Events):
+        #notifiaction for events
+        #Notification(user=comment.content_object.get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
+        pass
+    else:
+        #creating notification for owner if following
+        if news_post.get_owner() <> comment.user and news_post.get_owner() in news_post.get_post().following.all() \
+                and comment.user not in news_post.get_owner().get_blocked():
+            Notification(user=comment.content_object.get_post().get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
+        #create notifiactions for all followers of this post
+        try:
+            post = news_post.get_post()
+            if post.following.all():
+                for user in post.following.all():
+                    if user <> comment.user and user <> post.get_owner() \
+                            and comment.user not in user.get_blocked():
+                        Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
+        except:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning('Error in notifications')
+        #adding this post to following list
+        comment.user.follows.add(comment.content_object.get_post())
 comment_was_posted.connect(create_comment_notifiaction)
 
 

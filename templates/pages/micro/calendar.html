@@ -2,11 +2,20 @@
 
 <script>
 $(document).ready(function(){
-
-
+        /*
+        var add_dialog;
+        if (!LionFace.User.calendar_tp) create_tp();
+        function create_tp() {
+            $("#time1, #time2").timePicker({
+                show24Hours: false,
+            });
+            LionFace.User.calendar_tp = true;
+        }
+        */
+        //TODO this will create new pickers every request
         $("#time1, #time2").timePicker({
             show24Hours: false,
-            });
+        });
 
         function clean_add_form() {
             $("#what").val('');
@@ -34,7 +43,9 @@ $(document).ready(function(){
             console.log(date);
             
             $("#when").prop("disabled", true);
-            $( "#add-event-form" ).dialog( "open" );
+            add_dialog = create_add_dialog()
+            console.log(add_dialog);
+            add_dialog.dialog( "open" );
             GM1.check_resize(map);
             map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
         }
@@ -96,6 +107,12 @@ $(document).ready(function(){
             if (event.clone) {
                 evento['clone'] = 'True';
             }
+            if (event.allow_commenting) {
+                evento['allow_commenting'] = event.allow_commenting;
+            }
+            if (event.allow_sharing) {
+                evento['allow_sharing'] = event.allow_sharing;
+            }
             if (change == 'delete') {
                 evento['del'] = true;
             }
@@ -135,6 +152,8 @@ $(document).ready(function(){
             var time1 = jQuery.trim($("#time1").val());
             var time2 = jQuery.trim($("#time2").val());
             var pages = jQuery.trim($('#page_name_input').val());
+            var allow_commenting = $('#comment_settings').prop('checked');
+            var allow_sharing = $('#sharing_settings').prop('checked');
         
             if(what == ""){
                 alert("Please enter a short event description into the \"what\" field.");
@@ -223,6 +242,18 @@ $(document).ready(function(){
                     pages = $.map(pages.split(","), $.trim);
                     evento['pages'] = pages;
                 }
+                if (allow_commenting) {
+                    evento['allow_commenting'] = 'True';
+                }
+                else {
+                    evento['allow_commenting'] = 'False';
+                }
+                if (allow_sharing) {
+                    evento['allow_sharing'] = 'True';
+                }
+                else {
+                    evento['allow_sharing'] = 'False';
+                }
 
                 if ($("#show-event-form").data('eventObj')) {
                     change_event(evento,true);
@@ -230,7 +261,8 @@ $(document).ready(function(){
                 else {
                     change_event(evento);
                 }
-                $("#add-event-form").dialog('close');
+                add_dialog.dialog('close');
+                add_dialog = false;
 
             }
         }
@@ -280,18 +312,22 @@ $(document).ready(function(){
                     $("#show_date_end").html('');
                     $("#show_description").html('');
 
-                    var edit_buttons  = $("#show-event-form").dialog( "option", "buttons" );
+                    var show_dialog = create_show_dialog();
+                    var edit_buttons  = show_dialog.dialog( "option", "buttons" );
+                    add_dialog = create_add_dialog()
+
                     if (editable && calEvent.owner_id == LionFace.User.page_id) {
                         edit_buttons['Edit'] = function() {
-                            $("#show-event-form").dialog('close');
+                            show_dialog.dialog('close');
 
-                            var buttons = $( "#add-event-form" ).dialog( "option", "buttons" );
+                            var buttons = add_dialog.dialog( "option", "buttons" );
                             buttons['Delete'] = function() {
                                 change_event($("#show-event-form").data('eventObj'),'delete');
-                                $( "#add-event-form" ).dialog('close');
+                                add_dialog.dialog('close');
+                                add_dialog = false;
                             }
-                            $( "#add-event-form" ).dialog( "option", "buttons", buttons );
-                            $( "#add-event-form" ).dialog( "open" );
+                            add_dialog.dialog( "option", "buttons", buttons );
+                            add_dialog.dialog( "open" );
 
                             GM1.check_resize(map);
                             if (!$(this).data('eventObj').coords) {
@@ -307,7 +343,7 @@ $(document).ready(function(){
                     else {
                         delete  edit_buttons['Edit'];
                     }
-                    $( "#show-event-form" ).dialog( "option", "buttons", edit_buttons );
+                    show_dialog.dialog( "option", "buttons", edit_buttons );
 
                     $("#show_title").html(calEvent.title);
                     $("#show_date").html($.fullCalendar.formatDate( calEvent.start, 'ddd, MMMM dd hh:mm TT'));
@@ -351,9 +387,25 @@ $(document).ready(function(){
                     else {
                         $('#privacy_settings').hide()
                     }
+
+                    if (calEvent.comment_form) {
+                        console.log(calEvent);
+                        $('.comment_container').html('');
+                        $('.comment_container').html(calEvent.comment_list);
+                        $('.comment_container').append(calEvent.comment_form);
+                    }
+                    console.log(calEvent.allow_commenting);
+                    if (calEvent.allow_commenting) {
+                        $('.comment_form_class').show();
+                    }
+                    else {
+                        $('#comment_settings').prop('checked',false);
+                        $('.comment_form_class').hide();
+                    }
+
                     //show
-                    $("#show-event-form").dialog( "open" );
-                    $("#show-event-form").dialog( "option", "title", calEvent.title );
+                    show_dialog.dialog( "open" );
+                    show_dialog.dialog( "option", "title", calEvent.title );
                     GM2.check_resize(map2);
                     map2.setCenter(new google.maps.LatLng(40.7142, -74.0064));
                     if (newLatlng) {
@@ -458,35 +510,45 @@ $(document).ready(function(){
                 
 		});
 
-        $("#add-event-form").dialog({
-            autoOpen: false,
-            modal: true,
-            width: 500,
-            buttons: {
-                'Save': function() {
-                    add_event();
+        function create_add_dialog() {
+            var dialog = $("#add-event-form").dialog({
+                autoOpen: false,
+                modal: true,
+                width: 500,
+                buttons: {
+                    'Save': function() {
+                        add_event();
+                    },
+                    'Cancel': function() {
+                        $(this).dialog('close');
+                        add_dialog = false;
+                    }
                 },
-                'Cancel': function() {
-                    $(this).dialog('close');
+                close: function() {
+                    $('#add-event-form').dialog('destroy');
                 }
-            },
-            open: function(event, ui){
-            },
-            close: function() {
-            }
-        }); 
+            }); 
+            return dialog;
+        }
 
-        $("#show-event-form").dialog({
-            autoOpen: false,
-            width: 450,
-            modal: true, 
-            buttons: {
-                'Ok': function() {
-                    $(this).dialog('close');
-                } 
-            }
+        function create_show_dialog() {
+            var dialog = $("#show-event-form").dialog({
+                autoOpen: false,
+                width: 450,
+                modal: true, 
+                buttons: {
+                    'Ok': function() {
+                        $(this).dialog('close');
+                    } 
+                },
+                close: function() {
+                    //TODO create noraml updates
+                    $('#show-event-form').dialog('destroy');
+                }
 
-        });
+            });
+            return dialog;
+        }
 
         /** update posts option */
         $(document).on('change','#update_post',function() {
@@ -686,7 +748,7 @@ $(document).ready(function(){
 
 <div id='calendar_micro'></div>
 
-<div id="add-event-form" title="Add New Event">
+<div id="add-event-form" title="Add New Event" class="not-dialog" style="display:none">
     <form>
     <fieldset>
         <table style="width:100%; padding:5px;">
@@ -732,6 +794,17 @@ $(document).ready(function(){
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td width="30%"> 
+                    <label for="desc">Allow:</label>
+                </td>
+                <td style="padding: 8px 0;" width="70%">
+                    <input type="checkbox" name="comment_settings" id="comment_settings" value="on" checked="checked">
+                    Commenting
+                    <input type="checkbox" name="sharing_settings" id="sharing_settings" value="on" checked="checked">
+                    Sharing
+                </td>
+            </tr>
             <tr id="choose_time" >
                 <td>
                     <label>Time:</label>
@@ -771,7 +844,7 @@ $(document).ready(function(){
     </form>
 </div>
 
-<div id="show-event-form" title="Event Information">
+<div id="show-event-form" title="Event Information" class="not-dialog" style="display:none">
     <table>
         <tr>
             <td>
@@ -821,6 +894,17 @@ $(document).ready(function(){
                 Privacy:
             </td>
             <td id="show_privacy">
+            </td>
+        </tr>
+        <tr id="comments_event">
+            <td>
+                Comments:
+            </td>
+            <td id="comment_td">
+            <div class="comments">
+                <div class="comment_container">
+                </div>
+            </div>
             </td>
         </tr>
     </table>

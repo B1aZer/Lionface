@@ -1253,6 +1253,8 @@ def add_events(request, slug):
     privacy = request.POST.get('privacy','public')
     pages = request.POST.get('pages',None)
     clone = request.POST.get('clone',None)
+    allow_commenting = request.POST.get('allow_commenting',None)
+    allow_sharing = request.POST.get('allow_sharing',None)
     if date:
         date_beg = dateutil.parser.parse(date)
         if name:
@@ -1274,6 +1276,14 @@ def add_events(request, slug):
                 event.privacy = pr
             else:
                 event.privacy = 'P'
+            if allow_commenting == 'False':
+                event.allow_commenting = False
+            else:
+                event.allow_commenting = True
+            if allow_sharing == 'False':
+                event.allow_sharing = False
+            else:
+                event.allow_sharing = True
             event.save()
             if coords:
                 coords = json.loads(coords)
@@ -1352,6 +1362,29 @@ def get_events(request, slug):
         if classes:
             ev['className'] = classes
             ev['privacy'] = ",".join(event.get_privacy())
+        #comments
+        from django.contrib.comments.forms import CommentForm
+        from django.contrib.contenttypes.models import ContentType
+        from django.contrib import comments
+        from django.conf import settings
+
+        comment_list = comments.get_model().objects.filter(
+        content_type = ContentType.objects.get_for_model(Events),
+        object_pk = event.pk,
+        site__pk = settings.SITE_ID,
+        is_removed = False,
+        )
+        ev['comment_list'] = render_to_string('comments/list.html',
+                {
+                    'comment_list':comment_list,
+                }, RequestContext(request))
+        ev['comment_form'] = render_to_string('comments/form_event.html',
+                    {
+                        'item':event,
+                        'form': CommentForm(event),
+                    }, RequestContext(request))
+        ev['allow_commenting'] = event.allow_commenting
+        ev['allow_sharing'] = event.allow_sharing
         for role in roles:
             if role in event.get_privacy():
                 append = True
@@ -1405,4 +1438,24 @@ def post_update_change(request, slug):
     if value == 'false':
         page.post_update = False
         page.save()
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def event_comments(request, slug):
+    data = {'status':'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    event_id = request.POST.get('event_id',None)
+    if event_id:
+        try:
+            event = Events.objects.get(id=int(event_id))
+            data['html'] = render_to_string('comments/form.html',
+                    {
+                        'item':event,
+                    }, RequestContext(request))
+        except Events.DoesNotExist:
+            raise Http404
+
     return HttpResponse(json.dumps(data), "application/json")

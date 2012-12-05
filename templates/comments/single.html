@@ -17,7 +17,7 @@
                     <td align="right">
                         <div id="z{{ comment.id }}" style="display: none; color: #AAA; font-size: 8pt !important;">
                             {% if comment.user.userprofile == request.user or comment.content_object.user == request.user %}
-                                <a href="javascript:del_comm({{ comment.id }})" style="margin-left: 15px; color: #AAA;">Delete</a>
+                                <a href="javascript:LionFace.Site.del_comm({{ comment.id }})" style="margin-left: 15px; color: #AAA;">Delete</a>
                             {% endif %}
                         </div>
                     </td>

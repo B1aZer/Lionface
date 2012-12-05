@@ -18,6 +18,8 @@ class Events(models.Model):
     date_end = models.DateTimeField(null=True, blank=True)
     description = models.TextField(blank=True)
     privacy = models.CharField(max_length=20, choices=PRIVACY_SET, default='P')
+    allow_commenting = models.BooleanField(default=True)
+    allow_sharing = models.BooleanField(default=True)
 
     def __repr__(self):
         return '<Event %s> %s' % (self.id, self.name)
@@ -48,6 +50,9 @@ class Events(models.Model):
             else:
                 tagged = [pg for pg in self.tagged.all() if pg != self.page]
         return tagged
+
+    def get_owner(self):
+        return self.page.user
 
     def save(self, *args, **kwargs):
         """ Adding page to tagged """
