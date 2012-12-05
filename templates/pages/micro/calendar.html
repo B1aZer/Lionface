@@ -543,6 +543,7 @@ $(document).ready(function(){
                 },
                 close: function() {
                     //TODO create noraml updates
+                    $('#calendar_micro').fullCalendar( 'refetchEvents' );
                     $('#show-event-form').dialog('destroy');
                 }
 
