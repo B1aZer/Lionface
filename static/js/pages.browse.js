@@ -9,14 +9,29 @@ LionFace.PagesBrowse.prototype = {
         var self = this;
         self.bind_functions();
         self.load_pages();
+        var shifted = false;
     },
 
     //Binding
     bind_functions : function() {
         var self = this;
+        $(document).bind('keyup keydown', function(e){self.shifted = e.shiftKey} );
         $(document).on('click','.filter',function() {
             $(this).toggleClass('filterON');
-            self.load_pages();
+            console.log(self.shifted);
+            if (self.shifted) {
+                $('.filterON').removeClass('filterON');
+                $(this).toggleClass('filterON');
+            }
+            if ($('.filterON').length) {
+                $('.no_posts').hide();
+                $('#page_browser').show();
+                self.load_pages();
+            }
+            else {
+                $('.no_posts').show();
+                $('#page_browser').hide();
+            }
         });
     },
 

@@ -367,10 +367,12 @@ def page_browsing(request, page_type='business'):
     data = {'status':'OK'}
 
     if page_type == "nonprofit":
-        filter_labels = [filtr[0] for filtr in NONPROFIT_CATEGORY]
+        filter_labels = [filtr[0] for filtr in NONPROFIT_CATEGORY
+                        if Pages.objects.filter(category=filtr[0]).count()]
         pages = Pages.objects.filter(type='NP').order_by('-loves')
     else:
-        filter_labels = [filtr[0] for filtr in BUSINESS_CATEGORY]
+        filter_labels = [filtr[0] for filtr in BUSINESS_CATEGORY
+                        if Pages.objects.filter(category=filtr[0]).count()]
         pages = Pages.objects.filter(type='BS').order_by('-loves')
 
     if request.method == 'GET':
