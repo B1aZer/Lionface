@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import F
 from .forms import *
 from .models import *
-from post.models import PagePost, FeedbackPost
+from post.models import *
 from tags.models import Tag
 from agenda.models import Events, Locations
 from itertools import chain
@@ -24,6 +24,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.contenttypes.models import ContentType
+from django.utils.safestring import mark_safe
 
 from images.models import Image, ImageComments
 from images.forms import ImageForm
@@ -1457,5 +1458,36 @@ def event_comments(request, slug):
                     }, RequestContext(request))
         except Events.DoesNotExist:
             raise Http404
+
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def share_event(request, slug):
+    data = {'status':'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    event_id = request.POST.get('event_id',None)
+    share_to = request.POST.get('share_to',None)
+    try:
+        event = Events.objects.get(id=int(event_id))
+        content = mark_safe("""Shared an event %s from <a href=\"%s\">%s</a> page""" % (event.name, page.get_absolute_url(), page.name))
+        if event.description:
+            content = content + "\n Description: %s" % event.description
+    except Events.DoesNotExist:
+        raise Http404
+    if share_to and share_to != 'profile':
+        try:
+            share_page = Pages.objects.get(id=int(share_to))
+            post = PagePost(user=request.user, content=content, page = share_page)
+            post.save()
+        except:
+            data['status'] = 'FAIL'
+            return HttpResponse(json.dumps(data), "application/json")
+    else:
+        post = ContentPost(content = content, user = request.user , user_to=request.user, type='P')
+        #post = SharePost(user = request.user, user_to=request.user , content = content )
+        post.save()
 
     return HttpResponse(json.dumps(data), "application/json")

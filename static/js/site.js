@@ -412,17 +412,6 @@ LionFace.Site.prototype = {
                     if (data.status == 'removed') {
                         $('#comment_'+data.id).fadeOut();
                     }
-                    /** only for calendar events */
-                    var event = $("#show-event-form").data('eventObj');
-                    if (event) {
-                        console.log('pre_delete');
-                        console.log(event);
-                        var html_list = $(event.comment_list);
-                        html_list.find('#comment_' + data.id).remove();
-                        event.comment_list = html_list.html();
-                        console.log('post_delete');
-                        console.log(event);
-                    }
                 },
                 error: function() {
                     alert('Unable to delete data.');
@@ -452,25 +441,6 @@ LionFace.Site.prototype = {
                 $('#comment_form_'+form_id+' form textarea').val('');
                 /** following mark */
                 $('#comment_form_'+form_id).closest('.result').find('.follow_post').html('Unfollow');
-
-                /** only for calendar events */
-                if (event) {
-                    //event.comment_list.push(html.html);
-                        console.log('pre_add');
-                        console.log(event);
-                    var html_list = $(event.comment_list);
-                    if (html_list.find('#comments').length) {
-                        html_list.find('#comments').append(html.html);
-                    }
-                    else {
-                        html_list.html('<dl id="comments"></dl>');
-                        html_list.find('#comments').append(html.html);
-                    }
-                    
-                    event.comment_list = html_list.html();
-                        console.log('post_add');
-                        console.log(event);
-                }
 
             },
             errorback: function () {

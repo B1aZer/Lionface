@@ -40,11 +40,9 @@ $(document).ready(function(){
             var month = parseInt(date.getMonth())+1;
             $('#when').val(date.getDate() + '/' + month + '/' + date.getFullYear());
             //$('#when').val($.fullCalendar.formatDate( date, 'ddd, MMMM dd'));
-            console.log(date);
             
             $("#when").prop("disabled", true);
             add_dialog = create_add_dialog()
-            console.log(add_dialog);
             add_dialog.dialog( "open" );
             GM1.check_resize(map);
             map.setCenter(new google.maps.LatLng(40.7142, -74.0064));
@@ -311,6 +309,8 @@ $(document).ready(function(){
                     $("#show_date").html('');
                     $("#show_date_end").html('');
                     $("#show_description").html('');
+                    $('.share_text').hide();
+                    $('.share_to').hide();
 
                     var show_dialog = create_show_dialog();
                     var edit_buttons  = show_dialog.dialog( "option", "buttons" );
@@ -389,12 +389,10 @@ $(document).ready(function(){
                     }
 
                     if (calEvent.comment_form) {
-                        console.log(calEvent);
                         $('.comment_container').html('');
                         $('.comment_container').html(calEvent.comment_list);
                         $('.comment_container').append(calEvent.comment_form);
                     }
-                    console.log(calEvent.allow_commenting);
                     if (calEvent.allow_commenting) {
                         $('.comment_form_class').show();
                     }
@@ -593,6 +591,48 @@ $(document).ready(function(){
             }
             GM1.deleteOverlays();
         }); 
+
+        $(document).on('click','#share_event_btn',function(e) {
+            e.preventDefault();
+            $('.share_text').hide();
+            var event = $("#show-event-form").data('eventObj');
+            var url = '{% url pages.views.share_event slug=page.username %}';
+            var shared_div = $('.share_to');
+            if (event) {
+                if (shared_div.length) {
+                    if (shared_div.is(":visible")) {
+                        var share_val = shared_div.find('.share_to_select').val();
+                        make_request({
+                            url:url,
+                            data: {
+                                'event_id': event.id,
+                                'share_to': share_val,
+                            },
+                            callback: function(data) {
+                                if (data.status == 'OK') {
+                                    $('.share_text').show();
+                                    shared_div.hide();
+                                }
+                            }
+                        });
+                    }
+                    shared_div.show();
+                }
+                else {
+                    make_request({
+                        url:url,
+                        data: {
+                            'event_id':event.id
+                        },
+                        callback: function(data) {
+                            if (data.status == 'OK') {
+                                $('.share_text').show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
 
         /** google maps */
         GM  = function () {
@@ -892,6 +932,27 @@ $(document).ready(function(){
                 <label>Privacy:</label>
             </td>
             <td id="show_privacy">
+            </td>
+        </tr>
+        <tr id="share_event">
+            <td align="right">
+                <label><a id="share_event_btn" href="#">Share:</a></label>
+            </td>
+            <td id="event_share_to">
+                <div class="share_text" style="display:none">
+                    <span class="shared" style="position: relative; left:0; top:0;"> Shared </span>
+                </div>
+                {% if request.user.get_admin_pages %}
+                <div class="share_to" style="display:none">
+                    Share to: 
+                    <select name="share_to_page" class="share_to_select">
+                            <option value="profile" selected="selected">Profile</option>
+                            {% for page in request.user.get_admin_pages %}
+                            <option value="{{ page.id }}">{{ page.name }}</option>
+                            {% endfor %}
+                    </select>          
+                </div>
+                {% endif %}
             </td>
         </tr>
         <tr id="comments_event">

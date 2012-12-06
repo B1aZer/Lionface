@@ -114,6 +114,10 @@ LionFace.Pages.prototype = {
                 },
                 callback: function(data) {
                     if (data.html) {
+                        //remove calendar dialog dupl's
+                        $('.not-dialog').remove();
+                        $('.time-picker').remove();
+
                         $('.page_container').html(data.html);
                         if ($('.business_on').length) {
                             $('.business_on').removeClass('business_on');

@@ -49,6 +49,15 @@ class CustomQuerySet(QuerySet):
         return news
 
 
+def add_http(url):
+    if re.search('http://',url):
+        pass
+    else:
+        if not url.startswith('/'):
+            url = u"".join([u'http://', url])
+    return url
+
+
 class Post(models.Model):
     user = models.ForeignKey(UserProfile,  related_name='user')
     user_to = models.ForeignKey(UserProfile,  related_name='user_to', null=True, blank=True)
@@ -185,12 +194,6 @@ class FeedbackPost(Post):
     def render(self):
         import bleach
         from oembed.core import replace
-        def add_http(url):
-            if re.search('http://',url):
-                pass
-            else:
-                url = u"".join([u'http://', url])
-            return url
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
@@ -259,14 +262,6 @@ class PagePost(Post):
             return self.pagesharepost.render()
         import bleach
         from oembed.core import replace
-        def add_http(url):
-            if re.search('http://',url):
-                pass
-            else:
-                url = u"".join([u'http://', url])
-            return url
-            li = s.rsplit(old, occurrence)
-            return new.join(li)
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
@@ -361,12 +356,6 @@ class ContentPost(Post):
     def render(self):
         import bleach
         from oembed.core import replace
-        def add_http(url):
-            if re.search('http://',url):
-                pass
-            else:
-                url = u"".join([u'http://', url])
-            return url
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
