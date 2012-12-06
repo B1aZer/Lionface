@@ -20,6 +20,8 @@ from StringIO import StringIO
 import base64
 import dateutil.parser
 from datetime import datetime
+from collections import defaultdict
+import random
 
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -28,6 +30,7 @@ from django.utils.safestring import mark_safe
 
 from images.models import Image, ImageComments
 from images.forms import ImageForm
+
 
 
 try:
@@ -314,25 +317,66 @@ def leaderboard(request):
 
 def nonprofit(request):
 
+    form_busn = BusinessForm()
+    form_nonp = NonprofitForm()
+    active = None
+    max_pages = 12
+
+    if request.method == 'POST' and request.user.get_pages().count() == max_pages:
+        messages.warning(request, 'Sorry only 12 pages are allowed')
+    if request.method == 'POST' and request.POST.get('type',None) and request.user.get_pages().count() <= max_pages:
+        if request.POST.get('type',None) == 'NP':
+            active = 'Nonprofit'
+            form = NonprofitForm(data = request.POST)
+            form_nonp = form
+        else:
+            active = "Business"
+            form = BusinessForm(data = request.POST)
+            form_busn = form
+        if form.is_valid() and request.user.get_pages().count() < max_pages:
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            # nullify form
+            active = None
+            form = PageForm()
+            form_busn = BusinessForm()
+            form_nonp = NonprofitForm()
+
     pages = Pages.objects.filter(type='NP')
 
-    # grouping by rows for template [4 in row]
-    n=0
-    grouped_pages = []
-    row = []
+    # group by cats
+    c=0
+    row = defaultdict(list)
+    gp = defaultdict(list)
     for page in pages:
-        n += 1
-        row.append(page)
-        if n%4 == 0 or n == pages.count():
-            grouped_pages.append(row)
-            row = []
+        # grouping by rows for template [4 in row]
+        row[page.category].append(page)
+        c = len(row[page.category])
+        if c%4 == 0:
+            gp[page.category].append(row[page.category])
+            row[page.category]=[]
 
-    pages = grouped_pages
+    for k,v in row.items():
+        if k not in gp:
+            gp[k] = [v]
+        else:
+            if v not in gp[k]:
+                gp[k].append(v)
+
+    #gp = sorted(gp.items(), key=lambda x: random.random())
+
+    # grouping by rows for template [4 in row]
+
+    pages = gp
 
     return render_to_response(
         'pages/nonprofit.html',
         {
-            'pages':pages,
+            'form_busn': form_busn,
+            'form_nonp': form_nonp,
+            'pages': dict(pages),
+            'active': active,
         },
         RequestContext(request)
     )
