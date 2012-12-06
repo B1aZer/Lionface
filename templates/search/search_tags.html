@@ -1,7 +1,10 @@
 {% extends 'profile/base.html' %}
 {% load media format_results %}
 
-{% block content_title %}Search Results{% endblock %}
+{% block content_title %}
+	<table width="100%"><tr><td align="left" style="color: #999;" valign="bottom" height="30">
+		Search Results
+	</td></tr></table>{% endblock %}
 {% block right_col %}
     <form method="get" action=".">
         {% if query %}
