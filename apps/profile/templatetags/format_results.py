@@ -282,4 +282,9 @@ def show_connections(page,user):
     return page.show_connections(user)
 
 
+@register.filter(name="sort_dict")
+def sort_dict(dcty):
+    dcty = sorted(dcty.iteritems(), key=lambda (k,v): k)
+    return dcty
+
 

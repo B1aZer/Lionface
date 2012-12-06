@@ -1,4 +1,5 @@
-    {% for cat, rows in pages.items %}
+{% load format_results %}
+    {% for cat, rows in pages|sort_dict %}
         <tr>
             <td colspan="2" style="text-align: left; font-size: 14pt;">{{ cat }}</td>
             <td colspan="2" align="right">

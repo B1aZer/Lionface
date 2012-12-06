@@ -354,6 +354,7 @@ def nonprofit(request):
         row[page.category].append(page)
         c = len(row[page.category])
         if c%4 == 0:
+            random.shuffle(row[page.category])
             gp[page.category].append(row[page.category])
             row[page.category]=[]
 
@@ -363,10 +364,6 @@ def nonprofit(request):
         else:
             if v not in gp[k]:
                 gp[k].append(v)
-
-    #gp = sorted(gp.items(), key=lambda x: random.random())
-
-    # grouping by rows for template [4 in row]
 
     pages = gp
 
