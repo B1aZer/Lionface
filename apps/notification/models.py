@@ -195,9 +195,9 @@ comment_was_posted.connect(create_comment_notifiaction)
 
 def create_comment_image_notification(sender, instance, created, **kwargs):
     if created:
-        if instance.owner != instance.image.owner:
+        if instance.owner != instance.image.get_owner():
             data = {
-                'user': instance.image.owner,
+                'user': instance.image.get_owner(),
                 'type': 'CI',
                 'other_user': instance.owner,
                 'content_object': instance.image,

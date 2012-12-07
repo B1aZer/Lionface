@@ -8,6 +8,7 @@ from tags.models import *
 from pages.models import Pages
 from smileys.models import Smiley
 import re
+from pages.forms import BUSINESS_CATEGORY, NONPROFIT_CATEGORY
 
 register = template.Library()
 
@@ -286,5 +287,19 @@ def show_connections(page,user):
 def sort_dict(dcty):
     dcty = sorted(dcty.iteritems(), key=lambda (k,v): k)
     return dcty
+
+
+@register.filter(name="getcatnumnonp")
+def getcatnumnonp(cat):
+    tup = (cat,cat)
+    val = NONPROFIT_CATEGORY.index(tup)
+    return val
+
+@register.filter(name="getcatnumbusn")
+def getcatnumbusn(cat):
+    tup = (cat,cat)
+    val = BUSINESS_CATEGORY.index(tup)
+    return val
+
 
 

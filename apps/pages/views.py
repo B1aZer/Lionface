@@ -410,18 +410,21 @@ def page_browsing(request, page_type='business'):
     if page_type == "nonprofit":
         filter_labels = [filtr[0] for filtr in NONPROFIT_CATEGORY
                         if Pages.objects.filter(category=filtr[0]).count()]
+        labels = [filtr[0] for filtr in NONPROFIT_CATEGORY]
         pages = Pages.objects.filter(type='NP').order_by('-loves')
     else:
         filter_labels = [filtr[0] for filtr in BUSINESS_CATEGORY
                         if Pages.objects.filter(category=filtr[0]).count()]
+        labels = [filtr[0] for filtr in BUSINESS_CATEGORY]
         pages = Pages.objects.filter(type='BS').order_by('-loves')
 
     if request.method == 'GET':
+        ajax = request.GET.get('ajax',None)
         filters = request.GET.getlist('filters[]',None)
         if filters:
             filter_cats = []
             for filtr in filters:
-                filter_cats.append(filter_labels[int(filtr)])
+                filter_cats.append(labels[int(filtr)])
             pages = pages.filter(category__in=filter_cats).order_by('-loves')
 
     # grouping by rows for template [4 in row]
@@ -438,7 +441,7 @@ def page_browsing(request, page_type='business'):
 
     pages = grouped_pages
 
-    if filters:
+    if filters and ajax:
         data['html'] = render_to_string(
                                 'pages/pages.html',
                                     {
@@ -454,6 +457,7 @@ def page_browsing(request, page_type='business'):
         {
             'pages':pages,
             'filters':filter_labels,
+            'page_type':page_type,
         },
         RequestContext(request)
     )

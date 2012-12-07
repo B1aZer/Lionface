@@ -8,7 +8,17 @@ LionFace.PagesBrowse.prototype = {
     init : function() {
         var self = this;
         self.bind_functions();
-        self.load_pages();
+        if (!window.location.search) {
+            self.load_pages();
+        }
+        else {
+            $('.filterON').removeClass('filterON');
+            var regexS = "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.search);
+            var num = results[1];
+            $('#filter_'+num).toggleClass('filterON');
+        }
         var shifted = false;
     },
 
@@ -18,7 +28,6 @@ LionFace.PagesBrowse.prototype = {
         $(document).bind('keyup keydown', function(e){self.shifted = e.shiftKey} );
         $(document).on('click','.filter',function() {
             $(this).toggleClass('filterON');
-            console.log(self.shifted);
             if (self.shifted) {
                 $('.filterON').removeClass('filterON');
                 $(this).toggleClass('filterON');
@@ -36,12 +45,15 @@ LionFace.PagesBrowse.prototype = {
     },
 
     load_pages : function() {
-        var url = "";
+        var url = LionFace.User.current_url;
         var filters = new Array();
         $('.filterON').each(function () {
             filters.push(get_int($(this).attr('id')));
         }); 
-        var for_send = {'filters':filters};
+        var for_send = {
+                        'filters':filters,
+                        'ajax':true
+                        };
         make_request({
             url:url,
             type:'GET',

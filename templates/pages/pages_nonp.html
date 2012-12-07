@@ -1,7 +1,9 @@
 {% load format_results %}
     {% for cat, rows in pages|sort_dict %}
         <tr>
-            <td colspan="2" style="text-align: left; font-size: 14pt;">{{ cat }}</td>
+            <td colspan="2" style="text-align: left; font-size: 14pt;">
+                <a href="{% url pages.views.page_browsing page_type='nonprofit' %}?filters%5B%5D={{ cat|getcatnumnonp }}" >{{ cat }}</a>
+            </td>
             <td colspan="2" align="right">
                 <a href="#" class="profile_nav" style="font-size: 8pt;">Browse</a>
             </td>

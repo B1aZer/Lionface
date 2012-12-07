@@ -42,6 +42,15 @@ class Image(models.Model):
 
     objects = ImageQuerySet.as_manager()
 
+    def get_owner(self):
+        if isinstance(self.owner, UserProfile):
+            return self.owner
+        else:
+            try:
+                user = self.owner.user
+                return user
+            except:
+                return None
     def change_position(self, old, new, save=True, selflock=None):
         if old == new:
             return False

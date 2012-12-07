@@ -1,5 +1,10 @@
 {% extends 'profile/base.html' %}
 {% load media friends format_results %}
+{% block js %}
+<script>
+    LionFace.User['current_url'] = '{% url pages.views.page_browsing page_type=page_type %}';
+</script>
+{% endblock %}
 
 {% block content_title %} {% endblock %}
 {% block content_middle %}
@@ -15,7 +20,11 @@
     <div style="position: relative; left: 0px; z-index: 100;">
 		<span style="color: #AAA; font-size: 8pt;">Shift+click to select just one filter.</span>
         {% for filtr in filters %}
-        <a id="filter_{{ forloop.counter0 }}" href="javascript:;" class="feed_type filter filterON" >{{filtr}}</a>
+        {% if page_type == 'nonprofit' %}
+            <a id="filter_{{ filtr|getcatnumnonp }}" href="javascript:;" class="feed_type filter filterON" >{{filtr}}</a>
+        {% else %}
+            <a id="filter_{{ filtr|getcatnumbusn }}" href="javascript:;" class="feed_type filter filterON" >{{filtr}}</a>
+        {% endif %}
         {% endfor %}
 	</div>   
 
