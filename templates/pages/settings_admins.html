@@ -46,13 +46,14 @@
     name="pages_admins" id="pages_admins__{{ admin.username }}" class="page_options">
     <label class="admins_labels" for="pages_admins__{{ admin.username }}">Edit Admins</label>
     </td>
+    {% if admin == page.user %}
     <td>
-    <input type="checkbox" 
+    <input type="checkbox" disabled  
     {% if admin|check_pages_delete:page %} checked {% endif %}
-    {% if admin == page.user %} disabled {% endif %}
     name="pages_delete" id="pages_delete__{{ admin.username }}" class="page_options">
     <label class="admins_labels" for="pages_delete__{{ admin.username }}">Delete Page</label>
     </td>
+    {% endif %}
     <td>
     <input type="checkbox" 
     {% if admin|check_pages_calendar:page %} checked {% endif %}

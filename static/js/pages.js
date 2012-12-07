@@ -517,6 +517,19 @@ LionFace.Pages.prototype = {
 
         $('.postbox_textarea').autosize();
 
+        $(document).on('click','.page_delt_not',function(e) {
+            e.preventDefault();
+            var container = $(this).parents('.for_delt_notf');
+            var url = $(this).attr('href');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        container.remove();
+                    }
+                }
+            });
+        });
     },
     /*
      * moved to user.js

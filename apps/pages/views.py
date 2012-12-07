@@ -20,6 +20,8 @@ from StringIO import StringIO
 import base64
 import dateutil.parser
 from datetime import datetime
+import datetime as dateclass
+from django.utils import timezone
 from collections import defaultdict
 import random
 
@@ -708,7 +710,11 @@ def delete_page(request, slug=None):
         password = request.POST.get('confirm_password',None)
         if check_password(password, request.user.password):
             if page.user == request.user and request.user.check_option('pages_delete__%s' % page.id):
-                page.delete()
+                #delta = dateclass.timedelta(days=7)
+                delta = dateclass.timedelta(minutes=30)
+                page.for_deletion = timezone.now() + delta
+                page.save()
+                #page.delete()
             else:
                 messages.error(request, 'You don\'t have sufficient permissions.')
                 return redirect('pages.views.settings', slug=page.username)
@@ -716,6 +722,20 @@ def delete_page(request, slug=None):
             messages.error(request, 'Wrong password.')
             return redirect('pages.views.settings', slug=page.username)
     return redirect('pages.views.main')
+
+
+@login_required
+def prevent_deletion(request, slug=None):
+    data = {'status':'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    page.for_deletion = None
+    page.save()
+    data['status']='OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
 
 
 @login_required

@@ -36,3 +36,11 @@ class UpdatePageEvent(Task):
                     post = PagePost(user=page.user, content=content, page = page)
                     post.save()
 tasks.register(UpdatePageEvent)
+
+class DeletePage(Task):
+    def run(self, **kwargs):
+        from django.utils import timezone
+        from pages.models import Pages
+        now = timezone.now()
+        Pages.objects.all().filter(for_deletion__lte=now).delete()
+tasks.register(DeletePage)

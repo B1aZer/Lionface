@@ -4,6 +4,7 @@ from django.core.validators import validate_slug, URLValidator
 from django.db.models.signals import m2m_changed
 from django.db.models import F
 from datetime import datetime
+from django.utils import timezone
 import logging
 import cPickle
 
@@ -83,6 +84,7 @@ class Pages(models.Model):
     text_volunteers = models.TextField(blank=True)
     members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
     post_update = models.BooleanField(default=False)
+    for_deletion = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Page"
@@ -321,6 +323,13 @@ class Pages(models.Model):
             overall_rating = overall_rating * 1.0 /rating_count
         overall_rating = "{0:.1f}".format(overall_rating)
         return overall_rating
+
+    def get_deletion_offset(self):
+        if self.for_deletion:
+            dif = timezone.now() - self.for_deletion
+            return abs(dif.days)
+        else:
+            return False
 
     def update_option(self):
         return self.post_update

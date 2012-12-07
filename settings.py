@@ -308,6 +308,10 @@ CELERYBEAT_SCHEDULE = {
         "task": "pages.tasks.UpdatePageEvent",
         "schedule": timedelta(minutes=30),
     },
+    "delete_page": {
+        "task": "pages.tasks.DeletePage",
+        "schedule": timedelta(minutes=10),
+    },
 }
 
 import djcelery
