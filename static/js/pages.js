@@ -96,6 +96,23 @@ LionFace.Pages.prototype = {
             }
         });
 
+        //hide hidden rows in pages nonprofits
+        $('.hidden_row').hide();
+
+        $(document).on('click','.browse_rows',function(e) {
+            e.preventDefault();
+            var tr = $(this).parents('tr')
+            var category = tr.attr('class');
+            if (!$(this).data('toggled')) {
+                $("." + category + ".hidden_row").show();
+                $(this).data('toggled',true);
+            }
+            else {
+                $("." + category + ".hidden_row").hide();
+                $(this).data('toggled',false);
+            }
+        });
+
     },
 
     bind_page_functions : function() {

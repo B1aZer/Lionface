@@ -72,7 +72,7 @@ class Pages(models.Model):
     users_loved = models.ManyToManyField(UserProfile, related_name='pages_loved', null=True, blank=True)
     admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
-    category = models.CharField(max_length=100, default='undefined')
+    category = models.CharField(max_length=100, default='Undefined')
     cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/noCoverImage.png')
     photo = ImageWithThumbField(upload_to="uploads/images", default='uploads/images/noProfilePhoto.png')
     has_employees = models.BooleanField(default=True)
