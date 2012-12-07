@@ -629,7 +629,7 @@ a.profile_btn:hover {
 
 .album_shadow {
 	position: relative;
-	margin: 0 4px;
+	margin: 0 4px 8px 0;
 	padding: 4px 0px;
 	borde: 1px solid #DDD;
 	background: #EEE;
@@ -2086,11 +2086,9 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 	padding:  8px 5px 8px 15px;
 	margin: 5px 0;
 	border: 1px solid #EEE;
-	-moz-border-radius: 5px 0 0 5px;
-	border-radius: 5px 0 0 5px;
 	background: #fafafa;
 	width: 250px;
-	position: relative; left: -15px;
+	position: relative; left: -11px;
 	cursor: pointer;
 	display: block;
 	text-align: left;
@@ -2165,14 +2163,7 @@ a.loved:hover {
 .pages_nav_area {
 	padding: 15px 5px 14px 5px;
 	width: 888px;
-	background: #ffffff; /* Old browsers */
-	background: -moz-linear-gradient(top, #ffffff 0%, #f7f7f7 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f7f7f7)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #ffffff 0%,#f7f7f7 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
+	background: #ffffff;
 	border: 1px solid #EEE;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
@@ -2447,7 +2438,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 }
 
 .page_container {
-	position: relative; width: 900px; background: #EEE; text-align: left; -moz-box-shadow: 0 4px 8px -4px #555; box-shadow: 0 4px 8px -4px #555; -moz-border-radius: 3px; border-radius: 3px;
+	position: relative; width: 900px; background: #FFF; text-align: left; -moz-box-shadow: 0 4px 8px -4px #555; box-shadow: 0 4px 8px -4px #555; -moz-border-radius: 3px; border-radius: 3px;
 }
 
 .page_container:before, .page_container:after  
@@ -2739,4 +2730,13 @@ a.school_nav:hover {
 
 .chat_enter {
 	padding: 6px 4px; border: 1px solid #CCC; margin: 4px 0px 0px 0px; width: 192px; position: relative; left: -1px;
+}
+
+
+#comments_event .submit_comment {
+	position: relative; top: 4px;
+}
+
+#comments_event .comment_header {
+	position: relative; left: -8px;
 }

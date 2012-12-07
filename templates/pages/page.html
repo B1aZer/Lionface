@@ -135,6 +135,10 @@ data-url="{% url pages.views.images page.username %}">
       <td width="250" class="love_container love_nonprofit" align="center"> 
             {% endif %}
                 <div style="padding: 10px 20px;">
+						{% if page.type == 'BS' %} 
+							<div style=" position: absolute; top: 5px; right: 5px; color: #FFF; background: #900; padding: 4px 8px 2px 8px; -moz-border-radius: 3px; border-radius: 3px;">Inactive</div>
+						{% else %}
+						{% endif %}
                     {% if request.user in page.get_lovers %}
                         <a href="#" class="love love_button loved">Loved</a>
                     {% else %}
@@ -142,12 +146,7 @@ data-url="{% url pages.views.images page.username %}">
                     {% endif %}
                     <br /><br />
                     <span class="love_count" style="color: #FFF; font-size: 9pt;">{{ page.loves }}</span> 
-						{% if page.type == 'BS' %} 
-							<div style="padding: 8px;">
-							<span style="color: #FFF; background: #900; padding: 4px 8px 2px 8px; -moz-border-radius: 3px; border-radius: 3px;">Inactive</span>
-							</div>
-						{% else %}
-						{% endif %}
+						
       </div></td>
       </tr>
     </table>

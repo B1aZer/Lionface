@@ -13,6 +13,7 @@
 {% block left_col %}
 
     <div style="position: relative; left: 0px; z-index: 100;">
+		<span style="color: #AAA; font-size: 8pt;">Shift+click to select just one filter.</span>
         {% for filtr in filters %}
         <a id="filter_{{ forloop.counter0 }}" href="javascript:;" class="feed_type filter filterON" >{{filtr}}</a>
         {% endfor %}
