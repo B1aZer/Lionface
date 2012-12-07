@@ -46,16 +46,6 @@
         </table>
     </div>
     {% endfor %}
-    <!--
-	<div><table><tr><td><img src="" alt="" width="60" height="60"  /></td><td align="left">3rd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
-	<div><table><tr><td><img src="" alt="" width="60" height="60"  /></td><td align="left">4th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
-	<div><table><tr><td><img src="" alt="" width="60" height="60"  /></td><td align="left">5th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
-	<div><table><tr><td><img src="" alt="" width="45" height="45"  /></td><td align="left">6th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
-	<div><table><tr><td><img src="" alt="" width="45" height="45"  /></td><td align="left">7th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
-	<div><table><tr><td><img src="" alt="" width="45" height="45"  /></td><td align="left">8th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
-	<div><table><tr><td><img src="" alt="" width="45" height="45"  /></td><td align="left">9th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
-	<div><table><tr><td><img src="" alt="" width="45" height="45"  /></td><td align="left">10th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
--->
 </div>
 
 <div class="content_pages" style="width: 650px;">
@@ -117,12 +107,6 @@
                         {% endif %}
                     {% endif %}
                 </td>
-                <!--
-                <td>
-                    <a href="#"> <img src="" alt="" width="165" height="165"  /></a></td>
-                <td>
-                    <a href="#"> <img src="" alt="" width="140" height="140"  /></a></td>
-                -->
                 {% endfor %}
             </tr>
             <tr class="category_{{ forloop.parentloop.counter }}{% if forloop.counter > 1 %} hidden_row{% endif %}">
@@ -131,12 +115,6 @@
                     {{ page.name }}<br />
                     <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span>
                 </td>
-                <!--
-                <td>
-                    2nd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-                <td>
-                    3rd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-                -->
                 {% endfor %}
             </tr>
             {% endfor %}
