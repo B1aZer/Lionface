@@ -1,7 +1,10 @@
 {% extends "base.html" %}
-{% load media %}
+{% load media header %}
 
 {% block body %}
+    {% block header  %}
+        {% header request.user %}
+    {% endblock %}
 <div align="center">
 <div class="micro_container">
 	<div class="float_right">
