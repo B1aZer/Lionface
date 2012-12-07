@@ -1,6 +1,5 @@
 {% extends "pages/base.html" %}
-
-
+{% load format_results %}
 
 {% block content %}
 
@@ -28,8 +27,26 @@
 <div style="position: relative;">
 <div class="content_pages" id="leader" style="position: absolute; right: 0px; top: -10px; width: 200px; padding: 12px 10px 0px 10px; text-align: center;" id="leader">
 	<div class="leader_title" style="background: #FFF; cursor: default;">Most Loved on Lionface</div>
-	<div><img src="" alt="" width="180" height="180"  /><br />1st Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></div>
-	<div><table><tr><td><img src="" alt="" width="60" height="60"  /></td><td align="left">2nd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
+	<div>
+        <img src="{{ most_loved.get_thumb }}" alt="{{ most_loved.name }}" width="180" height="180"  /><br />{{ most_loved.name }}<br />
+        <span style="font-size: 11px; color: #E39;">{{ most_loved.loves }}</span>
+    </div>
+    {% for page in rest %}
+    {% cycle '60' '60' '60' '60' '45' '45' '45' '45' '45' as size silent %}
+	<div>
+        <table>
+            <tr>
+                <td>
+                    <img src="{{ page.get_thumb }}" alt="{{ page.name }}" width="{{ size }}" height="{{ size }}"  />
+                </td>
+                <td align="left">{{ page.name }}<br />
+                    <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    {% endfor %}
+    <!--
 	<div><table><tr><td><img src="" alt="" width="60" height="60"  /></td><td align="left">3rd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
 	<div><table><tr><td><img src="" alt="" width="60" height="60"  /></td><td align="left">4th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
 	<div><table><tr><td><img src="" alt="" width="60" height="60"  /></td><td align="left">5th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
@@ -38,32 +55,96 @@
 	<div><table><tr><td><img src="" alt="" width="45" height="45"  /></td><td align="left">8th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
 	<div><table><tr><td><img src="" alt="" width="45" height="45"  /></td><td align="left">9th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
 	<div><table><tr><td><img src="" alt="" width="45" height="45"  /></td><td align="left">10th Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td></tr></table></div>
+-->
 </div>
 
 <div class="content_pages" style="width: 650px;">
-<table width="650" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
-  <tr><td colspan="2" style="text-align: left; font-size: 14pt;">Category</td>
-	 <td align="right"><a href="#" class="profile_nav" style="font-size: 8pt;">Browse</a></td></tr>
-  <tr>
-    <td>
-      <a href="#"> <img src="" alt="" width="200" height="200"  /></a></td>
-    <td>
-      <a href="#"> <img src="" alt="" width="165" height="165"  /></a></td>
-    <td>
-      <a href="#"> <img src="" alt="" width="140" height="140"  /></a></td>
-  </tr>
-    <tr>
-    <td>
-      1st Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-    <td>
-      2nd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-    <td>
-      3rd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
-  </tr>
-</table>
+    <table width="650" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
+        {% for cat, rows in pages|sort_dict %}
+        <tr class="category_{{ forloop.counter }}" >
+            <td colspan="2" style="text-align: left; font-size: 14pt;">{{ cat }}</td>
+            <td align="right">
+                <a href="#" class="profile_nav browse_rows" style="font-size: 8pt;">Browse</a>
+            </td>
+        </tr>
+            {% for row in rows %}
+            <tr class="category_{{ forloop.parentloop.counter }}{% if forloop.counter > 1 %} hidden_row{% endif %}">
+                {% for page in row %}
+                <td>
+                    {% if forloop.parentloop.counter <= 1 %}
+                        {% if forloop.counter == 1 %}
+                            {% if page.type == 'BS' %}
+                                <a href="{% url business-page slug=page.username %}"> 
+                                    <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="200" height="200"  />
+                                </a>
+                            {% else %}   
+                                <a href="{% url nonprofit-page slug=page.username %}"> 
+                                    <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="200" height="200"  />
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        {% if forloop.counter == 2 %}
+                            {% if page.type == 'BS' %}
+                                <a href="{% url business-page slug=page.username %}"> 
+                                    <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="165" height="165"  />
+                                </a>
+                            {% else %}   
+                                <a href="{% url nonprofit-page slug=page.username %}"> 
+                                    <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="165" height="165"  />
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        {% if forloop.counter == 3 %}
+                            {% if page.type == 'BS' %}
+                                <a href="{% url business-page slug=page.username %}"> 
+                                    <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="140" height="140"  />
+                                </a>
+                            {% else %}   
+                                <a href="{% url nonprofit-page slug=page.username %}"> 
+                                    <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="140" height="140"  />
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {% if page.type == 'BS' %}
+                            <a href="{% url business-page slug=page.username %}"> 
+                                <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="140" height="140"  />
+                            </a>
+                        {% else %}   
+                            <a href="{% url nonprofit-page slug=page.username %}"> 
+                                <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="140" height="140"  />
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <!--
+                <td>
+                    <a href="#"> <img src="" alt="" width="165" height="165"  /></a></td>
+                <td>
+                    <a href="#"> <img src="" alt="" width="140" height="140"  /></a></td>
+                -->
+                {% endfor %}
+            </tr>
+            <tr class="category_{{ forloop.parentloop.counter }}{% if forloop.counter > 1 %} hidden_row{% endif %}">
+                {% for page in row %}
+                <td>
+                    {{ page.name }}<br />
+                    <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span>
+                </td>
+                <!--
+                <td>
+                    2nd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
+                <td>
+                    3rd Loved Business<br /><span style="font-size: 11px; color: #E39;">(count) Love</span></td>
+                -->
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
 </div>
 </div>
- 
+
 </div>
 
 {% endblock %}

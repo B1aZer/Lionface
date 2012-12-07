@@ -89,7 +89,10 @@ class Pages(models.Model):
         verbose_name_plural = "Pages"
 
     def __repr__ (self):
-        return '<Page %s> %s' % (self.id, self.username)
+        return '<Page %s> %s: %s' % (self.id, self.username, self.loves)
+
+    def get_thumb(self):
+        return "/%s" % self.photo.thumb_name
 
     def get_lovers(self):
         return self.users_loved.all()

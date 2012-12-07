@@ -307,9 +307,37 @@ def reset_album_activity(request, slug):
 
 def leaderboard(request):
 
+    pages = Pages.objects.all().order_by('-loves')
+    most_loved = pages[0]
+    rest = pages[1:10]
+
+    # group by cats
+    c=0
+    row = defaultdict(list)
+    gp = defaultdict(list)
+    for page in pages:
+        # grouping by rows for template [4 in row]
+        row[page.category].append(page)
+        c = len(row[page.category])
+        if c%3 == 0:
+            gp[page.category].append(row[page.category])
+            row[page.category]=[]
+
+    for k,v in row.items():
+        if k not in gp:
+            gp[k] = [v]
+        else:
+            if v not in gp[k]:
+                gp[k].append(v)
+
+    pages = gp
+
     return render_to_response(
         'pages/leaderboard.html',
         {
+            'pages': dict(pages),
+            'most_loved':most_loved,
+            'rest':rest,
         },
         RequestContext(request)
     )
