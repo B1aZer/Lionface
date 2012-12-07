@@ -42,5 +42,8 @@ class DeletePage(Task):
         from django.utils import timezone
         from pages.models import Pages
         now = timezone.now()
-        Pages.objects.all().filter(for_deletion__lte=now).delete()
+        pages = Pages.objects.all().filter(for_deletion__lte=now)
+        if pages.count():
+            for page in pages:
+                page.delete()
 tasks.register(DeletePage)

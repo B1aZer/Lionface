@@ -32,12 +32,14 @@
                     {% endblock %}
                 </div>
 				</td><td align="right">
+                    {% block community_button %}
                     <a href="#" 
                         {% if page.check_employees or page.check_interns or page.check_volunteers %}
                         {% else %}
                         style="display:none;" 
                         {% endif %}
                         class="profile_btn" onClick="ShowContent('select_community_{{page.id}}'); return false;">+ Community</a><br />
+                    {% endblock %}
                     {% for member in page|show_connections:profile_user %}
                     {% if profile_user|check_profile_eiv:request.user %} 
                     <div id="member_{{ member.id }}">

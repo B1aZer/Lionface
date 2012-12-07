@@ -9,3 +9,14 @@
     {% endif %}
 {% endblock %}
 
+{% block community_button %}
+{% if current_user in page.get_lovers %}
+<a href="#" 
+    {% if page.check_employees or page.check_interns or page.check_volunteers %}
+    {% else %}
+    style="display:none;" 
+    {% endif %}
+    class="profile_btn" onClick="ShowContent('select_community_{{page.id}}'); return false;">+ Community</a><br />
+{% endif %}
+{% endblock %}
+

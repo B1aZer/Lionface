@@ -123,33 +123,36 @@ LionFace.Pages.prototype = {
             var name = $(this).attr('id');
             var url = "?ajax"
             var self = $(this);
-            make_request({
-                url:url,
-                type:'GET',
-                data: {
-                    'template_name': name,
-                },
-                callback: function(data) {
-                    if (data.html) {
-                        //remove calendar dialog dupl's
-                        $('.not-dialog').remove();
-                        $('.time-picker').remove();
+            var right = !$(this).hasClass('grayed_out');
+            if (right) {
+                make_request({
+                    url:url,
+                    type:'GET',
+                    data: {
+                        'template_name': name,
+                    },
+                    callback: function(data) {
+                        if (data.html) {
+                            //remove calendar dialog dupl's
+                            $('.not-dialog').remove();
+                            $('.time-picker').remove();
 
-                        $('.page_container').html(data.html);
-                        if ($('.business_on').length) {
-                            $('.business_on').removeClass('business_on');
-                            self.addClass('business_on');
-                        }
-                        if ($('.nonprofit_on').length) {
-                            $('.nonprofit_on').removeClass('nonprofit_on');
-                            self.addClass('nonprofit_on');
-                        } 
-                        if (name == 'updates') {
-                             self_class.load_page_feed();
+                            $('.page_container').html(data.html);
+                            if ($('.business_on').length) {
+                                $('.business_on').removeClass('business_on');
+                                self.addClass('business_on');
+                            }
+                            if ($('.nonprofit_on').length) {
+                                $('.nonprofit_on').removeClass('nonprofit_on');
+                                self.addClass('nonprofit_on');
+                            } 
+                            if (name == 'updates') {
+                                 self_class.load_page_feed();
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         });
 
         /** update button */
