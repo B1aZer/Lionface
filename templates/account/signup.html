@@ -4,7 +4,7 @@
   <table width="100%" height="100%" class="heart">
     <tr>
       <td>
-        <form id="signup_form" method="POST" action="?act=signup">{% csrf_token %}
+        <form id="signup_form" method="POST" action="{% url signup %}">{% csrf_token %}
           <div class="dark_box">
             <table width="100%" border="0" cellspacing="0" cellpadding="4" style="position: relative; top: 12px;">
               <tr>
@@ -14,9 +14,9 @@
                   {% if signup_form.full_name.errors %}
                     <img src="{% media_url 'images/check_no.png' %}" width="20" title="{{ signup_form.full_name.errors.0 }}" />
                   {% else %}
-                    {% ifequal request.GET.act 'signup' %}
+                    {% if signup %}
                       <img src="{% media_url 'images/check.png' %}" width="20" />
-                    {% endifequal %}
+                    {% endif %}
                   {% endif %}
                 </td>
               </tr>
@@ -27,9 +27,9 @@
                   {% if signup_form.password.errors %}
                     <img src="{% media_url 'images/check_no.png' %}" width="20" title="{{ signup_form.password.errors.0 }}" />
                   {% else %}
-                    {% ifequal request.GET.act 'signup' %}
+                    {% if signup %}
                       <img src="{% media_url 'images/check.png' %}" width="20" />
-                    {% endifequal %}
+                    {% endif %}
                   {% endif %}
                 </td>
               </tr>
@@ -40,9 +40,9 @@
                   {% if signup_form.password2.errors %}
                     <img src="{% media_url 'images/check_no.png' %}" width="20" title="{{ signup_form.password2.errors.0 }}" />
                   {% else %}
-                    {% ifequal request.GET.act 'signup' %}
+                    {% if signup %}
                       <img src="{% media_url 'images/check.png' %}" width="20" />
-                    {% endifequal %}
+                    {% endif %}
                   {% endif %}
                 </td>
               </tr>
@@ -53,9 +53,9 @@
                   {% if signup_form.email.errors %}
                     <img src="{% media_url 'images/check_no.png' %}" width="20" title="{{ signup_form.email.errors.0 }}" />
                   {% else %}
-                    {% ifequal request.GET.act 'signup' %}
+                    {% if signup %}
                       <img src="{% media_url 'images/check.png' %}" width="20" />
-                    {% endifequal %}
+                    {% endif %}
                   {% endif %}
                 </td>
               </tr>
@@ -66,9 +66,9 @@
                   {% if signup_form.username.errors %}
                     <img src="{% media_url 'images/check_no.png' %}" width="20" title="{{ signup_form.username.errors.0 }}" />
                   {% else %}
-                    {% ifequal request.GET.act 'signup' %}
+                    {% if signup %}
                       <img src="{% media_url 'images/check.png' %}" width="20" />
-                    {% endifequal %}
+                    {% endif %}
                   {% endif %}
                 </td>
               </tr>
@@ -77,9 +77,9 @@
                   {% if signup_form.terms.errors %}
                     <img src="{% media_url 'images/check_no.png' %}" width="20" title="{{ signup_form.terms.errors.0 }}" style="vertical-align: middle;" />
                   {% else %}
-                    {% ifequal request.GET.act 'signup' %}
+                    {% if signup %}
                       <img src="{% media_url 'images/check.png' %}" width="20" style="vertical-align: middle;" />
-                    {% endifequal %}
+                    {% endif %}
                   {% endif %}
                   {{ signup_form.terms }} I agree to the <a href="{% url public.views.terms %}" target="_blank" style="color: #555">Terms</a>.
                   <input id="signup_submit" type="submit" value="Create an Account">
