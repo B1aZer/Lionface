@@ -447,7 +447,6 @@ a.reset:hover {
 .micro_page_about:hover .love, .micro_page:hover .love {
 	color: #F9C;
 }
-
+.login_error { position: absolute; right: 8px; border: 1px solid #DDD; color: #900; background: #FFF; z-index: 99999; }
 .help_text { font-size: 8pt; color: #900; }
-
 .dark_box .errorlist { font-weight: normal; padding: 2px; font-size: 10pt; }

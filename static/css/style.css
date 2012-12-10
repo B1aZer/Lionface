@@ -3,7 +3,7 @@ body {
 	font-size: 10pt; 
 	color: #222;
 	margin: 0px; 
-	background: #FAFAFA;
+	background: #F0F3F5;
 }
 
 		
@@ -79,8 +79,8 @@ a.filter img {
 	padding: 17px 0 15px 17px;
 	background: #FFF;
 	border-top: 1px solid #DDD;
-	-moz-box-shadow: 0 4px 8px -4px #EEE;
-	box-shadow: 0 4px 8px -4px #EEE;
+	-moz-box-shadow: 0 4px 8px -4px #CCC;
+	box-shadow: 0 4px 8px -4px #CCC;
 	-moz-border-radius: 0 0 0 8px;
 	border-radius: 0 0 0 8px;
 }
@@ -638,10 +638,9 @@ a.profile_btn:hover {
 	width: 200px; 
 	height: 200px; 
 	background-image: url(../images/noProfilePhoto.png); 
-	background-position: top center; 
+	background-position: center center; 
 	background-repeat: no-repeat; 
 	position: relative;
-	border: 1px solid #EEE;
 	-moz-border-radius: 0 0 0 3px;
 	border-radius: 0 0 0 3px;
 	position: relative;
@@ -1311,44 +1310,12 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 
 #dashboard {
 	display: block;
-	width: 900px;
+	width: 898px;
 	height: 50px;
 	border: 1px solid #DDD;
 	background: #FFF;
-	-moz-box-shadow: 0 4px 8px -4px #AAA;
-	box-shadow: 0 4px 8px -4px #AAA;
-	margin-bottom: 30px !important;
-}
-
-#dashboard:before, #dashboard:after  
-{  
-    position: absolute;  
-    width: 40%;  
-    height: 10px;  
-    content: ' ';  
-    left: 17px;  
-    top: 26px;  
-    background: transparent;  
-    -webkit-transform: skew(-5deg) rotate(-5deg);  
-    -moz-transform: skew(-5deg) rotate(-5deg);  
-    -ms-transform: skew(-5deg) rotate(-5deg);  
-    -o-transform: skew(-5deg) rotate(-5deg);  
-    transform: skew(-5deg) rotate(-5deg);  
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);  
-    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);  
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);  
-    z-index: -1;  
-}  
-#dashboard:after  
-{  
-    left: auto;  
-    right: 17px;  
-    -webkit-transform: skew(5deg) rotate(5deg);  
-    -moz-transform: skew(5deg) rotate(5deg);  
-    -ms-transform: skew(5deg) rotate(5deg);  
-    -o-transform: skew(5deg) rotate(5deg);  
-    transform: skew(5deg) rotate(5deg);  
-}  
+	z-index: 999;
+} 
 
 .dashboard_related {
 	display: block; height: 100%; width: 120px;
