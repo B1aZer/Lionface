@@ -310,7 +310,7 @@ CELERYBEAT_SCHEDULE = {
     },
     "delete_page": {
         "task": "pages.tasks.DeletePage",
-        "schedule": timedelta(minutes=10),
+        "schedule": timedelta(minutes=1440),
     },
 }
 

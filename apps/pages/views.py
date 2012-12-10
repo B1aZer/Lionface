@@ -712,8 +712,8 @@ def delete_page(request, slug=None):
         password = request.POST.get('confirm_password',None)
         if check_password(password, request.user.password):
             if page.user == request.user and request.user.check_option('pages_delete__%s' % page.id):
-                #delta = dateclass.timedelta(days=7)
-                delta = dateclass.timedelta(minutes=30)
+                delta = dateclass.timedelta(days=7)
+                #delta = dateclass.timedelta(minutes=30)
                 page.for_deletion = timezone.now() + delta
                 page.save()
                 #page.delete()
