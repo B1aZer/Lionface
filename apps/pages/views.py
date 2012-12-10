@@ -638,6 +638,7 @@ def list_feedback(request, slug=None):
 
 @login_required
 def settings(request, slug=None):
+    active = 'basics'
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
@@ -658,6 +659,7 @@ def settings(request, slug=None):
                 {
                     'page': page,
                     'form': form,
+                    'active': active,
                 },
                 RequestContext(request)
             )

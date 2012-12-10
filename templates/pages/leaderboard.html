@@ -28,7 +28,10 @@
 <div class="content_pages" id="leader" style="position: absolute; right: 0px; top: -10px; width: 200px; padding: 12px 10px 0px 10px; text-align: center;" id="leader">
 	<div class="leader_title" style="background: #FFF; cursor: default;">Most Loved on Lionface</div>
 	<div>
-        <img src="{{ most_loved.get_thumb }}" alt="{{ most_loved.name }}" width="180" height="180"  /><br />{{ most_loved.name }}<br />
+        <a href="{{ most_loved.get_absolute_url }}"> 
+            <img src="{{ most_loved.get_thumb }}" alt="{{ most_loved.name }}" width="180" height="180"  />
+        </a>
+        <br />{{ most_loved.name }}<br />
         <span style="font-size: 11px; color: #E39;">{{ most_loved.loves }}</span>
     </div>
     {% for page in rest %}
@@ -37,7 +40,9 @@
         <table>
             <tr>
                 <td>
-                    <img src="{{ page.get_thumb }}" alt="{{ page.name }}" width="{{ size }}" height="{{ size }}"  />
+                    <a href="{{ page.get_absolute_url }}"> 
+                        <img src="{{ page.get_thumb }}" alt="{{ page.name }}" width="{{ size }}" height="{{ size }}"  />
+                    </a>
                 </td>
                 <td align="left">{{ page.name }}<br />
                     <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span>

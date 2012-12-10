@@ -157,7 +157,7 @@ class PageSettingsForm(forms.ModelForm):
 
     class Meta:
         model = Pages
-        exclude = ('type','user','loves','admins')
+        fields = ('name','url','username','category', 'content', )
         widgets = {
             'username' : forms.TextInput(attrs={'readonly':'readonly'}),
         }
