@@ -105,11 +105,28 @@ LionFace.Pages.prototype = {
             var category = tr.attr('class');
             if (!$(this).data('toggled')) {
                 $("." + category + ".hidden_row").show();
+                $("." + category + ".page_row").show();
                 $(this).data('toggled',true);
             }
             else {
                 $("." + category + ".hidden_row").hide();
                 $(this).data('toggled',false);
+            }
+        });
+
+        /** update button */
+        $(document).on('click','.categoty_button',function(e) {
+            e.preventDefault();
+            var tr = $(this).parents('tr')
+            var category = tr.attr('class');
+            if (!$(this).data('entangled')) {
+                $("." + category + ".page_row").hide();
+                $("." + category + ".hidden_row").hide();
+                $(this).data('entangled',true);
+            }
+            else {
+                $("." + category + ".page_row").show();
+                $(this).data('entangled',false);
             }
         });
 

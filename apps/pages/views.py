@@ -309,7 +309,7 @@ def reset_album_activity(request, slug):
 
 def leaderboard(request):
 
-    pages = Pages.objects.all().order_by('-loves')
+    pages = Pages.objects.filter(type='BS').order_by('-loves')
     most_loved = pages[0]
     rest = pages[1:10]
 

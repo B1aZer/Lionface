@@ -70,7 +70,7 @@ a.reset:hover {
 	width: 100%;	
 	-moz-box-shadow: inset 0 5px 10px -4px #333;
 	box-shadow: inset 0 5px 10px -4px #333; 
-	background: url('../images/rainbow.png');
+	background: url(../images/rainbow.png);
 	background-position: bottom center;
 	background-repeat: repeat-x;
 	position: relative;
