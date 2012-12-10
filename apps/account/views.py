@@ -15,6 +15,7 @@ import json
 
 @public_required
 def signup(request, template='public/home.html'):
+    signup = True
     if request.method == 'POST':
         form = SignupForm(prefix='signup', data=request.POST)
         if form.is_valid():
@@ -31,12 +32,14 @@ def signup(request, template='public/home.html'):
             raise HttpResponseServerError()
     else:
         form = SignupForm(prefix='signup')
+        signup = False
 
     return render(request,
         template,
         {
             'login_form': LoginForm(prefix='login'),
-            'signup_form': form
+            'signup_form': form,
+            'signup': signup
         }
     )
 
@@ -61,13 +64,12 @@ def login(request, template_name='public/home.html'):
     else:
         form = LoginForm(prefix='login')
 
-    return render_to_response(
+    return render(request,
         template_name,
         {
             'login_form': form,
             'signup_form': SignupForm(prefix='signup')
-        },
-        RequestContext(request)
+        }
     )
 
 
