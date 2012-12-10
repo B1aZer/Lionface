@@ -488,6 +488,9 @@ class UserProfile(User):
                 return remain.days
         return False
 
+    def is_customer(self):
+        return self.customer.count()
+
     @models.permalink
     def get_absolute_url(self):
         return ('profile.views.profile', [str(self.username)])

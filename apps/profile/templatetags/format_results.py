@@ -225,6 +225,12 @@ def check_pages_calendar(user,page):
         return False
     return user.check_option('pages_calendar__%s' % page.id)
 
+@register.filter(name="check_pages_loves")
+def check_pages_loves(user,page):
+    if user.is_anonymous():
+        return False
+    return user.check_option('pages_loves__%s' % page.id)
+
 @register.filter(name="check_pages_community")
 def check_pages_community(user,page=None):
     if user.is_anonymous():
@@ -260,6 +266,7 @@ def check_three_arguments(context, *args, **kwargs):
             as_name = args[-1]
         context[as_name] = user.check_visiblity(name,current)
     return ''
+
 
 @register.filter(name="get_community_pages_friends")
 def get_community_pages_friends(user,page):

@@ -17,3 +17,4 @@ pytz==2012d
 wsgiref==0.1.2
 PIL==1.1.7
 html5lib==0.95
+stripe==1.7.6

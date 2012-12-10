@@ -150,6 +150,7 @@ INSTALLED_APPS = (
     'degrees',
     'pages',
     'agenda',
+    'ecomm',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -30,6 +30,11 @@ LionFace.User.options['pages_updates__'+{{ page.id }}] = true;
 {% else %}
 LionFace.User.options['pages_updates__'+{{ page.id }}] = false;
 {% endif %}
+{% if request.user|check_pages_loves:page %}
+LionFace.User.options['pages_loves__'+{{ page.id }}] = true;
+{% else %}
+LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
+{% endif %}
 </script>
 {% endblock %} 
 
@@ -44,6 +49,9 @@ LionFace.User.options['pages_updates__'+{{ page.id }}] = false;
             {% if request.user|check_pages_admins:page %}
             <li id="admins_settings" {% if active == 'admins' %} class="active" {% endif %}>Admins</li>
             {% endif %}
+            {% if request.user|check_pages_loves:page %}
+            <li id="loves_settings" {% if active == 'loves' %} class="active" {% endif %}>Loves</li>
+            {% endif %}
         </ul>
     </div>
     {% endblock %}
@@ -52,12 +60,16 @@ LionFace.User.options['pages_updates__'+{{ page.id }}] = false;
 <div class="right_col">
     {% block right_col %}
 
-    <div id="basics_header">
-        <span style="font-size: 18px;">Basics</span></strong>
+<div id="basics_header" {% if active == 'loves' or active == 'admins' %} style="display:none" {% endif %}>
+    <span style="font-size: 18px;">Basics</span></strong>
 </div>
 
-<div id="privacy_header">
+<div id="privacy_header" {% if active == 'loves' or active == 'basics' %} style="display:none" {% endif %}>
     <span style="font-size: 18px;">Admins</span></strong>
+</div>
+
+<div id="loves_header" {% if active == 'admins' or active == 'basics' %} style="display:none" {% endif %}>
+    <span style="font-size: 18px;">Loves</span></strong>
 </div>
 
 <form action="" method="post">{% csrf_token %}
@@ -108,10 +120,6 @@ LionFace.User.options['pages_updates__'+{{ page.id }}] = false;
     </table>
 
 
-    <td>&nbsp;</td>
-</tr>
-   </table>
-
    <table id="privacy">
         <tr>
             <td colspan="2" align="left" style="padding: 4px 20px; border-bottom: 1px solid #CCC;"><span style="margin-right: 10px;">Add an Admin</span>
@@ -136,9 +144,53 @@ LionFace.User.options['pages_updates__'+{{ page.id }}] = false;
         </tr>
     </table>
 
+   <table id="loves">
+        <tr>
+            <td width="150" align="right">&nbsp;</td>
+            <td width="405">&nbsp;</td>
+        </tr>
+        <tr>
+            <td align="right">Make a bid: </td>
+            <td>
+                <div id="bid-slider"></div>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Your bid: </td>
+            <td>
+                <span id="bid-value"></span>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Card: </td>
+            <td>
+                <form action="" method="POST" id="payment-form">
+                    {% csrf_token %}
+                  <div class="form-row">
+                    <label>Card Number</label>
+                    <input type="text" size="20" autocomplete="off" class="card-number"/>
+                  </div>
+                  <div class="form-row">
+                    <label>CVC</label>
+                    <input type="text" size="4" autocomplete="off" class="card-cvc"/>
+                  </div>
+                  <div class="form-row">
+                    <label>Expiration (MM/YYYY)</label>
+                    <input type="text" size="2" class="card-expiry-month"/>
+                    <span> / </span>
+                    <input type="text" size="4" class="card-expiry-year"/>
+                  </div>
+                  <button type="submit" class="submit-button">Submit Payment</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
 
-    <td>&nbsp;</td>
-</tr>               
+
 
 </div>
 
@@ -164,6 +216,42 @@ LionFace.User.options['pages_updates__'+{{ page.id }}] = false;
 </div>
 
 {% block additional_js %}
+<script>
+$(document).ready(function() {
+
+    function stripeResponseHandler(status, response) {
+        $(".payment-errors").html('');
+        if (response.error) {
+            // show the errors on the form
+            $(".payment-errors").text(response.error.message);
+            $(".submit-button").removeAttr("disabled");
+        } else {
+            var form$ = $("#payment-form");
+            // token contains id, last4, and card type
+            var token = response['id'];
+            // insert the token into the form so it gets submitted to the server
+            form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+            // and submit
+            form$.get(0).submit();
+        }
+    }
+
+    $("#payment-form").submit(function(event) {
+        // disable the submit button to prevent repeated clicks
+        $('.submit-button').attr("disabled", "disabled");
+
+        Stripe.createToken({
+            number: $('.card-number').val(),
+            cvc: $('.card-cvc').val(),
+            exp_month: $('.card-expiry-month').val(),
+            exp_year: $('.card-expiry-year').val()
+        }, stripeResponseHandler);
+
+        // prevent the form from submitting with the default action
+        return false;
+    });
+});
+</script>
     {% include_media 'pages.js' %}
     {% include_media 'pages.settings.js' %}
 {% endblock %} 

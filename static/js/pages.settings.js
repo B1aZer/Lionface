@@ -7,6 +7,7 @@ LionFace.PagesSettings.prototype = {
 
     runner : function() {
         this.bind_functions();
+        this.bind_loves();
 
     },
 
@@ -14,6 +15,7 @@ LionFace.PagesSettings.prototype = {
     bind_functions : function() {
 
         $('#privacy').hide();
+        $('#loves').hide();
 
         if (LionFace.User.options['pages_admins__'+LionFace.User.page_id] &&
             !LionFace.User.options['pages_basics__'+LionFace.User.page_id]) {
@@ -21,11 +23,19 @@ LionFace.PagesSettings.prototype = {
                 $('#privacy').show();
         }
 
+        if (LionFace.User.options['pages_loves__'+LionFace.User.page_id] &&
+            !LionFace.User.options['pages_basics__'+LionFace.User.page_id]) {
+                $('#basics').hide();
+                $('#loves').show();
+        }
 
         $(document).on('click','#admins_settings',function(){
             $('#basics').hide();
+            $('#loves').hide();
             $('#basics_header').hide(); 
+            $('#loves_header').hide(); 
             $('#basics_settings').removeClass('active');
+            $('#loves_settings').removeClass('active');
             $('#privacy').show();
             $('#privacy_header').show(); 
             $('#admins_settings').addClass('active');
@@ -37,9 +47,26 @@ LionFace.PagesSettings.prototype = {
             $('#basics_header').show(); 
             $('#basics_settings').addClass('active');
             $('#privacy').hide();
+            $('#loves').hide();
             $('#privacy_header').hide(); 
+            $('#loves_header').hide(); 
             $('#admins_settings').removeClass('active');
+            $('#loves_settings').removeClass('active');
             $('#submit_button').show();
+        });
+
+        $(document).on('click','#loves_settings',function(){
+            $('#loves').show();
+            $('#loves_header').show(); 
+            $('#loves_settings').addClass('active');
+            $('#privacy').hide();
+            $('#basics').hide();
+            $('#privacy_header').hide(); 
+            $('#basics_header').hide(); 
+            $('#admins_settings').removeClass('active');
+            $('#basics_settings').removeClass('active');
+            //$('#submit_button').show();
+            $('#submit_button').hide();
         });
 
         $(document).on('click','#delete_page', function (e) {
@@ -138,6 +165,19 @@ LionFace.PagesSettings.prototype = {
             }
         });
 
+    },
+
+    bind_loves: function() {
+        $( "#bid-slider" ).slider({
+            value:100,
+            min: 0,
+            max: 500,
+            step: 10,
+            slide: function( event, ui ) {
+                $( "#bid-value" ).html( "$" + ui.value );
+            }
+        });
+    
     },
 }
 

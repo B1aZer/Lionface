@@ -1,4 +1,5 @@
 ##next###
+update loves on server
 ### DoS ###
 loop problem
 
@@ -25,7 +26,7 @@ removing Post from signals
 ###USEFUL###
 from pages.models import Pages
 for page in Pages.objects.all():
-    page.user.set_option('pages_calendar__%s' % page.id,True)
+    page.user.set_option('pages_loves__%s' % page.id,True)
 
 CELERYD AND CELERYBEAT (do not forget to run them)
 

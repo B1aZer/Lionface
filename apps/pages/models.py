@@ -352,6 +352,7 @@ class Pages(models.Model):
         self.user.set_option('pages_updates__%s' % self.id,True)
         self.user.set_option('pages_community__%s' % self.id,True)
         self.user.set_option('pages_calendar__%s' % self.id,True)
+        self.user.set_option('pages_loves__%s' % self.id,True)
 
 
 def change_friend_position(sender, instance, action, reverse, model, pk_set, using, **kwargs):

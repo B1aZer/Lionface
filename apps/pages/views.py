@@ -11,6 +11,7 @@ from .models import *
 from post.models import *
 from tags.models import Tag
 from agenda.models import Events, Locations
+from ecomm.models import Customers
 from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -645,8 +646,14 @@ def settings(request, slug=None):
         raise Http404
     # check permissions
     if request.user.check_option('pages_admins__%s' % page.id) \
-            or request.user.check_option('pages_basics__%s' % page.id):
-                pass
+            or request.user.check_option('pages_basics__%s' % page.id) \
+            or request.user.check_option('pages_loves__%s' % page.id):
+                if request.user.check_option('pages_loves__%s' % page.id):
+                    active = 'loves'
+                if request.user.check_option('pages_admins__%s' % page.id):
+                    active = 'admins'
+                if request.user.check_option('pages_basics__%s' % page.id):
+                    active = 'basics'
     else:
         raise Http404
     form = PageSettingsForm(instance=page)
@@ -1588,3 +1595,52 @@ def share_event(request, slug):
         post.save()
 
     return HttpResponse(json.dumps(data), "application/json")
+
+
+def card_form(request, slug):
+    import stripe
+    if request.method == 'POST' and not request.user.is_customer():
+        import pdb;pdb.set_trace()
+        # set your secret key: remember to change this to your live secret key in production
+        # see your keys here https://manage.stripe.com/account
+        stripe.api_key = "GfdATJpLDgriMZ66PPrK0Kf9XuCsZU9w"
+
+        # get the credit card details submitted by the form
+        token = request.POST['stripeToken']
+
+        # create a Customer
+        customer = stripe.Customer.create(
+            card=token,
+            description=request.user.username
+        )
+
+        """
+        # charge the Customer instead of the card
+        stripe.Charge.create(
+            amount=1000, # in cents
+            currency="usd",
+            customer=customer.id
+        )
+        """
+        # save the customer ID in your database so you can use it later
+        #save_stripe_customer_id(user, customer.id)
+        customer = Customers(user=request.user, stripe_id=customer.id)
+        customer.save()
+
+        """
+        # later
+        customer_id = get_stripe_customer_id(user)
+
+        stripe.Charge.create(
+            amount=1500, # $15.00 this time
+            currency="usd",
+            customer=customer_id
+        )
+        """
+
+    return render_to_response(
+        'pages/card_form.html',
+        {
+        },
+        RequestContext(request)
+    )
