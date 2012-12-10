@@ -2,7 +2,6 @@
 
 <div class="left_col" style="border-width: 1px 1px 0 0;">
   {% block left_col %}
-    <div style="position: relative; top: -4px;">
 
     <ul class="notifications_list">
     {% for notification in notifications %}
@@ -12,7 +11,7 @@
     {% endfor %}
     </ul>
 
-    <div style="border: 1px solid #EEE; border-width: 1px 0 0 0; position: relative; top: -7px;">
+    <div style="border: 1px solid #EEE; border-width: 1px 0 0 0;">
         <table width="100%" style="font-size: 8pt; margin-top: 10px;"><tr>
           {% if notifications.has_previous %}
             <td align="left" width="75"><a href="?page={{ notifications.previous_page_number }}" class="profile_nav nav_link">< Newer</a></td>
@@ -29,5 +28,4 @@
     </div>
     </div>
   {% endblock %}
-</div>
 

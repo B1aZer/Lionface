@@ -8,7 +8,7 @@
 
 {% block content_title %} {% endblock %}
 {% block content_middle %}
-<table height="40" width="900"><tr><td valign="center">
+<table width="200"><tr><td valign="center" align="center">
 <a href="{% url page-browse page_type='business' %}" class="blue_btn" style="color: #FFF;">Businesses</a>
 <a href="{% url page-browse page_type='nonprofit' %}" class="blue_btn" style="color: #FFF;">Nonprofits</a>
 </td</tr></table>
@@ -18,7 +18,7 @@
 {% block left_col %}
 
     <div style="position: relative; left: 0px; z-index: 100;">
-		<span style="color: #AAA; font-size: 8pt;">Shift+click to select just one filter.</span>
+		<div class="filter_header">Categories<br /><span style="color: #BBB; font-size: 8pt;">Shift+click to select just one filter.</span></div>
         {% for filtr in filters %}
         {% if page_type == 'nonprofit' %}
             <a id="filter_{{ filtr|getcatnumnonp }}" href="javascript:;" class="feed_type filter filterON" >{{filtr}}</a>

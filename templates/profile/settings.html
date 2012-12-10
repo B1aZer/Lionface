@@ -3,9 +3,9 @@
 
 {% block content_title %}{% endblock %}
 {% block content_middle %}
-	<table width="100%" height="40"><tr><td align="left" style="color: #999;" valign="bottom">
+	<table width="100%"><tr><td align="left" style="color: #999;">
 		<a href="{{ request.user.get_absolute_url }}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | Account
-	</td><td align="right" valign="bottom">
+	</td><td align="right">
 		<a href="{{ request.user.get_absolute_url }}" style="color: #AAA;">Cancel</a>
 	</td></tr></table>
 {% endblock %}
@@ -14,6 +14,7 @@
 <div class="left_col">
     {% block left_col %}
     <div class="settings_nav">
+		<div class="filter_header">Account Settings</div>
         <ul>
             <li id="basics_settings" {% if active == 'basics' %} class="active" {% endif %} onClick="show_basics()">Basics</li>
             <li id="privacy_settings" {% if active == 'privacy' %} class="active" {% endif %} onClick="show_privacy()">Privacy</li>

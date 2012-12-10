@@ -1567,9 +1567,9 @@ def share_event(request, slug):
     share_to = request.POST.get('share_to',None)
     try:
         event = Events.objects.get(id=int(event_id))
-        content = mark_safe("""Shared an event %s from <a href=\"%s\">%s</a> page""" % (event.name, page.get_absolute_url(), page.name))
+        content = mark_safe("""Check out <i>%s</i>, an event from <a href=\"%s\">%s</a>.""" % (event.name, page.get_absolute_url(), page.name))
         if event.description:
-            content = content + "\n Description: %s" % event.description
+            content = content + "\n Event Description: %s" % event.description
     except Events.DoesNotExist:
         raise Http404
     if share_to and share_to != 'profile':

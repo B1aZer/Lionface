@@ -36,6 +36,7 @@ LionFace.User.options['pages_updates__'+{{ page.id }}] = false;
 <div class="left_col">
     {% block left_col %}
     <div class="settings_nav">
+		<div class="filter_header">Page Settings<br /><span style="color: #AAA; font-size: 8pt;">You must be an admin.</span></div>
         <ul>
             {% if request.user|check_pages_basics:page %}
             <li id="basics_settings" {% if active == 'basics' %} class="active" {% endif %}>Basics</li>
@@ -122,8 +123,16 @@ LionFace.User.options['pages_updates__'+{{ page.id }}] = false;
             {% include 'pages/settings_admins.html' %}
         </tr>
         <tr>
-            <td align="right">&nbsp;</td>
-            <td>&nbsp;</td>
+            <td align="left" colspan="2">
+				<span style="font-weight: bold;">Updates:</span> These administrators may post Updates to the Page. Page Updates will be seen in the News Feed of users who have loved your Page.<br /><br />
+				<span style="font-weight: bold;">Photos:</span> These administrators may change the Page's profile image, as well as the Page's cover photo.<br /><br />
+				<span style="font-weight: bold;">Basics:</span> These administrators may edit the basic information of the Page, such as the Page name, external URL, category, and Page bio.<br /><br />
+				<span style="font-weight: bold;">Calendar:</span> These administrators may post and edit events on the Calendar. They may choose to automatically post Updates 24 hours before an event. Additionally, Calendar administrators can initiate Inter-Page or In-House discussions.<br /><br />
+				<span style="font-weight: bold;">Community:</span> These administrators may add other Pages as friends, accept Page friend requests, approve Comunnity requests (employees, interns, and, if applicable, volunteers) from users, and add/edit text below the header of each category. Additionally, Calendar administrators can initiate Inter-Page or In-House discussions.<br /><br />
+				<span style="font-weight: bold;">Edit Admins:</span> These administrators may add, remove, or edit Admins of this Page, with the exception of the Admin who created the Page.<br /><br />
+				The creator of the Page as the option to delete the Page, however there is a 7 day waiting period (in case you wish to cancel the deletion of the Page).
+			</td>
+
         </tr>
     </table>
 
