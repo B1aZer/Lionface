@@ -1,5 +1,6 @@
 from django.http import *
-from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
 from django.shortcuts import redirect
@@ -11,13 +12,14 @@ from django.contrib.auth.decorators import login_required
 from models import *
 import json
 
+
 @public_required
-def signup(request):
+def signup(request, template='public/home.html'):
     if request.method == 'POST':
         form = SignupForm(prefix='signup', data=request.POST)
         if form.is_valid():
             new_user = form.save()
-            new_user_profile = getattr(new_user,'userprofile', None)
+            new_user_profile = getattr(new_user, 'userprofile', None)
             #saving full name
             if new_user_profile:
                 new_user_profile.optional_name = form.cleaned_data['full_name']
@@ -30,14 +32,14 @@ def signup(request):
     else:
         form = SignupForm(prefix='signup')
 
-    return render_to_response(
-        'account/signup.html',
+    return render(request,
+        template,
         {
             'login_form': LoginForm(prefix='login'),
             'signup_form': form
-        },
-        RequestContext(request)
+        }
     )
+
 
 @public_required
 def login(request, template_name='public/home.html'):
@@ -50,13 +52,14 @@ def login(request, template_name='public/home.html'):
                 usp = user.userprofile
                 usp.timezone = form.cleaned_data.get('tzone')
                 usp.save()
-                path = request.POST.get('next',None)
+                path = request.POST.get('next', None)
                 if path:
                     return redirect(path)
                 else:
                     return redirect('home')
-        form.error_message = "Invalid e-mail address and password provided."
-    else: form = LoginForm(prefix='login')
+        form.error_message = "There is an error with your login credentials."
+    else:
+        form = LoginForm(prefix='login')
 
     return render_to_response(
         template_name,
@@ -67,12 +70,18 @@ def login(request, template_name='public/home.html'):
         RequestContext(request)
     )
 
+
 def home(request):
     # If the user isn't signed in, forward to the public view.
-    if not request.user.is_authenticated(): return public.views.home(request)
+    if not request.user.is_authenticated():
+        act = request.GET.get('act')
+        if act == 'signup':
+            return signup(request)
+        return public.views.home(request)
 
     # Redirect to the user's feed
-    return redirect(profile.views.feed, username = request.user)
+    return redirect(profile.views.feed, username=request.user)
+
 
 @login_required
 def follow(request):
@@ -84,6 +93,7 @@ def follow(request):
         request.user.add_following(following)
     return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
 
+
 @login_required
 def unfollow(request):
     if 'user' in request.GET:
@@ -93,6 +103,7 @@ def unfollow(request):
             raise Http404()
         request.user.remove_following(following)
     return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
+
 
 @login_required
 def friend_add(request):
@@ -105,6 +116,7 @@ def friend_add(request):
         req.save()
         return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
     raise Http404()
+
 
 @login_required
 def friend_remove(request):
@@ -121,6 +133,7 @@ def friend_remove(request):
         return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
     raise Http404()
 
+
 @login_required
 def friend_accept(request, request_id):
     try:
@@ -130,6 +143,7 @@ def friend_accept(request, request_id):
     except FriendRequest.DoesNotExist:
         raise Http404()
     raise Http404()
+
 
 @login_required
 def friend_decline(request, request_id):
@@ -141,10 +155,11 @@ def friend_decline(request, request_id):
         raise Http404()
     raise Http404()
 
+
 @login_required
 def hide_friend(request):
-    data={'status':'FAIL'}
-    user_id = request.POST.get('user',None)
+    data = {'status': 'FAIL'}
+    user_id = request.POST.get('user', None)
     try:
         user = UserProfile.objects.get(id=user_id)
     except:
@@ -152,8 +167,9 @@ def hide_friend(request):
     if request.user != user:
         request.user.hidden.add(user)
         request.user.save()
-        data['status']='OK'
+        data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def filter_add(request):
@@ -186,6 +202,7 @@ def filter_add(request):
                     request.user.filters = filters
                     request.user.save()
     return HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def filter_remove(request):
