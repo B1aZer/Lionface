@@ -5,7 +5,7 @@
             {% if page.get_deletion_offset and request.user|check_pages_delete:page %}
 				<div class="for_delt_notf" align="right" style="display: block;">
                 <div class="page_rqst">
-                    <span> This Page has been scheduled to be deleted in {{ page.get_deletion_offset }} days (30 mins test).</span>
+                    <span> This Page has been scheduled to be deleted in {{ page.get_deletion_offset }} days.</span>
                     <a href="{% url pages.views.prevent_deletion slug=page.username %}" class="page_delt_not" style="color: #999;">Cancel</a>
                 </div>
 				</div>

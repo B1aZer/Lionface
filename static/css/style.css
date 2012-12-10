@@ -3,7 +3,7 @@ body {
 	font-size: 10pt; 
 	color: #222;
 	margin: 0px; 
-	background-color: #FBFBFB; 
+	background: #FAFAFA;
 }
 
 		
@@ -67,7 +67,23 @@ a.filter:hover, a.sub_filter:hover {
 	border-right-color: #CCC;
 }
 
+a.filter img {
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+	-moz-opacity: 0.50;
+	opacity: 0.50;
+}
 
+.filter_header {
+	color: #333;
+	display: block;
+	padding: 17px 0 15px 17px;
+	background: #FFF;
+	border-top: 1px solid #DDD;
+	-moz-box-shadow: 0 4px 8px -4px #EEE;
+	box-shadow: 0 4px 8px -4px #EEE;
+	-moz-border-radius: 0 0 0 8px;
+	border-radius: 0 0 0 8px;
+}
 
 a.filterON:link, a.filterON:active, a.filterON:visited { 
 	position: relative; 
@@ -95,6 +111,21 @@ a.filterON:hover, a.sub_filterON:hover {
 	background: #F5F5F5;
 	border-color: #EEE;
 	border-right-color: #CCC;
+}
+
+a.filterON img {
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+	-moz-opacity: 1;
+	opacity: 1;
+}
+
+.NF_icon {
+	width: 14px;
+	height: 14px;
+	margin-right: 8px;
+	display: inline-block;
+	float: left;
+	position: relative; top: -3px;
 }
 
 .remove_tag {
@@ -189,9 +220,8 @@ a.colored_tag:hover {
 }
 
 
-.dashboard_name, a.name_link:link, a.name_link:active, a.name_link:visited {
-	color: #777;
-}
+
+
 
 a.name_link:hover {
 	color: #F58;
@@ -373,9 +403,50 @@ a.link-remove-friend:hover {
 	color: #999;
 }
 
+.dashboard_name, a.name_link:link, a.name_link:active, a.name_link:visited {
+	color: #777;
+}
+
+.dashboard_name:hover, a.name_link:hover {
+	color: #F58;
+}
+
+.db_loves_icon, .db_albums_icon, .db_posts_icon {
+	display: block;
+	width: 20px; height: 20px; 
+	-webkit-background-size: 20px 20px;
+	-moz-background-size: 20px 20px;
+	background-size: 20px 20px;
+	position: relative; top: -2px; left: -2px;
+}
+
+.db_loves_icon {
+	background: url(../images/iconLoves.png);
+}
+
+.db_albums_icon {
+	background: url(../images/iconAlbum.png);
+}
+
+.db_posts_icon {
+	background: url(../images/iconPost.png);
+}
+
+#loves_link:hover .db_loves_icon {
+	background: url(../images/iconLoves.hover.png);
+}
+
+#albums_link:hover .db_albums_icon {
+	background: url(../images/iconAlbum.hover.png);
+}
+
+#posts_link:hover .db_posts_icon {
+	background: url(../images/iconPost.hover.png);
+}
+
 a.dashboard_nav:link, a.dashboard_nav:active, a.dashboard_nav:visited {
 	display: inline-block;
-	padding: 9px 17px 6px 7px;
+	padding: 11px 17px 7px 7px;
 	text-decoration: none;
 	color: #777;
 	background: #f7f7f7; /* Old browsers */
@@ -569,7 +640,7 @@ a.profile_btn:hover {
 	background-image: url(../images/noProfilePhoto.png); 
 	background-position: top center; 
 	background-repeat: no-repeat; 
-	position: relative; top: -10px;
+	position: relative;
 	border: 1px solid #EEE;
 	-moz-border-radius: 0 0 0 3px;
 	border-radius: 0 0 0 3px;
@@ -1370,7 +1441,7 @@ a.send_message:hover {
 
 .left_col {
   float: left;
-  width: 200px; padding: 10px 0px; border: 1px solid #EEE; border-width: 1px 0 0 0;
+  width: 200px; border: 1px solid #EEE; border-width: 1px 0 0 0;
 }
 .left_col p { margin: 13px 0px; }
 .left_col hr { background-color: #ddd; border: 1px none #ddd; height: 1px; margin-left: -10px; }
@@ -1419,7 +1490,9 @@ a.send_message:hover {
 
 #profile_top { display: block; font-size: 9pt; position: relative; height: 40px; margin-top: 15px; }
 #profile_top div { display: inline-block; }
-
+#profile_top table {
+	position: relative; top: 26px;
+}
 
 .blue_btn, .blue_btn a, .blue_btn a:active, .blue_btn a:visited { 
 	padding: 5px 12px 5px 12px; 
@@ -1594,6 +1667,11 @@ a.nav_page:link, a.nav_page:active, a.nav_page:visited {
 	top: -5px;
 }
 
+#page_choose_div {
+	position: absolute;
+	top: -15px; right: 0px;
+}
+
 .page_rqst {
 	display: block; 
 	padding: 8px; 
@@ -1698,34 +1776,9 @@ a.nav_notifications:hover {
 	border: 1px solid #CCC;
 	position: relative;
 }
-.page_image:before, .page_image:after  
-{  
-    position: absolute;  
-    width: 40%;  
-    height: 10px;  
-    content: ' ';  
-    left: 0px;  
-    bottom: 8px;  
-    background: transparent;  
-    -webkit-transform: skew(-5deg) rotate(-5deg);  
-    -moz-transform: skew(-5deg) rotate(-5deg);  
-    -ms-transform: skew(-5deg) rotate(-5deg);  
-    -o-transform: skew(-5deg) rotate(-5deg);  
-    transform: skew(-5deg) rotate(-5deg);  
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);  
-    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);  
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);  
-    z-index: -1;  
-}  
-.page_image:after  
-{  
-    left: auto;  
-    right: 0px;  
-    -webkit-transform: skew(5deg) rotate(5deg);  
-    -moz-transform: skew(5deg) rotate(5deg);  
-    -ms-transform: skew(5deg) rotate(5deg);  
-    -o-transform: skew(5deg) rotate(5deg);  
-    transform: skew(5deg) rotate(5deg);  
+
+.inactive {
+	position: absolute; top: 5px; right: 5px; color: #FFF; background: #C00; padding: 4px 8px 2px 8px; -moz-border-radius: 3px; border-radius: 3px;
 }
 
 /* Search */
@@ -2000,8 +2053,6 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 .settings_nav ul {
 	list-style: none;
 	line-height: 16pt;
-	position: relative;
-	top: -13px;
 }
 
 .settings_nav li {
@@ -2100,49 +2151,81 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 	border-color: #DDD;
 }
 
+.love_count {
+	color: #F58; font-size: 9pt;
+	margin: 8px;
+}
+
 a.love:link, a.love:active, a.love:visited { 
 	display: inline-block; 
-	padding: 8px 12px 6px 12px; 
-	color: #777; 
+	padding: 8px 12px 4px 12px; 
+	color: #EEE; 
 	font-size: 12pt;
 	text-decoration: none; 
 	border: 1px solid #FFF;
-	background: #FFF;
+	background: #ffbfd1; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffbfd1 0%, #ff7a9d 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffbfd1), color-stop(100%,#ff7a9d)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffbfd1 0%,#ff7a9d 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffbfd1 0%,#ff7a9d 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffbfd1 0%,#ff7a9d 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ffbfd1 0%,#ff7a9d 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffbfd1', endColorstr='#ff7a9d',GradientType=0 ); /* IE6-9 */
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	-moz-box-shadow: inset 0 4px 6px -4px #777;
-	box-shadow: inset 0 4px 6px -4px #777; 
 }
 
 a.love:hover, a.loved:link, a.loved:active, a.loved:visited { 
-	-moz-box-shadow: insent 0 4px 8px -4px #999;
-	box-shadow: inset 0 4px 8px -4px #999; 
+	color: #FFF;
+	background: #ff99b7; /* Old browsers */
+	background: -moz-linear-gradient(top, #ff99b7 0%, #ff3a75 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff99b7), color-stop(100%,#ff3a75)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ff99b7 0%,#ff3a75 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ff99b7 0%,#ff3a75 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ff99b7 0%,#ff3a75 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ff99b7 0%,#ff3a75 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff99b7', endColorstr='#ff3a75',GradientType=0 ); /* IE6-9 */
 }
+
 a.loved:hover {
-	-moz-box-shadow: inset 0 4px 6px -4px #777;
-	box-shadow: inset 0 4px 6px -4px #777; 
+	background: #ff99b7; /* Old browsers */
+	background: -moz-linear-gradient(top, #ff99b7 0%, #ff5588 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff99b7), color-stop(100%,#ff5588)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ff99b7 0%,#ff5588 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ff99b7 0%,#ff5588 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ff99b7 0%,#ff5588 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ff99b7 0%,#ff5588 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff99b7', endColorstr='#ff5588',GradientType=0 ); /* IE6-9 */
 }
+
+.loves_icon {
+	display: inline-block;
+	float: left;
+	width: 20px; height: 20px; 
+	-webkit-background-size: 20px 20px;
+	-moz-background-size: 20px 20px;
+	background-size: 20px 20px;
+	position: relative; top: -3px; left: -3px;
+	background: url(../images/Icon_Pages_Love.png);
+
+}
+
 .love_container {
 	position: relative;
-	-moz-border-radius: 0 0 5px 5px; 
-	border-radius: 0 0 5px 5px;
-	-moz-box-shadow: 0 4px 8px -4px #333, inset 0 0px 20px -5px #999;
-	box-shadow: 0 4px 8px -4px #333, inset 0 0px 20px -5px #999;
+	border: 1px solid #EEE;
+	border-width: 0 1px;
 }
 
 .love_business {
-	background: #2ab4ea;
+	background: url(../images/love_business.png) #F0F3F5;
+	background-position: center right;
+	background-repeat: no-repeat;
 }
 
 .love_nonprofit {
-	background: #bcc966; /* Old browsers */
-	background: -moz-linear-gradient(top, #bcc966 0%, #909e4a 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bcc966), color-stop(100%,#909e4a)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #bcc966 0%,#909e4a 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #bcc966 0%,#909e4a 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #bcc966 0%,#909e4a 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #bcc966 0%,#909e4a 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bcc966', endColorstr='#909e4a',GradientType=0 ); /* IE6-9 */
+	background: url(../images/love_nonprofit.png) #F0F3F5;
+	background-position: center right;
+	background-repeat: no-repeat;
 }
 
 .cover_photo {
@@ -2161,20 +2244,11 @@ a.loved:hover {
 }
 
 .pages_nav_area {
-	padding: 15px 5px 14px 5px;
-	width: 888px;
-	background: #ffffff;
+	width: 898px;
+	background: #FDFDFD;
 	border: 1px solid #EEE;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	-moz-box-shadow: 0 4px 8px -4px #555;
-	box-shadow: 0 4px 8px -4px #555;
 	position: relative;
-}
-
-#pages_nav_page { 
-	margin: 10px 0;
-
+	z-index: 999;
 }
 
 #pages_nav_page a:link, #pages_nav_page a:active, #pages_nav_page a:visited, 
@@ -2186,12 +2260,10 @@ a.loved:hover {
 .pages_nav_area a:link, .pages_nav_area a:active, .pages_nav_area a:visited, 
 a.nonprofit_btn:link, a.nonprofit_btn:active, a.nonprofit_btn:visited,
 a.business_btn:link, a.business_btn:active, a.business_btn:visited {
-	padding: 11px 12px 9px 12px;
+	padding: 17px 12px 0px 12px;
+	display: inline-block; height: 26px;
 	color: #666;
-	margin: 0px 5px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	position: relative; top: 2px;
+	position: relative; top: 0px;
 }
 
 
@@ -2201,8 +2273,6 @@ a.business_btn:link, a.business_btn:active, a.business_btn:visited {
 	color: #FFF;
 	text-decoration: none;
 	background: #2ab4ea;
-	-moz-box-shadow: inset 0 0px 10px -5px #777, inset 0 2px 4px -2px #999;
-	box-shadow: inset 0 0px 10px -5px #777, inset 0 2px 4px -2px #999; 
 
 }
 
@@ -2218,8 +2288,6 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	background: -ms-linear-gradient(top, #bcc966 0%,#909e4a 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #bcc966 0%,#909e4a 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bcc966', endColorstr='#909e4a',GradientType=0 ); /* IE6-9 */
-	-moz-box-shadow: inset 0 0px 10px -5px #777, inset 0 2px 4px -2px #777;
-	box-shadow: inset 0 0px 10px -5px #777, inset 0 2px 4px -2px #777; 
 }
 
 #pages_nav_page a.business_on:link, #pages_nav_page a.business_on:active, #pages_nav_page a.business_on:visited, #pages_nav_page a.business_on:hover, a.business_on,
@@ -2253,12 +2321,10 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	margin: 5px;
 }
 
-.review:hover , .active_review{
-	background: #2ab4ea;
+.review:hover , .active_review, .marked_review{
+	background: #bcc966;
 	cursor: pointer;
 	color: #FFF;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
 	border-color: #DDD;
 }
 
@@ -2267,13 +2333,11 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	width: 25px;
 	height: 17px;
 	padding-top: 7px;
-	border: 1px solid #DDD;
+	border: 1px solid #EEE;
 	text-align: center;
 	margin: 5px;
-	background: #3ea8d2;
+	background: #bcc966;
 	color: #FFF;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
 }
 .create_options {
 	position: absolute; 
@@ -2287,6 +2351,10 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 
 .create_options a.nonprofit_btn, .create_options a.business_btn, .create_options a.nonprofit_btn:active, .create_options a.business_btn:active, .create_options a.nonprofit_btn:visited, .create_options a.business_btn:visited {
 	color: #555;
+	height: 8px;
+	padding: 8px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
 .create_options a.nonprofit_btn:hover, .create_options a.business_btn:hover {
@@ -2351,16 +2419,13 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 }
 
 .content_pages {
-	width: 880px;
+	width: 878px;
 	position: relative;
 	background: #FFF;
-	padding: 0 10px 0 10px;
-	border: 1px solid #CCC;
+	padding: 10px 10px 0 10px;
+	border: 1px solid #EEE; border-width: 0 1px 1px 1px;
 	-moz-box-shadow: 0 4px 12px -4px #999;
 	box-shadow: 0 4px 12px -4px #999;
-	-moz-border-radius: 7px;
-	border-radius: 7px; 
-	margin: 10px 0;
 }
 
 .content_pages:before, .content_pages:after  
@@ -2394,7 +2459,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 } 
 
 .content_pages td {
-	padding: 4px 10px;
+	padding: 8px 10px;
 }
 
 #leader div:hover {
@@ -2410,10 +2475,6 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 
 .leader_title {
 	font-size: 12pt; color: #999; padding: 3px; border-bottom: 1px solid #DDD; display: block; margin-bottom: 5px;
-}
-
-.content_pages table {
-	margin: 10px 0;
 }
 
 .content_pages img {
@@ -2438,7 +2499,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 }
 
 .page_container {
-	position: relative; width: 900px; background: #FFF; text-align: left; -moz-box-shadow: 0 4px 8px -4px #555; box-shadow: 0 4px 8px -4px #555; -moz-border-radius: 3px; border-radius: 3px;
+	position: relative; width: 898px; background: #FFF; text-align: left; border: 1px solid #EEE; border-width: 0 1px 1px 1px;
 }
 
 .page_container:before, .page_container:after  
@@ -2472,7 +2533,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 } 
 
 .page_center {
-	width: 630px; min-height: 300px; padding: 10px; background: #FFF; position: relative; left: 250px; -moz-box-shadow: -6px 0 12px -6px #999; box-shadow: -6px 0 12px -6px #999;
+	width: 628px; min-height: 300px; padding: 10px; background: #FFF; position: relative; left: 250px; -moz-box-shadow: -6px 0 12px -6px #999; box-shadow: -6px 0 12px -6px #999;
 }
 
 a.admin_name:link, a.admin_name:active, a.admin_name:visited, a.admin_name:hover {
@@ -2557,6 +2618,10 @@ a.show_more_friends, a.business_friends_show, a.nonprofits_friends_show {
 
 .matched_name {
     background : #ff0;
+}
+
+.grayed_out {
+    opacity : 0.4;
 }
 
 /* Schools */

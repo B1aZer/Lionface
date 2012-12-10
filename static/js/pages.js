@@ -103,13 +103,32 @@ LionFace.Pages.prototype = {
             e.preventDefault();
             var tr = $(this).parents('tr')
             var category = tr.attr('class');
-            if (!$(this).data('toggled')) {
+            if (!tr.data('toggled')) {
                 $("." + category + ".hidden_row").show();
-                $(this).data('toggled',true);
+                $("." + category + ".page_row").show();
+                tr.data('toggled',true);
+                tr.data('entangled',false);
             }
             else {
                 $("." + category + ".hidden_row").hide();
-                $(this).data('toggled',false);
+                tr.data('toggled',false);
+            }
+        });
+
+        /** update button */
+        $(document).on('click','.categoty_button',function(e) {
+            e.preventDefault();
+            var tr = $(this).parents('tr')
+            var category = tr.attr('class');
+            if (!tr.data('entangled')) {
+                $("." + category + ".page_row").hide();
+                $("." + category + ".hidden_row").hide();
+                tr.data('entangled',true);
+                tr.data('toggled',false);
+            }
+            else {
+                $("." + category + ".page_row").show();
+                tr.data('entangled',false);
             }
         });
 
@@ -158,6 +177,7 @@ LionFace.Pages.prototype = {
         /** update button */
         $(document).on('click','#postboxbutton',function(e) {
             create_message();
+            $('.postbox_errors').hide();
             e.preventDefault();     
             var url = "/pages/update/";
             var rating = false;
@@ -190,7 +210,8 @@ LionFace.Pages.prototype = {
                 }
             }
             else {
-                create_message('Please, provide a valid rating.','error');
+                //create_message('Please, provide a valid rating.','error');
+                $('.postbox_errors').show();
             }
         });
 

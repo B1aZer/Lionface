@@ -4,11 +4,11 @@
 
 {% block content_title %}{% endblock %}
 {% block content_middle %}
-	<table width="100%" height="40"><tr><td align="left" width="200" style="color: #999;" valign="bottom">
+	<table width="100%"><tr><td align="left" width="200" style="color: #999;">
 		<a href="{% url profile.views.profile request.user.username %}" class="name_link">{{ user.full_name }}</a> | News Feed
 	</td><td align="center">
 		<a href="{% url schools.views.home %}" class="find_friends" style="display: none;">Find Friends from School ></a>
-	</td><td align="right" width="200" valign="bottom">
+	</td><td align="right" width="200">
 		<span style="color: #DDD;">share your heart</span>
 	</td></tr></table>
 {% endblock %}
@@ -17,15 +17,14 @@
 {% block left_col %}
 
     <div style="position: relative; left: 0px; z-index: 100;">
-		<span style="color: #A70; position: relative; left: 10px;">Adjust Filters</span><p />
-        <a href="javascript:;" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'F' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}>Friends</a>
-        <a href="javascript:;" class="feed_type {% if 'W' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'W' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}>Following</a>
-        <a href="javascript:;" class="feed_type {% if 'B' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'B' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}>Businesses</a>
-        <a href="javascript:;" class="feed_type {% if 'N' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'N' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}>Nonprofits</a>
+		<span class="filter_header">News Feed Filters<br /><span style="color: #BBB; font-size: 8pt;">Shift+click to select just one filter.</span></span><p />
+        <a href="javascript:;" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'F' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Friends.png' %}" /> Friends</a>
+        <a href="javascript:;" class="feed_type {% if 'W' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'W' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Following</a>
+        <a href="javascript:;" class="feed_type {% if 'B' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'B' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Business.png' %}" /> Businesses</a>
+        <a href="javascript:;" class="feed_type {% if 'N' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'N' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_NPs.png' %}" /> Nonprofits</a>
 	</div><p />
 
-<hr style="position: relative; left: 10px; background-color: #EEE; layer-background-color: #EEE; border: 1px none #000000; height: 1;" width="200" align="left" noshade="noshade" /><p />
-		<span style="color: #A70; position: relative; left: 10px;">Follow Tags</span><p />
+		<span class="filter_header">Follow <span style="color: #A70;">#Tags</span></span><p />
         {% for tag in request.user.user_tag_set.all %}
         <a href="javascript:;" onClick="return false;" class="tagged {% if tag.active %} filterON {%else%} filter {% endif %}" {% if tag.active %} title=" Turn filter off. " {%else%} title=" Turn filter on. " {% endif %}>{{ tag.name }}<span class="remove_tag" style="float:right; display:none;" title="Remove Tag">x</span></a>
         {% empty %}

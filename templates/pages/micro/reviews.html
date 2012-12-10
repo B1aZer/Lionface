@@ -1,10 +1,20 @@
-{% load media %}
+{% load media format_results %}
 <script>
     LionFace.Pages.load_feedback_feed();
     $(document).on('mouseenter','#postbox .review',function() {
         $('.active_review').removeClass('active_review');
         var rating = get_int($(this).attr('id'));
         $('.review :lt('+rating+')').addClass('active_review');
+        //$('.final_review').removeClass('final_review');
+        //$(this).addClass('final_review');
+    });
+    $(document).on('mouseout','#postbox .review',function() {
+        $('.active_review').removeClass('active_review');
+    });
+    $(document).on('click','#postbox .review',function() {
+        $('.marked_review').removeClass('marked_review');
+        var rating = get_int($(this).attr('id'));
+        $('.review :lt('+rating+')').addClass('marked_review');
         $('.final_review').removeClass('final_review');
         $(this).addClass('final_review');
     });
@@ -18,7 +28,13 @@
 <div class="page_center">
     <div style="padding: 15px;">
 		<div id="postbox_shadow">
-        <div id="postbox">
+            <div class="postbox_errors" style="display:none">
+                <span>Please, provide a valid rating.</span>
+            </div>
+        <div id="postbox" 
+            {% if request.user|posted_review_for:page %} 
+            class="grayed_out"
+            {% endif %}>
             <div style="padding: 10px;" align="center">
 				<div align="left">
 					<span style="color: #999;">Rating:</span> 
@@ -29,7 +45,14 @@
                     <div id="rating5" class="review">5</div>
 					<span style="color: #BBB; font-size: 8pt;">5 being best</span>
 				</div>
-                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
+                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"
+                    {% if request.user|posted_review_for:page %}
+                    disabled="disabled"
+                    {% endif %}
+                    ></textarea>
+                {% if request.user|posted_review_for:page %}
+                <span>Only 1 review per week allowed (left days: {{request.user|posted_review_for:page}})</span>
+                {% endif %}
 
                 <br />
                 <div class="postoptions_container" >

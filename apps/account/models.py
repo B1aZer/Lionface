@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save, pre_delete, post_delete
 from django.db.models.query import Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
+from django.utils import timezone
+import datetime as dateclass
 
 from django.utils import simplejson as json
 from images.fields import ImageWithThumbField
@@ -473,6 +475,18 @@ class UserProfile(User):
         if self.membership_set.filter(page=page,type='IN', is_confirmed=True).count():
             roles.append('I')
         return roles
+
+    def posted_review_for(self, page):
+        reviews = page.feedback_posts.filter(user=self).order_by('-date');
+        if reviews.count():
+            now = timezone.now()
+            delta = dateclass.timedelta(days=7)
+            review = reviews[0]
+            offset = review.date + delta
+            if  offset > now:
+                remain = offset - now
+                return remain.days
+        return False
 
     @models.permalink
     def get_absolute_url(self):

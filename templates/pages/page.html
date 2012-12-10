@@ -33,11 +33,10 @@
   <div class="content_area">
     <div id="profile_top" style="z-index: 999;">
         {% include 'pages/page_requests.html' %}
-        <div class="left"><table height="25"><tr><td valign="bottom">{{page.username}} 
+        <div class="left"><div style="position: relative; top: 14px;">{{page.username}} 
             {% if page.url %}
             <a href="{{ page.url }}" target="_black">{{ page.url }}</a>
-            {% endif %}
-      </td></tr></table>
+            {% endif %}</div>
         </div>
         {% if request.user|check_pages_community %}
         <div class="right" style="position: relative;">
@@ -104,8 +103,8 @@
 
     <table width="900">
       <tr>
-      <td width="100">
-        <div class="page_image" style="background: url('/{{ page.photo.thumb_name }}') #FFF; cursor: pointer;" 
+      <td width="100" style="background: #FFF; border-left: 1px solid #EEE;"><div style="position: relative; top: -4px;">
+        <div class="page_image" style="background: url('{{ page.get_thumb }}') #FFF; cursor: pointer;" 
 data-url="{% url pages.views.images page.username %}">
             {% if request.user in page.get_admins and request.user|check_pages_photos:page %}
             <div style="position: absolute; bottom: 0px; display:none;">
@@ -114,8 +113,9 @@ data-url="{% url pages.views.images page.username %}">
             </div>
             {% endif %}
         </div>
+	  </div>
       <td>
-      <td valign="top"><div style="padding: 10px 0px; position: relative; top: 10px;">
+      <td valign="top" style="background: #FFF;"><div style="padding: 10px 0px; position: relative; top: 6px;">
         {% if page.type == 'BS' %}
                     <span style="color:#3ea8d2; font-size: 16pt;">{{ page.name }}</span> 
                 {% else %}   
@@ -136,16 +136,16 @@ data-url="{% url pages.views.images page.username %}">
             {% endif %}
                 <div style="padding: 10px 20px;">
 						{% if page.type == 'BS' %} 
-							<div style=" position: absolute; top: 5px; right: 5px; color: #FFF; background: #900; padding: 4px 8px 2px 8px; -moz-border-radius: 3px; border-radius: 3px;">Inactive</div>
+							<div class="inactive">Inactive</div>
 						{% else %}
 						{% endif %}
+					<span class="love_count">{{ page.loves }}</span>
                     {% if request.user in page.get_lovers %}
-                        <a href="#" class="love love_button loved">Loved</a>
+                        <a href="#" class="love love_button loved"><div class="loves_icon"></div> Loved</a>
                     {% else %}
-                        <a href="#" class="love love_button">Love</a>
+                        <a href="#" class="love love_button"><div class="loves_icon"></div> Love</a>
                     {% endif %}
-                    <br /><br />
-                    <span class="love_count" style="color: #FFF; font-size: 9pt;">{{ page.loves }}</span> 
+                     
 						
       </div></td>
       </tr>

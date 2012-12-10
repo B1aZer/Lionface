@@ -309,7 +309,7 @@ def reset_album_activity(request, slug):
 
 def leaderboard(request):
 
-    pages = Pages.objects.all().order_by('-loves')
+    pages = Pages.objects.filter(type='BS').order_by('-loves')
     most_loved = pages[0]
     rest = pages[1:10]
 
@@ -535,7 +535,7 @@ def feedback(request):
         rating = request.POST.get('rating')
         try:
             page = Pages.objects.get(id=int(page_id))
-            if rating:
+            if rating and not request.user.posted_review_for(page):
                 post = FeedbackPost(user=request.user, content=content, page = page, rating=rating)
                 post.save()
 
@@ -638,6 +638,7 @@ def list_feedback(request, slug=None):
 
 @login_required
 def settings(request, slug=None):
+    active = 'basics'
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
@@ -658,6 +659,7 @@ def settings(request, slug=None):
                 {
                     'page': page,
                     'form': form,
+                    'active': active,
                 },
                 RequestContext(request)
             )
@@ -710,8 +712,8 @@ def delete_page(request, slug=None):
         password = request.POST.get('confirm_password',None)
         if check_password(password, request.user.password):
             if page.user == request.user and request.user.check_option('pages_delete__%s' % page.id):
-                #delta = dateclass.timedelta(days=7)
-                delta = dateclass.timedelta(minutes=30)
+                delta = dateclass.timedelta(days=7)
+                #delta = dateclass.timedelta(minutes=30)
                 page.for_deletion = timezone.now() + delta
                 page.save()
                 #page.delete()
@@ -1567,9 +1569,9 @@ def share_event(request, slug):
     share_to = request.POST.get('share_to',None)
     try:
         event = Events.objects.get(id=int(event_id))
-        content = mark_safe("""Shared an event %s from <a href=\"%s\">%s</a> page""" % (event.name, page.get_absolute_url(), page.name))
+        content = mark_safe("""Check out <i>%s</i>, an event from <a href=\"%s\">%s</a>.""" % (event.name, page.get_absolute_url(), page.name))
         if event.description:
-            content = content + "\n Description: %s" % event.description
+            content = content + "\n Event Description: %s" % event.description
     except Events.DoesNotExist:
         raise Http404
     if share_to and share_to != 'profile':

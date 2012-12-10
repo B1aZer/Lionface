@@ -302,4 +302,8 @@ def getcatnumbusn(cat):
     return val
 
 
+@register.filter(name="posted_review_for")
+def posted_review_for(user, page):
+    return user.posted_review_for(page)
+
 
