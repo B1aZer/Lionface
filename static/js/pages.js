@@ -103,14 +103,15 @@ LionFace.Pages.prototype = {
             e.preventDefault();
             var tr = $(this).parents('tr')
             var category = tr.attr('class');
-            if (!$(this).data('toggled')) {
+            if (!tr.data('toggled')) {
                 $("." + category + ".hidden_row").show();
                 $("." + category + ".page_row").show();
-                $(this).data('toggled',true);
+                tr.data('toggled',true);
+                tr.data('entangled',false);
             }
             else {
                 $("." + category + ".hidden_row").hide();
-                $(this).data('toggled',false);
+                tr.data('toggled',false);
             }
         });
 
@@ -119,14 +120,15 @@ LionFace.Pages.prototype = {
             e.preventDefault();
             var tr = $(this).parents('tr')
             var category = tr.attr('class');
-            if (!$(this).data('entangled')) {
+            if (!tr.data('entangled')) {
                 $("." + category + ".page_row").hide();
                 $("." + category + ".hidden_row").hide();
-                $(this).data('entangled',true);
+                tr.data('entangled',true);
+                tr.data('toggled',false);
             }
             else {
                 $("." + category + ".page_row").show();
-                $(this).data('entangled',false);
+                tr.data('entangled',false);
             }
         });
 
