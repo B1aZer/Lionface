@@ -14,13 +14,13 @@
 		<td align="left">
 			<table><tr><td>
         <a href="{{ profile_user.get_absolute_url }}" id="posts_link" class="dashboard_nav">
-		<table><tr><td><img src="{% media_url 'images/iconPost.png' %}" height="20" width="20" /></td><td>Posts</td></tr></table></a>
+		<table><tr><td><div class="db_posts_icon"></div></td><td>Posts</td></tr></table></a>
 			</td><td>
         <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="dashboard_nav">
-		<table><tr><td><img src="{% media_url 'images/iconAlbum.png' %}" height="20" width="20" /></td><td>Albums</td></tr></table></a>
+		<table><tr><td><div class="db_albums_icon"></div></td><td>Albums</td></tr></table></a>
 			</td><td>
         <a href="{% url user-loves username=profile_user.username %}" id="loves_link" class="dashboard_nav">
-		<table><tr><td><img src="{% media_url 'images/iconLoves.png' %}" height="20" width="20" /></td><td>Loves</td></tr></table></a>
+		<table><tr><td><div class="db_loves_icon"></div></td><td>Loves</td></tr></table></a>
 			</td><td>
 			{% if request.user == profile_user %}
 			{% else %}

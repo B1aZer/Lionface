@@ -14,24 +14,31 @@
     {% if admin|check_pages_updates:page %} checked {% endif %}
     {% if admin == page.user %} disabled {% endif %}
     name="pages_updates" id="pages_updates__{{ admin.username }}" class="page_options">
-    <label class="admins_labels" for="pages_updates__{{ admin.username }}">Post Updates</label>
+    <label class="admins_labels" for="pages_updates__{{ admin.username }}">Updates</label>
     </td>
     <td>
     <input type="checkbox"
     {% if admin|check_pages_photos:page %} checked {% endif %}
     {% if admin == page.user %} disabled {% endif %}
     name="pages_photos" id="pages_photos__{{ admin.username }}" class="page_options">
-    <label class="admins_labels" for="pages_photos__{{ admin.username }}">Manage Photos</label>
+    <label class="admins_labels" for="pages_photos__{{ admin.username }}">Photos</label>
     </td>
     <td>
     <input type="checkbox" 
     {% if admin|check_pages_basics:page %} checked {% endif %}
     {% if admin == page.user %} disabled {% endif %}
     name="pages_basics" id="pages_basics__{{ admin.username }}" class="page_options">
-    <label class="admins_labels" for="pages_basics__{{ admin.username }}">Edit Basics</label>
+    <label class="admins_labels" for="pages_basics__{{ admin.username }}">Basics</label>
     </td>
 </tr>
 <tr style="border-bottom: 1px solid #FFF;">
+    <td>
+    <input type="checkbox" 
+    {% if admin|check_pages_calendar:page %} checked {% endif %}
+    {% if admin == page.user %} disabled {% endif %}
+    name="pages_calendar" id="pages_calendar__{{ admin.username }}" class="page_options">
+    <label class="admins_labels" for="pages_calendar__{{ admin.username }}">Calendar</label>
+    </td>
     <td>
     <input type="checkbox" 
     {% if admin|check_pages_community:page %} checked {% endif %}
@@ -51,16 +58,9 @@
     <input type="checkbox" disabled  
     {% if admin|check_pages_delete:page %} checked {% endif %}
     name="pages_delete" id="pages_delete__{{ admin.username }}" class="page_options">
-    <label class="admins_labels" for="pages_delete__{{ admin.username }}">Delete Page</label>
+    <label class="admins_labels" for="pages_delete__{{ admin.username }}">Delete</label>
     </td>
     {% endif %}
-    <td>
-    <input type="checkbox" 
-    {% if admin|check_pages_calendar:page %} checked {% endif %}
-    {% if admin == page.user %} disabled {% endif %}
-    name="pages_calendar" id="pages_calendar__{{ admin.username }}" class="page_options">
-    <label class="admins_labels" for="pages_calendar__{{ admin.username }}">Calendar</label>
-    </td>
 	<td></td>
 </tr>
 {% endfor %}

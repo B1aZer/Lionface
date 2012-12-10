@@ -5,13 +5,14 @@
 <div class="content_area notifications">
     <div id="profile_top">
 {% block content_middle %}
-	<table width="100%" height="40"><tr><td align="left" width="200" style="color: #999;" valign="bottom">
+	<table width="100%"><tr><td align="left" width="200" style="color: #999;">
 		 <a href="{{ request.user.get_absolute_url }}" class="name_link" style="display: inline-block;">{{ user.full_name }}</a> | Messages
 	</td><td align="center">
-	</td><td align="right" width="200" valign="bottom">
+	</td><td align="right" width="200"><div position: relative;">
 			<a href="#" id="show_older" class="older_mess" style="margin: 0;">Show Older Messages</a>
-            <a href="#" id="revert_btn" class="profile_btn" style="margin: 0; position: relative; left: 2px;">Reverse</a>
-            <a href="{% url messaging.views.messages request.user.username %}" class="profile_btn" style="margin: 0; position: relative; left: 2px;">+ Compose</a>
+            <a href="#" id="revert_btn" class="profile_btn" style="position: absolute; top: -15px; right: 80px;">Reverse</a>
+            <a href="{% url messaging.views.messages request.user.username %}" class="profile_btn" style="position: absolute; top: -15px; right: -2px;">+ Compose</a>
+			</div>
 	</td></tr></table>
 {% endblock %}
     </div>

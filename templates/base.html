@@ -88,10 +88,6 @@ var timezone = jstz.determine();
       <div id="footer">
 
 <div align="center">
-<div style="background: #EFC; width: 900px; padding: 7px 0; margin-bottom: 10px; display: none;">News</div>
-</div>
-
-        <div class="highlight">
         
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -99,7 +95,8 @@ var timezone = jstz.determine();
     y0=today.getFullYear();
 
 </SCRIPT>
-  
+  	<div style="width: 900px; text-align: right;">
+
     Copyright &#169; <a href="{% url account.views.login %}" style="color: #777; text-decoration: none;">Lionface</a> Inc <SCRIPT LANGUAGE="JavaScript">
   <!--- Hide from old browsers
     document.write(y0);
@@ -108,7 +105,8 @@ var timezone = jstz.determine();
 		<span style="color: transparent;">--</span> <a href="{% url public.views.about %}" target="_top" style="color: #777;">About</a>
 		<span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" target="_top" style="color: #777;">Terms</a>
 		<span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top" style="display: none;">Feedback</a>
-      </div></div>
+	</div>
+      </div>
 
     {% endblock %}
 

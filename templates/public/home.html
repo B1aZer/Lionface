@@ -15,34 +15,21 @@ body { background: #EEE;}
 <div align="center">
   <div id="center_box">
     <div class="content_area">
-<table width="100%" height="450"><tr><td>
-<table width="900"><tr><td width="450" align="left">
-	<div class="white_opacity" style="text-align: center;"><div class="right_shadow"></div><div class="left_shadow"></div>
-			<div class="next_generation" style="top: -10px;">The Next Generation in Social Networking</div>
-			<div style="position: absolute; left: 17px; bottom: -5px; color: #FFF; font-size: 8pt; 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=75); -moz-opacity: 0.75; opacity: 0.75;">Built in Python Django</div>
-			<a href="{% url account.views.login %}" style="border: 0px none;"><div class="center_container" style="z-index: 999;">
-		<table width="100%" height="300"><tr><td>
-      		<img src="{% media_url 'images/logo300.png' %}" border="0"/>
-		</td></tr></table>
-			</div></a>
+<table width="900" height="500"><tr><td width="450" align="left">
+	
+			
+				<div class="center_container" style="z-index: 999;">
+					<table width="100%" height="300"><tr><td align="center">
+      					<a href="{% url account.views.login %}" style="border: 0px none; color: #FFF; text-decoration: none; font-size: 17pt;"><img src="{% media_url 'images/logo300.png' %}" border="0"/><br /> The Next Generation<br />in Social Networking</a>
+					</td></tr></table>
+				</div>
+			
 	</div>
-</td><td width="450" align="right">
-
+</td><td width="450" align="right" style="background: url({% media_url 'images/white.png' %});">
+			<div style="display: block; text-align: left; padding: 0 0 17px 17px; font-size: 17px; color: #F59;">Create an Account</div>
           {% include "account/signup.html" %}
-
+			<span style="font-size: 8pt; display: block; color: #FFF; text-align: left; padding: 17px 0 0 17px;">Built in Python Django</span>
 </td></tr></table>
-</td></tr></table>
-
-<div style="position: relative; top: 125px; text-align: center;">
-	<div id="learn"><span class="learn_more_learn">Learn more about Lionface by clicking the links below.</span></div>
-	<div id="lf" style="display: none;"><span class="learn_more">Lionface</span></div>
-	<div id="n" style="display: none;"><span class="learn_more">Nonprofits</span></div>
-	<div id="b" style="display: none;"><span class="learn_more">Businesses</span></div>
-	<div id="t" style="display: none;"><span class="learn_more">Tags</span></div>
-	<div id="f" style="display: none;"><span class="learn_more">Followers</span></div>
-	<div id="d" style="display: none;"><span class="learn_more">Degree of Separation</span></div>
-	<div id="a" style="display: none;"><span class="learn_more">Albums</span></div>
-</div>
 
     </div>
   </div>
@@ -50,13 +37,13 @@ body { background: #EEE;}
 
 
 	<div class="enabled_table">
-		<div id="lionface" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('lf'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('lf'); return false;"><div class="enabled">Lf</div></div>
-		<div id="nonprofits" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('n'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('n'); return false;"><div class="enabled">np</div></div>
-		<div id="business" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('b'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('b'); return false;"><div class="enabled">b</div></div>
-		<div id="tags" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('t'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('t'); return false;"><div class="enabled"><span style="position: relative; top: 1px;">#</span></div></div>
-		<div id="followers" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('f'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('f'); return false;"><div class="enabled"><span style="position: relative; top: -1px;">+</span></div></div>
-		<div id="dos" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('d'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('d'); return false;"><div class="enabled">d&#176;</div></div>
-		<div id="albums" class="enabled_container public_link" onMouseOver="ReverseContentDisplay('learn');ReverseContentDisplay('a'); return false;" onMouseOut="ReverseContentDisplay('learn');ReverseContentDisplay('a'); return false;"><div class="enabled"><span style="position: relative; top: -1px; font-size: 14pt;">:]</span></div></div>
+		<div id="lionface" class="enabled_container public_link"><div class="enabled">Lf</div></div>
+		<div id="nonprofits" class="enabled_container public_link"><div class="enabled">np</div></div>
+		<div id="business" class="enabled_container public_link"><div class="enabled">b</div></div>
+		<div id="tags" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: 1px;">#</span></div></div>
+		<div id="followers" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: -1px;">+</span></div></div>
+		<div id="dos" class="enabled_container public_link" ><div class="enabled">d&#176;</div></div>
+		<div id="albums" class="enabled_container public_link"><div class="enabled"><span style="position: relative; top: -1px; font-size: 14pt;">:]</span></div></div>
 
 	</div>
 	<div class="enabled_results" style="display: none; padding: 30px 10px;">
