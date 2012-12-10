@@ -535,7 +535,7 @@ def feedback(request):
         rating = request.POST.get('rating')
         try:
             page = Pages.objects.get(id=int(page_id))
-            if rating:
+            if rating and not request.user.posted_review_for(page):
                 post = FeedbackPost(user=request.user, content=content, page = page, rating=rating)
                 post.save()
 

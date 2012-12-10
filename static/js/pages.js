@@ -177,6 +177,7 @@ LionFace.Pages.prototype = {
         /** update button */
         $(document).on('click','#postboxbutton',function(e) {
             create_message();
+            $('.postbox_errors').hide();
             e.preventDefault();     
             var url = "/pages/update/";
             var rating = false;
@@ -209,7 +210,8 @@ LionFace.Pages.prototype = {
                 }
             }
             else {
-                create_message('Please, provide a valid rating.','error');
+                //create_message('Please, provide a valid rating.','error');
+                $('.postbox_errors').show();
             }
         });
 

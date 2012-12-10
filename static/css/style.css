@@ -2321,7 +2321,7 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	margin: 5px;
 }
 
-.review:hover , .active_review{
+.review:hover , .active_review, .marked_review{
 	background: #bcc966;
 	cursor: pointer;
 	color: #FFF;
@@ -2618,6 +2618,10 @@ a.show_more_friends, a.business_friends_show, a.nonprofits_friends_show {
 
 .matched_name {
     background : #ff0;
+}
+
+.grayed_out {
+    opacity : 0.4;
 }
 
 /* Schools */

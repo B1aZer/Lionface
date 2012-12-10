@@ -1,7 +1,4 @@
 ##next###
-page deletion timings
-fix23
-remove zip
 ### DoS ###
 loop problem
 

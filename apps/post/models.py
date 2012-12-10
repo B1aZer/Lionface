@@ -303,6 +303,12 @@ class PagePost(Post):
     def get_owner(self):
         return self.user
 
+    def get_page_thumb(self):
+        return self.page.get_thumb()
+
+    def get_page_url(self):
+        return self.page.get_absolute_url()
+
     def privacy(self):
         return 'P'
 
@@ -601,6 +607,11 @@ class NewsItem(models.Model):
 
     def get_album(self):
         return self.post.album
+
+    def get_page_thumb(self):
+        post = self.post.get_inherited()
+        if hasattr(post,'page'):
+            return post.page.get_thumb()
 
     def get_page_url(self):
         post = self.post.get_inherited()
