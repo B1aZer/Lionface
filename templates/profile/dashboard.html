@@ -5,7 +5,7 @@
 		<td align="left" width="186" style="padding: 7px;"> 
 			<a href="{{ profile_user.get_absolute_url }}" class="name_link">
 			<table><tr><td>
-			<div class="images_profile_thumb" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; background-size: 34px 34px; -moz-background-size: 34px 34px !important; width: 34px; height: 34px; display: block;"></div>
+			<div class="images_profile_thumb" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 34px 34px; -moz-background-size: 34px 34px !important; background-size: 34px 34px; width: 34px; height: 34px; display: block;"></div>
 				</td><td style="padding: 3px 0 0 7px;">
 			{{ profile_user.full_name }}<br />
 			<span class="subtitle_username">{{ profile_user.username }}</span>

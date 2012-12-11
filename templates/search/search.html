@@ -2,7 +2,7 @@
 {% load media format_results %}
 
 {% block content_middle %}
-	<table width="100%" height="40"><tr><td align="left" style="color: #999;" valign="bottom">
+	<table width="100%"><tr><td align="left" style="color: #999;">
 		Search Results
 	</td></tr></table>
 {% endblock %}
@@ -33,9 +33,9 @@ $(document).on('click','#search_next', function(e) {
 {% block left_col %}
 
     <div style="position: relative; left: 0px; z-index: 100;">
-        <a id="search_people" href="javascript:;" class="seacrh_feed filter filterON" >People</a>
-        <a id="search_businesses" href="javascript:;" class="seacrh_feed filter filterON" >Businesses</a>
-        <a id="search_nonprofits" href="javascript:;" class="seacrh_feed filter filterON" >Nonprofits</a>
+        <a id="search_people" href="javascript:;" class="seacrh_feed filter filterON" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_Friends.png' %}" /> People</a>
+        <a id="search_businesses" href="javascript:;" class="seacrh_feed filter filterON" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_Business.png' %}" /> Businesses</a>
+        <a id="search_nonprofits" href="javascript:;" class="seacrh_feed filter filterON" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_NPs.png' %}" />Nonprofits</a>
 	</div>   
 
 {% endblock %} 

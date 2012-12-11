@@ -20,7 +20,7 @@
 <div {% if profile_user|check_profile_image_visibility:request.user %}
 onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;" 
 {% endif %}
-	class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 194px 194px; -moz-background-size: 194px 194px !important; background-size: 194px 194px; background-position: center center; background-repeat: no-repeat; ">
+	class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat;">
 		{% if request.user == profile_user %}
 		<div style="position: relative; top: 165px; display: block; width: 200px;" align="center">
 			<a id="upload_picture" class="upload" style="display:none;">Upload</a>
