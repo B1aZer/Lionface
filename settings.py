@@ -278,6 +278,8 @@ HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(os.path.dirname(__file__), 'whoosh_index')
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 7
 
+STRIPE_API_KEY = 'GfdATJpLDgriMZ66PPrK0Kf9XuCsZU9w'
+
 SITE_ID = 1
 #BROKER_URL = "django://"
 
@@ -299,6 +301,7 @@ ABSOLUTE_URL_OVERRIDES = {
 CELERY_QUEUES = {"lionface": {"exchange": "lionface", "binding_key": "lionface"}}
 CELERY_DEFAULT_QUEUE = "lionface"
 
+from celery.schedules import crontab
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
     "update_search_index": {
@@ -312,6 +315,21 @@ CELERYBEAT_SCHEDULE = {
     "delete_page": {
         "task": "pages.tasks.DeletePage",
         "schedule": timedelta(minutes=1440),
+    },
+    "process_bids": {
+        'task': 'pages.tasks.ProcessBids',
+        #'schedule': crontab(hour=14, minute=44, day_of_week=2),
+        'schedule': crontab(hour='*', minute=5),
+    },
+    "reprocess_bids": {
+        'task': 'pages.tasks.ReprocessBids',
+        #'schedule': crontab(hour=14, minute=36, day_of_week=2),
+        'schedule': crontab(hour='*', minute=10),
+    },
+    "update_pages_from_bids": {
+        'task': 'pages.tasks.UpdatePagesFromBids',
+        #'schedule': crontab(hour=14, minute=37, day_of_week=2),
+        'schedule': crontab(hour='*', minute=15),
     },
 }
 

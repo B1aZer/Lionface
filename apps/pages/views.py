@@ -11,7 +11,7 @@ from .models import *
 from post.models import *
 from tags.models import Tag
 from agenda.models import Events, Locations
-from ecomm.models import Customers
+from ecomm.models import *
 from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -25,6 +25,8 @@ import datetime as dateclass
 from django.utils import timezone
 from collections import defaultdict
 import random
+
+import stripe
 
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -70,7 +72,14 @@ def main(request):
             form_busn = BusinessForm()
             form_nonp = NonprofitForm()
 
-    pages = Pages.objects.filter(type='BS').order_by('?')[:8]
+    pages = Pages.objects.filter(featured=False, type='BS').order_by('?')[:8]
+    featured = Pages.objects.filter(featured=True, type='BS')
+    if featured.count():
+        pcount = pages.count()
+        fcount = featured.count()
+        acount = pcount - fcount
+        pages = list(chain(pages[:acount], featured))
+        random.shuffle(pages)
 
     # grouping by rows for template [4 in row]
     n=0
@@ -79,7 +88,7 @@ def main(request):
     for page in pages:
         n += 1
         row.append(page)
-        if n%4 == 0 or n == pages.count():
+        if n%4 == 0 or n == len(pages):
             grouped_pages.append(row)
             row = []
 
@@ -639,11 +648,22 @@ def list_feedback(request, slug=None):
 
 @login_required
 def settings(request, slug=None):
+    from django.conf import settings
     active = 'basics'
+
+    stripe_error = ''
+    stripe.api_key = settings.STRIPE_API_KEY
+    bids = Bids.objects.filter(status=1).order_by('-amount')
+    if bids.count() > 2:
+        min_bid = bids[2].amount + 10
+    else:
+        min_bid = 10
+
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
+
     # check permissions
     if request.user.check_option('pages_admins__%s' % page.id) \
             or request.user.check_option('pages_basics__%s' % page.id) \
@@ -656,17 +676,48 @@ def settings(request, slug=None):
                     active = 'basics'
     else:
         raise Http404
+
     form = PageSettingsForm(instance=page)
     if request.method == 'POST':
-        form = PageSettingsForm(data=request.POST, instance=page)
-        if form.is_valid():
-            form.save()
+        token = request.POST.get('stripeToken', None)
+        bid = request.POST.get('bid_value', None)
+        if token:
+            try:
+                customer = stripe.Customer.create(
+                    card=token,
+                    description=request.user.username
+                )
+                customer = Customers(user=request.user, stripe_id=customer.id)
+                customer.save()
+            except stripe.CardError, e:
+                body = e.json_body
+                err  = body['error']
+                stripe_error = err.get('message','Card was declined')
+            except:
+                stripe_error = 'An error occurred while processing your card'
+        elif bid:
+            amount = int(bid.strip().replace('$',''))
+            ebid = page.get_max_bid()
+            if ebid:
+                bid = ebid
+            else:
+                bid = Bids( page = page)
+            if bid.amount < amount:
+                bid.amount = amount
+                bid.user = request.user
+                bid.save()
+        else:
+            form = PageSettingsForm(data=request.POST, instance=page)
+            if form.is_valid():
+                form.save()
     return render_to_response(
             "pages/settings.html",
                 {
                     'page': page,
                     'form': form,
                     'active': active,
+                    'min_bid': min_bid,
+                    'stripe_error': stripe_error,
                 },
                 RequestContext(request)
             )
@@ -1598,7 +1649,6 @@ def share_event(request, slug):
 
 
 def card_form(request, slug):
-    import stripe
     if request.method == 'POST' and not request.user.is_customer():
         import pdb;pdb.set_trace()
         # set your secret key: remember to change this to your live secret key in production

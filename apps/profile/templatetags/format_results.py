@@ -314,3 +314,14 @@ def posted_review_for(user, page):
     return user.posted_review_for(page)
 
 
+@register.filter(name="get_current_bid_for")
+def get_current_bid_for(user, page):
+    bid = user.get_current_bid_for(page)
+    if bid:
+        bid = bid.amount
+    else:
+        bid = 0
+    return bid
+
+
+

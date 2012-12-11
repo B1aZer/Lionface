@@ -85,6 +85,7 @@ class Pages(models.Model):
     members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
     post_update = models.BooleanField(default=False)
     for_deletion = models.DateTimeField(null=True, blank=True)
+    featured = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Page"
@@ -333,6 +334,20 @@ class Pages(models.Model):
 
     def update_option(self):
         return self.post_update
+
+    def get_max_bid(self):
+        bids = self.bids.filter(status=1).order_by('-amount')
+        if bids:
+            bids = bids[0]
+        return bids
+
+    def get_max_bid_value(self):
+        bid = self.get_max_bid()
+        if bid:
+            bid = bid.amount
+        else:
+            bid = 10
+        return bid
 
     @models.permalink
     def get_absolute_url(self):

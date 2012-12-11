@@ -20,13 +20,16 @@ LionFace.PagesSettings.prototype = {
         if (LionFace.User.options['pages_admins__'+LionFace.User.page_id] &&
             !LionFace.User.options['pages_basics__'+LionFace.User.page_id]) {
                 $('#basics').hide();
+                $('#loves').hide();
                 $('#privacy').show();
         }
 
         if (LionFace.User.options['pages_loves__'+LionFace.User.page_id] &&
-            !LionFace.User.options['pages_basics__'+LionFace.User.page_id]) {
+            !LionFace.User.options['pages_basics__'+LionFace.User.page_id] &&
+            !LionFace.User.options['pages_admins__'+LionFace.User.page_id]) {
                 $('#basics').hide();
                 $('#loves').show();
+                $('#submit-card').show();
         }
 
         $(document).on('click','#admins_settings',function(){
@@ -40,6 +43,7 @@ LionFace.PagesSettings.prototype = {
             $('#privacy_header').show(); 
             $('#admins_settings').addClass('active');
             $('#submit_button').hide();
+            $('#submit-card').hide();
         });
 
         $(document).on('click','#basics_settings',function(){
@@ -53,6 +57,7 @@ LionFace.PagesSettings.prototype = {
             $('#admins_settings').removeClass('active');
             $('#loves_settings').removeClass('active');
             $('#submit_button').show();
+            $('#submit-card').hide();
         });
 
         $(document).on('click','#loves_settings',function(){
@@ -65,7 +70,7 @@ LionFace.PagesSettings.prototype = {
             $('#basics_header').hide(); 
             $('#admins_settings').removeClass('active');
             $('#basics_settings').removeClass('active');
-            //$('#submit_button').show();
+            $('#submit-card').show();
             $('#submit_button').hide();
         });
 
@@ -168,15 +173,7 @@ LionFace.PagesSettings.prototype = {
     },
 
     bind_loves: function() {
-        $( "#bid-slider" ).slider({
-            value:100,
-            min: 0,
-            max: 500,
-            step: 10,
-            slide: function( event, ui ) {
-                $( "#bid-value" ).html( "$" + ui.value );
-            }
-        });
+        
     
     },
 }

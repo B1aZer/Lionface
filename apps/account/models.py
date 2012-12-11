@@ -491,6 +491,15 @@ class UserProfile(User):
     def is_customer(self):
         return self.customer.count()
 
+    def get_stripe_id(self):
+        return self.customer.get().stripe_id
+
+    def get_current_bid_for(self, page):
+        bids = self.bids.filter(page=page, status=1).order_by('-amount')
+        if bids:
+            bids = bids[0]
+        return bids
+
     @models.permalink
     def get_absolute_url(self):
         return ('profile.views.profile', [str(self.username)])

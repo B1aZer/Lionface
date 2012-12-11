@@ -72,7 +72,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
     <span style="font-size: 18px;">Loves</span></strong>
 </div>
 
-<form action="" method="post">{% csrf_token %}
+<form action="" id="page_settings_form" method="post">{% csrf_token %}
 <div align="center">
     <table id="basics">
         <tr>
@@ -149,23 +149,35 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
         </tr>
+        {% if request.user.is_customer %}
         <tr>
             <td align="right">Make a bid: </td>
             <td>
-                <div id="bid-slider"></div>
+                 <div id="bid-slider" style="width: 260px; margin: 15px;"></div>
             </td>
         </tr>
         <tr>
             <td align="right">Your bid: </td>
             <td>
-                <span id="bid-value"></span>
+                <input name="bid_value" id="bid-value" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
             </td>
         </tr>
+            {% if page.get_max_bid %}
         <tr>
-            <td align="right">Card: </td>
+            <td align="right">Last bid: </td>
             <td>
-                <form action="" method="POST" id="payment-form">
-                    {% csrf_token %}
+                <span style="margin: 15px;">{{ page.get_max_bid_value }}</span>
+            </td>
+        </tr>
+            {% endif %}
+        {% else %}
+        <tr id="card_info">
+            <td align="right">To make a bid enter card info: </td>
+            <td>
+                    <div class="payment-errors">
+                        {{ stripe_error }}
+                    </div>
+                <!--<form action="" method="POST" id="payment-form">-->
                   <div class="form-row">
                     <label>Card Number</label>
                     <input type="text" size="20" autocomplete="off" class="card-number"/>
@@ -180,10 +192,10 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                     <span> / </span>
                     <input type="text" size="4" class="card-expiry-year"/>
                   </div>
-                  <button type="submit" class="submit-button">Submit Payment</button>
-                </form>
+                  <!--</form>-->
             </td>
         </tr>
+        {% endif %}
         <tr>
             <td align="right">&nbsp;</td>
             <td>&nbsp;</td>
@@ -196,8 +208,12 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
 
 <div class="save_container">
 <input type="hidden" name="form_name" id="form_name">
+<input type="hidden" name="active" id="active_input" value="{{ active }}">
 {% if request.user|check_pages_basics:page %}
 <input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> 
+{% endif %}
+{% if request.user|check_pages_loves:page %}
+<button id="submit-card" type="submit" name="submit-card" class="blue_btn" style="display:none;">Submit</button>
 {% endif %}
 </form>
 {% if request.user|check_pages_delete:page %} 
@@ -224,9 +240,9 @@ $(document).ready(function() {
         if (response.error) {
             // show the errors on the form
             $(".payment-errors").text(response.error.message);
-            $(".submit-button").removeAttr("disabled");
+            $("#submit-card").removeAttr("disabled");
         } else {
-            var form$ = $("#payment-form");
+            var form$ = $("#page_settings_form");
             // token contains id, last4, and card type
             var token = response['id'];
             // insert the token into the form so it gets submitted to the server
@@ -236,20 +252,46 @@ $(document).ready(function() {
         }
     }
 
-    $("#payment-form").submit(function(event) {
-        // disable the submit button to prevent repeated clicks
-        $('.submit-button').attr("disabled", "disabled");
+    $(document).on('click','#submit-card', function(event) {
+        if ($('#card_info').length) {
+            // disable the submit button to prevent repeated clicks
+            $('#submit-card').attr("disabled", "disabled");
 
-        Stripe.createToken({
-            number: $('.card-number').val(),
-            cvc: $('.card-cvc').val(),
-            exp_month: $('.card-expiry-month').val(),
-            exp_year: $('.card-expiry-year').val()
-        }, stripeResponseHandler);
+            Stripe.createToken({
+                number: $('.card-number').val(),
+                cvc: $('.card-cvc').val(),
+                exp_month: $('.card-expiry-month').val(),
+                exp_year: $('.card-expiry-year').val()
+            }, stripeResponseHandler);
 
-        // prevent the form from submitting with the default action
-        return false;
+            // prevent the form from submitting with the default action
+            return false;
+        }
     });
+
+    var value = parseInt("{{ min_bid }}") || 10;
+    var min_val = value - 300;
+    if (min_val < 0)
+        min_val = 0;
+    $( "#bid-slider" ).slider({
+            value:value,
+            range: "min",
+            min: min_val,
+            max: value + 300,
+            step: 10,
+            slide: function( event, ui ) {
+                $( "#bid-value" ).val( ui.value );
+                if (ui.value < value) {
+                    $( "#bid-value" ).val( value );
+                }
+            },
+            change: function(event, ui) {
+                if (ui.value < value) {
+                    $( this ).slider( "option", "value", value );
+                }
+            },
+                
+    }); 
 });
 </script>
     {% include_media 'pages.js' %}
