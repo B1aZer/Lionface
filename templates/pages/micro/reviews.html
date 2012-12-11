@@ -27,7 +27,6 @@
 
 <div class="page_center">
     <div style="padding: 15px;">
-		<div id="postbox_shadow">
             <div class="postbox_errors" style="display:none">
                 <span>Please, provide a valid rating.</span>
             </div>
@@ -51,7 +50,7 @@
                     {% endif %}
                     ></textarea>
                 {% if request.user|posted_review_for:page %}
-                <span>Only 1 review per week allowed (left days: {{request.user|posted_review_for:page}})</span>
+                <span style="padding: 4px 0; color: #900;">Only 1 review per week allowed (days remaining: {{request.user|posted_review_for:page}})</span>
                 {% endif %}
 
                 <br />
@@ -67,7 +66,6 @@
                 </div>
             </div>
         </div>
-		</div>
 		<br /><div style="height: 20px;"></div><br />
 
         <div id="page_feed" style="position: relative; left: -50px;">

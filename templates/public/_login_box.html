@@ -13,11 +13,11 @@
 	    {{ login_form.tzone }}
         <td align="right" width="175"><span style="font-size: 8pt; margin-right: 12px;">{{ login_form.preserve }} <label for="id_login-preserve">{{ login_form.preserve.label }}</label></span>
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-			<input type="submit" class="login_button" value="Sign In"/> 
+			<input type="submit" class="login_button" value="Sign In"/>
 			</td>
       </tr>
 	  <tr>
-	    <td colspan="3" align="right" style="color: #900;">{{ login_form.error_message }}</td>
+	    <td colspan="3" align="right"><div style="position: relative; width: 100%; height: 100%;"><div class="login_error">{{ login_form.error_message }}</div></div></td>
 	    <td colspan="1" align="right"></td>
       </tr>
     </table>

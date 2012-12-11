@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-import re, datetime
+import re
+import datetime
 import pytz
 
 
@@ -29,6 +30,9 @@ class LoginForm(forms.Form):
 
 
 class SignupForm(forms.Form):
+    error_css_class = 'error'
+    required_css_class = 'required'
+
     full_name = forms.CharField(required=True, label="Full Name", help_text="You can change this later.")
     password = forms.CharField(max_length=20, min_length=4, widget=forms.PasswordInput())
     password2 = forms.CharField(max_length=20, min_length=4, widget=forms.PasswordInput(), label="Confirm Password")
@@ -87,4 +91,3 @@ class SignupForm(forms.Form):
         user.last_name = data['full_name'].split(' ', 2)[1]
         user.save()
         return user
-
