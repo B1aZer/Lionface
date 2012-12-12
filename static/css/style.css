@@ -707,7 +707,7 @@ a.profile_btn:hover {
 
 .album_shadow {
 	position: relative;
-	margin: 0 4px 8px 0;
+	margin: 0 4px 8px 4px;
 	padding: 4px 0px;
 	borde: 1px solid #DDD;
 	background: #EEE;
@@ -1189,7 +1189,7 @@ a.profile_btn:hover {
 	font-size: 8pt; 
 	color: #CCC; 
 	display: block; 
-	background: #F7F7F7; 
+	background: #FAFCFF; 
 	padding: 6px 10px 5px 10px; 
 	-moz-border-radius: 3px 0 0 3px; 
 	border-radius: 3px 0 0 3px; 
