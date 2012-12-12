@@ -7,7 +7,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         from ecomm.models import Bids
         from pages.models import Pages
+        from django.utils import timezone
+        now = timezone.now()
+        # no featured
         Pages.objects.filter(featured=True).update(featured=False)
+        # expired disabled
+        Pages.objects.filter(is_disabled__lte=now).update(is_disabled=None)
         winners = Bids.objects.filter(status=3)
         for bid in winners:
             bid.page.featured = True

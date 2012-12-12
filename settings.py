@@ -320,17 +320,17 @@ CELERYBEAT_SCHEDULE = {
         'task': 'pages.tasks.ProcessBids',
         #'schedule': crontab(hour=14, minute=44, day_of_week=2),
         #'schedule': crontab(hour='*', minute=20),
-        'schedule': crontab(hour='*', minute=[2,12,22,32,42,52]),
+        'schedule': crontab(hour='*', minute=[20,50]),
     },
     "reprocess_bids": {
         'task': 'pages.tasks.ReprocessBids',
         #'schedule': crontab(hour=14, minute=36, day_of_week=2),
-        'schedule': crontab(hour='*', minute=[6,16,26,36,46,56]),
+        'schedule': crontab(hour='*', minute=[25,55]),
     },
     "update_pages_from_bids": {
         'task': 'pages.tasks.UpdatePagesFromBids',
         #'schedule': crontab(hour=14, minute=37, day_of_week=2),
-        'schedule': crontab(hour='*', minute=[0,20,40]),
+        'schedule': crontab(hour='*', minute=[0,30]),
     },
 }
 

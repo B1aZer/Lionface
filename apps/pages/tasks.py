@@ -56,6 +56,7 @@ class ProcessBids(Task):
         from pages.models import PageRequest
         import stripe
         stripe.api_key = settings.STRIPE_API_KEY
+        winnc = Bids.objects.filter(status=3).count()
         max_three = Bids.objects.filter(status=1).order_by('-amount')[:3]
         if max_three.count():
             for bid in max_three:
@@ -69,11 +70,11 @@ class ProcessBids(Task):
                         description="Charge for %s" % bid.user.get_full_name(),
                     )
                     logger.info('Charging: %s' % stripe_id)
-                    bid.status = 3
-                    bid.save()
-                    #except stripe.CardError, e:
-                    pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BN')
-                    pr.save()
+                    if winnc < 3:
+                        bid.status = 3
+                        bid.save()
+                        pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BN')
+                        pr.save()
                 except:
                     pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BE')
                     pr.save()
@@ -90,6 +91,7 @@ class ReprocessBids(Task):
         import datetime as dateclass
         import stripe
         stripe.api_key = settings.STRIPE_API_KEY
+        winnc = Bids.objects.filter(status=3).count()
         error_bids = Bids.objects.filter(status=2)
         for bid in error_bids:
             stripe_id = bid.user.get_stripe_id()
@@ -106,8 +108,11 @@ class ReprocessBids(Task):
                     description="Recharge for %s" % bid.user.get_full_name(),
                 )
                 logger.info('ReCharging: %s' % stripe_id)
-                bid.status = 3
-                bid.save()
+                if winnc < 3:
+                    bid.status = 3
+                    bid.save()
+                    pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BN')
+                    pr.save()
             except:
                 pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BB')
                 pr.save()

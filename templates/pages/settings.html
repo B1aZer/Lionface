@@ -164,6 +164,14 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                          <div id="bid-slider" style="width: 260px; margin: 15px;"></div>
                     </td>
                 </tr>
+                {% if error %}
+                <tr>
+                    <td align="right">Errors: </td>
+                    <td>
+                        <div style="margin-left: 15px;"> {{ error }} </div>
+                    </td>
+                </tr>
+                {% endif %}
                 <tr>
                     <td align="right">Your bid: </td>
                     <td>
@@ -178,6 +186,12 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                     </td>
                 </tr>
                     {% endif %}
+                <tr>
+                    <td align="right">&nbsp;</td>
+                    <td>
+                        <a id="show_card_info" href="#" style="margin: 15px;">Replace Card</a>
+                    </td>
+                </tr> 
                 {% endif %}
             {% else %}
             <tr>
@@ -186,8 +200,8 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 </td>
             </tr>
             {% endif %}
-        {% else %}
-        <tr id="card_info">
+        {% endif %}
+        <tr id="card_info" {% if request.user.is_customer %} style="display:none" {% endif %}>
             <td align="right">To make a bid enter card info: </td>
             <td>
                     <div class="payment-errors">
@@ -211,7 +225,6 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                   <!--</form>-->
             </td>
         </tr>
-        {% endif %}
         <tr>
             <td align="right">&nbsp;</td>
             <td>&nbsp;</td>
@@ -269,7 +282,7 @@ $(document).ready(function() {
     }
 
     $(document).on('click','#submit-card', function(event) {
-        if ($('#card_info').length) {
+        if ($('#card_info').is(":visible")) {
             // disable the submit button to prevent repeated clicks
             $('#submit-card').attr("disabled", "disabled");
 

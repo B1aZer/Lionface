@@ -650,6 +650,7 @@ def list_feedback(request, slug=None):
 def settings(request, slug=None):
     from django.conf import settings
     active = 'basics'
+    error = ''
 
     stripe_error = ''
     stripe.api_key = settings.STRIPE_API_KEY
@@ -668,7 +669,7 @@ def settings(request, slug=None):
     day = now.isoweekday() #5
     hour = now.hour #4pm
     mint = now.minute
-    if mint > 10 and mint < 12:
+    if (mint > 19 and mint < 30) or (mint > 49 and mint <= 59):
         show_bids = False
     else:
         show_bids = True
@@ -692,12 +693,18 @@ def settings(request, slug=None):
         bid = request.POST.get('bid_value', None)
         if token:
             try:
-                customer = stripe.Customer.create(
-                    card=token,
-                    description=request.user.username
-                )
-                customer = Customers(user=request.user, stripe_id=customer.id)
-                customer.save()
+                if request.user.is_customer():
+                    stripe_id = request.user.get_stripe_id()
+                    customer = stripe.Customer.retrieve(stripe_id)
+                    customer.card = token
+                    customer.save()
+                else:
+                    customer = stripe.Customer.create(
+                        card=token,
+                        description=request.user.username
+                    )
+                    customer = Customers(user=request.user, stripe_id=customer.id)
+                    customer.save()
             except stripe.CardError, e:
                 body = e.json_body
                 err  = body['error']
@@ -711,12 +718,17 @@ def settings(request, slug=None):
                 bid = ebid
             else:
                 bid = Bids( page = page)
-            #if bid.amount < amount:
-            bid.amount = amount
-            bid.user = request.user
-            # save only for permitted period
-            if show_bids and not page.is_disabled:
-                bid.save()
+            # do not process bids lower than previous
+            if bid.amount < amount:
+                bid.amount = amount
+                bid.user = request.user
+                # save only for permitted period
+                if show_bids and \
+                        not page.is_disabled and \
+                        amount >= min_bid:
+                    bid.save()
+            else:
+                error = "Can't process bid lower than previous"
         else:
             form = PageSettingsForm(data=request.POST, instance=page)
             if form.is_valid():
@@ -730,6 +742,7 @@ def settings(request, slug=None):
                     'min_bid': min_bid,
                     'stripe_error': stripe_error,
                     'show_bids': show_bids,
+                    'error': error,
                 },
                 RequestContext(request)
             )

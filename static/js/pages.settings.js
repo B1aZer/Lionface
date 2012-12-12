@@ -173,7 +173,19 @@ LionFace.PagesSettings.prototype = {
     },
 
     bind_loves: function() {
+        $(document).on('click','#show_card_info',function(e) {
+            e.preventDefault();
+            if (!$(this).data('toggled')) {
+                $('#card_info').show();
+                $(this).data('toggled',true);
+            }
+            else {
+                $('#card_info').hide();
+                $(this).data('toggled',false);
+            }
+        });
         
+    
     
     },
 }

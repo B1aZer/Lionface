@@ -7,8 +7,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         from ecomm.models import Bids
         from django.conf import settings
+        from pages.models import PageRequest
         import stripe
         stripe.api_key = settings.STRIPE_API_KEY
+        winnc = Bids.objects.filter(status=3).count()
         max_three = Bids.objects.filter(status=1).order_by('-amount')[:3]
         if max_three.count():
             for bid in max_three:
@@ -18,17 +20,18 @@ class Command(BaseCommand):
                     stripe.Charge.create(
                         amount=amount, # 1500 - $15.00 this time
                         currency="usd",
-                        customer=stripe_id
+                        customer=stripe_id,
+                        description="Charge for %s" % bid.user.get_full_name(),
                     )
                     self.stdout.write('Charging: %s' % stripe_id)
-                    bid.status = 3
-                    bid.save()
+                    if winnc <= 3:
+                        bid.status = 3
+                        bid.save()
                     #except stripe.CardError, e:
-                    # declined card
-                    # mark unsuccessful
-                    #pass
+                    pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BN')
+                    pr.save()
                 except:
-                    # send message
+                    pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BE')
+                    pr.save()
                     bid.status = 2
                     bid.save()
-
