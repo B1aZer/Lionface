@@ -1,7 +1,22 @@
 {% load format_results %}
 <div id="page_friend_requests" style="text-align:center; width: 100%;">
 <div style="position: absolute; right: 0px; top: 50px;">
-{% if request.user in page.get_community_admins %}
+            {% if page.get_bidding_notifiers and request.user|check_pages_loves:page %}
+            {% for reqst in page.get_bidding_notifiers %}
+				<div align="right" style="display: block;">
+                <div class="page_rqst">
+                    {% if reqst.type == 'BN' %}
+                    <span> Your bid have won. This page will be featured during next week.</span>
+                    {% elif reqst.type == 'BE' %}
+                    <span> There was an error while processing your card. We will try again at 8am on Saturday.</span>
+                    {% else %}
+                    <span> There was an error while processing your card. This page wil be removed from bidding list.</span>
+                    {% endif %}
+                    <a href="{% url pages.views.decline_friend_request slug=page.username request_id=reqst.id %}" style="color: #999;">Cancel</a>
+                </div>
+				</div>
+            {% endfor %}
+            {% endif %}
             {% if page.get_deletion_offset and request.user|check_pages_delete:page %}
 				<div class="for_delt_notf" align="right" style="display: block;">
                 <div class="page_rqst">
@@ -10,6 +25,7 @@
                 </div>
 				</div>
             {% endif %}
+{% if request.user in page.get_community_admins %}
             {% for reqst in page.get_requests %} 
 				<div align="right" style="display: block;">
                 <div class="page_rqst">

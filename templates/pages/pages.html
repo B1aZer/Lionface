@@ -19,6 +19,9 @@
                 {% else %}   
                     <span style="color:#909E4A; font-size: 11pt;">{{ page.name }}</span><br />
                 {% endif %}
+                {% if page.featured %}
+                <span style="color: #EC2;">Featured</span>
+                {% endif %}
                 <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span>
 				</div>
             </td>

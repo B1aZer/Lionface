@@ -664,6 +664,15 @@ def settings(request, slug=None):
     except Pages.DoesNotExist:
         raise Http404
 
+    now = timezone.now()
+    day = now.isoweekday() #5
+    hour = now.hour #4pm
+    mint = now.minute
+    if mint > 10 and mint < 12:
+        show_bids = False
+    else:
+        show_bids = True
+
     # check permissions
     if request.user.check_option('pages_admins__%s' % page.id) \
             or request.user.check_option('pages_basics__%s' % page.id) \
@@ -702,9 +711,11 @@ def settings(request, slug=None):
                 bid = ebid
             else:
                 bid = Bids( page = page)
-            if bid.amount < amount:
-                bid.amount = amount
-                bid.user = request.user
+            #if bid.amount < amount:
+            bid.amount = amount
+            bid.user = request.user
+            # save only for permitted period
+            if show_bids and not page.is_disabled:
                 bid.save()
         else:
             form = PageSettingsForm(data=request.POST, instance=page)
@@ -718,6 +729,7 @@ def settings(request, slug=None):
                     'active': active,
                     'min_bid': min_bid,
                     'stripe_error': stripe_error,
+                    'show_bids': show_bids,
                 },
                 RequestContext(request)
             )

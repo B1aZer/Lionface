@@ -14,6 +14,9 @@ from images.fields import ImageWithThumbField
 REQUEST_TYPE = (
         ('ER','Event Request'),
         ('PR','Page Request'),
+        ('BN','Bidding Notifier'),
+        ('BE','Bidding Error'),
+        ('BB','Bidding Block'),
 )
 
 PAGE_TYPE = (
@@ -26,6 +29,7 @@ MEMBERSHIP_TYPE = (
         ('IN','Intern'),
         ('EM','Employee'),
 )
+
 
 class PageRequest(models.Model):
     from_page = models.ForeignKey('Pages', related_name='from_page')
@@ -45,7 +49,6 @@ class PageRequest(models.Model):
             self.event.tagged.add(self.to_page)
             self.is_accepted = True
             self.save()
-
 
     def hide(self):
         self.is_hidden = True
@@ -76,6 +79,7 @@ class Pages(models.Model):
     category = models.CharField(max_length=100, default='Undefined')
     cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/noCoverImage.png')
     photo = ImageWithThumbField(upload_to="uploads/images", default='uploads/images/noProfilePhoto.png')
+    # members
     has_employees = models.BooleanField(default=True)
     text_employees = models.TextField(blank=True)
     has_interns = models.BooleanField(default=True)
@@ -83,9 +87,13 @@ class Pages(models.Model):
     has_volunteers = models.BooleanField(default=True)
     text_volunteers = models.TextField(blank=True)
     members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
+    # calendar
     post_update = models.BooleanField(default=False)
+    # deletion
     for_deletion = models.DateTimeField(null=True, blank=True)
+    # bidding
     featured = models.BooleanField(default=False)
+    is_disabled = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Page"
@@ -150,6 +158,9 @@ class Pages(models.Model):
 
     def get_events_requests(self):
         return self.to_page.filter(is_hidden=False, is_accepted=False, type='ER')
+
+    def get_bidding_notifiers(self):
+        return self.to_page.filter(is_hidden=False, is_accepted=False, type__in=('BN','BE','BB'))
 
     def get_friends(self):
         return self.friends.all()
@@ -328,6 +339,13 @@ class Pages(models.Model):
     def get_deletion_offset(self):
         if self.for_deletion:
             dif = timezone.now() - self.for_deletion
+            return abs(dif.days)
+        else:
+            return False
+
+    def get_disabled_time(self):
+        if self.is_disabled:
+            dif = timezone.now() - self.is_disabled
             return abs(dif.days)
         else:
             return False

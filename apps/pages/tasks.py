@@ -53,6 +53,7 @@ class ProcessBids(Task):
     def run(self, **kwargs):
         from ecomm.models import Bids
         from django.conf import settings
+        from pages.models import PageRequest
         import stripe
         stripe.api_key = settings.STRIPE_API_KEY
         max_three = Bids.objects.filter(status=1).order_by('-amount')[:3]
@@ -64,17 +65,18 @@ class ProcessBids(Task):
                     stripe.Charge.create(
                         amount=amount, # 1500 - $15.00 this time
                         currency="usd",
-                        customer=stripe_id
+                        customer=stripe_id,
+                        description="Charge for %s" % bid.user.get_full_name(),
                     )
                     logger.info('Charging: %s' % stripe_id)
                     bid.status = 3
                     bid.save()
                     #except stripe.CardError, e:
-                    # declined card
-                    # mark unsuccessful
-                    #pass
+                    pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BN')
+                    pr.save()
                 except:
-                    # send message
+                    pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BE')
+                    pr.save()
                     bid.status = 2
                     bid.save()
 tasks.register(ProcessBids)
@@ -82,26 +84,39 @@ tasks.register(ProcessBids)
 class ReprocessBids(Task):
     def run(self, **kwargs):
         from ecomm.models import Bids
+        from pages.models import PageRequest
         from django.conf import settings
+        from django.utils import timezone
+        import datetime as dateclass
         import stripe
         stripe.api_key = settings.STRIPE_API_KEY
         error_bids = Bids.objects.filter(status=2)
         for bid in error_bids:
             stripe_id = bid.user.get_stripe_id()
             amount = bid.amount * 100
+            # remove error notifiers
+            prs = PageRequest.objects.filter(to_page = bid.page, type = 'BE')
+            for pr in prs:
+                pr.delete()
             try:
                 stripe.Charge.create(
                     amount=amount, # 1500 - $15.00 this time
                     currency="usd",
-                    customer=stripe_id
+                    customer=stripe_id,
+                    description="Recharge for %s" % bid.user.get_full_name(),
                 )
                 logger.info('ReCharging: %s' % stripe_id)
                 bid.status = 3
                 bid.save()
             except:
-                # send message
-                # block
-                bid.status = 2
+                pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BB')
+                pr.save()
+                now = timezone.now()
+                #delta = dateclass.timedelta(days=21)
+                delta = dateclass.timedelta(minutes=5)
+                bid.page.is_disabled = now + delta
+                bid.page.save()
+                bid.status = 0
                 bid.save()
 tasks.register(ReprocessBids)
 
@@ -109,7 +124,12 @@ class UpdatePagesFromBids(Task):
     def run(self, **kwargs):
         from ecomm.models import Bids
         from pages.models import Pages
+        from django.utils import timezone
+        now = timezone.now()
+        # no featured
         Pages.objects.filter(featured=True).update(featured=False)
+        # expired disabled
+        Pages.objects.filter(is_disabled__lte=now).update(is_disabled=None)
         winners = Bids.objects.filter(status=3)
         for bid in winners:
             bid.page.featured = True

@@ -150,25 +150,41 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td width="405">&nbsp;</td>
         </tr>
         {% if request.user.is_customer %}
-        <tr>
-            <td align="right">Make a bid: </td>
-            <td>
-                 <div id="bid-slider" style="width: 260px; margin: 15px;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td align="right">Your bid: </td>
-            <td>
-                <input name="bid_value" id="bid-value" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
-            </td>
-        </tr>
-            {% if page.get_max_bid %}
-        <tr>
-            <td align="right">Last bid: </td>
-            <td>
-                <span style="margin: 15px;">{{ page.get_max_bid_value }}</span>
-            </td>
-        </tr>
+            {% if show_bids %}
+                {% if page.is_disabled %}
+                <tr>
+                    <td colspan="2">
+                        <div style="margin: 15px;">This page is not allowed to make bids (days left: {{ page.get_disabled_time }})</div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td align="right">Make a bid: </td>
+                    <td>
+                         <div id="bid-slider" style="width: 260px; margin: 15px;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Your bid: </td>
+                    <td>
+                        <input name="bid_value" id="bid-value" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
+                    </td>
+                </tr>
+                    {% if page.get_max_bid %}
+                <tr>
+                    <td align="right">Last bid (for this page): </td>
+                    <td>
+                        <span style="margin: 15px;">{{ page.get_max_bid_value }}</span>
+                    </td>
+                </tr>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+            <tr>
+                <td colspan="2" >
+                     <div style="margin: 10px;"> Sorry, bidding is currently over.</div>
+                </td>
+            </tr>
             {% endif %}
         {% else %}
         <tr id="card_info">

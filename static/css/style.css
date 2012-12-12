@@ -743,10 +743,10 @@ a.profile_btn:hover {
     transform: skew(3deg) rotate(3deg);  
 }
 
-/* jquery class */
+/* !!! jquery class */
 .ui-state-default {
-	margin: 10px 3px 10px 3px;
-	padding: 5px 0;
+    /*margin: 10px 3px 10px 3px;*/
+    /*padding: 5px 0;*/
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	border: 1px solid transparent;
