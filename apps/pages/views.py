@@ -75,9 +75,8 @@ def main(request):
     pages = Pages.objects.filter(featured=False, type='BS').order_by('?')[:8]
     featured = Pages.objects.filter(featured=True, type='BS')
     if featured.count():
-        pcount = pages.count()
         fcount = featured.count()
-        acount = pcount - fcount
+        acount = 8 - fcount
         pages = list(chain(pages[:acount], featured))
         random.shuffle(pages)
 
