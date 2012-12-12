@@ -2,9 +2,6 @@
 {% load media %}
 
 {% block css %}
-<style>
-body { background: #EEE;}
-</style>
 {% endblock %}
 
 {% block body %}
@@ -15,20 +12,25 @@ body { background: #EEE;}
 <div align="center">
   <div id="center_box">
     <div class="content_area">
-<table width="900" height="500"><tr><td width="450" align="left">
+
+<div class="credit">Photography: Hannah Young</div>
+<table width="900" height="700"><tr><td width="500" align="left" valign="top" style="padding-top: 35px;">
 	
 			
 				<div class="center_container" style="z-index: 999;">
 					<table width="100%" height="300"><tr><td align="center">
-      					<a href="{% url account.views.login %}" style="border: 0px none; color: #FFF; text-decoration: none; font-size: 17pt;"><img src="{% media_url 'images/logo300.png' %}" border="0"/><br /> The Next Generation<br />in Social Networking</a>
+      					<a href="{% url account.views.login %}" class="home_link">
+							<img src="{% media_url 'images/logo300.png' %}" border="0" width="134" style="position: relative; left: 8px;" />
+							<br />Lionface</a><br /> <br />
+							<span style="color: #FFF; font-size: 17pt; letter-spacing: 1.25pt;">The Next Generation<br />in Social Networking</span>
 					</td></tr></table>
 				</div>
 			
 	</div>
-</td><td width="450" align="right" style="background: url({% media_url 'images/white.png' %});">
-			<div style="display: block; text-align: left; padding: 0 0 17px 17px; font-size: 17px; color: #F59;">Create an Account</div>
+</td><td width="400" align="right" valign="top" style="padding-top: 35px;">
+			<div class="create_header">Create an Account</div>
           {% include "account/signup.html" %}
-			<span style="font-size: 8pt; display: block; color: #FFF; text-align: left; padding: 17px 0 0 17px;">Built in Python Django</span>
+			<span style="font-size: 8pt; display: block; color: #FFF; text-align: left; padding: 17px 0 0 33px;">Built in Python Django</span>
 </td></tr></table>
 
     </div>

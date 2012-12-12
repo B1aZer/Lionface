@@ -2,23 +2,24 @@
 <form method="POST" action="{% url account.views.login %}">{% csrf_token %}
 <div id="login_box" align="right">
 
-	<table border="0" cellspacing="0" cellpadding="0" width="900">
+	<table border="0" cellspacing="0" cellpadding="0" width="900" height="65">
 	  <tr>
-		<td align="left"><a href="{% url account.views.login %}">Register</a></td>
-	    <td align="right" width="220"><label>{{ login_form.email.label }}</label> {{ login_form.email }}
-		</td>
+		<td rowspan="2" align="left"><a href="{% url account.views.login %}">Register</a></td>
+	    <td align="right" width="220"><label>{{ login_form.email.label }}</label> {{ login_form.email }}</td>
 	    <td align="right" width="240"><label>{{ login_form.password.label }}</label> {{ login_form.password }}
-			<a href="{% url django.contrib.auth.views.password_reset %}" title=" Forgot your password? " class="reset">?</a>
+			
 		</td>
 	    {{ login_form.tzone }}
-        <td align="right" width="175"><span style="font-size: 8pt; margin-right: 12px;">{{ login_form.preserve }} <label for="id_login-preserve">{{ login_form.preserve.label }}</label></span>
+        <td align="right" width="100">
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
 			<input type="submit" class="login_button" value="Sign In"/>
 			</td>
       </tr>
 	  <tr>
-	    <td colspan="3" align="right"><div style="position: relative; width: 100%; height: 100%;"><div class="login_error">{{ login_form.error_message }}</div></div></td>
-	    <td colspan="1" align="right"></td>
+		
+		<td align="right" valign="top"><span style="font-size: 8pt;">{{ login_form.preserve }} <label for="id_login-preserve">{{ login_form.preserve.label }}</label></span></td>
+	    <td align="right" valign="top"><a href="{% url django.contrib.auth.views.password_reset %}" title=" Forgot your password? " class="reset">Forgot your password?</a></td>
+	    <td align="right"><div style="position: relative; width: 100%; height: 100%;"><div class="login_error">{{ login_form.error_message }}</div></div></td>
       </tr>
     </table>
 
