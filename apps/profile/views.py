@@ -377,10 +377,13 @@ def album_posts(request, username, album_id=None):
     except UserProfile.DoesNotExist:
         raise Http404
 
+    album = None
+
     if album_id:
         try:
             from post.models import Post
             current = Albums.objects.get(id=album_id)
+            album = current
             items = Post.objects.filter(album_id = current.id)
             #getting news_feed for Post Objects
             items = items.get_news_post()
@@ -394,6 +397,7 @@ def album_posts(request, username, album_id=None):
         {
             'profile_user': profile_user,
             'items' : items,
+            'album':album,
         },
         RequestContext(request)
     )
