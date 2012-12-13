@@ -25,6 +25,7 @@ import datetime as dateclass
 from django.utils import timezone
 from collections import defaultdict
 import random
+import cPickle
 
 import stripe
 import pytz
@@ -52,9 +53,10 @@ def main(request):
     active = None
     max_pages = 12
 
-    if request.method == 'POST' and request.user.get_pages().count() == max_pages:
+
+    if request.method == 'POST' and request.user.get_pages().count() >= max_pages:
         messages.warning(request, 'Sorry only 12 pages are allowed')
-    if request.method == 'POST' and request.POST.get('type',None) and request.user.get_pages().count() <= max_pages:
+    if request.method == 'POST' and request.POST.get('type',None) and request.user.get_pages().count() < max_pages:
         if request.POST.get('type',None) == 'NP':
             active = 'Nonprofit'
             form = NonprofitForm(data = request.POST)
@@ -362,9 +364,9 @@ def nonprofit(request):
     active = None
     max_pages = 12
 
-    if request.method == 'POST' and request.user.get_pages().count() == max_pages:
+    if request.method == 'POST' and request.user.get_pages().count() >= max_pages:
         messages.warning(request, 'Sorry only 12 pages are allowed')
-    if request.method == 'POST' and request.POST.get('type',None) and request.user.get_pages().count() <= max_pages:
+    if request.method == 'POST' and request.POST.get('type',None) and request.user.get_pages().count() < max_pages:
         if request.POST.get('type',None) == 'NP':
             active = 'Nonprofit'
             form = NonprofitForm(data = request.POST)
@@ -655,6 +657,8 @@ def settings(request, slug=None):
     stripe_error = ''
     stripe.api_key = settings.STRIPE_API_KEY
     bids = Bids.objects.filter(status=1).order_by('-amount')
+    pickle_str = cPickle.dumps(bids[:3])
+    old_three = cPickle.loads(pickle_str)
     if bids.count() > 2:
         min_bid = bids[2].amount + 10
     else:
@@ -675,7 +679,8 @@ def settings(request, slug=None):
     friday = now.date() + dateclass.timedelta(4 - now.weekday())
     closing = dateclass.datetime(friday.year, friday.month, friday.day, 17, 00, tzinfo=pytz.timezone('US/Eastern'))
     if (mint > 19 and mint < 30) or (mint > 49 and mint <= 59):
-        show_bids = False
+        # TODO
+        show_bids = True
     else:
         show_bids = True
 
@@ -749,7 +754,18 @@ def settings(request, slug=None):
                 if show_bids and \
                         not page.is_disabled and \
                         amount >= min_bid:
+                    # save bid
                     bid.save()
+                    # find all outbidders
+                    outbs = Bids.objects.filter(status=1, amount__lt=bid.amount)
+                    max_three = bids[:3]
+                    for outb in outbs:
+                        # if in old
+                        if outb in old_three \
+                                and outb not in max_three:
+                                # but not in new
+                            pr = PageRequest(from_page = outb.page, to_page = outb.page, type = 'BO')
+                            pr.save()
             else:
                 error = "Can't process bid lower than previous"
         # just form

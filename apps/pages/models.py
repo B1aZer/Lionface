@@ -17,6 +17,7 @@ REQUEST_TYPE = (
         ('BN','Bidding Notifier'),
         ('BE','Bidding Error'),
         ('BB','Bidding Block'),
+        ('BO','Bidding Out'),
 )
 
 PAGE_TYPE = (
@@ -160,7 +161,7 @@ class Pages(models.Model):
         return self.to_page.filter(is_hidden=False, is_accepted=False, type='ER')
 
     def get_bidding_notifiers(self):
-        return self.to_page.filter(is_hidden=False, is_accepted=False, type__in=('BN','BE','BB'))
+        return self.to_page.filter(is_hidden=False, is_accepted=False, type__in=('BN','BE','BB','BO'))
 
     def get_friends(self):
         return self.friends.all()
