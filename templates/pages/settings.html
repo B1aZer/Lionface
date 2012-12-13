@@ -207,7 +207,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             {% else %}
             <tr>
                 <td colspan="2" >
-                    <div class="no_bidding" style="margin: 10px;"> Sorry, bidding is currently over. Bidding will reopen in {{ nextm|timeuntil }} ({{ nextm|date:"M. d" }})</div>
+                    <div class="no_bidding" style="margin: 10px;"> Sorry, bidding is currently over. Bidding will reopen in {{ nextm|timeuntil }} (Monday, {{ nextm|date:"M. d" }})</div>
                 </td>
             </tr>
             {% endif %}

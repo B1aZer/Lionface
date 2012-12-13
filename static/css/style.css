@@ -2775,3 +2775,17 @@ a.school_nav:hover {
 #comments_event .comment_header {
 	position: relative; left: -8px;
 }
+
+.card-number, .card-cvc, .card-expiry-month, .card-expiry-year {
+	padding: 5px;
+	border: 1px solid #CCC;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.no-bidding {
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 10px 0;
+}
