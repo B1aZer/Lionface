@@ -488,8 +488,8 @@ class UserProfile(User):
                 return remain.days
         return False
 
-    def is_customer(self):
-        return self.customer.count()
+    def is_customer_for(self, page):
+        return self.customer.filter(page=page).count()
 
     def get_stripe_id(self):
         return self.customer.get().stripe_id
@@ -499,6 +499,20 @@ class UserProfile(User):
         if bids:
             bids = bids[0]
         return bids
+
+    def get_last_4(self,page):
+        if self.is_customer_for(page):
+            customer = self.customer.get(page=page)
+            return customer.get_last_four()
+        else:
+            return False
+
+    def get_card_type_for(self,page):
+        if self.is_customer_for(page):
+            customer = self.customer.get(page=page)
+            return customer.get_type()
+        else:
+            return False
 
     @models.permalink
     def get_absolute_url(self):

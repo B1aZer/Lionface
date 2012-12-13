@@ -324,4 +324,23 @@ def get_current_bid_for(user, page):
     return bid
 
 
+@register.filter(name="is_customer_for")
+def is_customer_for(user, page):
+    return user.is_customer_for(page)
 
+@register.filter(name="get_last_four")
+def get_last_four(user,page):
+    return user.get_last_4(page)
+
+@register.filter(name="get_card_type")
+def get_card_type(user,page):
+    return user.get_card_type_for(page)
+
+@register.filter(name="format_date")
+def format_date(dt):
+    dt = int(dt) / 100
+    if dt > 0:
+        dt = "+%s" % dt
+    if dt == 0:
+        dt = ''
+    return dt

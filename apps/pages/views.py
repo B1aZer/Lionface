@@ -27,6 +27,7 @@ from collections import defaultdict
 import random
 
 import stripe
+import pytz
 
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -665,9 +666,14 @@ def settings(request, slug=None):
         raise Http404
 
     now = timezone.now()
+    nextMonday = now.date() + dateclass.timedelta(7 - now.weekday())
+    startWeek = now.date() - dateclass.timedelta(now.weekday())
+    endWeek = now.date() + dateclass.timedelta(6 - now.weekday())
     day = now.isoweekday() #5
     hour = now.hour #4pm
     mint = now.minute
+    friday = now.date() + dateclass.timedelta(4 - now.weekday())
+    closing = dateclass.datetime(friday.year, friday.month, friday.day, 17, 00, tzinfo=pytz.timezone('US/Eastern'))
     if (mint > 19 and mint < 30) or (mint > 49 and mint <= 59):
         show_bids = False
     else:
@@ -690,19 +696,36 @@ def settings(request, slug=None):
     if request.method == 'POST':
         token = request.POST.get('stripeToken', None)
         bid = request.POST.get('bid_value', None)
-        if token:
+        active = request.POST.get('active', None)
+        last4 = request.POST.get('last4', None)
+        ctype = request.POST.get('ctype', None)
+        # adding card info
+        if 'cancel_bid' in request.POST:
+            bid = page.get_max_bid()
+            if bid:
+                if bid.user == request.user:
+                    bid.delete()
+                else:
+                    error = "This bid has not been placed by you"
+        elif token:
             try:
-                if request.user.is_customer():
-                    stripe_id = request.user.get_stripe_id()
+                if request.user.is_customer_for(page):
+                    stripe_id = page.get_stripe_id_for(request.user)
                     customer = stripe.Customer.retrieve(stripe_id)
                     customer.card = token
                     customer.save()
+                    db_customer = page.get_customer_for(request.user)
+                    db_customer.last4 = last4
+                    db_customer.type = ctype
+                    db_customer.save()
                 else:
                     customer = stripe.Customer.create(
                         card=token,
-                        description=request.user.username
+                        description=page.name
                     )
-                    customer = Customers(user=request.user, stripe_id=customer.id)
+                    customer = Customers(user=request.user, page=page, stripe_id=customer.id)
+                    customer.last4 = last4
+                    customer.type = ctype
                     customer.save()
             except stripe.CardError, e:
                 body = e.json_body
@@ -710,6 +733,7 @@ def settings(request, slug=None):
                 stripe_error = err.get('message','Card was declined')
             except:
                 stripe_error = 'An error occurred while processing your card'
+        # bidding
         elif bid:
             amount = int(bid.strip().replace('$',''))
             ebid = page.get_max_bid()
@@ -728,6 +752,7 @@ def settings(request, slug=None):
                     bid.save()
             else:
                 error = "Can't process bid lower than previous"
+        # just form
         else:
             form = PageSettingsForm(data=request.POST, instance=page)
             if form.is_valid():
@@ -742,6 +767,10 @@ def settings(request, slug=None):
                     'stripe_error': stripe_error,
                     'show_bids': show_bids,
                     'error': error,
+                    'nextm': nextMonday,
+                    'startw': startWeek,
+                    'endw': endWeek,
+                    'closing': closing,
                 },
                 RequestContext(request)
             )

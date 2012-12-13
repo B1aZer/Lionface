@@ -367,6 +367,23 @@ class Pages(models.Model):
             bid = 10
         return bid
 
+    def get_stripe_id(self):
+        return self.customer.get().stripe_id
+
+    def get_stripe_id_for(self, user):
+        try:
+            customer = self.customer.get(user=user)
+            return customer.stripe_id
+        except:
+            return False
+
+    def get_customer_for(self, user):
+        try:
+            customer = self.customer.get(user=user)
+            return customer
+        except:
+            return False
+
     @models.permalink
     def get_absolute_url(self):
         if self.type == 'BS':

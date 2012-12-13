@@ -60,14 +60,14 @@ class ProcessBids(Task):
         max_three = Bids.objects.filter(status=1).order_by('-amount')[:3]
         if max_three.count():
             for bid in max_three:
-                stripe_id = bid.user.get_stripe_id()
+                stripe_id = bid.get_stripe_id()
                 amount = bid.amount * 100
                 try:
                     stripe.Charge.create(
                         amount=amount, # 1500 - $15.00 this time
                         currency="usd",
                         customer=stripe_id,
-                        description="Charge for %s" % bid.user.get_full_name(),
+                        description="Charge for %s, user: %s" % (bid.page.name, bid.user)
                     )
                     logger.info('Charging: %s' % stripe_id)
                     if winnc < 3:
@@ -94,7 +94,7 @@ class ReprocessBids(Task):
         winnc = Bids.objects.filter(status=3).count()
         error_bids = Bids.objects.filter(status=2)
         for bid in error_bids:
-            stripe_id = bid.user.get_stripe_id()
+            stripe_id = bid.get_stripe_id()
             amount = bid.amount * 100
             # remove error notifiers
             prs = PageRequest.objects.filter(to_page = bid.page, type = 'BE')
@@ -105,7 +105,7 @@ class ReprocessBids(Task):
                     amount=amount, # 1500 - $15.00 this time
                     currency="usd",
                     customer=stripe_id,
-                    description="Recharge for %s" % bid.user.get_full_name(),
+                    description="Recharge for %s, user: %s" % (bid.page.name, bid.user)
                 )
                 logger.info('ReCharging: %s' % stripe_id)
                 if winnc < 3:

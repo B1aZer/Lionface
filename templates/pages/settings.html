@@ -149,15 +149,26 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
         </tr>
-        {% if request.user.is_customer %}
+        {% if request.user|is_customer_for:page %}
             {% if show_bids %}
                 {% if page.is_disabled %}
                 <tr>
                     <td colspan="2">
-                        <div style="margin: 15px;">This page is not allowed to make bids (days left: {{ page.get_disabled_time }})</div>
+                        <div class="no_bidding" style="margin: 15px;">This page is not allowed to make bids (days left: {{ page.get_disabled_time }})</div>
                     </td>
                 </tr>
                 {% else %}
+                <tr>
+                    <td  align="center" colspan="2" >
+                        <span>Bidding will close, {{ closing|date:"M jS" }} at {{ closing|date:"g A" }}, GMT {{ closing|date:"O"|format_date }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">Minimum bid: </td>
+                    <td>
+                        <input id="bid-min" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
+                    </td>
+                </tr>
                 <tr>
                     <td align="right">Make a bid: </td>
                     <td>
@@ -180,7 +191,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 </tr>
                     {% if page.get_max_bid %}
                 <tr>
-                    <td align="right">Last bid (for this page): </td>
+                    <td align="right">Last bid (for this page):<div>{{ startw|date:"M jS" }} to {{ endw|date:"M jS" }}</div> </td>
                     <td>
                         <span style="margin: 15px;">{{ page.get_max_bid_value }}</span>
                     </td>
@@ -189,19 +200,19 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <tr>
                     <td align="right">&nbsp;</td>
                     <td>
-                        <a id="show_card_info" href="#" style="margin: 15px;">Replace Card</a>
+                        <span style="margin: 15px;"> {{ request.user|get_card_type:page }}: **** **** **** {{ request.user|get_last_four:page }}</span><a id="show_card_info" href="#" style="margin: 15px;">Replace Card</a>
                     </td>
                 </tr> 
                 {% endif %}
             {% else %}
             <tr>
                 <td colspan="2" >
-                     <div style="margin: 10px;"> Sorry, bidding is currently over.</div>
+                    <div class="no_bidding" style="margin: 10px;"> Sorry, bidding is currently over. Bidding will reopen in {{ nextm|timeuntil }} ({{ nextm|date:"M. d" }})</div>
                 </td>
             </tr>
             {% endif %}
         {% endif %}
-        <tr id="card_info" {% if request.user.is_customer %} style="display:none" {% endif %}>
+        <tr id="card_info" {% if request.user|is_customer_for:page %} style="display:none" {% endif %}>
             <td align="right">To make a bid enter card info: </td>
             <td>
                     <div class="payment-errors">
@@ -211,6 +222,8 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                   <div class="form-row">
                     <label>Card Number</label>
                     <input type="text" size="20" autocomplete="off" class="card-number"/>
+                    <input name="last4" type="hidden" readonly class="card-last-four"/>
+                    <input name="ctype" type="hidden" readonly class="card-type"/>
                   </div>
                   <div class="form-row">
                     <label>CVC</label>
@@ -244,6 +257,9 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
 {% if request.user|check_pages_loves:page %}
 <button id="submit-card" type="submit" name="submit-card" class="blue_btn" style="display:none;">Submit</button>
 {% endif %}
+{% if page.get_max_bid %}
+<button id="cancel-bid" type="submit" name="cancel_bid" class="blue_btn" style="display:none;">Cancel Bid</button>
+{% endif %}
 </form>
 {% if request.user|check_pages_delete:page %} 
 <a href="#" id="delete_page" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Page</a>
@@ -274,6 +290,8 @@ $(document).ready(function() {
             var form$ = $("#page_settings_form");
             // token contains id, last4, and card type
             var token = response['id'];
+            $('.card-last-four').val(response.card.last4);
+            $('.card-type').val(response.card.type);
             // insert the token into the form so it gets submitted to the server
             form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
             // and submit

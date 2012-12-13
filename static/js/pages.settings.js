@@ -16,7 +16,7 @@ LionFace.PagesSettings.prototype = {
 
         $('#privacy').hide();
         $('#loves').hide();
-
+        
         if (LionFace.User.options['pages_admins__'+LionFace.User.page_id] &&
             !LionFace.User.options['pages_basics__'+LionFace.User.page_id]) {
                 $('#basics').hide();
@@ -44,6 +44,8 @@ LionFace.PagesSettings.prototype = {
             $('#admins_settings').addClass('active');
             $('#submit_button').hide();
             $('#submit-card').hide();
+            $('#cancel-bid').hide();
+            $('#active_input').val('admins');
         });
 
         $(document).on('click','#basics_settings',function(){
@@ -58,6 +60,8 @@ LionFace.PagesSettings.prototype = {
             $('#loves_settings').removeClass('active');
             $('#submit_button').show();
             $('#submit-card').hide();
+            $('#cancel-bid').hide();
+            $('#active_input').val('basics');
         });
 
         $(document).on('click','#loves_settings',function(){
@@ -72,7 +76,16 @@ LionFace.PagesSettings.prototype = {
             $('#basics_settings').removeClass('active');
             $('#submit-card').show();
             $('#submit_button').hide();
+            $('#active_input').val('loves');
+            $('#cancel-bid').show();
+            if ( $('.no_bidding').length ) {
+                $('#submit-card').hide();
+            }
         });
+
+        if ( $('#active_input').val() == 'loves' ) {
+            $('#loves_settings').click();
+        }
 
         $(document).on('click','#delete_page', function (e) {
             e.preventDefault();
