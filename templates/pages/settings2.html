@@ -163,13 +163,13 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 {% else %}
                 <tr>
                     <td  align="center" colspan="2" >
-                        <span>Bidding will close Friday, {{ closing|date:"M jS" }} at {{ closing|date:"g A" }}, GMT {{ closing|date:"O"|format_date }}</span>
+                        <span>Bidding will close, {{ closing|date:"M jS" }} at {{ closing|date:"g A" }}, GMT {{ closing|date:"O"|format_date }}</span>
                     </td>
                 </tr>
                 <tr>
                     <td align="right">Minimum bid: </td>
                     <td>
-                        <input id="bid-min" class="bid-min" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
+                        <input id="bid-min" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
                     </td>
                 </tr>
                 <tr>
@@ -189,12 +189,12 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <tr>
                     <td align="right">Your bid: </td>
                     <td>
-                        <input name="bid_value" id="bid-value" class="bid-value" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
+                        <input name="bid_value" id="bid-value" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
                     </td>
                 </tr>
                     {% if page.get_max_bid %}
                 <tr>
-                    <td align="right">Current Bid:<div> <span style="font-size: 8pt;">Week:{{ startw|date:"M jS" }} to {{ endw|date:"M jS" }}</span></div> </td>
+                    <td align="right">Last bid (for this page):<div>{{ startw|date:"M jS" }} to {{ endw|date:"M jS" }}</div> </td>
                     <td>
                         <span style="margin: 15px;">{{ page.get_max_bid_value }}</span>
                     </td>
@@ -210,7 +210,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             {% else %}
             <tr>
                 <td colspan="2" >
-                    <div class="no_bidding"> Sorry, bidding is currently over. Bidding will reopen in {{ nextm|timeuntil }} (Monday, {{ nextm|date:"M. d" }})</div>
+                    <div class="no_bidding" style="margin: 10px;"> Sorry, bidding is currently over. Bidding will reopen in {{ nextm|timeuntil }} ({{ nextm|date:"M. d" }})</div>
                 </td>
             </tr>
             {% endif %}
@@ -348,5 +348,4 @@ $(document).ready(function() {
     {% include_media 'pages.js' %}
     {% include_media 'pages.settings.js' %}
 {% endblock %} 
-
 
