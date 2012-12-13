@@ -2783,6 +2783,13 @@ a.school_nav:hover {
 	border-radius: 3px;
 }
 
+.bid-value, .bid-min {
+	background: transparent;
+	color: #A70;
+	border-color: transparent;
+	position: relative; top: -2px;
+}
+
 .no-bidding {
 	display: block;
 	text-align: center;

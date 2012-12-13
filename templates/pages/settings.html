@@ -166,7 +166,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <tr>
                     <td align="right">Minimum bid: </td>
                     <td>
-                        <input id="bid-min" class="bid-min" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
+                        <input id="bid-min" class="bid-min" type="text" value="${{ min_bid }}" style="margin: 15px;" readonly/>
                     </td>
                 </tr>
                 <tr>
@@ -186,12 +186,12 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <tr>
                     <td align="right">Your bid: </td>
                     <td>
-                        <input name="bid_value" id="bid-value" class="bid-value" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
+                        <input name="bid_value" id="bid-value" class="bid-value" type="text" value="${{ min_bid }}" style="margin: 15px;" readonly/>
                     </td>
                 </tr>
                     {% if page.get_max_bid %}
                 <tr>
-                    <td align="right">Last bid (for this page):<div>{{ startw|date:"M jS" }} to {{ endw|date:"M jS" }}</div> </td>
+                    <td align="right">Current Bid:<div> <span style="font-size: 8pt;">Week: {{ startw|date:"M jS" }} to {{ endw|date:"M jS" }}</span></div> </td>
                     <td>
                         <span style="margin: 15px;">{{ page.get_max_bid_value }}</span>
                     </td>
@@ -257,7 +257,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
 {% if request.user|check_pages_loves:page %}
 <button id="submit-card" type="submit" name="submit-card" class="blue_btn" style="display:none;">Submit</button>
 {% endif %}
-{% if page.get_max_bid and show_bids %}
+{% if page.get_max_bid %}
 <button id="cancel-bid" type="submit" name="cancel_bid" class="blue_btn" style="display:none;">Cancel Bid</button>
 {% endif %}
 </form>
