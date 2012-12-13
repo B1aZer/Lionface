@@ -2776,7 +2776,7 @@ a.school_nav:hover {
 	position: relative; left: -8px;
 }
 
-.card-number, .card-cvc, .card-expiry-month, .card-expiry-year {
+.card-number, .card-cvc, .card-expiry-month, .card-expiry-year, .bid-value, .bid-min {
 	padding: 5px;
 	border: 1px solid #CCC;
 	-moz-border-radius: 3px;
@@ -2785,7 +2785,7 @@ a.school_nav:hover {
 
 .no-bidding {
 	display: block;
-	width: 600px;
 	text-align: center;
-	padding: 10px 0;
+	padding: 10px 17px;
+	position: relative; left: 17px;
 }

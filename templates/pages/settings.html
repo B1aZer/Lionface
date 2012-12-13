@@ -49,10 +49,8 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             {% if request.user|check_pages_admins:page %}
             <li id="admins_settings" {% if active == 'admins' %} class="active" {% endif %}>Admins</li>
             {% endif %}
-            {% if page.type == 'BS' %}
-                {% if request.user|check_pages_loves:page %}
-                <li id="loves_settings" {% if active == 'loves' %} class="active" {% endif %}>Loves</li>
-                {% endif %}
+            {% if request.user|check_pages_loves:page %}
+            <li id="loves_settings" {% if active == 'loves' %} class="active" {% endif %}>Loves</li>
             {% endif %}
         </ul>
     </div>
@@ -146,7 +144,6 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
         </tr>
     </table>
 
-    {% if page.type == 'BS' %}
    <table id="loves">
         <tr>
             <td width="150" align="right">&nbsp;</td>
@@ -163,19 +160,19 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 {% else %}
                 <tr>
                     <td  align="center" colspan="2" >
-                        <span>Bidding will close, {{ closing|date:"M jS" }} at {{ closing|date:"g A" }}, GMT {{ closing|date:"O"|format_date }}</span>
+                        <span>Bidding will close Friday, {{ closing|date:"M jS" }} at {{ closing|date:"g A" }}, GMT {{ closing|date:"O"|format_date }}</span>
                     </td>
                 </tr>
                 <tr>
                     <td align="right">Minimum bid: </td>
                     <td>
-                        <input id="bid-min" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
+                        <input id="bid-min" class="bid-min" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
                     </td>
                 </tr>
                 <tr>
                     <td align="right">Make a bid: </td>
                     <td>
-                         <div id="bid-slider" style="width: 260px; margin: 15px;"></div>
+                         <div id="bid-slider" style="width: 300px; margin: 15px;"></div>
                     </td>
                 </tr>
                 {% if error %}
@@ -189,7 +186,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <tr>
                     <td align="right">Your bid: </td>
                     <td>
-                        <input name="bid_value" id="bid-value" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
+                        <input name="bid_value" id="bid-value" class="bid-value" type="text" value="{{ min_bid }}" style="margin: 15px;" readonly/>
                     </td>
                 </tr>
                     {% if page.get_max_bid %}
@@ -246,7 +243,6 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td>&nbsp;</td>
         </tr>
     </table>
-    {% endif %}
 
 
 
@@ -321,14 +317,14 @@ $(document).ready(function() {
     });
 
     var value = parseInt("{{ min_bid }}") || 10;
-    var min_val = value - 3500 + 10;
+    var min_val = value - 300;
     if (min_val < 0)
         min_val = 0;
     $( "#bid-slider" ).slider({
             value:value,
             range: "min",
             min: min_val,
-            max: value + 3500 - 10,
+            max: value + 300,
             step: 10,
             slide: function( event, ui ) {
                 $( "#bid-value" ).val( ui.value );
