@@ -331,7 +331,7 @@ $(document).ready(function() {
             max: value + 3500 - 10,
             step: 10,
             slide: function( event, ui ) {
-                $( "#bid-value" ).val( ui.value );
+                $( "#bid-value" ).val( '$' + ui.value );
                 if (ui.value < value) {
                     $( "#bid-value" ).val( '$' + value );
                 }
