@@ -31,8 +31,8 @@
         <a href="{{ most_loved.get_absolute_url }}"> 
             <img src="{{ most_loved.get_thumb }}" alt="{{ most_loved.name }}" width="180" height="180"  />
         </a>
-        <br />{{ most_loved.name }}<br />
-        <span style="font-size: 11px; color: #E39;">{{ most_loved.loves }}</span>
+        <a href="{{ most_loved.get_absolute_url }}" style="text-decoration: none;"><br />{{ most_loved.name }}<br />
+        <span style="font-size: 11px; color: #E39;">{{ most_loved.loves }}</span></a>
     </div>
     {% for page in rest %}
     {% cycle '60' '60' '60' '60' '45' '45' '45' '45' '45' as size silent %}
@@ -44,8 +44,8 @@
                         <img src="{{ page.get_thumb }}" alt="{{ page.name }}" width="{{ size }}" height="{{ size }}"  />
                     </a>
                 </td>
-                <td align="left">{{ page.name }}<br />
-                    <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span>
+                <td align="left"><a href="{{ page.get_absolute_url }}" style="text-decoration: none;"> {{ page.name }}<br />
+                    <span style="font-size: 11px; color: #E39;">{{ page.loves }}</span></a>
                 </td>
             </tr>
         </table>
