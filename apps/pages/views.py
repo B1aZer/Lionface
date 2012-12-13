@@ -671,8 +671,7 @@ def settings(request, slug=None):
 
     now = timezone.now()
     nextMonday = now.date() + dateclass.timedelta(7 - now.weekday())
-    startWeek = now.date() - dateclass.timedelta(now.weekday())
-    endWeek = now.date() + dateclass.timedelta(6 - now.weekday())
+    endWeek = now.date() + dateclass.timedelta(11 - now.weekday())
     day = now.isoweekday() #5
     hour = now.hour #4pm
     mint = now.minute
@@ -784,7 +783,7 @@ def settings(request, slug=None):
                     'show_bids': show_bids,
                     'error': error,
                     'nextm': nextMonday,
-                    'startw': startWeek,
+                    'startw': nextMonday,
                     'endw': endWeek,
                     'closing': closing,
                 },
