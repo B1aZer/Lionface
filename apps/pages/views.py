@@ -677,7 +677,8 @@ def settings(request, slug=None):
     mint = now.minute
     friday = now.date() + dateclass.timedelta(4 - now.weekday())
     closing = dateclass.datetime(friday.year, friday.month, friday.day, 17, 00, tzinfo=pytz.timezone('US/Eastern'))
-    if (mint > 19 and mint < 30) or (mint > 49 and mint <= 59):
+    #if (mint > 19 and mint < 30) or (mint > 49 and mint <= 59):
+    if now > closing:
         show_bids = False
     else:
         show_bids = True

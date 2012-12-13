@@ -333,7 +333,7 @@ $(document).ready(function() {
             slide: function( event, ui ) {
                 $( "#bid-value" ).val( ui.value );
                 if (ui.value < value) {
-                    $( "#bid-value" ).val( value );
+                    $( "#bid-value" ).val( '$' + value );
                 }
             },
             change: function(event, ui) {
