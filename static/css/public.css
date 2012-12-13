@@ -59,7 +59,7 @@ a.reset:hover {
 }
 
 .create_header {
-	display: block; text-align: left; padding: 26px 0px 0px 33px; font-size: 17px; color: #333; background: #FFF;-moz-border-radius: 3px 3px 0 0; border-radius: 3px 3px 0 0;
+	display: block; text-align: left; padding: 26px 0px 0px 33px; font-size: 17px; color: #333; background: #FFF;-moz-border-radius: 3px 3px 0 0; border-radius: 3px 3px 0 0; border-bottom: 1px solid #EEE;
 }
 
 #center_box { 

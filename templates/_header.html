@@ -34,7 +34,7 @@
 <div align="center"><div style="position: relative; width: 900px;">
 
 {% for one_page in request.user.get_admin_pages %}
-{% cycle -40 as left_offset silent %}
+{% cycle -44 as left_offset silent %}
 {% cycle 95 135 175 215 255 295 335 375 415 455 495 535 as top_offset silent %}
 
     <div style="position: absolute; left: {{ left_offset }}px; top: {{ top_offset }}px; width: 35px; text-align: right; z-index: 9999;">

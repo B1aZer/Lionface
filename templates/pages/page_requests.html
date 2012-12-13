@@ -6,13 +6,13 @@
 				<div align="right" style="display: block;">
                 <div class="page_rqst">
                     {% if reqst.type == 'BN' %}
-                    <span> Your bid have won. This page will be featured during next week.</span>
+                    <span> Your bid has won. This Page will be featured for the coming week.</span>
                     {% elif reqst.type == 'BE' %}
-                    <span> There was an error while processing your card. We will try again at 8am on Saturday.</span>
+                    <span> There was an error while processing your card. We will try again tomorrow morning.</span>
                     {% else %}
-                    <span> There was an error while processing your card. This page wil be removed from bidding list.</span>
+                    <span> There was an error while processing your card. This Page has been removed from bidding.</span>
                     {% endif %}
-                    <a href="{% url pages.views.decline_friend_request slug=page.username request_id=reqst.id %}" style="color: #999;">Cancel</a>
+                    <a href="{% url pages.views.decline_friend_request slug=page.username request_id=reqst.id %}" style="color: #999;">Hide</a>
                 </div>
 				</div>
             {% endfor %}

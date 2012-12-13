@@ -78,9 +78,7 @@ a.filter img {
 	display: block;
 	padding: 17px 0 15px 17px;
 	background: #FFF;
-	border-top: 1px solid #DDD;
-	-moz-box-shadow: 0 4px 8px -4px #CCC;
-	box-shadow: 0 4px 8px -4px #CCC;
+	border-top: 1px solid #EEE;
 	-moz-border-radius: 0 0 0 8px;
 	border-radius: 0 0 0 8px;
 }
@@ -221,7 +219,9 @@ a.colored_tag:hover {
 
 
 
-
+.profile_micro_header {
+	font-size: 17pt; padding: 8px; position: relative; top: 3px;
+}
 
 a.name_link:hover {
 	color: #F58;
@@ -361,8 +361,6 @@ a.post:link {
 a.post:hover, .submit_comment:hover, .send:hover { 
 	text-decoration: none; 
 	background: #2ab4ea;
-	-moz-box-shadow: inset 0 2px 6px -2px #777;
-	box-shadow: inset 0 2px 6px -2px #777; 
 	color: #FFF;
 }
 
@@ -464,18 +462,18 @@ a.dashboard_nav:link, a.dashboard_nav:active, a.dashboard_nav:visited {
 }
 
 a.dashboard_nav:hover {
-	background: #f3f3f3; /* Old browsers */
-	background: -moz-linear-gradient(top, #f3f3f3 0%, #fcfcfc 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3f3f3), color-stop(100%,#fcfcfc)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #f3f3f3 0%,#fcfcfc 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #f3f3f3 0%,#fcfcfc 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #f3f3f3 0%,#fcfcfc 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #f3f3f3 0%,#fcfcfc 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#fcfcfc',GradientType=0 ); /* IE6-9 */
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffffff 0%, #eeeeee 50%, #e5e5e5 51%, #eeeeee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(50%,#eeeeee), color-stop(51%,#e5e5e5), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffffff 0%,#eeeeee 50%,#e5e5e5 51%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffffff 0%,#eeeeee 50%,#e5e5e5 51%,#eeeeee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffffff 0%,#eeeeee 50%,#e5e5e5 51%,#eeeeee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ffffff 0%,#eeeeee 50%,#e5e5e5 51%,#eeeeee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
 	color: #333;
 	border-color: #DDD;
-	-moz-box-shadow: inset 0 0 20px 0 #DDD;
-	box-shadow: inset 0 0 20px 0 #DDD;
+	-moz-box-shadow: inset 0 0 8px 0 #DDD;
+	box-shadow: inset 0 0 8px 0 #DDD;
 }
 
 a.profile_btn, a.profile_btn:active, a.profile_btn:visited {
@@ -1362,11 +1360,12 @@ a.db_related:hover {
 
 a.send_message:link, a.send_message:active, a.send_message:visited {
 	font-size: 8pt;
-	color: #AAA;
-	padding: 10px 7px 7px 7px;
+	color: #777;
+	padding: 8px 7px 7px 8px;
 	-mox-border-radius: 3px;
 	border-radius: 3px;
-	position: relative; top: 1px;
+	position: relative; top: 2px;
+	text-decoration: none;
 }
 
 a.send_message:hover {
@@ -1679,12 +1678,10 @@ a.nav_messages:link, a.nav_messages:active, a.nav_messages:visited, a.nav_notifi
 	width: 30px; 
 	height: 30px; 
 	margin: 3px 0;
-	border: 1px solid #EEE;  
+	border: 1px solid #DDD;  
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	text-align: center;
-	-moz-box-shadow: inset 0 2px 4px -2px #777;
-	box-shadow: inset 0 2px 4px -2px #777; 
 	position: relative;
 }
 
@@ -1715,6 +1712,7 @@ a.nav_messages:hover {
 	-webkit-background-size: 18px 18px !important; 
 	-moz-background-size: 18px 18px !important; 
 	background-size: 18px 18px; 
+	border-color: #CCC;
 
 }
 
@@ -1725,7 +1723,7 @@ a.nav_notifications:hover {
 	-webkit-background-size: 18px 18px !important; 
 	-moz-background-size: 18px 18px !important; 
 	background-size: 18px 18px;
-
+	border-color: #CCC;
 }
 
 .count {
@@ -2208,7 +2206,7 @@ a.loved:hover {
 	box-shadow: 0 4px 8px -4px #333;
 	z-index: 500;
 	border-bottom: 7px solid #EEE;
-	border-top: 7px solid #EEE;
+	border-top: 7px solid #FFF;
 }
 
 .content_area_pages {
@@ -2523,14 +2521,7 @@ a.admin_name:link, a.admin_name:active, a.admin_name:visited, a.admin_name:hover
 }
 
 .friend_container {
-	background: #ededde; /* Old browsers */
-	background: -moz-linear-gradient(left, #ededde 0%, #e3e5c5 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#ededde), color-stop(100%,#e3e5c5)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(left, #ededde 0%,#e3e5c5 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(left, #ededde 0%,#e3e5c5 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(left, #ededde 0%,#e3e5c5 100%); /* IE10+ */
-	background: linear-gradient(to right, #ededde 0%,#e3e5c5 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededde', endColorstr='#e3e5c5',GradientType=1 ); /* IE6-9 */
+	background: #E7F7FF;
  	padding: 10px 10px 10px 10px; 
 	width: 230px; 
 	position: relative; left: -10px; 

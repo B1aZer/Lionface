@@ -23,7 +23,7 @@
 <div style="padding: 10px; position: relative; left: 40px;">
 
     {% if profile_user == request.user %}
-    <div id="create_album_link" style="cursor:pointer">+ Create Album</div>
+    <span class="profile_micro_header">Albums</span><div id="create_album_link" style="cursor:pointer">+ Create an Album</div>
     <form id="create_album_form" style="display:none">
         <input id="album_name" name="album_name">
         <input type="submit" value="+ Create" class="blue_btn" style="font-size: 8pt;">
