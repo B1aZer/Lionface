@@ -101,7 +101,6 @@ NONPROFIT_CATEGORY = (
 
 
 class PageForm(forms.ModelForm):
-    represent = forms.BooleanField(label='I have the legal right to represent this business entity.', required=True)
     terms =  forms.BooleanField(label='I agree to the terms.',
             required=True,
             widget=forms.CheckboxInput(attrs = {'style':'margin-left: 20px;'}))
@@ -118,6 +117,7 @@ class PageForm(forms.ModelForm):
 
 
 class BusinessForm(PageForm):
+    represent = forms.BooleanField(label='I have the legal right to represent this business entity.', required=True)
     class Meta:
         model = Pages
         fields = ('name','username','category','type')
@@ -127,6 +127,7 @@ class BusinessForm(PageForm):
 
 
 class NonprofitForm(PageForm):
+    represent = forms.BooleanField(label='I have the legal right to represent this nonprofit entity.', required=True)
     class Meta:
         model = Pages
         fields = ('name','username','category','type')

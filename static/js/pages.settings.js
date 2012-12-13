@@ -14,8 +14,10 @@ LionFace.PagesSettings.prototype = {
     //Binding
     bind_functions : function() {
 
-        $('#privacy').hide();
-        $('#loves').hide();
+        if ( $('#active_input').val() != 'loves' ) {
+            $('#privacy').hide();
+            $('#loves').hide();
+        }
         
         if (LionFace.User.options['pages_admins__'+LionFace.User.page_id] &&
             !LionFace.User.options['pages_basics__'+LionFace.User.page_id]) {

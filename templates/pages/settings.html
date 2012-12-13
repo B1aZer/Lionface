@@ -49,8 +49,10 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             {% if request.user|check_pages_admins:page %}
             <li id="admins_settings" {% if active == 'admins' %} class="active" {% endif %}>Admins</li>
             {% endif %}
-            {% if request.user|check_pages_loves:page %}
-            <li id="loves_settings" {% if active == 'loves' %} class="active" {% endif %}>Loves</li>
+            {% if page.type == 'BS' %}
+                {% if request.user|check_pages_loves:page %}
+                <li id="loves_settings" {% if active == 'loves' %} class="active" {% endif %}>Loves</li>
+                {% endif %}
             {% endif %}
         </ul>
     </div>
@@ -144,6 +146,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
         </tr>
     </table>
 
+    {% if page.type == 'BS' %}
    <table id="loves">
         <tr>
             <td width="150" align="right">&nbsp;</td>
@@ -243,6 +246,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td>&nbsp;</td>
         </tr>
     </table>
+    {% endif %}
 
 
 
@@ -317,14 +321,14 @@ $(document).ready(function() {
     });
 
     var value = parseInt("{{ min_bid }}") || 10;
-    var min_val = value - 300;
+    var min_val = value - 3500 + 10;
     if (min_val < 0)
         min_val = 0;
     $( "#bid-slider" ).slider({
             value:value,
             range: "min",
             min: min_val,
-            max: value + 300,
+            max: value + 3500 - 10,
             step: 10,
             slide: function( event, ui ) {
                 $( "#bid-value" ).val( ui.value );

@@ -9,6 +9,8 @@
                     <span> Your bid has won. This Page will be featured for the coming week.</span>
                     {% elif reqst.type == 'BE' %}
                     <span> There was an error while processing your card. We will try again tomorrow morning.</span>
+                    {% elif reqst.type == 'BO' %}
+                    <span> You were outbidded.</span>
                     {% else %}
                     <span> There was an error while processing your card. This Page has been removed from bidding.</span>
                     {% endif %}
