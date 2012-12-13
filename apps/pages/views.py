@@ -671,7 +671,7 @@ def settings(request, slug=None):
 
     now = timezone.now()
     nextMonday = now.date() + dateclass.timedelta(7 - now.weekday())
-    endWeek = now.date() + dateclass.timedelta(11 - now.weekday())
+    endWeek = now.date() + dateclass.timedelta(13 - now.weekday())
     day = now.isoweekday() #5
     hour = now.hour #4pm
     mint = now.minute
