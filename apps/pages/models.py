@@ -31,6 +31,11 @@ MEMBERSHIP_TYPE = (
         ('EM','Employee'),
 )
 
+PAGE_LOVE_STATUS = (
+        ('A', 'Active'),
+        ('Q', 'Queue'),
+)
+
 
 class PageRequest(models.Model):
     from_page = models.ForeignKey('Pages', related_name='from_page')
@@ -66,15 +71,23 @@ class PagePositions(models.Model):
     position = models.IntegerField(blank = True, null = True)
 
 
+class PageLoves(models.Model):
+    page = models.ForeignKey('Pages')
+    user = models.ForeignKey(UserProfile)
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length='1', choices=PAGE_LOVE_STATUS, default='A')
+
+
 class Pages(models.Model):
     name = models.CharField(max_length='200')
     friends = models.ManyToManyField('self', related_name='friends')
     loves = models.IntegerField(default=0)
+    loves_limit = models.IntegerField(default=100)
     username = models.CharField(max_length='200', validators=[validate_slug], unique=True)
     url = models.URLField(max_length='2000', null=True, blank=True)
     content = models.TextField(null=True, blank=True)
     user = models.ForeignKey(UserProfile, related_name='pages')
-    users_loved = models.ManyToManyField(UserProfile, related_name='pages_loved', null=True, blank=True)
+    users_loved = models.ManyToManyField(UserProfile, through='PageLoves', related_name='pages_loved', null=True, blank=True)
     admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
     category = models.CharField(max_length=100, default='Undefined')
@@ -107,23 +120,28 @@ class Pages(models.Model):
         return "/%s" % self.photo.thumb_name
 
     def get_lovers(self):
-        return self.users_loved.all()
+        lovers = self.users_loved.all()
+        return lovers
 
     def get_lovers_count(self):
-        return self.users_loved.count()
+        return self.get_lovers().count()
+
+    def get_lovers_active(self):
+        lovers = self.users_loved.filter(pageloves__status='A')
+        return lovers
 
     def get_lovers_public(self):
-        lovers = self.users_loved.all()
+        lovers = self.get_lovers()
         lovers = [lover for lover in lovers if not lover.check_option('loves','Private')]
         return lovers
 
     def get_lovers_public_count(self):
-        lovers = self.users_loved.all()
+        lovers = self.get_lovers()
         lovers = [lover for lover in lovers if not lover.check_option('loves','Private')]
         return len(lovers)
 
     def get_lovers_private_count(self):
-        lovers = self.users_loved.all()
+        lovers = self.get_lovers()
         lovers = [lover for lover in lovers if lover.check_option('loves','Private')]
         return len(lovers)
 
@@ -132,6 +150,9 @@ class Pages(models.Model):
         lovers = self.get_lovers_public()[:70]
         lovers = sorted(lovers, key=lambda s: s.get_followers_count(), reverse=True)
         return lovers
+
+    def get_page_loves_limit(self):
+        return self.loves_limit
 
     def get_posts(self):
         return self.posts.all()
