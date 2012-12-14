@@ -117,8 +117,8 @@ class ReprocessBids(Task):
                 pr = PageRequest(from_page = bid.page, to_page = bid.page, type = 'BB')
                 pr.save()
                 now = timezone.now()
-                #delta = dateclass.timedelta(days=21)
-                delta = dateclass.timedelta(minutes=5)
+                delta = dateclass.timedelta(days=21)
+                #delta = dateclass.timedelta(minutes=5)
                 bid.page.is_disabled = now + delta
                 bid.page.save()
                 bid.status = 0

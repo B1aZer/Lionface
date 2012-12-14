@@ -169,7 +169,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 {% else %}
                 <tr>
                     <td  align="center" colspan="2" >
-                        <span>Bidding will close Friday, {{ closing|date:"M jS" }} at {{ closing|date:"g A" }} EST (GMT {{ closing|date:"O"|format_date }})</span>
+                        <span>Bidding will close {{ closing|date:"l, M jS" }} at {{ closing|date:"g A T" }} (GMT {{ closing|date:"O"|format_date }})</span>
                     </td>
                 </tr>
                 <tr>
@@ -217,7 +217,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             {% else %}
             <tr>
                 <td colspan="2" >
-                    <div class="no_bidding"> Sorry, bidding is currently over. Bidding will reopen in {{ nextm|timeuntil }} (Monday, {{ nextm|date:"M. d" }})</div>
+                    <div class="no_bidding"> Sorry, bidding is currently over. Bidding will reopen in {{ nextm|timeuntil }} ({{ nextm|date:"l, M. d" }})</div>
                 </td>
             </tr>
             {% endif %}
@@ -338,9 +338,9 @@ $(document).ready(function() {
             max: value + 3500 - 10,
             step: 10,
             slide: function( event, ui ) {
-                $( "#bid-value" ).val( ui.value );
+                $( "#bid-value" ).val( '$' + ui.value );
                 if (ui.value < value) {
-                    $( "#bid-value" ).val( value );
+                    $( "#bid-value" ).val( '$' + value );
                 }
             },
             change: function(event, ui) {

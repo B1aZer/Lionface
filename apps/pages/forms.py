@@ -161,6 +161,7 @@ class PageSettingsForm(forms.ModelForm):
         fields = ('name','url','username','category', 'content', )
         widgets = {
             'username' : forms.TextInput(attrs={'readonly':'readonly'}),
+            'content' : forms.Textarea(attrs={'rows':'5'}),
         }
 
     def __init__(self, *args, **kwargs):
