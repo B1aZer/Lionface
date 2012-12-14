@@ -1,11 +1,6 @@
 ##next###
-#normal tabbing
-#restrict submui periods
 watch mvideo balls
 cofer
-page shold be allowed - user not
-change card info
-feature busn pages ?
 ### DoS ###
 loop problem
 

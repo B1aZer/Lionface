@@ -152,6 +152,32 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
         </tr>
+        <tr>
+            <td align="right">Loves amount: </td>
+            <td>
+                <div style="margin-left: 15px;">{{ page.get_page_loves_limit }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Buy loves: </td>
+            <td>
+                 <div id="loves-slider" style="width: 260px; margin: 15px;"></div>
+            </td>
+        </tr>
+        {% if love_error %}
+        <tr>
+            <td align="right">Errors: </td>
+            <td>
+                <div style="margin-left: 15px;"> {{ love_error }} </div>
+            </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td align="right">Loves price: </td>
+            <td>
+                <input name="loves_value" id="loves-value" type="text" value="$100" style="margin: 15px;" readonly/>
+            </td>
+        </tr>
 		<tr>
 			<td colspan="2" style="padding: 17px; text-align: left;">
 			<span style="font-size: 11pt; font-weight: bold;">Featured Pages</span><br /> On the main business landing page, eight random business Pages are displayed to users. These Pages change on each load, for each user. However, three of those slots have been reserved for Featured Pages. Featured Pages will load every time, for every user. These three slots are handed out weekly to the highest bidders. Bidding starts every Monday and ends Friday. If you win on Friday, your Page will be featured for 1 week starting the coming Monday.<br />
@@ -339,16 +365,29 @@ $(document).ready(function() {
             step: 10,
             slide: function( event, ui ) {
                 $( "#bid-value" ).val( '$' + ui.value );
-                if (ui.value < value) {
+                // lower limit
+                if (ui.value < value && ui.value != 0) {
                     $( "#bid-value" ).val( '$' + value );
                 }
             },
             change: function(event, ui) {
-                if (ui.value < value) {
+                if (ui.value < value && ui.value != 0) {
                     $( this ).slider( "option", "value", value );
                 }
             },
                 
+    }); 
+    
+    /** loves slider */
+    $( "#loves-slider" ).slider({
+            value:100,
+            range: "min",
+            min: 0,
+            max: 3500,
+            step: 100,
+            slide: function( event, ui ) {
+                $( "#loves-value" ).val( '$' + ui.value );
+            },
     }); 
 });
 </script>

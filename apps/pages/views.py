@@ -442,6 +442,8 @@ def love_count(request):
                         page.loves = page.get_lovers().count() + 1
                         #page.users_loved.add(request.user)
                         PageLoves.objects.create(user=request.user,page=page).save()
+                        if page.type == 'BS':
+                            page.loves_limit = page.loves_limit - 1
                         page.save()
                         data['status'] = 'OK'
                         data['loved'] = page.loves
@@ -449,6 +451,8 @@ def love_count(request):
                     page.loves = page.get_lovers().count() - 1
                     PageLoves.objects.filter(user=request.user,page=page).delete()
                     #page.users_loved.remove(request.user)
+                    if page.type == 'BS':
+                        page.loves_limit = page.loves_limit + 1
                     page.save()
                     data['status'] = 'OK'
                     data['loved'] = page.loves
@@ -664,6 +668,7 @@ def settings(request, slug=None):
     from django.conf import settings
     active = 'basics'
     error = ''
+    love_error = ''
 
     stripe_error = ''
     stripe.api_key = settings.STRIPE_API_KEY
@@ -709,11 +714,18 @@ def settings(request, slug=None):
 
     form = PageSettingsForm(instance=page)
     if request.method == 'POST':
+        amount = 0
+        lamount = 0
         token = request.POST.get('stripeToken', None)
         bid = request.POST.get('bid_value', None)
+        if bid:
+            amount = int(bid.strip().replace('$',''))
         active = request.POST.get('active', None)
         last4 = request.POST.get('last4', None)
         ctype = request.POST.get('ctype', None)
+        loves = request.POST.get('loves_value', None)
+        if loves:
+            lamount = int(loves.strip().replace('$',''))
         # adding card info
         if 'cancel_bid' in request.POST:
             bid = page.get_max_bid()
@@ -749,35 +761,57 @@ def settings(request, slug=None):
             except:
                 stripe_error = 'An error occurred while processing your card'
         # bidding
-        elif bid:
-            amount = int(bid.strip().replace('$',''))
-            ebid = page.get_max_bid()
-            if ebid:
-                bid = ebid
-            else:
-                bid = Bids( page = page)
-            # do not process bids lower than previous
-            if bid.amount < amount:
-                bid.amount = amount
-                bid.user = request.user
-                # save only for permitted period
-                if show_bids and \
-                        not page.is_disabled and \
-                        amount >= min_bid:
-                    # save bid
-                    bid.save()
-                    # find all outbidders
-                    outbs = Bids.objects.filter(status=1, amount__lt=bid.amount)
-                    max_three = bids[:3]
-                    for outb in outbs:
-                        # if in old
-                        if outb in old_three \
-                                and outb not in max_three:
-                                # but not in new
-                            pr = PageRequest(from_page = outb.page, to_page = outb.page, type = 'BO')
-                            pr.save()
-            else:
-                error = "Can't process bid lower than previous"
+        elif amount or lamount:
+            # loves
+            if lamount:
+                ch_amount = lamount * 100
+                stripe_id = page.get_stripe_id_for(request.user)
+                try:
+                    stripe.Charge.create(
+                        amount=ch_amount, # 1500 - $15.00 this time
+                        currency="usd",
+                        customer=stripe_id,
+                        description="Loves for %s, user: %s" % (page.name, request.user)
+                    )
+                    page.loves_limit = page.loves_limit + lamount
+                    # TODO: need testing
+                    users_inq = PageLoves.objects.filter(page=page,status='Q')[:lamount]
+                    for quser in users_inq:
+                        quser.status='A'
+                        quser.save()
+                        page.loves_limit = page.loves_limit - 1
+                    page.save()
+                except:
+                    love_error = 'An error occurred while processing your card'
+            # bids
+            if amount:
+                ebid = page.get_max_bid()
+                if ebid:
+                    bid = ebid
+                else:
+                    bid = Bids( page = page)
+                # do not process bids lower than previous
+                if bid.amount < amount:
+                    bid.amount = amount
+                    bid.user = request.user
+                    # save only for permitted period
+                    if show_bids and \
+                            not page.is_disabled and \
+                            amount >= min_bid:
+                        # save bid
+                        bid.save()
+                        # find all outbidders
+                        outbs = Bids.objects.filter(status=1, amount__lt=bid.amount)
+                        max_three = bids[:3]
+                        for outb in outbs:
+                            # if in old
+                            if outb in old_three \
+                                    and outb not in max_three:
+                                    # but not in new
+                                pr = PageRequest(from_page = outb.page, to_page = outb.page, type = 'BO')
+                                pr.save()
+                else:
+                    error = "Can't process bid lower than previous"
         # just form
         else:
             form = PageSettingsForm(data=request.POST, instance=page)
@@ -797,6 +831,7 @@ def settings(request, slug=None):
                     'startw': nextMonday,
                     'endw': endWeek,
                     'closing': closing,
+                    'love_error': love_error,
                 },
                 RequestContext(request)
             )
