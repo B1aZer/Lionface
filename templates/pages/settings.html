@@ -134,7 +134,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
         </tr>
         <tr>
             <td align="left" colspan="2">
-				<span style="font-weight: bold;">Updates:</span> These administrators may post Updates to the Page. Page Updates will be seen in the News Feed of users who have loved your Page.<br /><br />
+				<span style="font-weight: bold;">Updates:</span> These administrators may post Updates to the Page. Page Updates will be seen in the News Feed of users who have Loved your Page.<br /><br />
 				<span style="font-weight: bold;">Photos:</span> These administrators may change the Page's profile image, as well as the Page's cover photo.<br /><br />
 				<span style="font-weight: bold;">Basics:</span> These administrators may edit the basic information of the Page, such as the Page name, external URL, category, and Page bio.<br /><br />
 				<span style="font-weight: bold;">Calendar:</span> These administrators may post and edit events on the Calendar. They may choose to automatically post Updates 24 hours before an event. Additionally, Calendar administrators can initiate Inter-Page or In-House discussions.<br /><br />
@@ -152,6 +152,12 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
         </tr>
+		<tr>
+			<td colspan="2" style="padding: 17px; text-align: left;">
+			<span style="font-size: 11pt; font-weight: bold;">Featured Pages</span><br /> On the main business landing page, eight random business Pages are displayed to users. These Pages change on each load, for each user. However, three of those slots have been reserved for Featured Pages. Featured Pages will load every time, for every user. These three slots are handed out weekly to the highest bidders. Bidding starts every Monday and ends Friday. If you win on Friday, your Page will be featured for 1 week starting the coming Monday.<br />
+<span style="font-size: 8pt; color: #777;">To bid, you must enter a valid credit card.</span>
+			</td>
+		</tr>
         {% if request.user|is_customer_for:page %}
             {% if show_bids %}
                 {% if page.is_disabled %}
@@ -163,7 +169,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 {% else %}
                 <tr>
                     <td  align="center" colspan="2" >
-                        <span>Bidding will close Friday, {{ closing|date:"M jS" }} at {{ closing|date:"g A" }}, GMT {{ closing|date:"O"|format_date }}</span>
+                        <span>Bidding will close Friday, {{ closing|date:"M jS" }} at {{ closing|date:"g A" }} EST (GMT {{ closing|date:"O"|format_date }})</span>
                     </td>
                 </tr>
                 <tr>
@@ -194,16 +200,17 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 </tr>
                     {% if page.get_max_bid %}
                 <tr>
-                    <td align="right">Current Bid:<div> <span style="font-size: 8pt;">Week:{{ startw|date:"M jS" }} to {{ endw|date:"M jS" }}</span></div> </td>
+                    <td align="right">Current Bid:<div> <span style="font-size: 8pt;">Week: {{ startw|date:"M jS" }} to {{ endw|date:"M jS" }}</span></div> </td>
                     <td>
-                        <span style="margin: 15px;">${{ page.get_max_bid_value }}</span>
+                        <div style="padding: 21px; color: #124; font-size: 11pt;">${{ page.get_max_bid_value }} 
+							<span style="font-size: 8pt; margin-left: 17px; color: #777;">Winning bids will be processed Friday evening.</span></div>
                     </td>
                 </tr>
                     {% endif %}
                 <tr>
                     <td align="right">&nbsp;</td>
                     <td>
-                        <span style="margin: 15px;"> {{ request.user|get_card_type:page }}: **** **** **** {{ request.user|get_last_four:page }}</span><a id="show_card_info" href="#" style="margin: 15px;">Replace Card</a>
+                        <span style="padding-left: 21px;"> {{ request.user|get_card_type:page }}: **** **** **** {{ request.user|get_last_four:page }}</span><a id="show_card_info" href="#" style="margin: 15px;">Replace Card</a>
                     </td>
                 </tr> 
                 {% endif %}
@@ -216,23 +223,23 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             {% endif %}
         {% endif %}
         <tr id="card_info" {% if request.user|is_customer_for:page %} style="display:none" {% endif %}>
-            <td align="right">To make a bid enter card info: </td>
-            <td>
+            <td align="right" style="padding: 8px;">Visa<br />Mastercard<br />American Express<br />JCR<br />Discover </td>
+            <td style="padding: 8px; margin: 8px 0; background: #E0E5E7;">
                     <div class="payment-errors">
                         {{ stripe_error }}
                     </div>
                 <!--<form action="" method="POST" id="payment-form">-->
-                  <div class="form-row">
+                  <div class="form-row" style="padding: 0px; margin: 0px; width: auto; display: inline-block;">
                     <label>Card Number</label>
                     <input type="text" size="20" autocomplete="off" class="card-number"/>
                     <input name="last4" type="hidden" readonly class="card-last-four"/>
                     <input name="ctype" type="hidden" readonly class="card-type"/>
                   </div>
-                  <div class="form-row">
+                  <div class="form-row" style="padding: 0px; margin: 0px; width: auto; margin-left: 17px; display: inline-block;">
                     <label>CVC</label>
                     <input type="text" size="4" autocomplete="off" class="card-cvc"/>
-                  </div>
-                  <div class="form-row">
+                  </div><br /><br />
+                  <div class="form-row" style="padding: 0px; margin: 0px; width: auto; display: inline-block;">
                     <label>Expiration (MM/YYYY)</label>
                     <input type="text" size="2" class="card-expiry-month"/>
                     <span> / </span>
@@ -331,9 +338,9 @@ $(document).ready(function() {
             max: value + 3500 - 10,
             step: 10,
             slide: function( event, ui ) {
-                $( "#bid-value" ).val( '$' + ui.value );
+                $( "#bid-value" ).val( ui.value );
                 if (ui.value < value) {
-                    $( "#bid-value" ).val( '$' + value );
+                    $( "#bid-value" ).val( value );
                 }
             },
             change: function(event, ui) {
