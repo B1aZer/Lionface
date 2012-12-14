@@ -189,7 +189,7 @@ def save(request):
             if image_form.is_valid():
                 img = image_form.save(request.user)
                 img.make_activity()
-                img.generate_thumbnail(175, 175)
+                img.generate_thumbnail(158, 158)
                 post.images.add(img)
             else:
                 data['status'] = 'fail'

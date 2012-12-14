@@ -458,7 +458,7 @@ LionFace.Images.prototype = {
             var winw = $('.image_zone_view').width();
             var winh = $('.image_zone_view').height();
             var ratioX, ratioY, scale, newWidth, newHeight;
-            
+
             ratioX = winw / $(image).width();
             ratioY = winh / $(image).height();
             scale = ratioX < ratioY ? ratioX : ratioY;
@@ -729,6 +729,6 @@ LionFace.Images.prototype = {
 
 };
 
-$(function() {         
+$(function() {
     LionFace.Images = new LionFace.Images();
 });

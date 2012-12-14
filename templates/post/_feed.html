@@ -1,5 +1,6 @@
 {% load media comments format_results friends %}
 {% load oembed_tags %}
+{% include_media 'images.js' %}
 
 {% for item in items %}
 {% if not notification %}
@@ -16,10 +17,19 @@
 
     {% endblock %}
     {{ item.render|smileys|excerpt|linebreaks|color_tags }}
-    <div class="attached-images">
+    <div class="image_container post">
+        <ul class="ui-sortable">
         {% for image in item.post.images.all %}
-            <img src="/{{ image.image.thumb_name }}" alt="">
+            <li class="album_shadow post">
+                <div style="background: url('/{{ image.image.thumb_name }}') #FFF" data-original-url="/{{ image.image.url }}" class="image_album post">
+                    <div id="image_settings post" style="display: none;">
+                        <a href="#" data-activity="0" id="make_primary" style="float: left;" title="Make Primary Photo">+</a>
+                        <a href="#" id="delete" style="float: right;" title="Delete Photo">x</a>
+                    </div>
+                </div>
+            </li>
         {% endfor %}
+        </ul>
     </div>
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
@@ -208,3 +218,9 @@
 
 {% endblock %}
 {% endif %}
+
+<script type="text/javascript">
+    $(function() {
+        $(".ui-sortable").sortable();
+    });
+</script>
