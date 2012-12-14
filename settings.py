@@ -211,6 +211,8 @@ MEDIA_BUNDLES = (
         'js/jquery.autosize-1.13.min.js',
         #'js/jquery-ui-1.9.1.min.js',
         'js/jquery-ui-1.8.24.min.js',
+        'js/load-image.min.js',
+        'js/jquery.form.js',
         'js/site.js',
     ),
     ('user.js',

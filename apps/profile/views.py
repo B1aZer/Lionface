@@ -74,20 +74,21 @@ def images(request, username, rows_show=4):
         if form.is_valid():
             image = form.save(profile_user)
             image.make_activity()
-            try:
-                pil_object = pilImage.open(image.image.path)
-                w, h = pil_object.size
-                x, y = 0, 0
-                if w > h:
-                    x, y, w, h = int((w-h)/2), 0, h, h
-                elif h > w:
-                    x, y, w, h = 0, int((h-w)/2), w, w
-                new_pil_object = pil_object \
-                    .crop((x, y, x+w, y+h)) \
-                    .resize((200, 200))
-                new_pil_object.save(image.image.thumb_path)
-            except:
-                pass
+            image.generate_thumbnail(200, 200)
+            # try:
+            #     pil_object = pilImage.open(image.image.path)
+            #     w, h = pil_object.size
+            #     x, y = 0, 0
+            #     if w > h:
+            #         x, y, w, h = int((w-h)/2), 0, h, h
+            #     elif h > w:
+            #         x, y, w, h = 0, int((h-w)/2), w, w
+            #     new_pil_object = pil_object \
+            #         .crop((x, y, x+w, y+h)) \
+            #         .resize((200, 200))
+            #     new_pil_object.save(image.image.thumb_path)
+            # except:
+            #     pass
             return redirect('profile.views.images', username=profile_user.username)
     else:
         form = ImageForm()
@@ -300,20 +301,21 @@ def profile(request, username):
          and form.is_valid():
             image = form.save(profile_user)
             image.make_activity()
-            try:
-                pil_object = pilImage.open(image.image.path)
-                w, h = pil_object.size
-                x, y = 0, 0
-                if w > h:
-                    x, y, w, h = int((w-h)/2), 0, h, h
-                elif h > w:
-                    x, y, w, h = 0, int((h-w)/2), w, w
-                new_pil_object = pil_object \
-                    .crop((x, y, x+w, y+h)) \
-                    .resize((200, 200))
-                new_pil_object.save(image.image.thumb_path)
-            except:
-                pass
+            image.generate_thumbnail(200, 200)
+            # try:
+            #     pil_object = pilImage.open(image.image.path)
+            #     w, h = pil_object.size
+            #     x, y = 0, 0
+            #     if w > h:
+            #         x, y, w, h = int((w-h)/2), 0, h, h
+            #     elif h > w:
+            #         x, y, w, h = 0, int((h-w)/2), w, w
+            #     new_pil_object = pil_object \
+            #         .crop((x, y, x+w, y+h)) \
+            #         .resize((200, 200))
+            #     new_pil_object.save(image.image.thumb_path)
+            # except:
+            #     pass
             return redirect('profile.views.profile', username=profile_user.username)
 
         if 'message' in request.POST:
@@ -326,7 +328,6 @@ def profile(request, username):
                 return HttpResponseRedirect(request.path)
     else:
         form = ImageForm()
-        
 
     if request.method == 'GET' and 'albums' in request.GET:
         """Albums view"""

@@ -1,3 +1,6 @@
+var MAX_UPLOAD_IMAGES = 21;
+
+
 LionFace.Profile = function() {
     this.runner();
 }
@@ -12,7 +15,7 @@ LionFace.Profile.prototype = {
             this.bind_albums();
             this.bind_love_list();
         }
-
+        this.attach_image_count = 0;
     },
 
     //restrict image size and format before upload
@@ -28,7 +31,7 @@ LionFace.Profile.prototype = {
                     else {
                         $('.upload_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 1mb )</li></ul>');
                     }
-                } 
+                }
                 else if(this.files[0].type == 'image/gif') {
                     $('#submit_img_btn').hide();
                     if ($('.errorlist').length) {
@@ -36,7 +39,7 @@ LionFace.Profile.prototype = {
                     }
                     else {
                         $('.upload_form').prepend('<ul class="errorlist"><li>Gif images are not allowed</li></ul>');
-                    }      
+                    }
                 }
                 else if(this.files[0].type.indexOf("image") == -1) {
                     $('#submit_img_btn').hide();
@@ -45,18 +48,18 @@ LionFace.Profile.prototype = {
                     }
                     else {
                         $('.upload_form').prepend('<ul class="errorlist"><li>Please upload a valid image</li></ul>');
-                    }      
-                }       
+                    }
+                }
                 else{
                     $('#submit_img_btn').show();
-                    $('.errorlist').html(''); 
+                    $('.errorlist').html('');
                 }
             });
 
         $("#upload_picture").click(function(event){
             event.stopPropagation();
-            $('.upload_form').show(); 
-        });  
+            $('.upload_form').show();
+        });
 
         $('#upload_cancel').click(function(event) {
             $('.upload_form').fadeOut(function(){
@@ -70,7 +73,7 @@ LionFace.Profile.prototype = {
 
         $("#send_message").click(function(event){
             event.stopPropagation();
-            $('.send_message_form').show(); 
+            $('.send_message_form').show();
         });
 
         $('.noPhoto').hover(
@@ -100,17 +103,29 @@ LionFace.Profile.prototype = {
 
 
         $("#postboxbutton").click(function() {
-            var url = '/posts/save/'
-            make_request({
-                url:url,
-                data: $('#postform').serialize(), 
-                callback: function(data) {
+            var options = {
+                url: "/posts/save/",
+                type: "POST",
+                dataType: "JSON",
+                success: function(data) {
+                    if (data.status === 'OK') {
                         $("#news_feed").prepend(data.html);
                         $('.postbox_textarea').val('');
                         console.log('saving');
                         make_excerpts();
-                },
-            });
+                    } else {
+                        if ($('.errorlist').length) {
+                            $('.errorlist').html(data.errors);
+                        }
+                        else {
+                            $('#attached-images').append('<ul class="errorlist">' + data.errors + '</ul>');
+                        }
+                    }
+                    $("#attached-images ul").html("");
+                    this.attach_image_count = 0;
+                }
+            };
+            $("#postform").ajaxSubmit(options);
             return false;
         });
 
@@ -138,13 +153,37 @@ LionFace.Profile.prototype = {
                     }
                 });
 
-                return false;   
+                return false;
             }
         });
     */
 
         $('.postbox_textarea').autosize();
 
+        /* attach images */
+        $( "#attached-images ul").sortable();
+    },
+
+    attach_image: function(attached_images) {
+        if (this.attach_image_count > MAX_UPLOAD_IMAGES) {
+            create_message("Too many images", "error");
+            return;
+        }
+        var $attached_images = $(attached_images);
+        $attached_images.find("ul").append("<li><input class='attach-image-file' type='file' name='image' style='display: none;'></li>");
+        $(".attach-image-file").on("change", function(e) {
+            // TODO: check uploaded image size
+            // if(e.target.files[0].size > 3145728) {
+            window.loadImage(
+                e.target.files[0],
+                function (img) {
+                    $attached_images.find("ul li:last").append(img);
+                },
+                {maxWidth: 100}
+            );
+        });
+        $attached_images.find(".attach-image-file:last").click();
+        this.attach_image_count += 1;
     },
 
     bind_albums : function() {
@@ -152,7 +191,7 @@ LionFace.Profile.prototype = {
         var self_class = this;
 
         /** Create album */
-        $(document).on('submit','#create_album_form',function(e) {    
+        $(document).on('submit','#create_album_form',function(e) {
             e.preventDefault();
             var albums = parseInt(LionFace.User.album_count);
             var url = 'album_create/';
@@ -176,7 +215,7 @@ LionFace.Profile.prototype = {
         });
 
         /** Delete album */
-        $(document).on('click','.albums_edit',function(e) {    
+        $(document).on('click','.albums_edit',function(e) {
             var self = $(this);
             var url = 'delete_album/';
             var albums = parseInt(LionFace.User.album_count);
@@ -184,7 +223,7 @@ LionFace.Profile.prototype = {
             make_request({
                 url:url,
                 data:{
-                    album_id:album_id,    
+                    album_id:album_id,
                 },
                 callback:function(data){
                     if (data.status == 'OK') {
@@ -196,12 +235,12 @@ LionFace.Profile.prototype = {
                 },
             });
 
-        });       
+        });
 
         /** Show create form */
-        $(document).on('click','#create_album_link',function(e) {    
+        $(document).on('click','#create_album_link',function(e) {
             var toggled = $(this).data('toggled');
-            $(this).data('toggled', !toggled);     
+            $(this).data('toggled', !toggled);
             if (!toggled){
                 $('#create_album_form').show();
                 $('#album_name').focus();
@@ -219,11 +258,11 @@ LionFace.Profile.prototype = {
             self.replaceWith('<input id="edit_album_name" name="album_name">');
             $('#edit_album_name').focus();
             $('#edit_album_name').blur(function() {
-                var new_name = $(this).val(); 
+                var new_name = $(this).val();
                 if (new_name == '' || new_name == name) {
                     $(this).replaceWith(self);
                 }else {
-                    var url = 'album_name/' 
+                    var url = 'album_name/'
                     make_request({
                         url:url,
                         data:{
@@ -245,7 +284,7 @@ LionFace.Profile.prototype = {
         var pos_bgn = 0;
 
         $( ".albums, .sortable" ).sortable({
-            start: function(event, ui) { 
+            start: function(event, ui) {
                 pos_bgn = ui.item.index();
             },
             stop: function(event, ui) {
@@ -299,7 +338,7 @@ LionFace.Profile.prototype = {
             var url = params;
             if (params.length) {
                 make_request({
-                    url:url, 
+                    url:url,
                     callback:function (data) {
                         if (data.html) {
                             $('#result_table').html(data.html);
@@ -308,15 +347,15 @@ LionFace.Profile.prototype = {
                 });
             }
             else {
-                $('#result_table').html(''); 
+                $('#result_table').html('');
             }
 
-        });   
+        });
     },
 
 }
 
-$(function() {         
+$(function() {
     LionFace.Profile = new LionFace.Profile();
     LionFace.Profile.hide_album_hint();
 });

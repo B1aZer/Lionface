@@ -3,6 +3,8 @@ from django.db.models.signals import post_save, post_delete
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
+from PIL import Image as pilImage
+
 from account.models import UserProfile
 from post.models import QuerySet as CustomQuerySet
 from .fields import ImageWithThumbField
@@ -17,10 +19,10 @@ class ImageQuerySet(CustomQuerySet):
 
     def get_rows(self, start, count, row_size=DEFAULT_ROW_SIZE):
         qs = self.order_by('rating')
-        objs = qs[start*row_size:(start+count)*row_size]
+        objs = qs[start * row_size:(start + count) * row_size]
         rows = []
         for i in xrange(0, len(objs), row_size):
-            rows.append(objs[i:i+row_size])
+            rows.append(objs[i:i + row_size])
         return rows
 
     def get_row(self, start, row_size=DEFAULT_ROW_SIZE):
@@ -51,6 +53,7 @@ class Image(models.Model):
                 return user
             except:
                 return None
+
     def change_position(self, old, new, save=True, selflock=None):
         if old == new:
             return False
@@ -95,6 +98,23 @@ class Image(models.Model):
         self.owner.photo = self.image
         self.owner.save()
         return True
+
+    def generate_thumbnail(self, width, height, quiet=True):
+        try:
+            pil_object = pilImage.open(self.image.path)
+            w, h = pil_object.size
+            x, y = 0, 0
+            if w > h:
+                x, y, w, h = int((w - h) / 2), 0, h, h
+            elif h > w:
+                x, y, w, h = 0, int((h - w) / 2), w, w
+            new_pil_object = pil_object \
+                .crop((x, y, x + w, y + h)) \
+                .resize((width, height))
+            new_pil_object.save(self.image.thumb_path)
+        except:
+            if not quiet:
+                raise
 
 
 def create_image(sender, instance, created, **kwargs):

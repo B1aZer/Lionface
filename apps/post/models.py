@@ -38,19 +38,19 @@ class QuerySet(models.query.QuerySet):
         return ManagerClass(cls)
 
 
-
 class CustomQuerySet(QuerySet):
-    def get_news_post(self, ids = None):
+    def get_news_post(self, ids=None):
         """ getting news feed for post ids"""
         if ids:
             news = NewsItem.objects.filter(post_id__in=ids)
         else:
-            news = NewsItem.objects.filter(post_id__in=self.values_list('id', flat=True))
+            news = NewsItem.objects.filter(
+                post_id__in=self.values_list('id', flat=True))
         return news
 
 
 def add_http(url):
-    if re.search('http://',url):
+    if re.search('http://', url):
         pass
     else:
         if not url.startswith('/'):
@@ -59,14 +59,18 @@ def add_http(url):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(UserProfile,  related_name='user')
-    user_to = models.ForeignKey(UserProfile,  related_name='user_to', null=True, blank=True)
-    users_loved = models.ManyToManyField(UserProfile, related_name='posts_loved', null=True, blank=True)
+    user = models.ForeignKey(UserProfile, related_name='user')
+    user_to = models.ForeignKey(
+        UserProfile, related_name='user_to', null=True, blank=True)
+    users_loved = models.ManyToManyField(
+        UserProfile, related_name='posts_loved', null=True, blank=True)
     loves = models.PositiveIntegerField(default=0)
-    following = models.ManyToManyField(UserProfile,  related_name='follows', null=True, blank=True)
+    following = models.ManyToManyField(
+        UserProfile, related_name='follows', null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
+    images = models.ManyToManyField('images.Image')
     allow_commenting = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
     album = models.ForeignKey('Albums', related_name="posts", on_delete=models.SET_NULL, null=True, blank=True)
@@ -74,19 +78,30 @@ class Post(models.Model):
 
     # Function to attempt to return the inherited object for this item.
     def get_inherited(self):
-        try: return self.friendpost
-        except Exception: pass
-        try: return self.contentpost
-        except Exception: pass
-        try: return self.sharepost
-        except Exception: pass
-        try: return self.pagepost
-        except Exception: pass
-        try: return self.feedbackpost
-        except Exception: pass
+        try:
+            return self.friendpost
+        except Exception:
+            pass
+        try:
+            return self.contentpost
+        except Exception:
+            pass
+        try:
+            return self.sharepost
+        except Exception:
+            pass
+        try:
+            return self.pagepost
+        except Exception:
+            pass
+        try:
+            return self.feedbackpost
+        except Exception:
+            pass
         return self
 
-    # Return a list of users who are involved with this post (i.e. should see it)
+    # Return a list of users who are involved with this post (i.e. should see
+    # it)
     def get_involved(self):
         return self.user.friends.all()
 
@@ -130,7 +145,7 @@ class Post(models.Model):
     def get_album(self):
         return self.album
 
-    def get_news(self, ids = None):
+    def get_news(self, ids=None):
         if not ids:
             try:
                 news_feed = NewsItem.objects.filter(post_id=self.id)
@@ -155,16 +170,15 @@ class Post(models.Model):
 
     def get_comment_counter(self, user=None):
         value = comments.get_model().objects.filter(
-        content_type = ContentType.objects.get_for_model(self),
-        object_pk = self.pk,
-        site__pk = settings.SITE_ID,
-        is_removed = False,
+            content_type=ContentType.objects.get_for_model(self),
+            object_pk=self.pk,
+            site__pk=settings.SITE_ID,
+            is_removed=False,
         ).exclude(user__in=user.get_blocked()).count()
         return value
 
     def get_lovers(self):
         return self.users_loved.all()
-
 
 
 class FriendPost(Post):
@@ -183,11 +197,11 @@ class FriendPost(Post):
         return ""
 
 
-
 class FeedbackPost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='feedback_posts')
-    rating = models.IntegerField(validators=[MaxValueValidator(5),MinValueValidator(0)])
+    rating = models.IntegerField(
+        validators=[MaxValueValidator(5), MinValueValidator(0)])
     agreed = models.ManyToManyField(UserProfile, related_name='feedback_votes_agreed', null=True, blank=True)
     disagreed = models.ManyToManyField(UserProfile, related_name='feedback_votes_disagreed', null=True, blank=True)
 
@@ -197,16 +211,17 @@ class FeedbackPost(Post):
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
-        self.content = replace(self.content,max_width=527,fixed_width=527)
+        self.content = replace(self.content, max_width=527, fixed_width=527)
         # Linkify
-        self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
+        self.content = bleach.linkify(
+            self.content, target='_blank', filter_url=add_http)
 
         post_template = render_to_string('post/_pagefeedback.html',
-                { 'user':self.user,
-                    'page':self.page,
-                    'rating':self.rating,
-                    'content':mark_safe(self.content),
-                })
+                                         {'user': self.user,
+                                          'page': self.page,
+                                          'rating': self.rating,
+                                          'content': mark_safe(self.content),
+                                          })
 
         # replace last linebreak
         post_template = post_template.strip()
@@ -252,7 +267,6 @@ class FeedbackPost(Post):
         return 'P'
 
 
-
 class PagePost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='posts')
@@ -265,15 +279,16 @@ class PagePost(Post):
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
-        self.content = replace(self.content,max_width=527,fixed_width=527)
+        self.content = replace(self.content, max_width=527, fixed_width=527)
         # Linkify
-        self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
+        self.content = bleach.linkify(
+            self.content, target='_blank', filter_url=add_http)
 
         post_template = render_to_string('post/_pagepost.html',
-                { 'user':self.user,
-                    'page':self.page,
-                    'content':mark_safe(self.content),
-                })
+                                         {'user': self.user,
+                                          'page': self.page,
+                                          'content': mark_safe(self.content),
+                                          })
 
         # replace last linebreak
         post_template = post_template.strip()
@@ -313,7 +328,6 @@ class PagePost(Post):
         return 'P'
 
 
-
 class PageSharePost(PagePost):
     id_news = models.IntegerField(default=0)
     content_type = models.ForeignKey(ContentType, null=True, blank=True)
@@ -325,13 +339,13 @@ class PageSharePost(PagePost):
         return "pageshare post"
 
     def privacy(self):
-        return getattr(self.content_object,'type',"")
+        return getattr(self.content_object, 'type', "")
 
     def get_original_post(self):
         """Return last shared object(child)"""
         try:
-            if (isinstance(self.content_object,PagePost) or isinstance(self.content_object,FeedbackPost)) \
-                and not self.newsitem_set.all():
+            if (isinstance(self.content_object, PagePost) or isinstance(self.content_object, FeedbackPost)) \
+                    and not self.newsitem_set.all():
                 original = Post.objects.get(id=self.id_news)
                 original = original.get_inherited()
             else:
@@ -365,14 +379,15 @@ class ContentPost(Post):
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
-        self.content = replace(self.content,max_width=527,fixed_width=527)
+        self.content = replace(self.content, max_width=527, fixed_width=527)
         # Linkify
-        self.content = bleach.linkify(self.content,target='_blank',filter_url=add_http)
+        self.content = bleach.linkify(
+            self.content, target='_blank', filter_url=add_http)
 
         return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
     def get_id(self):
-         return self.id
+        return self.id
 
     def name(self):
         return self._meta.verbose_name
@@ -405,7 +420,6 @@ class ContentPost(Post):
         return self.privacy
 
 
-
 class SharePost(Post):
     content = models.TextField(null=True)
     id_news = models.IntegerField(default=0)
@@ -417,13 +431,13 @@ class SharePost(Post):
         return self._meta.verbose_name
 
     def privacy(self):
-        return getattr(self.content_object,'type',"")
+        return getattr(self.content_object, 'type', "")
 
     def get_original_post(self):
         """Return last shared object(child)"""
         try:
-            if (isinstance(self.content_object,PagePost) or isinstance(self.content_object,FeedbackPost)) \
-                and not self.newsitem_set.all():
+            if (isinstance(self.content_object, PagePost) or isinstance(self.content_object, FeedbackPost)) \
+                    and not self.newsitem_set.all():
                 original = Post.objects.get(id=self.id_news)
                 original = original.get_inherited()
             else:
@@ -449,18 +463,20 @@ class CustomQuerySet(QuerySet):
             return self.filter(id__in=post_ids)
         else:
             post_ids = [x.id
-                    for x in self
-                    if x.get_privacy == 'P' or
-                    (x.get_privacy == 'F' and x.get_owner().has_friend(user)) or
-                    (x.get_privacy == 'F' and x.get_owner() == user) or
-                    x.get_privacy == '']
+                        for x in self
+                        if x.get_privacy == 'P' or
+                        (x.get_privacy == 'F' and x.get_owner().has_friend(user)) or
+                        (x.get_privacy == 'F' and x.get_owner() == user) or
+                        x.get_privacy == '']
             return self.filter(id__in=post_ids)
-    def get_tagged_posts(self,tags):
+
+    def get_tagged_posts(self, tags):
         #import pdb;pdb.set_trace()
         tagged_posts = [x for x in self if x.post.tags.filter(name__in=tags)]
         if tagged_posts:
             self = list(chain(self, tagged_posts))
         return self
+
     def remove_similar(self):
         """ remove duplicates by Post.id"""
         duplicates = []
@@ -475,28 +491,33 @@ class CustomQuerySet(QuerySet):
             for id_item in ids:
                 self = self.exclude(id=id_item)
         return self
+
     def remove_to_other(self):
         """ Remove post from friends
         show only own posts"""
         for item in self:
             if isinstance(item.post.get_inherited(), ContentPost):
-                if item.post.user <> item.post.user_to:
+                if item.post.user != item.post.user_to:
                     self = self.exclude(id=item.id)
         return self
+
     def filter_blocked(self, user=None):
         if user and user.get_blocked():
             for item in self:
                 if item.get_owner() in user.get_blocked():
                     self = self.exclude(id=item.id)
         return self
+
     def get_profile_wall(self, users):
         """ test method """
         return self.filter(post__user_to__in=[users])
+
     def remove_page_posts(self):
         for item in self:
             if isinstance(item.post.get_inherited(), PagePost):
-                self = self.exclude(id = item.id)
+                self = self.exclude(id=item.id)
         return self
+
     def get_business_feed(self, user):
         """
         pages = user.get_loved()
@@ -516,6 +537,7 @@ class CustomQuerySet(QuerySet):
             else:
                 self = self.exclude(id=item.id)
         return self
+
     def get_nonprofit_feed(self, user):
         self = self.filter(user=user)
         for item in self:
@@ -556,8 +578,8 @@ class NewsItem(models.Model):
         return self.user.friends.all() | UserProfile.objects.filter(id=self.user.id)
 
     def get_id(self):
-         original = self.post.get_inherited()
-         return original.id
+        original = self.post.get_inherited()
+        return original.id
 
     def get_type(self):
         try:
@@ -588,7 +610,7 @@ class NewsItem(models.Model):
         original = self.post.get_inherited()
         if original._meta.verbose_name == 'friend post':
             owner = self.user
-            if owner.check_option('friend_list','Public'):
+            if owner.check_option('friend_list', 'Public'):
                 return 'P'
             else:
                 return 'F'
@@ -610,27 +632,26 @@ class NewsItem(models.Model):
 
     def get_page_thumb(self):
         post = self.post.get_inherited()
-        if hasattr(post,'page'):
+        if hasattr(post, 'page'):
             return post.page.get_thumb()
 
     def get_page_url(self):
         post = self.post.get_inherited()
-        if hasattr(post,'page'):
+        if hasattr(post, 'page'):
             return post.page.get_absolute_url()
 
     def get_comment_counter(self, user=None):
         value = comments.get_model().objects.filter(
-        content_type = ContentType.objects.get_for_model(self),
-        object_pk = self.pk,
-        site__pk = settings.SITE_ID,
-        is_removed = False,
+            content_type=ContentType.objects.get_for_model(self),
+            object_pk=self.pk,
+            site__pk=settings.SITE_ID,
+            is_removed=False,
         ).exclude(user__in=user.get_blocked()).count()
         return value
 
     @property
     def timestamp(self):
         return self.date
-
 
 
 def add_post_to_followings(sender, instance, created, **kwargs):
@@ -663,8 +684,10 @@ post_delete.connect(delete_news_feeds, sender=NewsItem)
 
 def change_default_settings(sender, instance, created, **kwargs):
     if created:
-        instance.allow_commenting = not instance.user.check_option('comment_default','Disabled')
-        instance.allow_sharing = not instance.user.check_option('share_default','Disabled')
+        instance.allow_commenting = not instance.user.check_option(
+            'comment_default', 'Disabled')
+        instance.allow_sharing = not instance.user.check_option(
+            'share_default', 'Disabled')
         instance.save()
 post_save.connect(change_default_settings, sender=ContentPost)
 post_save.connect(change_default_settings, sender=SharePost)
@@ -674,7 +697,7 @@ class Albums(models.Model):
     name = models.CharField(max_length=200)
     user = models.ForeignKey(UserProfile)
     date = models.DateTimeField(auto_now_add=True)
-    position = models.IntegerField(blank = True, null = True)
+    position = models.IntegerField(blank=True, null=True)
 
     def get_count(self):
         try:
@@ -686,7 +709,8 @@ class Albums(models.Model):
 def change_album_postion(sender, instance, created, **kwargs):
     if created:
         #getting max position
-        max_pos = Albums.objects.filter(user=instance.user).order_by("-position")[0].position
+        max_pos = Albums.objects.filter(
+            user=instance.user).order_by("-position")[0].position
         if max_pos is not None:
             instance.position = max_pos + 1
             instance.save()
@@ -697,19 +721,20 @@ post_save.connect(change_album_postion, sender=Albums)
 
 
 def change_album_postion_ondelete(sender, instance, **kwargs):
-    albums = Albums.objects.filter(position__gt=instance.position,user=instance.user)
+    albums = Albums.objects.filter(
+        position__gt=instance.position, user=instance.user)
     if albums.count() > 0:
         albums.update(position=F('position') - 1)
 post_delete.connect(change_album_postion_ondelete, sender=Albums)
+
 
 def remove_all_comments(sender, instance, **kwargs):
     """ remove comments
     after removing post, pk for post remains in objects model
     this is not good"""
     comms = comments.get_model().objects.filter(
-            content_type = ContentType.objects.get_for_model(instance),
-            object_pk = instance.pk,
-            site__pk = settings.SITE_ID)
+        content_type=ContentType.objects.get_for_model(instance),
+        object_pk=instance.pk,
+        site__pk=settings.SITE_ID)
     comms.delete()
 post_delete.connect(remove_all_comments, sender=Post)
-

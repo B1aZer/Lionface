@@ -37,7 +37,6 @@ from images.models import Image, ImageComments
 from images.forms import ImageForm
 
 
-
 try:
     import json
 except ImportError:
@@ -53,14 +52,14 @@ def main(request):
 
     if request.method == 'POST' and request.user.get_pages().count() == max_pages:
         messages.warning(request, 'Sorry only 12 pages are allowed')
-    if request.method == 'POST' and request.POST.get('type',None) and request.user.get_pages().count() <= max_pages:
-        if request.POST.get('type',None) == 'NP':
+    if request.method == 'POST' and request.POST.get('type', None) and request.user.get_pages().count() <= max_pages:
+        if request.POST.get('type', None) == 'NP':
             active = 'Nonprofit'
-            form = NonprofitForm(data = request.POST)
+            form = NonprofitForm(data=request.POST)
             form_nonp = form
         else:
             active = "Business"
-            form = BusinessForm(data = request.POST)
+            form = BusinessForm(data=request.POST)
             form_busn = form
         if form.is_valid() and request.user.get_pages().count() < max_pages:
             obj = form.save(commit=False)
@@ -81,13 +80,13 @@ def main(request):
         random.shuffle(pages)
 
     # grouping by rows for template [4 in row]
-    n=0
+    n = 0
     grouped_pages = []
     row = []
     for page in pages:
         n += 1
         row.append(page)
-        if n%4 == 0 or n == len(pages):
+        if n % 4 == 0 or n == len(pages):
             grouped_pages.append(row)
             row = []
 
@@ -123,13 +122,13 @@ def page(request, slug=None):
 
     if request.method == 'GET' and 'ajax' in request.GET:
         data = {}
-        template_name = request.GET.get('template_name',None)
+        template_name = request.GET.get('template_name', None)
         if template_name:
             try:
                 data['html'] = render_to_string('pages/micro/%s.html' % template_name,
-                {
-                    'page': page,
-                }, context_instance=RequestContext(request))
+                                                {
+                                                'page': page,
+                                                }, context_instance=RequestContext(request))
             except TemplateDoesNotExist:
                 data['html'] = "Sorry! Wrong template."
             return HttpResponse(json.dumps(data), "application/json")
@@ -137,34 +136,35 @@ def page(request, slug=None):
     image_height = page.cover_photo.height
 
     if request.method == 'POST' \
-     and 'album_image' in request.POST \
-     and request.user.is_authenticated() \
-     and request.user.check_option('pages_photos__%s' % page.id):
+        and 'album_image' in request.POST \
+        and request.user.is_authenticated() \
+            and request.user.check_option('pages_photos__%s' % page.id):
         album_form = ImageForm(request.POST, request.FILES)
         if album_form.is_valid():
             image = album_form.save(page)
             image.make_activity()
-            try:
-                pil_object = pilImage.open(image.image.path)
-                w, h = pil_object.size
-                x, y = 0, 0
-                if w > h:
-                    x, y, w, h = int((w-h)/2), 0, h, h
-                elif h > w:
-                    x, y, w, h = 0, int((h-w)/2), w, w
-                new_pil_object = pil_object \
-                    .crop((x, y, x+w, y+h)) \
-                    .resize((200, 200))
-                new_pil_object.save(image.image.thumb_path)
-            except:
-                pass
+            image.generate_thumbnail(200, 200)
+            # try:
+            #     pil_object = pilImage.open(image.image.path)
+            #     w, h = pil_object.size
+            #     x, y = 0, 0
+            #     if w > h:
+            #         x, y, w, h = int((w-h)/2), 0, h, h
+            #     elif h > w:
+            #         x, y, w, h = 0, int((h-w)/2), w, w
+            #     new_pil_object = pil_object \
+            #         .crop((x, y, x+w, y+h)) \
+            #         .resize((200, 200))
+            #     new_pil_object.save(image.image.thumb_path)
+            # except:
+            #     pass
             name = 'business-page' if page.type == 'BS' else 'nonprofit-page'
             return redirect(name, slug=page.username)
     else:
         album_form = ImageForm()
 
     if request.method == 'POST' \
-     and 'cover_image' in request.POST:
+            and 'cover_image' in request.POST:
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.cleaned_data['cover_photo']
@@ -172,18 +172,18 @@ def page(request, slug=None):
             f = StringIO(image.read())
             # PIL image
             img = pilImage.open(f)
-            ( width, height) = img.size
+            (width, height) = img.size
             if width < target_width:
                 target_height = int(height * (1.0 * target_width / width))
-                img = img.resize( (target_width, target_height) )
+                img = img.resize((target_width, target_height))
             elif width > target_width:
                 target_height = int(height * (1.0 * target_width / width))
-                img.thumbnail((target_width,target_height), pilImage.ANTIALIAS)
+                img.thumbnail((target_width, target_height), pilImage.ANTIALIAS)
             else:
                 pass
-            ( new_width, new_height) = img.size
+            (new_width, new_height) = img.size
             if new_height != restrict_height:
-                resize= True
+                resize = True
             # save to memory
             thumb = StringIO()
             img.save(thumb, 'JPEG')
@@ -203,6 +203,7 @@ def page(request, slug=None):
                     self.width = 0
                     self.height = 0
                     self.data_uri = None
+
                 def __repr__(self):
                     return self.data_uri
 
@@ -245,7 +246,7 @@ def page(request, slug=None):
 
 
 def reposition(request, slug=None):
-    data={'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if not slug:
         raise Http404
 
@@ -256,13 +257,13 @@ def reposition(request, slug=None):
 
     if request.method == 'POST' and 'top' in request.POST:
         top_pos = abs(int(request.POST['top']))
-        b64image = request.POST.get('image',None)
+        b64image = request.POST.get('image', None)
         #decoded_image = base64.b64decode(b64image + '=' * (-len(b64image) % 4))
         imgstr = re.search(r'base64,(.*)', b64image).group(1)
         mem_image = StringIO(imgstr.decode('base64'))
         #image = page.cover_photo
         img = pilImage.open(mem_image)
-        box = (0, top_pos, 900, top_pos+300)
+        box = (0, top_pos, 900, top_pos + 300)
         img = img.crop(box)
 
         cropped = StringIO()
@@ -323,18 +324,18 @@ def leaderboard(request):
     rest = pages[1:10]
 
     # group by cats
-    c=0
+    c = 0
     row = defaultdict(list)
     gp = defaultdict(list)
     for page in pages:
         # grouping by rows for template [4 in row]
         row[page.category].append(page)
         c = len(row[page.category])
-        if c%3 == 0:
+        if c % 3 == 0:
             gp[page.category].append(row[page.category])
-            row[page.category]=[]
+            row[page.category] = []
 
-    for k,v in row.items():
+    for k, v in row.items():
         if k not in gp:
             gp[k] = [v]
         else:
@@ -347,8 +348,8 @@ def leaderboard(request):
         'pages/leaderboard.html',
         {
             'pages': dict(pages),
-            'most_loved':most_loved,
-            'rest':rest,
+            'most_loved': most_loved,
+            'rest': rest,
         },
         RequestContext(request)
     )
@@ -363,14 +364,14 @@ def nonprofit(request):
 
     if request.method == 'POST' and request.user.get_pages().count() == max_pages:
         messages.warning(request, 'Sorry only 12 pages are allowed')
-    if request.method == 'POST' and request.POST.get('type',None) and request.user.get_pages().count() <= max_pages:
-        if request.POST.get('type',None) == 'NP':
+    if request.method == 'POST' and request.POST.get('type', None) and request.user.get_pages().count() <= max_pages:
+        if request.POST.get('type', None) == 'NP':
             active = 'Nonprofit'
-            form = NonprofitForm(data = request.POST)
+            form = NonprofitForm(data=request.POST)
             form_nonp = form
         else:
             active = "Business"
-            form = BusinessForm(data = request.POST)
+            form = BusinessForm(data=request.POST)
             form_busn = form
         if form.is_valid() and request.user.get_pages().count() < max_pages:
             obj = form.save(commit=False)
@@ -385,19 +386,19 @@ def nonprofit(request):
     pages = Pages.objects.filter(type='NP')
 
     # group by cats
-    c=0
+    c = 0
     row = defaultdict(list)
     gp = defaultdict(list)
     for page in pages:
         # grouping by rows for template [4 in row]
         row[page.category].append(page)
         c = len(row[page.category])
-        if c%4 == 0:
+        if c % 4 == 0:
             random.shuffle(row[page.category])
             gp[page.category].append(row[page.category])
-            row[page.category]=[]
+            row[page.category] = []
 
-    for k,v in row.items():
+    for k, v in row.items():
         if k not in gp:
             gp[k] = [v]
         else:
@@ -419,7 +420,7 @@ def nonprofit(request):
 
 
 def love_count(request):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if request.method == 'POST':
         page_id = request.POST.get('page_id')
         vote = request.POST.get('vote')
@@ -444,22 +445,22 @@ def love_count(request):
 
 
 def page_browsing(request, page_type='business'):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
 
     if page_type == "nonprofit":
         filter_labels = [filtr[0] for filtr in NONPROFIT_CATEGORY
-                        if Pages.objects.filter(category=filtr[0]).count()]
+                         if Pages.objects.filter(category=filtr[0]).count()]
         labels = [filtr[0] for filtr in NONPROFIT_CATEGORY]
         pages = Pages.objects.filter(type='NP').order_by('-loves')
     else:
         filter_labels = [filtr[0] for filtr in BUSINESS_CATEGORY
-                        if Pages.objects.filter(category=filtr[0]).count()]
+                         if Pages.objects.filter(category=filtr[0]).count()]
         labels = [filtr[0] for filtr in BUSINESS_CATEGORY]
         pages = Pages.objects.filter(type='BS').order_by('-loves')
 
     if request.method == 'GET':
-        ajax = request.GET.get('ajax',None)
-        filters = request.GET.getlist('filters[]',None)
+        ajax = request.GET.get('ajax', None)
+        filters = request.GET.getlist('filters[]', None)
         if filters:
             filter_cats = []
             for filtr in filters:
@@ -467,14 +468,14 @@ def page_browsing(request, page_type='business'):
             pages = pages.filter(category__in=filter_cats).order_by('-loves')
 
     # grouping by rows for template [4 in row]
-    n=0
-    col=2
+    n = 0
+    col = 2
     grouped_pages = []
     row = []
     for page in pages:
         n += 1
         row.append(page)
-        if n%col == 0 or n == pages.count():
+        if n % col == 0 or n == pages.count():
             grouped_pages.append(row)
             row = []
 
@@ -482,21 +483,20 @@ def page_browsing(request, page_type='business'):
 
     if filters and ajax:
         data['html'] = render_to_string(
-                                'pages/pages.html',
-                                    {
-                                        'pages':pages,
-                                    },
-                                    RequestContext(request)
-                                )
+            'pages/pages.html',
+            {
+            'pages': pages,
+            },
+            RequestContext(request)
+        )
         return HttpResponse(json.dumps(data), "application/json")
-
 
     return render_to_response(
         'pages/browse.html',
         {
-            'pages':pages,
-            'filters':filter_labels,
-            'page_type':page_type,
+            'pages': pages,
+            'filters': filter_labels,
+            'page_type': page_type,
         },
         RequestContext(request)
     )
@@ -504,14 +504,14 @@ def page_browsing(request, page_type='business'):
 
 @login_required
 def update(request):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if request.method == 'POST' and 'page_id' in request.POST:
         page_id = request.POST.get('page_id')
         content = request.POST.get('content')
         try:
             page = Pages.objects.get(id=int(page_id))
             if request.user in page.get_admins():
-                post = PagePost(user=request.user, content=content, page = page)
+                post = PagePost(user=request.user, content=content, page=page)
                 post.save()
 
                 #Tags
@@ -537,7 +537,7 @@ def update(request):
 
 @login_required
 def feedback(request):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if request.method == 'POST' and 'page_id' in request.POST:
         page_id = request.POST.get('page_id')
         content = request.POST.get('content')
@@ -545,7 +545,7 @@ def feedback(request):
         try:
             page = Pages.objects.get(id=int(page_id))
             if rating and not request.user.posted_review_for(page):
-                post = FeedbackPost(user=request.user, content=content, page = page, rating=rating)
+                post = FeedbackPost(user=request.user, content=content, page=page, rating=rating)
                 post.save()
 
                 #Tags
@@ -570,7 +570,7 @@ def feedback(request):
 
 
 def list_posts(request, slug=None):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if not slug:
         HttpResponse(json.dumps(data), "application/json")
     if slug:
@@ -599,16 +599,16 @@ def list_posts(request, slug=None):
             page = 1
 
     data['html'] = render_to_string('post/_page_feed.html',
-            {
-                'items':items,
-                'page':page,
-            }, context_instance=RequestContext(request))
+                                    {
+                                    'items': items,
+                                    'page': page,
+                                    }, context_instance=RequestContext(request))
     data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
 
 
 def list_feedback(request, slug=None):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if not slug:
         HttpResponse(json.dumps(data), "application/json")
     if slug:
@@ -637,10 +637,10 @@ def list_feedback(request, slug=None):
             page = 1
 
     data['html'] = render_to_string('post/_page_feed.html',
-            {
-                'items':items,
-                'page':page,
-            }, context_instance=RequestContext(request))
+                                    {
+                                    'items': items,
+                                    'page': page,
+                                    }, context_instance=RequestContext(request))
     data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -665,8 +665,8 @@ def settings(request, slug=None):
         raise Http404
 
     now = timezone.now()
-    day = now.isoweekday() #5
-    hour = now.hour #4pm
+    day = now.isoweekday()  # 5
+    hour = now.hour  # 4pm
     mint = now.minute
     if (mint > 19 and mint < 30) or (mint > 49 and mint <= 59):
         show_bids = False
@@ -706,17 +706,17 @@ def settings(request, slug=None):
                     customer.save()
             except stripe.CardError, e:
                 body = e.json_body
-                err  = body['error']
-                stripe_error = err.get('message','Card was declined')
+                err = body['error']
+                stripe_error = err.get('message', 'Card was declined')
             except:
                 stripe_error = 'An error occurred while processing your card'
         elif bid:
-            amount = int(bid.strip().replace('$',''))
+            amount = int(bid.strip().replace('$', ''))
             ebid = page.get_max_bid()
             if ebid:
                 bid = ebid
             else:
-                bid = Bids( page = page)
+                bid = Bids(page=page)
             # do not process bids lower than previous
             if bid.amount < amount:
                 bid.amount = amount
@@ -733,32 +733,32 @@ def settings(request, slug=None):
             if form.is_valid():
                 form.save()
     return render_to_response(
-            "pages/settings.html",
-                {
-                    'page': page,
-                    'form': form,
-                    'active': active,
-                    'min_bid': min_bid,
-                    'stripe_error': stripe_error,
-                    'show_bids': show_bids,
-                    'error': error,
-                },
-                RequestContext(request)
-            )
+        "pages/settings.html",
+        {
+        'page': page,
+        'form': form,
+        'active': active,
+        'min_bid': min_bid,
+        'stripe_error': stripe_error,
+        'show_bids': show_bids,
+        'error': error,
+        },
+        RequestContext(request)
+    )
 
 
 @login_required
 def settings_admins(request, slug=None):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
     if request.method == 'POST':
-        admin_username = request.POST.get('admin_username',None)
-        removing = request.POST.get('remove',None)
-        adding = request.POST.get('add',None)
-        option = request.POST.get('option',None)
+        admin_username = request.POST.get('admin_username', None)
+        removing = request.POST.get('remove', None)
+        adding = request.POST.get('add', None)
+        option = request.POST.get('option', None)
         if option:
             option, admin_username = option.split('__')
         try:
@@ -767,18 +767,18 @@ def settings_admins(request, slug=None):
                 page.admins.add(admin)
             if removing:
                 page.admins.remove(admin)
-                options = admin.find_options('pages',page)
+                options = admin.find_options('pages', page)
                 options.delete()
             if option:
-                if admin.check_option("%s__%s" % (option,page.id)):
-                    admin.set_option("%s__%s" % (option,page.id),False)
+                if admin.check_option("%s__%s" % (option, page.id)):
+                    admin.set_option("%s__%s" % (option, page.id), False)
                 else:
-                    admin.set_option("%s__%s" % (option,page.id),True)
+                    admin.set_option("%s__%s" % (option, page.id), True)
             data['status'] = 'OK'
             data['html'] = render_to_string("pages/settings_admins.html",
-                    {
-                        'page':page,
-                    }, RequestContext(request))
+                                            {
+                                            'page': page,
+                                            }, RequestContext(request))
         except:
             HttpResponse(json.dumps(data), "application/json")
     return HttpResponse(json.dumps(data), "application/json")
@@ -791,7 +791,7 @@ def delete_page(request, slug=None):
     except Pages.DoesNotExist:
         raise Http404
     if 'delete_page' in request.POST:
-        password = request.POST.get('confirm_password',None)
+        password = request.POST.get('confirm_password', None)
         if check_password(password, request.user.password):
             if page.user == request.user and request.user.check_option('pages_delete__%s' % page.id):
                 delta = dateclass.timedelta(days=7)
@@ -810,45 +810,44 @@ def delete_page(request, slug=None):
 
 @login_required
 def prevent_deletion(request, slug=None):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
     page.for_deletion = None
     page.save()
-    data['status']='OK'
+    data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
-
 
 
 @login_required
 def page_content(request, slug=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    content = request.POST.get('content','')
+    content = request.POST.get('content', '')
     page.content = content
     page.save()
     data['html'] = render_to_string("pages/page_content.html",
-                    {
-                        'page':page,
-                    }, RequestContext(request))
+                                    {
+                                    'page': page,
+                                    }, RequestContext(request))
     return HttpResponse(json.dumps(data), "application/json")
 
 
 @login_required
 def send_friend_request(request, slug=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     from_page = None
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
     if request.method == 'POST':
-        page_id = request.POST.get('page_id',None)
+        page_id = request.POST.get('page_id', None)
         if page_id:
             try:
                 from_page = Pages.objects.get(id=int(page_id))
@@ -872,33 +871,33 @@ def send_friend_request(request, slug=None):
     if not from_page:
         if user_pages:
             data['pages'] = render_to_string("pages/page_choose.html",
-                    {
-                        'pages' : user_pages,
-                    }, RequestContext(request))
+                                             {
+                                             'pages': user_pages,
+                                             }, RequestContext(request))
         else:
-            data['status']='FAIL'
+            data['status'] = 'FAIL'
     else:
         # check if request exist or in friends
         topage_requests = [one_page.from_page for one_page in page.get_requests()]
         if from_page in page.get_friends() or from_page in topage_requests:
-            data['status']='FAIL'
+            data['status'] = 'FAIL'
             return HttpResponse(json.dumps(data), "application/json")
-        page_request = page.to_page.create(from_page = from_page, \
-                                        to_page = page)
+        page_request = page.to_page.create(from_page=from_page,
+                                           to_page=page)
 
     return HttpResponse(json.dumps(data), "application/json")
 
 
 @login_required
 def remove_friend_page(request, slug=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     friend = None
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
     if request.method == 'POST':
-        page_id = request.POST.get('page_id',None)
+        page_id = request.POST.get('page_id', None)
         if page_id:
             try:
                 friend = Pages.objects.get(id=int(page_id))
@@ -909,9 +908,9 @@ def remove_friend_page(request, slug=None):
         friend = user_page_friends[0]
     if not friend:
         data['pages'] = render_to_string("pages/page_choose.html",
-                    {
-                        'pages' : user_page_friends,
-                    }, RequestContext(request))
+                                         {
+                                         'pages': user_page_friends,
+                                         }, RequestContext(request))
     else:
         page.friends.remove(friend)
         PageRequest.objects.filter(to_page=page, from_page=friend).delete()
@@ -922,7 +921,7 @@ def remove_friend_page(request, slug=None):
 
 @login_required
 def accept_friend_request(request, slug=None, request_id=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     if request_id:
         try:
             page_request = PageRequest.objects.get(id=int(request_id))
@@ -934,7 +933,7 @@ def accept_friend_request(request, slug=None, request_id=None):
 
 @login_required
 def decline_friend_request(request, slug=None, request_id=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     if request_id:
         try:
             page_request = PageRequest.objects.get(id=int(request_id))
@@ -946,7 +945,7 @@ def decline_friend_request(request, slug=None, request_id=None):
 
 @login_required
 def hide_friend_request(request, slug=None, request_id=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     if request_id:
         try:
             page_request = PageRequest.objects.get(id=int(request_id))
@@ -958,7 +957,7 @@ def hide_friend_request(request, slug=None, request_id=None):
 
 @login_required
 def accept_community_request(request, slug=None, request_id=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
@@ -968,9 +967,9 @@ def accept_community_request(request, slug=None, request_id=None):
             member = Membership.objects.get(id=int(request_id))
             member.confirm()
             data['html'] = render_to_string("pages/micro/_community_list.html",
-                    {
-                        'page':page,
-                    }, RequestContext(request))
+                                            {
+                                            'page': page,
+                                            }, RequestContext(request))
         except Membership.DoesNotExist:
             raise Http404
     return HttpResponse(json.dumps(data), "application/json")
@@ -978,7 +977,7 @@ def accept_community_request(request, slug=None, request_id=None):
 
 @login_required
 def decline_community_request(request, slug=None, request_id=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     if request_id:
         try:
             member = Membership.objects.get(id=int(request_id))
@@ -990,7 +989,7 @@ def decline_community_request(request, slug=None, request_id=None):
 
 @login_required
 def friends_position(request, slug=None):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     if request.method == 'POST':
         position_bgn = request.POST.get('position_bgn')
         position_end = request.POST.get('position_end')
@@ -1009,37 +1008,35 @@ def friends_position(request, slug=None):
                 obj.position = position_end
                 obj.save()
                 if position_bgn < position_end:
-                    positions = PagePositions.objects.filter(to_page=page, \
-                            position__gte=position_bgn, \
-                            position__lte=position_end, \
-                            from_page__type=friend.type).exclude(id=obj.id)
+                    positions = PagePositions.objects.filter(to_page=page,
+                                                             position__gte=position_bgn,
+                                                             position__lte=position_end,
+                                                             from_page__type=friend.type).exclude(id=obj.id)
                     positions.update(position=F('position') - 1)
                 elif position_bgn > position_end:
                     positions = PagePositions.objects.filter(to_page=page,
-                            position__gte=position_end, \
-                            position__lte=position_bgn, \
-                            from_page__type=friend.type).exclude(id=obj.id)
+                                                             position__gte=position_end,
+                                                             position__lte=position_bgn,
+                                                             from_page__type=friend.type).exclude(id=obj.id)
                     positions.update(position=F('position') + 1)
                 # this fix only for broken positioning
                 positions.filter(position__lt=0).update(position=0)
             except:
                 raise Http404
 
-
-
     return HttpResponse(json.dumps(data), "application/json")
 
 
 @login_required
 def community_check(request, slug=None):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    name = request.POST.get('name',None)
-    checked = request.POST.get('checked',None)
-    if checked =='true':
+    name = request.POST.get('name', None)
+    checked = request.POST.get('checked', None)
+    if checked == 'true':
         checked = True
     else:
         checked = False
@@ -1060,13 +1057,13 @@ def community_check(request, slug=None):
 
 @login_required
 def community_text(request, slug=None):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    content = request.POST.get('content',None)
-    parent_id = request.POST.get('parent_id',None)
+    content = request.POST.get('content', None)
+    parent_id = request.POST.get('parent_id', None)
     if parent_id == 'employees_div':
         page.text_employees = content
         page.save()
@@ -1081,22 +1078,22 @@ def community_text(request, slug=None):
         data['status'] = 'OK'
     if data['status'] == 'OK':
         data['html'] = render_to_string("pages/micro/_community_info.html",
-                    {
-                        'content':content,
-                    }, RequestContext(request))
+                                        {
+                                        'content': content,
+                                        }, RequestContext(request))
     return HttpResponse(json.dumps(data), "application/json")
 
 
 @login_required
 def community_date(request, slug=None):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    date = request.POST.get('date',None)
-    date_type = request.POST.get('date_type',None)
-    member_id = request.POST.get('id',None)
+    date = request.POST.get('date', None)
+    date_type = request.POST.get('date_type', None)
+    member_id = request.POST.get('id', None)
     try:
         member = Membership.objects.get(id=member_id)
     except Membership.DoesNotExist:
@@ -1116,18 +1113,18 @@ def community_date(request, slug=None):
 
 @login_required
 def page_members(request, slug=None, member_id=None):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
     member = None
     new = False
-    member_type = request.POST.get('member_type',None)
-    from_date = request.POST.get('from_date',None)
-    to_date = request.POST.get('to_date',None)
+    member_type = request.POST.get('member_type', None)
+    from_date = request.POST.get('from_date', None)
+    to_date = request.POST.get('to_date', None)
     user = request.user
-    delete_member = request.POST.get('delete',None)
+    delete_member = request.POST.get('delete', None)
     if member_id:
         try:
             member = Membership.objects.get(id=member_id)
@@ -1146,32 +1143,32 @@ def page_members(request, slug=None, member_id=None):
             if not member:
                 member = Membership()
                 new = True
-                member.user=user
-                member.page=page
-            member.type=member_type
-            member.from_date=from_date
+                member.user = user
+                member.page = page
+            member.type = member_type
+            member.from_date = from_date
             if to_date:
-                member.to_date=to_date
+                member.to_date = to_date
                 member.is_present = False
             else:
                 member.is_present = True
             try:
                 if user == member.get_user():
-                    if member.get_user().check_option('pages_removed__%s__%s' % (page.id,member.type)):
-                        date_old = member.get_user().check_option('pages_removed__%s__%s' % (page.id,member.type))
-                        date1= datetime.strptime(date_old,"%m/%d/%Y")
+                    if member.get_user().check_option('pages_removed__%s__%s' % (page.id, member.type)):
+                        date_old = member.get_user().check_option('pages_removed__%s__%s' % (page.id, member.type))
+                        date1 = datetime.strptime(date_old, "%m/%d/%Y")
                         date2 = datetime.today()
                         diff = date2 - date1
                         if diff.days >= 30:
-                            member.get_user().remove_option('pages_removed__%s__%s' % (page.id,member.type))
-                    if not (member.get_user().check_option('pages_removed__%s__%s' % (page.id,member.type)) and new):
+                            member.get_user().remove_option('pages_removed__%s__%s' % (page.id, member.type))
+                    if not (member.get_user().check_option('pages_removed__%s__%s' % (page.id, member.type)) and new):
                         member.save()
                         data['status'] = 'OK'
-                        data['redirect'] = reverse('user-loves',args=(request.user,))
+                        data['redirect'] = reverse('user-loves', args=(request.user,))
                         data['html'] = render_to_string("pages/micro/_community_list.html",
-                        {
-                            'page':page,
-                        }, RequestContext(request))
+                                                        {
+                                                        'page': page,
+                                                        }, RequestContext(request))
                     else:
                         data['message'] = 'Previous request denied. Unable to make new request for %s days.' % (30 - diff.days)
 
@@ -1189,30 +1186,31 @@ def images(request, slug, rows_show=4):
     ctype = ContentType.objects.get_for_model(Pages)
     qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
     manage_perm = request.user.is_authenticated() \
-     and request.user.check_option('pages_photos__%s' % page.id) \
-     and request.user in page.get_admins()
+        and request.user.check_option('pages_photos__%s' % page.id) \
+        and request.user in page.get_admins()
 
     if request.method == 'POST' \
-     and 'album_image' in request.POST \
-     and manage_perm:
+        and 'album_image' in request.POST \
+            and manage_perm:
         album_form = ImageForm(request.POST, request.FILES)
         if album_form.is_valid():
             image = album_form.save(page)
             image.make_activity()
-            try:
-                pil_object = pilImage.open(image.image.path)
-                w, h = pil_object.size
-                x, y = 0, 0
-                if w > h:
-                    x, y, w, h = int((w-h)/2), 0, h, h
-                elif h > w:
-                    x, y, w, h = 0, int((h-w)/2), w, w
-                new_pil_object = pil_object \
-                    .crop((x, y, x+w, y+h)) \
-                    .resize((200, 200))
-                new_pil_object.save(image.image.thumb_path)
-            except:
-                pass
+            image.generate_thumbnail(200, 200)
+            # try:
+            #     pil_object = pilImage.open(image.image.path)
+            #     w, h = pil_object.size
+            #     x, y = 0, 0
+            #     if w > h:
+            #         x, y, w, h = int((w-h)/2), 0, h, h
+            #     elif h > w:
+            #         x, y, w, h = 0, int((h-w)/2), w, w
+            #     new_pil_object = pil_object \
+            #         .crop((x, y, x+w, y+h)) \
+            #         .resize((200, 200))
+            #     new_pil_object.save(image.image.thumb_path)
+            # except:
+            #     pass
             return redirect('pages.views.images', slug=page.username)
     else:
         album_form = ImageForm()
@@ -1246,9 +1244,9 @@ def images_ajax(request, slug):
 
     ctype = ContentType.objects.get_for_model(Pages)
     qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
-    manage_perm =request.user.is_authenticated() \
-     and request.user in page.get_admins() \
-     and request.user.check_option('pages_photos__%s' % page.id)
+    manage_perm = request.user.is_authenticated() \
+        and request.user in page.get_admins() \
+        and request.user.check_option('pages_photos__%s' % page.id)
 
     if method in ['activity', 'delete', 'change_position'] and not manage_perm:
         raise Http404
@@ -1289,7 +1287,7 @@ def images_ajax(request, slug):
             if row < qs.total_rows():
                 image_row = qs.get_row(row)[-1:]
                 manage_perm = request.user in page.get_admins() \
-                 and request.user.check_option('pages_photos__%s' % page.id)
+                    and request.user.check_option('pages_photos__%s' % page.id)
                 data['html'] = render_to_string('images/li.html', {
                     'rows': image_row,
                     'manage_perm': manage_perm,
@@ -1335,9 +1333,9 @@ def images_comments_ajax(request, slug):
 
     ctype = ContentType.objects.get_for_model(Pages)
     qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
-    manage_perm =request.user.is_authenticated() \
-     and request.user in page.get_admins() \
-     and request.user.check_option('pages_photos__%s' % page.id)
+    manage_perm = request.user.is_authenticated() \
+        and request.user in page.get_admins() \
+        and request.user.check_option('pages_photos__%s' % page.id)
 
     try:
         image = qs.get(pk=request.REQUEST.get('pk', None))
@@ -1383,7 +1381,7 @@ def images_comments_ajax(request, slug):
 
 
 def count_agrees(request, item_id):
-    data = {'status' : 'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         post = FeedbackPost.objects.get(id=item_id)
     except FeedbackPost.DoesNotExist:
@@ -1400,7 +1398,7 @@ def count_agrees(request, item_id):
 
 
 def count_disagrees(request, item_id):
-    data = {'status' : 'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         post = FeedbackPost.objects.get(id=item_id)
     except FeedbackPost.DoesNotExist:
@@ -1417,24 +1415,24 @@ def count_disagrees(request, item_id):
 
 
 def add_events(request, slug):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    event_id = request.POST.get('id',None)
-    name = request.POST.get('name',None)
-    date = request.POST.get('start',None)
+    event_id = request.POST.get('id', None)
+    name = request.POST.get('name', None)
+    date = request.POST.get('start', None)
     #allday = request.POST.get('allday',None)
-    delete = request.POST.get('del',None)
-    desc = request.POST.get('desc',None)
-    end = request.POST.get('end',None)
-    coords = request.POST.get('coords',None)
-    privacy = request.POST.get('privacy','public')
-    pages = request.POST.get('pages',None)
-    clone = request.POST.get('clone',None)
-    allow_commenting = request.POST.get('allow_commenting',None)
-    allow_sharing = request.POST.get('allow_sharing',None)
+    delete = request.POST.get('del', None)
+    desc = request.POST.get('desc', None)
+    end = request.POST.get('end', None)
+    coords = request.POST.get('coords', None)
+    privacy = request.POST.get('privacy', 'public')
+    pages = request.POST.get('pages', None)
+    clone = request.POST.get('clone', None)
+    allow_commenting = request.POST.get('allow_commenting', None)
+    allow_sharing = request.POST.get('allow_sharing', None)
     if date:
         date_beg = dateutil.parser.parse(date)
         if name:
@@ -1442,13 +1440,13 @@ def add_events(request, slug):
                 event = page.events_set.get(id=event_id)
             else:
                 event = Events(page=page)
-            event.name=name
-            event.date=date_beg
+            event.name = name
+            event.date = date_beg
             if end:
                 time1 = dateutil.parser.parse(end)
-                event.date_end=time1
+                event.date_end = time1
             if desc:
-                event.description=desc
+                event.description = desc
             if privacy != 'public':
                 privacies = json.loads(privacy)
                 pr = [pr[0].upper() for pr in privacies]
@@ -1469,10 +1467,10 @@ def add_events(request, slug):
                 coords = json.loads(coords)
                 event.remove_locations()
                 for coord in coords:
-                    loc = Locations(lat = coord.get('lat'), lng = coord.get('lng'), event = event)
+                    loc = Locations(lat=coord.get('lat'), lng=coord.get('lng'), event=event)
                     loc.save()
             else:
-                locs = Locations.objects.filter(event = event)
+                locs = Locations.objects.filter(event=event)
                 locs.delete()
             if pages:
                 pages = json.loads(pages)
@@ -1483,9 +1481,9 @@ def add_events(request, slug):
                         try:
                             spage = Pages.objects.get(username=page_name)
                             if not clone:
-                                req_count = PageRequest.objects.filter(from_page = page, to_page = spage, type = 'ER', event = event).count()
+                                req_count = PageRequest.objects.filter(from_page=page, to_page=spage, type='ER', event=event).count()
                                 if not req_count:
-                                    pr = PageRequest(from_page = page, to_page = spage, type = 'ER', event = event)
+                                    pr = PageRequest(from_page=page, to_page=spage, type='ER', event=event)
                                     pr.save()
                             else:
                                 event.tagged.add(spage)
@@ -1494,8 +1492,8 @@ def add_events(request, slug):
             if delete:
                 if event.page == page:
                     event.delete()
-            data['status']='OK'
-            data['id']=event.id
+            data['status'] = 'OK'
+            data['id'] = event.id
     return HttpResponse(json.dumps(data), "application/json")
 
 
@@ -1511,11 +1509,11 @@ def get_events(request, slug):
         classes = ''
         append = False
         ev = {
-                'id':event.id,
-                'owner_id':event.page.id,
-                'title':event.name,
-                'start':event.date.strftime("%Y-%m-%d %H:%M:%S"),
-            }
+            'id': event.id,
+            'owner_id': event.page.id,
+            'title': event.name,
+            'start': event.date.strftime("%Y-%m-%d %H:%M:%S"),
+        }
         if event.date_end:
             ev['end'] = event.date_end.strftime("%Y-%m-%d %H:%M:%S")
         if event.description:
@@ -1549,20 +1547,20 @@ def get_events(request, slug):
         from django.conf import settings
 
         comment_list = comments.get_model().objects.filter(
-        content_type = ContentType.objects.get_for_model(Events),
-        object_pk = event.pk,
-        site__pk = settings.SITE_ID,
-        is_removed = False,
+            content_type=ContentType.objects.get_for_model(Events),
+            object_pk=event.pk,
+            site__pk=settings.SITE_ID,
+            is_removed=False,
         )
         ev['comment_list'] = render_to_string('comments/list.html',
-                {
-                    'comment_list':comment_list,
-                }, RequestContext(request))
+                                              {
+                                              'comment_list': comment_list,
+                                              }, RequestContext(request))
         ev['comment_form'] = render_to_string('comments/form_event.html',
-                    {
-                        'item':event,
-                        'form': CommentForm(event),
-                    }, RequestContext(request))
+                                              {
+                                              'item': event,
+                                              'form': CommentForm(event),
+                                              }, RequestContext(request))
         ev['allow_commenting'] = event.allow_commenting
         ev['allow_sharing'] = event.allow_sharing
         for role in roles:
@@ -1574,15 +1572,15 @@ def get_events(request, slug):
 
 
 def change_event(request, slug):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    event_id = request.POST.get('id',None)
-    start = request.POST.get('start',None)
-    end = request.POST.get('end',None)
-    delete = request.POST.get('del',None)
+    event_id = request.POST.get('id', None)
+    start = request.POST.get('start', None)
+    end = request.POST.get('end', None)
+    delete = request.POST.get('del', None)
     try:
         event = page.events_set.get(id=event_id)
     except Events.DoesNotExist:
@@ -1591,27 +1589,27 @@ def change_event(request, slug):
         start = dateutil.parser.parse(start)
         event.date = start
         event.save()
-        data['status']='OK'
+        data['status'] = 'OK'
     if end:
         end = dateutil.parser.parse(end)
         event.date_end = end
         event.save()
-        data['status']='OK'
+        data['status'] = 'OK'
     if delete:
         if event.page == page:
             event.delete()
-            data['status']='OK'
+            data['status'] = 'OK'
 
     return HttpResponse(json.dumps(data), "application/json")
 
 
 def post_update_change(request, slug):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    value = request.POST.get('value',None)
+    value = request.POST.get('value', None)
     if value == 'true':
         page.post_update = True
         page.save()
@@ -1622,19 +1620,19 @@ def post_update_change(request, slug):
 
 
 def event_comments(request, slug):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    event_id = request.POST.get('event_id',None)
+    event_id = request.POST.get('event_id', None)
     if event_id:
         try:
             event = Events.objects.get(id=int(event_id))
             data['html'] = render_to_string('comments/form.html',
-                    {
-                        'item':event,
-                    }, RequestContext(request))
+                                            {
+                                            'item': event,
+                                            }, RequestContext(request))
         except Events.DoesNotExist:
             raise Http404
 
@@ -1642,13 +1640,13 @@ def event_comments(request, slug):
 
 
 def share_event(request, slug):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     try:
         page = Pages.objects.get(username=slug)
     except Pages.DoesNotExist:
         raise Http404
-    event_id = request.POST.get('event_id',None)
-    share_to = request.POST.get('share_to',None)
+    event_id = request.POST.get('event_id', None)
+    share_to = request.POST.get('share_to', None)
     try:
         event = Events.objects.get(id=int(event_id))
         content = mark_safe("""Check out <i>%s</i>, an event from <a href=\"%s\">%s</a>.""" % (event.name, page.get_absolute_url(), page.name))
@@ -1659,13 +1657,13 @@ def share_event(request, slug):
     if share_to and share_to != 'profile':
         try:
             share_page = Pages.objects.get(id=int(share_to))
-            post = PagePost(user=request.user, content=content, page = share_page)
+            post = PagePost(user=request.user, content=content, page=share_page)
             post.save()
         except:
             data['status'] = 'FAIL'
             return HttpResponse(json.dumps(data), "application/json")
     else:
-        post = ContentPost(content = content, user = request.user , user_to=request.user, type='P')
+        post = ContentPost(content=content, user=request.user, user_to=request.user, type='P')
         #post = SharePost(user = request.user, user_to=request.user , content = content )
         post.save()
 
@@ -1674,7 +1672,8 @@ def share_event(request, slug):
 
 def card_form(request, slug):
     if request.method == 'POST' and not request.user.is_customer():
-        import pdb;pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         # set your secret key: remember to change this to your live secret key in production
         # see your keys here https://manage.stripe.com/account
         stripe.api_key = "GfdATJpLDgriMZ66PPrK0Kf9XuCsZU9w"
