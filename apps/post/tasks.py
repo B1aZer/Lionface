@@ -14,7 +14,7 @@ class UpdateNewsFeeds(Task):
         elif isinstance(post, SharePost):
             ni, created = NewsItem.objects.get_or_create(user=post.user_to, post=post)
         elif isinstance(post, PagePost):
-            users = post.page.get_lovers()
+            users = post.page.get_lovers_active()
             for user in users:
                 ni, created = NewsItem.objects.get_or_create(user=user, post=post)
         else:

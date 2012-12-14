@@ -785,7 +785,7 @@ LionFace.Site.prototype = {
                                     me.html('Loved');
                                 }
                                 me.addClass('loved');   
-                                if (data.loved) {
+                                if (data.loved || data.loved == 0) {
                                     love_count = parseInt(data.loved);
                                 }
                                 else {
@@ -801,7 +801,7 @@ LionFace.Site.prototype = {
                                     me.html('Love');
                                 }
                                 me.removeClass('loved'); 
-                                if (data.loved) {
+                                if (data.loved || data.loved == 0) {
                                     love_count = parseInt(data.loved);
                                 }
                                 else {

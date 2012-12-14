@@ -430,14 +430,25 @@ def love_count(request):
             try:
                 page = Pages.objects.get(id=int(page_id))
                 if vote == 'up':
-                    page.loves = page.get_lovers().count() + 1
-                    page.users_loved.add(request.user)
-                    page.save()
-                    data['status'] = 'OK'
-                    data['loved'] = page.loves
+                    # if BUSINESS
+                    loves_limit = page.loves_limit
+                    if page.type == 'BS' \
+                            and loves_limit <= 0:
+                        # go away and wait for love
+                        PageLoves.objects.create(user=request.user,page=page,status='Q').save()
+                        data['status'] = 'OK'
+                        data['loved'] = page.loves
+                    else:
+                        page.loves = page.get_lovers().count() + 1
+                        #page.users_loved.add(request.user)
+                        PageLoves.objects.create(user=request.user,page=page).save()
+                        page.save()
+                        data['status'] = 'OK'
+                        data['loved'] = page.loves
                 if vote == 'down':
                     page.loves = page.get_lovers().count() - 1
-                    page.users_loved.remove(request.user)
+                    PageLoves.objects.filter(user=request.user,page=page).delete()
+                    #page.users_loved.remove(request.user)
                     page.save()
                     data['status'] = 'OK'
                     data['loved'] = page.loves
