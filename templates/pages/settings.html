@@ -175,7 +175,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
         <tr>
             <td align="right">Loves price: </td>
             <td>
-                <input name="loves_value" id="loves-value" type="text" value="$100" style="margin: 15px;" readonly/>
+                <input name="loves_value" id="loves-value" type="text" value="$0" style="margin: 15px;" readonly/>
             </td>
         </tr>
 		<tr>
@@ -380,7 +380,7 @@ $(document).ready(function() {
     
     /** loves slider */
     $( "#loves-slider" ).slider({
-            value:100,
+            value:0,
             range: "min",
             min: 0,
             max: 3500,
