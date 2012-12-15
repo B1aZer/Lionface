@@ -784,13 +784,8 @@ LionFace.Site.prototype = {
                                 else {
                                     me.html('Loved');
                                 }
-<<<<<<< HEAD
-                                me.addClass('loved');   
-                                if (data.loved || data.loved == 0) {
-=======
                                 me.addClass('loved');
-                                if (data.loved) {
->>>>>>> postbox
+                                if (data.loved || data.loved == 0) {
                                     love_count = parseInt(data.loved);
                                 }
                                 else {
@@ -805,13 +800,8 @@ LionFace.Site.prototype = {
                                 else {
                                     me.html('Love');
                                 }
-<<<<<<< HEAD
-                                me.removeClass('loved'); 
-                                if (data.loved || data.loved == 0) {
-=======
                                 me.removeClass('loved');
-                                if (data.loved) {
->>>>>>> postbox
+                                if (data.loved || data.loved == 0) {
                                     love_count = parseInt(data.loved);
                                 }
                                 else {
