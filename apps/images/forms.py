@@ -57,4 +57,5 @@ class ImageForm(forms.Form):
             owner=owner,
             post=post
         )
+        image.save()
         return image

@@ -47,6 +47,9 @@ class Image(models.Model):
 
     objects = ImageQuerySet.as_manager()
 
+    def __unicode__(self):
+        return self.image.name
+
     def get_owner(self):
         if isinstance(self.owner, UserProfile):
             return self.owner

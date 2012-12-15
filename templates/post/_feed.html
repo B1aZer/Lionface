@@ -1,6 +1,6 @@
 {% load media comments format_results friends %}
 {% load oembed_tags %}
-{% include_media 'images.js' %}
+{# {% include_media 'images.js' %} #}
 
 {% for item in items %}
 {% if not notification %}
@@ -17,12 +17,12 @@
 
     {% endblock %}
     {{ item.render|smileys|excerpt|linebreaks|color_tags }}
-    <div class="image_container post">
+    <div class="image_container feed">
         <ul class="ui-sortable">
-        {% for image in item.post.images.all %}
-            <li class="album_shadow post">
-                <div style="background: url('/{{ image.image.thumb_name }}') #FFF" data-original-url="/{{ image.image.url }}" class="image_album post">
-                    <div id="image_settings post" style="display: none;">
+        {% for image in item.get_post.images.all %}
+            <li class="album_shadow feed">
+                <div style="background: url('/{{ image.image.thumb_name }}') #FFF" data-original-url="/{{ image.image.url }}" class="image_album feed">
+                    <div id="image_settings feed" style="display: none;">
                         <a href="#" data-activity="0" id="make_primary" style="float: left;" title="Make Primary Photo">+</a>
                         <a href="#" id="delete" style="float: right;" title="Delete Photo">x</a>
                     </div>
@@ -218,9 +218,3 @@
 
 {% endblock %}
 {% endif %}
-
-<script type="text/javascript">
-    $(function() {
-        $(".ui-sortable").sortable();
-    });
-</script>

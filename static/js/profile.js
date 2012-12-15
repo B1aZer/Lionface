@@ -159,9 +159,6 @@ LionFace.Profile.prototype = {
     */
 
         $('.postbox_textarea').autosize();
-
-        /* attach images */
-        $( "#attached-images ul").sortable();
     },
 
     attach_image: function(attached_images) {
@@ -178,8 +175,11 @@ LionFace.Profile.prototype = {
                 e.target.files[0],
                 function (img) {
                     $attached_images.find("ul li:last").append(img);
+                    $attached_images.sortable();
                 },
-                {maxWidth: 100}
+                {
+                    maxWidth: 190
+                }
             );
         });
         $attached_images.find(".attach-image-file:last").click();
