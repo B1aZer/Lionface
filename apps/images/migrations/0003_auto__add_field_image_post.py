@@ -8,18 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding M2M table for field images on 'Post'
-        db.create_table('post_post_images', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('post', models.ForeignKey(orm['post.post'], null=False)),
-            ('image', models.ForeignKey(orm['images.image'], null=False))
-        ))
-        db.create_unique('post_post_images', ['post_id', 'image_id'])
+        # Adding field 'Image.post'
+        db.add_column('images_image', 'post',
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='images', null=True, to=orm['post.Post']),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Removing M2M table for field images on 'Post'
-        db.delete_table('post_post_images')
+        # Deleting field 'Image.post'
+        db.delete_column('images_image', 'post_id')
 
 
     models = {
@@ -86,47 +83,23 @@ class Migration(SchemaMigration):
             'image': ('images.fields.ImageWithThumbField', [], {'max_length': '100'}),
             'owner_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'owner_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
+            'post': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'images'", 'null': 'True', 'to': "orm['post.Post']"}),
             'rating': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
-        'pages.membership': {
-            'Meta': {'object_name': 'Membership'},
-            'from_date': ('django.db.models.fields.DateField', [], {}),
+        'images.imagecomments': {
+            'Meta': {'ordering': "['date']", 'object_name': 'ImageComments', 'db_table': "'images_comments'"},
+            'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_confirmed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_new': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_present': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['pages.Pages']"}),
-            'to_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': "'2'"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"})
+            'image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'comments'", 'to': "orm['images.Image']"}),
+            'message': ('django.db.models.fields.TextField', [], {}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"})
         },
-        'pages.pages': {
-            'Meta': {'object_name': 'Pages'},
-            'admins': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'pages_admin'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
-            'category': ('django.db.models.fields.CharField', [], {'default': "'Undefined'", 'max_length': '100'}),
-            'content': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'cover_photo': ('django.db.models.fields.files.ImageField', [], {'default': "'uploads/images/noCoverImage.png'", 'max_length': '100'}),
-            'featured': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'for_deletion': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'friends': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'friends_rel_+'", 'to': "orm['pages.Pages']"}),
-            'has_employees': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'has_interns': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'has_volunteers': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+        'images.imagecounter': {
+            'Meta': {'unique_together': "(('owner_type', 'owner_id'),)", 'object_name': 'ImageCounter', 'db_table': "'images_counter'"},
+            'count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_disabled': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'loves': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'members': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'member_of'", 'symmetrical': 'False', 'through': "orm['pages.Membership']", 'to': "orm['account.UserProfile']"}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': "'200'"}),
-            'photo': ('images.fields.ImageWithThumbField', [], {'default': "'uploads/images/noProfilePhoto.png'", 'max_length': '100'}),
-            'post_update': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'text_employees': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'text_interns': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'text_volunteers': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': "'2'"}),
-            'url': ('django.db.models.fields.URLField', [], {'max_length': "'2000'", 'null': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': "orm['account.UserProfile']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': "'200'"}),
-            'users_loved': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'pages_loved'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['account.UserProfile']"})
+            'owner_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'owner_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"})
         },
         'post.albums': {
             'Meta': {'object_name': 'Albums'},
@@ -136,47 +109,6 @@ class Migration(SchemaMigration):
             'position': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"})
         },
-        'post.contentpost': {
-            'Meta': {'object_name': 'ContentPost', '_ormbases': ['post.Post']},
-            'content': ('django.db.models.fields.CharField', [], {'max_length': '5000'}),
-            'post_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['post.Post']", 'unique': 'True', 'primary_key': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '1'})
-        },
-        'post.feedbackpost': {
-            'Meta': {'object_name': 'FeedbackPost', '_ormbases': ['post.Post']},
-            'agreed': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'feedback_votes_agreed'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
-            'content': ('django.db.models.fields.CharField', [], {'max_length': '5000'}),
-            'disagreed': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'feedback_votes_disagreed'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'feedback_posts'", 'to': "orm['pages.Pages']"}),
-            'post_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['post.Post']", 'unique': 'True', 'primary_key': 'True'}),
-            'rating': ('django.db.models.fields.IntegerField', [], {})
-        },
-        'post.friendpost': {
-            'Meta': {'object_name': 'FriendPost', '_ormbases': ['post.Post']},
-            'friend': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"}),
-            'post_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['post.Post']", 'unique': 'True', 'primary_key': 'True'})
-        },
-        'post.newsitem': {
-            'Meta': {'unique_together': "(('user', 'post'),)", 'object_name': 'NewsItem'},
-            'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'hidden': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'post': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['post.Post']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"})
-        },
-        'post.pagepost': {
-            'Meta': {'object_name': 'PagePost', '_ormbases': ['post.Post']},
-            'content': ('django.db.models.fields.CharField', [], {'max_length': '5000'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'posts'", 'to': "orm['pages.Pages']"}),
-            'post_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['post.Post']", 'unique': 'True', 'primary_key': 'True'})
-        },
-        'post.pagesharepost': {
-            'Meta': {'object_name': 'PageSharePost', '_ormbases': ['post.PagePost']},
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']", 'null': 'True', 'blank': 'True'}),
-            'id_news': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'pagepost_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['post.PagePost']", 'unique': 'True', 'primary_key': 'True'})
-        },
         'post.post': {
             'Meta': {'object_name': 'Post'},
             'album': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'posts'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['post.Albums']"}),
@@ -185,21 +117,12 @@ class Migration(SchemaMigration):
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'following': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'follows'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'images': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['images.Image']", 'symmetrical': 'False'}),
             'loves': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'shared': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'tags': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['tags.Tag']", 'symmetrical': 'False'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user'", 'to': "orm['account.UserProfile']"}),
             'user_to': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'user_to'", 'null': 'True', 'to': "orm['account.UserProfile']"}),
             'users_loved': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'posts_loved'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['account.UserProfile']"})
-        },
-        'post.sharepost': {
-            'Meta': {'object_name': 'SharePost', '_ormbases': ['post.Post']},
-            'content': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']", 'null': 'True', 'blank': 'True'}),
-            'id_news': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'post_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['post.Post']", 'unique': 'True', 'primary_key': 'True'})
         },
         'tags.tag': {
             'Meta': {'object_name': 'Tag'},
@@ -208,4 +131,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['post']
+    complete_apps = ['images']

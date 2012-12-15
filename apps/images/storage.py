@@ -49,6 +49,8 @@ class ImageStorage(FileSystemStorage):
                     os.close(fd)
                 except OSError, e:
                     if e.errno == errno.EEXIST:
+                        print('file', thumb_name, 'exists')
+                        print('file', full_path, 'exists')
                         # Ooops, the file exists. We need a new file name.
                         name = self.get_available_name(name)
                         full_path = self.path(name)

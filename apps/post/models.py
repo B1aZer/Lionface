@@ -70,7 +70,6 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
-    images = models.ManyToManyField('images.Image')
     allow_commenting = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
     album = models.ForeignKey('Albums', related_name="posts", on_delete=models.SET_NULL, null=True, blank=True)

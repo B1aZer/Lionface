@@ -17,11 +17,11 @@ class ImageForm(forms.Form):
             raise forms.ValidationError("Please select file and send it")
         if image.content_type == 'image/gif':
             raise forms.ValidationError("Sorry! Gif is prohibited.")
-        if image._size > 1*1024*1024:
+        if image._size > 1 * 1024 * 1024:
             raise forms.ValidationError("Image file too large ( > 1mb )")
         return image
 
-    def save(self, owner):
+    def save(self, owner, post=None):
         ctype = ContentType.objects.get_for_model(owner.__class__)
         try:
             counter = ImageCounter.objects \
@@ -54,6 +54,7 @@ class ImageForm(forms.Form):
         )
         image = Image.objects.create(
             image=self.cleaned_data['image'],
-            owner=owner
+            owner=owner,
+            post=post
         )
         return image

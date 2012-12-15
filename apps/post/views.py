@@ -187,10 +187,9 @@ def save(request):
         for image in request.FILES.getlist('image'):
             image_form = ImageForm(None, {'image': image})
             if image_form.is_valid():
-                img = image_form.save(request.user)
+                img = image_form.save(request.user, post)
                 img.make_activity()
                 img.generate_thumbnail(158, 158)
-                post.images.add(img)
             else:
                 data['status'] = 'fail'
                 data['errors'] = image_form.errors
