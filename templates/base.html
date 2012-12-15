@@ -52,7 +52,7 @@
 	src: url('fonts/Kievit-Bold-Custom.eot');
     src: local(my_font), url('{% media_url 'css/fonts/Kievit-Bold-Custom.ttf' %}') format('opentype');
 	font-weight: bold;
-}  
+}
 </style>
 
 <!-- Google Analytics -->
@@ -72,7 +72,7 @@
 
 <!--TimeZone-->
   {% include_media 'jstz.min.js' %}
-<script type="text/javascript">  
+<script type="text/javascript">
 var timezone = jstz.determine();
 </script>
 
@@ -95,7 +95,7 @@ var timezone = jstz.determine();
       <div id="footer">
 
 <div align="center">
-        
+
 <SCRIPT LANGUAGE="JavaScript">
 
     today=new Date();
@@ -108,7 +108,7 @@ var timezone = jstz.determine();
   <!--- Hide from old browsers
     document.write(y0);
   // end hiding --->
-</SCRIPT> 
+</SCRIPT>
 		<span style="color: transparent;">--</span> <a href="{% url public.views.about %}" target="_top" style="color: #777;">About</a>
 		<span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" target="_top" style="color: #777;">Terms</a>
 		<span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top" style="display: none;">Feedback</a>
@@ -120,6 +120,6 @@ var timezone = jstz.determine();
     {% block footer_js %}
     {% endblock %}
     {% block additional_js %}
-    {% endblock %} 
+    {% endblock %}
   </body>
 </html>

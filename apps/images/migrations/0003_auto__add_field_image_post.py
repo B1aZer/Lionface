@@ -8,52 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'ImageComments'
-        db.create_table('images_comments', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('image', self.gf('django.db.models.fields.related.ForeignKey')(related_name='comments', to=orm['images.Image'])),
-            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['account.UserProfile'])),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('message', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal('images', ['ImageComments'])
-
-        # Adding model 'ImageCounter'
-        db.create_table('images_counter', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('owner_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
-            ('owner_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('count', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal('images', ['ImageCounter'])
-
-        # Adding unique constraint on 'ImageCounter', fields ['owner_type', 'owner_id']
-        db.create_unique('images_counter', ['owner_type_id', 'owner_id'])
-
-        # Adding model 'Image'
-        db.create_table('images_image', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('image', self.gf('images.fields.ImageWithThumbField')(max_length=100)),
-            ('owner_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
-            ('owner_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('rating', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('activity', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal('images', ['Image'])
+        # Adding field 'Image.post'
+        db.add_column('images_image', 'post',
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='images', null=True, to=orm['post.Post']),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'ImageCounter', fields ['owner_type', 'owner_id']
-        db.delete_unique('images_counter', ['owner_type_id', 'owner_id'])
-
-        # Deleting model 'ImageComments'
-        db.delete_table('images_comments')
-
-        # Deleting model 'ImageCounter'
-        db.delete_table('images_counter')
-
-        # Deleting model 'Image'
-        db.delete_table('images_image')
+        # Deleting field 'Image.post'
+        db.delete_column('images_image', 'post_id')
 
 
     models = {
@@ -74,6 +37,7 @@ class Migration(SchemaMigration):
             'hidden': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'hidden_from'", 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
             'optional_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': "'200'"}),
             'photo': ('images.fields.ImageWithThumbField', [], {'default': "'uploads/images/noProfilePhoto.png'", 'max_length': '100'}),
+            'timezone': ('django.db.models.fields.CharField', [], {'max_length': "'200'", 'blank': 'True'}),
             'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
         },
         'auth.group': {
@@ -119,6 +83,7 @@ class Migration(SchemaMigration):
             'image': ('images.fields.ImageWithThumbField', [], {'max_length': '100'}),
             'owner_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'owner_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
+            'post': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'images'", 'null': 'True', 'to': "orm['post.Post']"}),
             'rating': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'images.imagecomments': {
@@ -135,6 +100,34 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'owner_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'owner_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"})
+        },
+        'post.albums': {
+            'Meta': {'object_name': 'Albums'},
+            'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'position': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"})
+        },
+        'post.post': {
+            'Meta': {'object_name': 'Post'},
+            'album': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'posts'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['post.Albums']"}),
+            'allow_commenting': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'allow_sharing': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'following': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'follows'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'loves': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'shared': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['tags.Tag']", 'symmetrical': 'False'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user'", 'to': "orm['account.UserProfile']"}),
+            'user_to': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'user_to'", 'null': 'True', 'to': "orm['account.UserProfile']"}),
+            'users_loved': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'posts_loved'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['account.UserProfile']"})
+        },
+        'tags.tag': {
+            'Meta': {'object_name': 'Tag'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         }
     }
 

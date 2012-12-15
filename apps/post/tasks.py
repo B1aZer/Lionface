@@ -2,6 +2,7 @@ from celery.task import Task
 from celery.registry import tasks
 from celery.contrib import rdb
 
+
 class UpdateNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
         from models import NewsItem, FriendPost, SharePost, ContentPost, PagePost
@@ -22,25 +23,29 @@ class UpdateNewsFeeds(Task):
 
 tasks.register(UpdateNewsFeeds)
 
+
 class DeleteNewsFeeds(Task):
     def run(self, post, user=None, **kwargs):
         from models import NewsItem, FriendPost
         #rdb.set_trace()
         post_wrapper = post
-        if user: users = [user]
-        else: users = post_wrapper.get_involved()
+        if user:
+            users = [user]
+        else:
+            users = post_wrapper.get_involved()
         for user in users:
             post_news = NewsItem.objects.filter(user=user, post=post_wrapper.post)
             if post_news:
                 if not isinstance(post_news[0].post.get_inherited(), FriendPost):
                     post_news.delete()
-                else:
-                    if post_news[0].user == user:
-                        post_news.delete()
+                elif post_news[0].user == user:
+                    post_news.delete()
 
 tasks.register(DeleteNewsFeeds)
 
 # Churns through the list of posts for the new friend and adds them to the news feed for this user.
+
+
 class AddFriendToFeed(Task):
     def run(self, user, friend, **kwargs):
         from models import NewsItem
