@@ -18,7 +18,7 @@
 <!--onclick="window.open('/{{ profile_user.photo }}');return false;"-->
 <div class="noPhoto_shadow">
 <div {% if profile_user|check_profile_image_visibility:request.user %}
-onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;" 
+onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;"
 {% endif %}
 	class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat;">
 		{% if request.user == profile_user %}
@@ -73,7 +73,7 @@ Website<br /><br />
 	{% if profile_user|has_friend:request.user or request.user == profile_user %}
 
 	<div id="postbox_shadow"><div id="postbox" style="margin-top: 25px;">
-		<form id="postform">{% csrf_token %}
+		<form id="postform" enctype="multipart/form-data">{% csrf_token %}
 			<div style="padding: 10px;" align="center">
 
 				<textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
@@ -90,7 +90,7 @@ Website<br /><br />
 												<input name="type" type="radio" value="P" id="checkbox1" name="public" style="cursor: pointer;">
 											<label for="checkbox1" style="cursor: pointer;"> Public</label></div>
 											<div class="post_option">
-												<input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;"> 
+												<input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;">
 											<label for="checkbox" style="cursor: pointer;"> Friends</label>
 												</div>
 										{% else %}
@@ -100,7 +100,7 @@ Website<br /><br />
 													<label for="checkbox1" style="cursor: pointer;"> Public</label>
 												</div>
 												<div class="post_option">
-													<input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;"> 
+													<input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;">
 													<label for="checkbox" style="cursor: pointer;"> Friends</label>
 												</div>
 											{% else %}
@@ -109,7 +109,7 @@ Website<br /><br />
 													<label for="checkbox1" style="cursor: pointer;"> Public</label>
 												</div>
 												<div class="post_option">
-													<input name="type" type="radio" value="F" id="checkbox" style="cursor: pointer;"> 
+													<input name="type" type="radio" value="F" id="checkbox" style="cursor: pointer;">
 													<label for="checkbox" style="cursor: pointer;"> Friends</label>
 												</div>
 											{% endif %}
@@ -118,21 +118,25 @@ Website<br /><br />
 										</div>
 									</div>
 							</td>
-									<td align="right">
-										<span class="post_feature_container">
-											<span onMouseOver="ShowContent('tags'); return false;" onMouseOut="HideContent('tags'); return false;">#</span>
-											<span onMouseOver="ShowContent('embed'); return false;" onMouseOut="HideContent('embed'); return false;">embed</span>
-											<span  onMouseOver="ShowContent('href'); return false;" onMouseOut="HideContent('href'); return false;">href</span></span> 
-											<div class="attach">Attach</div>
-											<div style="position: relative; display: inline-block;">
-												<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol (#) to create tags.</div>
-												<div class="post_feature" style="display: none;" id="embed">Copy and paste links from sites like Youtube and Vimeo and videos will automatically embed into your post. We also support TED.com videos.</div>
-												<div class="post_feature" style="display: none;" id="href">Use standard HTML a href code to create links within your post.</div>
-											</div>
-									<a href="#" class="post" id="postboxbutton">Post</a>
-									</td>
+								<td align="right">
+									<span class="post_feature_container">
+										<span onMouseOver="ShowContent('tags'); return false;" onMouseOut="HideContent('tags'); return false;">#</span>
+										<span onMouseOver="ShowContent('embed'); return false;" onMouseOut="HideContent('embed'); return false;">embed</span>
+										<span  onMouseOver="ShowContent('href'); return false;" onMouseOut="HideContent('href'); return false;">href</span></span>
+										<div class="attach" onclick="LionFace.Profile.attach_image('#attached-images'); return false;">Attach</div>
+										<div style="position: relative; display: inline-block;">
+											<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol (#) to create tags.</div>
+											<div class="post_feature" style="display: none;" id="embed">Copy and paste links from sites like Youtube and Vimeo and videos will automatically embed into your post. We also support TED.com videos.</div>
+											<div class="post_feature" style="display: none;" id="href">Use standard HTML a href code to create links within your post.</div>
+										</div>
+								<a href="#" class="post" id="postboxbutton">Post</a>
+							</td>
 				</tr></table>
 				</div>
+			</div>
+			<div id="attached-images" class="image_container_attach">
+				<ul>
+				</ul>
 			</div>
 		</form>
 	</div></div>

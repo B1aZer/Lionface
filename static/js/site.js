@@ -53,10 +53,10 @@ function make_request(input) {
     var type = input.type || false;
 
     /*
-    if (window.location.pathname.indexOf('/lionface/') >= 0) 
-    { 
+    if (window.location.pathname.indexOf('/lionface/') >= 0)
+    {
         url = '/lionface' +  url;
-    }   
+    }
     */
 
     if (data) {
@@ -72,20 +72,20 @@ function make_request(input) {
 
     $.ajax(url,
         {
-            type: request_type, 
+            type: request_type,
             data: data,
             success: function(data_success) {
 
                 if ($.isFunction(callback)) {
                     callback(data_success);
                 }
-            
+
             },
             error: function() {
                 console.log("error during request");
                 if ($.isFunction(error_call)) {
                     error_call();
-                }  
+                }
             }
         });
 
@@ -123,7 +123,7 @@ function make_excerpts() {
             }
         });
     }
-}    
+}
 
 /** scrolling embed fix */
 function fix_embed() {
@@ -133,14 +133,14 @@ function fix_embed() {
                 $(this).find('iframe').attr('scrolling','no');
             }
         })
-    }    
+    }
 }
 
 /** django messages */
 function create_message(message,type) {
     var type = type || 'warning';
     if (message) {
-        var message = $('<li>', { 'class':type}).html(message); 
+        var message = $('<li>', { 'class':type}).html(message);
         $('.messages').html(message);
     }
     else {
@@ -163,7 +163,7 @@ LionFace.Site.prototype = {
             this.bind_private();
         }
     },
-     
+
     hookLinks: function() {
         // Friend links.
         $(document).on('click','.link-add-friend', function() {
@@ -216,7 +216,7 @@ LionFace.Site.prototype = {
                 });
             }
             return false;
-        });   
+        });
 
         $(document).on('click', '.link-accept-friend', function() {
             var data = $(this).metadata();
@@ -295,7 +295,7 @@ LionFace.Site.prototype = {
                 });
             }
             return false;
-        });   
+        });
 
     },
 
@@ -329,12 +329,12 @@ LionFace.Site.prototype = {
         });
     },
 
-    share_post: function (elem) { 
+    share_post: function (elem) {
         if (LionFace.User.is_anonymous) {
             return
         }
         var url = "/posts/share/" + elem + "/";
-        var meta = $('.post_'+elem).metadata(); 
+        var meta = $('.post_'+elem).metadata();
         var post = $('.post_'+elem);
 
         if (post.find('.share_to').length) {
@@ -355,7 +355,7 @@ LionFace.Site.prototype = {
                             shared_div.hide();
                         }
                     }
-                });    
+                });
             }
             shared_div.show();
         }
@@ -372,12 +372,12 @@ LionFace.Site.prototype = {
                         $('.post_'+elem).find('.share_text').show();
                     }
                 }
-            });    
+            });
         }
 
-    },          
+    },
 
-    del_post: function (elem) { 
+    del_post: function (elem) {
         if (LionFace.User.is_anonymous) {
             return
         }
@@ -385,26 +385,26 @@ LionFace.Site.prototype = {
         url = "/posts/del/" + elem + "?user="+data.user+"&type="+data.type+"&model="+data.model;
         make_request({
             url:url,
-            callback:function(post_data) 
+            callback:function(post_data)
             {
                 if (post_data.status == 'OK') {
                     $('.post_'+elem).prev('hr').hide();
                     $('.post_'+elem).fadeOut();
                 }
             }
-        });    
-    },       
+        });
+    },
 
-    del_comm: function (elem) { 
+    del_comm: function (elem) {
         if (LionFace.User.is_anonymous) {
             return
         }
         url = "/posts/dlcom/" + elem + "/";
 
-        if (window.location.pathname.indexOf('lionface') >= 0) 
-        { 
+        if (window.location.pathname.indexOf('lionface') >= 0)
+        {
             url = '/lionface' +  url;
-        }       
+        }
 
         $.ajax(url,
             {
@@ -416,9 +416,9 @@ LionFace.Site.prototype = {
                 error: function() {
                     alert('Unable to delete data.');
                 }
-            });    
+            });
 
-    }, 
+    },
 
     post_comment: function (form_id, url) {
         if (LionFace.User.is_anonymous) {
@@ -436,7 +436,7 @@ LionFace.Site.prototype = {
                     $('#comment_form_'+form_id).closest('.comment_container').find('.comment_list:last').after(html.html);
                 }
                 else {
-                    $('#comment_form_'+form_id).closest('.comment_container').find('#comments').append(html.html);   
+                    $('#comment_form_'+form_id).closest('.comment_container').find('#comments').append(html.html);
                 }
                 $('#comment_form_'+form_id+' form textarea').val('');
                 /** following mark */
@@ -448,7 +448,7 @@ LionFace.Site.prototype = {
             }
 
         });
-    },      
+    },
 
     check_for_messages: function (){
         var url = '/check/messages/'
@@ -476,7 +476,7 @@ LionFace.Site.prototype = {
                 error_back: function() {
                     console.log('fail');
                 }
-            });  
+            });
 
     },
 
@@ -501,10 +501,10 @@ LionFace.Site.prototype = {
                         $('#notifications_id_notif span').remove();
                     }
                 }
-        
+
             }
         });
-    }, 
+    },
 
     toggle_privacy: function (post_id, privacy) {
         var post = $('#post_'+post_id)
@@ -565,7 +565,7 @@ LionFace.Site.prototype = {
                 });
             }
             return false;
-        });                
+        });
 
         /** Autocomplete for search input */
         var url_auto = '/auto/';
@@ -576,7 +576,7 @@ LionFace.Site.prototype = {
             }).keydown(function(e){
                 if (e.keyCode === 13){
                     console.log($(this).val());
-                    window.location = url_user + $(this).val();  
+                    window.location = url_user + $(this).val();
                 }
             }).data( "autocomplete" )._renderItem = function( ul, item ) {
                 return $( "<li></li>" )
@@ -590,7 +590,7 @@ LionFace.Site.prototype = {
         var url_auto = '/auto/';
         $( "#block_user" ).autocomplete({
             source: url_auto,
-        }); 
+        });
 
         //checking for new nofifications
         if (!LionFace.User.is_anonymous) {
@@ -638,7 +638,7 @@ LionFace.Site.prototype = {
 
         /** Follow post. */
         $(document).on('click','.follow_post', function(e) {
-            
+
             e.preventDefault();
             var self = $(this);
             var value = self.html();
@@ -663,7 +663,7 @@ LionFace.Site.prototype = {
                         alert(data_back.html);
                     }
                 }
-            });   
+            });
         });
 
         /** Displaying post settings */
@@ -687,7 +687,7 @@ LionFace.Site.prototype = {
             var meta = $(this).parents('.result').metadata();
             var post_id = post.attr("id").replace( /^\D+/g, '');
             data = "post_id="+post_id+"&post_type="+meta.type
-            if (form_data) { data = data + "&" + form_data; } 
+            if (form_data) { data = data + "&" + form_data; }
             make_request({
                 url:url,
                 data:data,
@@ -706,7 +706,7 @@ LionFace.Site.prototype = {
                             $('#hide_comment_link_'+post_id).show();
                             $('#hide_follow_link_'+post_id).show();
                             $('#hide_comment_'+post_id).show();
-                        }  
+                        }
                         if (data_back.sharing) {
                             $('#hide_share_'+post_id).hide();
                         }
@@ -784,14 +784,19 @@ LionFace.Site.prototype = {
                                 else {
                                     me.html('Loved');
                                 }
+<<<<<<< HEAD
                                 me.addClass('loved');   
                                 if (data.loved || data.loved == 0) {
+=======
+                                me.addClass('loved');
+                                if (data.loved) {
+>>>>>>> postbox
                                     love_count = parseInt(data.loved);
                                 }
                                 else {
                                     love_count = love_count + 1;
                                 }
-                                
+
                             }
                             else {
                                 if (me.find('.loves_icon').length) {
@@ -800,8 +805,13 @@ LionFace.Site.prototype = {
                                 else {
                                     me.html('Love');
                                 }
+<<<<<<< HEAD
                                 me.removeClass('loved'); 
                                 if (data.loved || data.loved == 0) {
+=======
+                                me.removeClass('loved');
+                                if (data.loved) {
+>>>>>>> postbox
                                     love_count = parseInt(data.loved);
                                 }
                                 else {
@@ -812,10 +822,10 @@ LionFace.Site.prototype = {
                         }
                     }
                 });
-        });   
+        });
 
     },
-        
+
     bind_public : function() {
 
         //Switch search queries
@@ -841,7 +851,7 @@ LionFace.Site.prototype = {
                 });
             }
             else {
-                $('.comment_'+post_id).hide(); 
+                $('.comment_'+post_id).hide();
             }
         });
 
@@ -864,8 +874,8 @@ LionFace.Site.prototype = {
             e.preventDefault();
             var self = $(this);
             var post_content = $(this).parent();
-            post_content.find('.full_post').hide(); 
-            post_content.find('.excerpt').show(); 
+            post_content.find('.full_post').hide();
+            post_content.find('.excerpt').show();
             self.remove();
         });
 
@@ -873,7 +883,7 @@ LionFace.Site.prototype = {
         /** toggle post subtext */
         $(document).on('mouseover','.result',function() {
         var meta = $(this).metadata();
-        if (meta.type != 'friend post' && meta.postid) { 
+        if (meta.type != 'friend post' && meta.postid) {
             ShowContent(meta.postid);
         }
         });
@@ -887,7 +897,7 @@ LionFace.Site.prototype = {
 
         /** Follow post. */
         $(document).on('click','.follow_post', function(e) {
-            e.preventDefault();                            
+            e.preventDefault();
         });
     },
     page_members : function () {
@@ -918,7 +928,7 @@ LionFace.Site.prototype = {
             intern_flag = false;
             employee_flag = true;
         });
-                        
+
         $(document).on('click','.save_member', function(e) {
             create_message();
             var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
@@ -1015,7 +1025,7 @@ LionFace.Site.prototype = {
         monthfield.each(function() {
             var month = $(this).get(0);
             for (var m=0; m<12; m++) month.options[m]=new Option(monthtext[m], monthtext[m])
-            month.options[today.getMonth()]=new Option(monthtext[today.getMonth()], monthtext[today.getMonth()], true, true) 
+            month.options[today.getMonth()]=new Option(monthtext[today.getMonth()], monthtext[today.getMonth()], true, true)
         });
 
         yearfield.each(function() {
@@ -1027,9 +1037,9 @@ LionFace.Site.prototype = {
             }
             year.options[0]=new Option(today.getFullYear(), today.getFullYear(), true, true)
         })
-    } 
+    }
 }
 
-$(function() {         
+$(function() {
     LionFace.Site = new LionFace.Site();
 });
