@@ -152,6 +152,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
         </tr>
+        {% if request.user|is_lcustomer_for:page %}
         <tr>
             <td align="right">Loves Remaining: </td>
             <td>
@@ -176,6 +177,44 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td align="right">Loves price: </td>
             <td>
                 <input name="loves_value" id="loves-value" type="text" value="$0" style="margin: 15px;" readonly/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">&nbsp;</td>
+            <td>
+                <span style="padding-left: 21px;"> {{ request.user|get_love_card_type_for:page }}: **** **** **** {{ request.user|get_love_last_4:page }}</span><a id="show_love_card_info" href="#" style="margin: 15px;">Replace Card</a>
+            </td>
+        </tr> 
+        {% else %}
+        <tr>
+            <td align="right">&nbsp;</td>
+            <td>
+                <a href="#" id="add_loves_card" style="padding-left: 21px;">Add a Card</a>
+            </td>
+        </tr> 
+        {% endif %}
+        <tr id="card_info_loves" class="card_infos" style="display:none">
+            <td align="right" style="padding: 8px;">Visa<br />Mastercard<br />American Express<br />JCR<br />Discover </td>
+            <td style="padding: 8px; margin: 8px 0; background: #E0E5E7;">
+                    <div class="payment-errors">
+                        {{ stripe_error }}
+                    </div>
+                <!--<form action="" method="POST" id="payment-form">-->
+                  <div class="form-row" style="padding: 0px; margin: 0px; width: auto; display: inline-block;">
+                    <label>Card Number</label>
+                    <input type="text" size="20" autocomplete="off" class="card-number"/>
+                  </div>
+                  <div class="form-row" style="padding: 0px; margin: 0px; width: auto; margin-left: 17px; display: inline-block;">
+                    <label>CVC</label>
+                    <input type="text" size="4" autocomplete="off" class="card-cvc"/>
+                  </div><br /><br />
+                  <div class="form-row" style="padding: 0px; margin: 0px; width: auto; display: inline-block;">
+                    <label>Expiration (MM/YYYY)</label>
+                    <input type="text" size="2" class="card-expiry-month"/>
+                    <span> / </span>
+                    <input type="text" size="4" class="card-expiry-year"/>
+                  </div>
+                  <!--</form>-->
             </td>
         </tr>
 		<tr>
@@ -247,8 +286,15 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 </td>
             </tr>
             {% endif %}
+        {% else %}
+        <tr>
+            <td align="right">&nbsp;</td>
+            <td>
+                <a href="#" id="add_bidding_card" style="padding-left: 21px;">Add a Card</a>
+            </td>
+        </tr> 
         {% endif %}
-        <tr id="card_info" {% if request.user|is_customer_for:page %} style="display:none" {% endif %}>
+        <tr id="card_info" class="card_infos" style="display:none">
             <td align="right" style="padding: 8px;">Visa<br />Mastercard<br />American Express<br />JCR<br />Discover </td>
             <td style="padding: 8px; margin: 8px 0; background: #E0E5E7;">
                     <div class="payment-errors">
@@ -258,8 +304,6 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                   <div class="form-row" style="padding: 0px; margin: 0px; width: auto; display: inline-block;">
                     <label>Card Number</label>
                     <input type="text" size="20" autocomplete="off" class="card-number"/>
-                    <input name="last4" type="hidden" readonly class="card-last-four"/>
-                    <input name="ctype" type="hidden" readonly class="card-type"/>
                   </div>
                   <div class="form-row" style="padding: 0px; margin: 0px; width: auto; margin-left: 17px; display: inline-block;">
                     <label>CVC</label>
@@ -316,36 +360,52 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
 {% block additional_js %}
 <script>
 $(document).ready(function() {
-
     function stripeResponseHandler(status, response) {
-        $(".payment-errors").html('');
+        var card_info = false;
+        var card_type = 'bids';
+        if ($('#card_info').is(":visible")) {
+            card_info = $('#card_info');
+            card_type = 'bids';
+        }
+        if ($('#card_info_loves').is(":visible")) {
+            card_info = $('#card_info_loves');
+            card_type = 'loves';
+        }
+        card_info.find(".payment-errors").html('');
         if (response.error) {
             // show the errors on the form
-            $(".payment-errors").text(response.error.message);
+            card_info.find(".payment-errors").text(response.error.message);
             $("#submit-card").removeAttr("disabled");
         } else {
             var form$ = $("#page_settings_form");
             // token contains id, last4, and card type
             var token = response['id'];
-            $('.card-last-four').val(response.card.last4);
-            $('.card-type').val(response.card.type);
             // insert the token into the form so it gets submitted to the server
-            form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+            form$.append("<input type='hidden' name='stripeToken_" + card_type + "' value='" + token + "'/>");
+            form$.append("<input name='ctype' type='hidden' readonly class='card-type' value='" + response.card.type + "'/>");
+            form$.append("<input name='last4' type='hidden' readonly class='card-last-four' value='" + response.card.last4 + "'/>");
             // and submit
             form$.get(0).submit();
         }
     }
 
     $(document).on('click','#submit-card', function(event) {
+        var card_info = false;
         if ($('#card_info').is(":visible")) {
+            card_info = $('#card_info');
+        }
+        if ($('#card_info_loves').is(":visible")) {
+            card_info = $('#card_info_loves');
+        }
+        if (card_info) {
             // disable the submit button to prevent repeated clicks
             $('#submit-card').attr("disabled", "disabled");
 
             Stripe.createToken({
-                number: $('.card-number').val(),
-                cvc: $('.card-cvc').val(),
-                exp_month: $('.card-expiry-month').val(),
-                exp_year: $('.card-expiry-year').val()
+                number: card_info.find('.card-number').val(),
+                cvc: card_info.find('.card-cvc').val(),
+                exp_month: card_info.find('.card-expiry-month').val(),
+                exp_year: card_info.find('.card-expiry-year').val()
             }, stripeResponseHandler);
 
             // prevent the form from submitting with the default action

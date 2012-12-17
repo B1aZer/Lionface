@@ -190,6 +190,14 @@ LionFace.PagesSettings.prototype = {
     bind_loves: function() {
         $(document).on('click','#show_card_info',function(e) {
             e.preventDefault();
+            if ($('#show_love_card_info').data('toggled')) {
+                $('#card_info_loves').hide();
+                $('#show_love_card_info').data('toggled',false);
+            }
+            if ($('#add_loves_card').data('toggled')) {
+                $('#card_info_loves').hide();
+                $('#add_loves_card').data('toggled',false);
+            }
             if (!$(this).data('toggled')) {
                 $('#card_info').show();
                 $(this).data('toggled',true);
@@ -200,6 +208,66 @@ LionFace.PagesSettings.prototype = {
             }
         });
         
+        $(document).on('click','#show_love_card_info',function(e) {
+            e.preventDefault();
+            if ($('#show_card_info').data('toggled')) {
+                $('#card_info').hide();
+                $('#show_card_info').data('toggled',false);
+            }
+            if ($('#add_bidding_card').data('toggled')) {
+                $('#card_info').hide();
+                $('#add_bidding_card').data('toggled',false);
+            }
+            if (!$(this).data('toggled')) {
+                $('#card_info_loves').show();
+                $(this).data('toggled',true);
+            }
+            else {
+                $('#card_info_loves').hide();
+                $(this).data('toggled',false);
+            }
+        });
+        
+        $(document).on('click','#add_bidding_card',function(e) {
+            e.preventDefault();
+            if ($('#add_loves_card').data('toggled')) {
+                $('#card_info_loves').hide();
+                $('#add_loves_card').data('toggled',false);
+            }
+            if ($('#add_loves_card').data('toggled')) {
+                $('#card_info_loves').hide();
+                $('#add_loves_card').data('toggled',false);
+            }
+            if (!$(this).data('toggled')) {
+                $('#card_info').show();
+                $(this).data('toggled',true);
+            }
+            else {
+                $('#card_info').hide();
+                $(this).data('toggled',false);
+            }
+        });
+
+        $(document).on('click','#add_loves_card',function(e) {
+            e.preventDefault();
+            if ($('#show_card_info').data('toggled')) {
+                $('#card_info').hide();
+                $('#show_card_info').data('toggled',false);
+            }
+            if ($('#add_bidding_card').data('toggled')) {
+                $('#card_info').hide();
+                $('#add_bidding_card').data('toggled',false);
+            }
+            if (!$(this).data('toggled')) {
+                $('#card_info_loves').show();
+                $(this).data('toggled',true);
+            }
+            else {
+                $('#card_info_loves').hide();
+                $(this).data('toggled',false);
+            }
+        });
+               
     
     
     },

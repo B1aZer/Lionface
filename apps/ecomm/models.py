@@ -9,12 +9,19 @@ BIDS_STATUSES = (
     (3, 'Winner'),
 )
 
+BIDDING_SECTION = (
+    ('B', 'Bids'),
+    ('L', 'Loves'),
+)
+
+
 class Customers(models.Model):
     user = models.ForeignKey(UserProfile, related_name='customer', null=True, blank=True)
     page = models.ForeignKey(Pages, related_name='customer', null=True, blank=True)
     stripe_id = models.CharField(max_length=200)
     last4 = models.CharField(max_length=4, blank=True)
     type = models.CharField(max_length=200, blank=True)
+    section = models.CharField(max_length=1, choices=BIDDING_SECTION, default='B')
 
     def get_last_four(self):
         if self.last4:

@@ -716,7 +716,8 @@ def settings(request, slug=None):
     if request.method == 'POST':
         amount = 0
         lamount = 0
-        token = request.POST.get('stripeToken', None)
+        token = request.POST.get('stripeToken_bids', None)
+        ltoken = request.POST.get('stripeToken_loves', None)
         bid = request.POST.get('bid_value', None)
         if bid:
             amount = int(bid.strip().replace('$',''))
@@ -734,38 +735,65 @@ def settings(request, slug=None):
                     bid.delete()
                 else:
                     error = "This bid has not been placed by you"
-        elif token:
-            try:
-                if request.user.is_customer_for(page):
-                    stripe_id = page.get_stripe_id_for(request.user)
-                    customer = stripe.Customer.retrieve(stripe_id)
-                    customer.card = token
-                    customer.save()
-                    db_customer = page.get_customer_for(request.user)
-                    db_customer.last4 = last4
-                    db_customer.type = ctype
-                    db_customer.save()
-                else:
-                    customer = stripe.Customer.create(
-                        card=token,
-                        description=page.name
-                    )
-                    customer = Customers(user=request.user, page=page, stripe_id=customer.id)
-                    customer.last4 = last4
-                    customer.type = ctype
-                    customer.save()
-            except stripe.CardError, e:
-                body = e.json_body
-                err = body['error']
-                stripe_error = err.get('message', 'Card was declined')
-            except:
-                stripe_error = 'An error occurred while processing your card'
+        elif token or ltoken:
+            if ltoken:
+                try:
+                    if request.user.is_lcustomer_for(page):
+                        stripe_id = page.get_love_stripe_id(request.user)
+                        customer = stripe.Customer.retrieve(stripe_id)
+                        customer.card = ltoken
+                        customer.save()
+                        db_customer = page.get_lcustomer_for(request.user)
+                        db_customer.last4 = last4
+                        db_customer.type = ctype
+                        db_customer.save()
+                    else:
+                        customer = stripe.Customer.create(
+                            card=ltoken,
+                            description=page.name
+                        )
+                        customer = Customers(user=request.user, page=page, stripe_id=customer.id, section='L')
+                        customer.last4 = last4
+                        customer.type = ctype
+                        customer.save()
+                except stripe.CardError, e:
+                    body = e.json_body
+                    err = body['error']
+                    stripe_error = err.get('message', 'Card was declined')
+                except:
+                    stripe_error = 'An error occurred while processing your card'
+            else:
+                try:
+                    if request.user.is_customer_for(page):
+                        stripe_id = page.get_stripe_id_for(request.user)
+                        customer = stripe.Customer.retrieve(stripe_id)
+                        customer.card = token
+                        customer.save()
+                        db_customer = page.get_customer_for(request.user)
+                        db_customer.last4 = last4
+                        db_customer.type = ctype
+                        db_customer.save()
+                    else:
+                        customer = stripe.Customer.create(
+                            card=token,
+                            description=page.name
+                        )
+                        customer = Customers(user=request.user, page=page, stripe_id=customer.id, section='B')
+                        customer.last4 = last4
+                        customer.type = ctype
+                        customer.save()
+                except stripe.CardError, e:
+                    body = e.json_body
+                    err = body['error']
+                    stripe_error = err.get('message', 'Card was declined')
+                except:
+                    stripe_error = 'An error occurred while processing your card'
         # bidding
         elif amount or lamount:
             # loves
             if lamount:
                 ch_amount = lamount * 100
-                stripe_id = page.get_stripe_id_for(request.user)
+                stripe_id = page.get_love_stripe_id(request.user)
                 try:
                     stripe.Charge.create(
                         amount=ch_amount, # 1500 - $15.00 this time

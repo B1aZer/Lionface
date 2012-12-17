@@ -392,16 +392,30 @@ class Pages(models.Model):
     def get_stripe_id(self):
         return self.customer.get().stripe_id
 
+    def get_love_stripe_id(self, user):
+        try:
+            customer = self.customer.get(user=user, section='L')
+            return customer.stripe_id
+        except:
+            return False
+
     def get_stripe_id_for(self, user):
         try:
-            customer = self.customer.get(user=user)
+            customer = self.customer.get(user=user, section='B')
             return customer.stripe_id
+        except:
+            return False
+
+    def get_lcustomer_for(self, user):
+        try:
+            customer = self.customer.get(user=user, section='L')
+            return customer
         except:
             return False
 
     def get_customer_for(self, user):
         try:
-            customer = self.customer.get(user=user)
+            customer = self.customer.get(user=user, section='B')
             return customer
         except:
             return False
