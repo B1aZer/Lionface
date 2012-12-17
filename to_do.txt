@@ -1,6 +1,5 @@
 ##next###
-watch mvideo balls
-cofer
+partial amount charge
 ### DoS ###
 loop problem
 

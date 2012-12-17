@@ -130,6 +130,10 @@ class Pages(models.Model):
         lovers = self.users_loved.filter(pageloves__status='A')
         return lovers
 
+    def get_lovers_active_count(self):
+        lovers = self.get_lovers_active().count()
+        return lovers
+
     def get_lovers_public(self):
         lovers = self.get_lovers()
         lovers = [lover for lover in lovers if not lover.check_option('loves','Private')]
