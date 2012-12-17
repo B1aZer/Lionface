@@ -10,27 +10,13 @@
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     {% block thumbnail %}
     {% if item.get_type == 'page post' %}
-    <a href="{{item.get_page_url}}"><div class="user_thumbnail" style="background: url('{{ item.get_page_thumb }}') #FFF; -webkit-background-size: 50px 50px; -moz-background-size: 50px 50px !important; background-size: 50px 50px;"></div></a>
+        <a href="{{item.get_page_url}}"><div class="user_thumbnail" style="background: url('{{ item.get_page_thumb }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
     {% else %}
-    <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background: url('/{{ item.get_owner.photo.thumb_name }}') #FFF; -webkit-background-size: 50px 50px; -moz-background-size: 50px 50px !important; background-size: 50px 50px;"></div></a>
+        <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background: url('/{{ item.get_owner.photo.thumb_name }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
     {% endif %}
 
     {% endblock %}
     {{ item.render|smileys|excerpt|linebreaks|color_tags }}
-    <div class="image_container feed">
-        <ul class="ui-sortable">
-        {% for image in item.get_post.images.all %}
-            <li class="album_shadow feed">
-                <div style="background: url('/{{ image.image.thumb_name }}') #FFF" data-original-url="/{{ image.image.url }}" class="image_album feed">
-                    <div id="image_settings feed" style="display: none;">
-                        <a href="#" data-activity="0" id="make_primary" style="float: left;" title="Make Primary Photo">+</a>
-                        <a href="#" id="delete" style="float: right;" title="Delete Photo">x</a>
-                    </div>
-                </div>
-            </li>
-        {% endfor %}
-        </ul>
-    </div>
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>

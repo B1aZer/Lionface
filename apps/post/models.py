@@ -11,7 +11,6 @@ from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from django.contrib.contenttypes.models import ContentType
 from django.contrib import comments
 from django.conf import settings
 from django.template.loader import render_to_string, get_template
@@ -383,7 +382,15 @@ class ContentPost(Post):
         self.content = bleach.linkify(
             self.content, target='_blank', filter_url=add_http)
 
-        return mark_safe("<a href='%s'>%s</a><br /><div class='post_content'> %s</div>" % (self.user.get_absolute_url(), self.user.get_full_name(), self.content))
+        c = { 'images': self.images.all() }
+        render_images = render_to_string('post/_post_images.html', c)
+
+        return mark_safe("<a href='%s'>%s</a><br />"
+                         "<div class='post_content'> %s</div>"
+                         "<div class='image_container feed'>%s</div>"
+                         % (self.user.get_absolute_url(),
+                         self.user.get_full_name(), self.content,
+                         render_images))
 
     def get_id(self):
         return self.id

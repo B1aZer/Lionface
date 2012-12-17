@@ -783,6 +783,8 @@ a.profile_btn:hover {
 /* end images from feed's post */
 
 /* style for attached images */
+
+
 .image_container_attach {
 	padding: 10px;
 }
@@ -1266,6 +1268,38 @@ a.profile_btn:hover {
 	padding-right: 3px;
 }
 
+/* style for shared post's feed*/
+.share_content .image_album.feed {
+	-webkit-background-size: 152px 152px !important;
+	/*-moz-background-size: 152px 152px !important;*/
+	background-size: 152px 152px no-repeat;
+ 	width: 152px;
+ 	height: 152px;
+ 	/*border: 1px solid #E7E7E7;*/
+	/*position: relative;*/
+	/*top: -6px;*/
+	z-index: 0;
+	/*margin: 5px;*/
+}
+
+.share_content .image_container.feed {
+	background: inherit;
+}
+
+.share_content .image_container.feed ul {
+	/*display: inline-block;*/
+	/*list-style-type: none;*/
+	width: 535px;
+	/*position: relative;*/
+	left: 0;
+}
+
+.share_content .image_container.feed ul li {
+	/*float: left;*/
+	width: 164px;
+	height: 152px;
+}
+
 .share_content {
 	padding: 10px 15px 5px 15px;
 	background-color: #F7F7F7;
@@ -1274,6 +1308,8 @@ a.profile_btn:hover {
 	border: 1px solid #DDD;
 	margin: 10px 0;
 }
+
+/* end style for shared post's feed */
 
 .post_bottom {
 	position: absolute;
@@ -1855,7 +1891,7 @@ a.nav_messages:link, a.nav_messages:active, a.nav_messages:visited, a.nav_notifi
 	width: 30px;
 	height: 30px;
 	margin: 3px 0;
-	border: 1px solid #DDD;  
+	border: 1px solid #DDD;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	text-align: center;
@@ -1885,11 +1921,10 @@ a.nav_messages:hover {
 	background: url(../images/IconMessages.png) #FFF;
 	background-position: center center;
 	background-repeat: no-repeat;
-	-webkit-background-size: 18px 18px !important; 
-	-moz-background-size: 18px 18px !important; 
-	background-size: 18px 18px; 
+	-webkit-background-size: 18px 18px !important;
+	-moz-background-size: 18px 18px !important;
+	background-size: 18px 18px;
 	border-color: #CCC;
-
 }
 
 a.nav_notifications:hover {
@@ -2708,11 +2743,20 @@ a.admin_name:link, a.admin_name:active, a.admin_name:visited, a.admin_name:hover
 
 .friend_container {
 	background: #E0E3E5;
- 	padding: 10px 10px 10px 10px; 
-	width: 230px; 
-	position: relative; left: -10px; 
-	text-align: center;  
-	-moz-box-shadow: 0px 4px 8px -4px #999; 
+	background: #ededde; /* Old browsers */
+	background: -moz-linear-gradient(left, #ededde 0%, #e3e5c5 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#ededde), color-stop(100%,#e3e5c5)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left, #ededde 0%,#e3e5c5 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left, #ededde 0%,#e3e5c5 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left, #ededde 0%,#e3e5c5 100%); /* IE10+ */
+	background: linear-gradient(to right, #ededde 0%,#e3e5c5 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededde', endColorstr='#e3e5c5',GradientType=1 ); /* IE6-9 */
+ 	padding: 10px 10px 10px 10px;
+	width: 230px;
+	position: relative; left: -10px;
+	text-align: center;
+	-moz-box-shadow: 0px 4px 8px -4px #999;
+	box-shadow: 0px 4px 8px -4px #999;
 }
 
 .friend_title {

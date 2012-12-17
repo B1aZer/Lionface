@@ -3,7 +3,7 @@ var MAX_UPLOAD_IMAGES = 21;
 
 LionFace.Profile = function() {
     this.runner();
-}
+};
 
 
 LionFace.Profile.prototype = {

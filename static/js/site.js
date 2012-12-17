@@ -331,7 +331,7 @@ LionFace.Site.prototype = {
 
     share_post: function (elem) {
         if (LionFace.User.is_anonymous) {
-            return
+            return;
         }
         var url = "/posts/share/" + elem + "/";
         var meta = $('.post_'+elem).metadata();
@@ -346,7 +346,7 @@ LionFace.Site.prototype = {
                     data:{
                         'post_type':meta.type,
                         'post_model':meta.model,
-                        'share_to': share_val,
+                        'share_to': share_val
                     },
                     callback: function(data) {
                         if (data.status == 'OK') {
@@ -363,8 +363,8 @@ LionFace.Site.prototype = {
             make_request({
                 url:url,
                 data:{
-                    'post_type':meta.type,
-                    'post_model':meta.model,
+                    'post_type': meta.type,
+                    'post_model': meta.model
                 },
                 callback: function(data) {
                     if (data.status == 'OK') {
