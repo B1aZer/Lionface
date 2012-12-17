@@ -2,6 +2,7 @@
 
     <div class="left_col">
         {% block left_col %}
+					<span class="filter_header">Messages<br /><span style="color: #BBB; font-size: 8pt;">Click to view message details.</span></span>
             {% for user in user_messages %}
             <div style="border: 1px solid #EEE; border-width: 1px 0 0 0;">
                 <div class="message user_id_{{ user.id }} {user: '{{ user.id }}' }">

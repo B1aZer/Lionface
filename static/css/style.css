@@ -87,8 +87,6 @@ a.filter img {
 	padding: 17px 0 15px 17px;
 	background: #FFF;
 	border-top: 1px solid #EEE;
-	-moz-border-radius: 0 0 0 8px;
-	border-radius: 0 0 0 8px;
 }
 
 a.filterON:link, a.filterON:active, a.filterON:visited {
