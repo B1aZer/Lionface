@@ -113,6 +113,9 @@ class Pages(models.Model):
         verbose_name = "Page"
         verbose_name_plural = "Pages"
 
+    def __unicode__(self):
+        return self.username
+
     def __repr__ (self):
         return '<Page %s> %s: %s' % (self.id, self.username, self.loves)
 
@@ -128,6 +131,10 @@ class Pages(models.Model):
 
     def get_lovers_active(self):
         lovers = self.users_loved.filter(pageloves__status='A')
+        return lovers
+
+    def get_lovers_active_count(self):
+        lovers = self.get_lovers_active().count()
         return lovers
 
     def get_lovers_public(self):
@@ -392,16 +399,30 @@ class Pages(models.Model):
     def get_stripe_id(self):
         return self.customer.get().stripe_id
 
+    def get_love_stripe_id(self, user):
+        try:
+            customer = self.customer.get(user=user, section='L')
+            return customer.stripe_id
+        except:
+            return False
+
     def get_stripe_id_for(self, user):
         try:
-            customer = self.customer.get(user=user)
+            customer = self.customer.get(user=user, section='B')
             return customer.stripe_id
+        except:
+            return False
+
+    def get_lcustomer_for(self, user):
+        try:
+            customer = self.customer.get(user=user, section='L')
+            return customer
         except:
             return False
 
     def get_customer_for(self, user):
         try:
-            customer = self.customer.get(user=user)
+            customer = self.customer.get(user=user, section='B')
             return customer
         except:
             return False

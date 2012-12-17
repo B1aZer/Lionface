@@ -51,7 +51,7 @@ tasks.register(DeletePage)
 
 class ProcessBids(Task):
     def run(self, **kwargs):
-        from ecomm.models import Bids
+        from ecomm.models import Bids, Summary
         from django.conf import settings
         from pages.models import PageRequest
         import stripe
@@ -69,6 +69,7 @@ class ProcessBids(Task):
                         customer=stripe_id,
                         description="Charge for %s, user: %s" % (bid.page.name, bid.user)
                     )
+                    Summary.objects.create(user=bid.user, page=bid.page, amount=bid.amount, type='B') 
                     logger.info('Charging: %s' % stripe_id)
                     if winnc < 3:
                         bid.status = 3
@@ -84,7 +85,7 @@ tasks.register(ProcessBids)
 
 class ReprocessBids(Task):
     def run(self, **kwargs):
-        from ecomm.models import Bids
+        from ecomm.models import Bids, Summary
         from pages.models import PageRequest
         from django.conf import settings
         from django.utils import timezone
@@ -107,6 +108,7 @@ class ReprocessBids(Task):
                     customer=stripe_id,
                     description="Recharge for %s, user: %s" % (bid.page.name, bid.user)
                 )
+                Summary.objects.create(user=bid.user, page=bid.page, amount=bid.amount, type='B') 
                 logger.info('ReCharging: %s' % stripe_id)
                 if winnc < 3:
                     bid.status = 3

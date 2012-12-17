@@ -138,7 +138,7 @@ data-url="{% url pages.views.images page.username %}">
 						{% if page.type == 'BS' and not page.get_page_loves_limit %} 
 							<div class="inactive">Inactive</div>
 						{% endif %}
-					<span class="love_count">{{ page.loves }}</span>
+					<span class="love_count">{{ page.get_lovers_active_count }}</span>
                     {% if request.user in page.get_lovers %}
                         <a href="#" class="love love_button loved"><div class="loves_icon"></div> Loved</a>
                     {% else %}

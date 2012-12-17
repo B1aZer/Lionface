@@ -488,11 +488,17 @@ class UserProfile(User):
                 return remain.days
         return False
 
+    def is_lcustomer_for(self, page):
+        return self.customer.filter(page=page, section='L').count()
+
     def is_customer_for(self, page):
-        return self.customer.filter(page=page).count()
+        return self.customer.filter(page=page, section='B').count()
+
+    def get_love_stripe_id(self):
+        return self.customer.get(section='L').stripe_id
 
     def get_stripe_id(self):
-        return self.customer.get().stripe_id
+        return self.customer.get(section='B').stripe_id
 
     def get_current_bid_for(self, page):
         bids = self.bids.filter(page=page, status=1).order_by('-amount')
@@ -500,16 +506,30 @@ class UserProfile(User):
             bids = bids[0]
         return bids
 
+    def get_love_last_4(self,page):
+        if self.is_lcustomer_for(page):
+            customer = self.customer.get(page=page, section='L')
+            return customer.get_last_four()
+        else:
+            return False
+
     def get_last_4(self,page):
         if self.is_customer_for(page):
-            customer = self.customer.get(page=page)
+            customer = self.customer.get(page=page, section='B')
             return customer.get_last_four()
+        else:
+            return False
+
+    def get_love_card_type_for(self,page):
+        if self.is_lcustomer_for(page):
+            customer = self.customer.get(page=page, section='L')
+            return customer.get_type()
         else:
             return False
 
     def get_card_type_for(self,page):
         if self.is_customer_for(page):
-            customer = self.customer.get(page=page)
+            customer = self.customer.get(page=page, section='B')
             return customer.get_type()
         else:
             return False

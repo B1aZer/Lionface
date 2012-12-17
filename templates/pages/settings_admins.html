@@ -30,6 +30,7 @@
     name="pages_basics" id="pages_basics__{{ admin.username }}" class="page_options">
     <label class="admins_labels" for="pages_basics__{{ admin.username }}">Basics</label>
     </td>
+    {% if page.type == 'BS' %}
     <td>
     <input type="checkbox"
     {% if admin|check_pages_loves:page %} checked {% endif %}
@@ -37,6 +38,7 @@
     name="pages_loves" id="pages_loves__{{ admin.username }}" class="page_options">
     <label class="admins_labels" for="pages_loves__{{ admin.username }}">Loves</label>
     </td>
+    {% endif %}
 </tr>
 <tr style="border-bottom: 1px solid #FFF;">
     <td>

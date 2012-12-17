@@ -1,6 +1,4 @@
 ##next###
-watch mvideo balls
-cofer
 ### DoS ###
 loop problem
 

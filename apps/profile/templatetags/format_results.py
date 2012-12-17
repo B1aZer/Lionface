@@ -355,11 +355,21 @@ def get_current_bid_for(user, page):
 def is_customer_for(user, page):
     return user.is_customer_for(page)
 
+@register.filter(name="is_lcustomer_for")
+def is_lcustomer_for(user, page):
+    return user.is_lcustomer_for(page)
+
+@register.filter(name="get_love_last_4")
+def get_love_last_4(user,page):
+    return user.get_love_last_4(page)
 
 @register.filter(name="get_last_four")
 def get_last_four(user, page):
     return user.get_last_4(page)
 
+@register.filter(name="get_love_card_type_for")
+def get_love_card_type_for(user,page):
+    return user.get_love_card_type_for(page)
 
 @register.filter(name="get_card_type")
 def get_card_type(user, page):

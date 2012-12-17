@@ -438,7 +438,7 @@ def love_count(request):
                         # go away and wait for love
                         PageLoves.objects.create(user=request.user,page=page,status='Q').save()
                         data['status'] = 'OK'
-                        data['loved'] = page.loves
+                        data['loved'] = page.get_lovers_active_count()
                     else:
                         page.loves = page.get_lovers().count() + 1
                         #page.users_loved.add(request.user)
@@ -447,16 +447,17 @@ def love_count(request):
                             page.loves_limit = page.loves_limit - 1
                         page.save()
                         data['status'] = 'OK'
-                        data['loved'] = page.loves
+                        data['loved'] = page.get_lovers_active_count()
                 if vote == 'down':
                     page.loves = page.get_lovers().count() - 1
+                    if page.type == 'BS' \
+                            and request.user in page.get_lovers_active():
+                        page.loves_limit = page.loves_limit + 1
                     PageLoves.objects.filter(user=request.user,page=page).delete()
                     #page.users_loved.remove(request.user)
-                    if page.type == 'BS':
-                        page.loves_limit = page.loves_limit + 1
                     page.save()
                     data['status'] = 'OK'
-                    data['loved'] = page.loves
+                    data['loved'] = page.get_lovers_active_count()
             except Pages.DoesNotExist:
                 pass
     return HttpResponse(json.dumps(data), "application/json")
@@ -716,7 +717,8 @@ def settings(request, slug=None):
     if request.method == 'POST':
         amount = 0
         lamount = 0
-        token = request.POST.get('stripeToken', None)
+        token = request.POST.get('stripeToken_bids', None)
+        ltoken = request.POST.get('stripeToken_loves', None)
         bid = request.POST.get('bid_value', None)
         if bid:
             amount = int(bid.strip().replace('$',''))
@@ -734,55 +736,84 @@ def settings(request, slug=None):
                     bid.delete()
                 else:
                     error = "This bid has not been placed by you"
-        elif token:
-            try:
-                if request.user.is_customer_for(page):
-                    stripe_id = page.get_stripe_id_for(request.user)
-                    customer = stripe.Customer.retrieve(stripe_id)
-                    customer.card = token
-                    customer.save()
-                    db_customer = page.get_customer_for(request.user)
-                    db_customer.last4 = last4
-                    db_customer.type = ctype
-                    db_customer.save()
-                else:
-                    customer = stripe.Customer.create(
-                        card=token,
-                        description=page.name
-                    )
-                    customer = Customers(user=request.user, page=page, stripe_id=customer.id)
-                    customer.last4 = last4
-                    customer.type = ctype
-                    customer.save()
-            except stripe.CardError, e:
-                body = e.json_body
-                err = body['error']
-                stripe_error = err.get('message', 'Card was declined')
-            except:
-                stripe_error = 'An error occurred while processing your card'
+        elif token or ltoken:
+            if ltoken:
+                try:
+                    if request.user.is_lcustomer_for(page):
+                        stripe_id = page.get_love_stripe_id(request.user)
+                        customer = stripe.Customer.retrieve(stripe_id)
+                        customer.card = ltoken
+                        customer.save()
+                        db_customer = page.get_lcustomer_for(request.user)
+                        db_customer.last4 = last4
+                        db_customer.type = ctype
+                        db_customer.save()
+                    else:
+                        customer = stripe.Customer.create(
+                            card=ltoken,
+                            description=page.name
+                        )
+                        customer = Customers(user=request.user, page=page, stripe_id=customer.id, section='L')
+                        customer.last4 = last4
+                        customer.type = ctype
+                        customer.save()
+                except stripe.CardError, e:
+                    body = e.json_body
+                    err = body['error']
+                    stripe_error = err.get('message', 'Card was declined')
+                except:
+                    stripe_error = 'An error occurred while processing your card'
+            else:
+                try:
+                    if request.user.is_customer_for(page):
+                        stripe_id = page.get_stripe_id_for(request.user)
+                        customer = stripe.Customer.retrieve(stripe_id)
+                        customer.card = token
+                        customer.save()
+                        db_customer = page.get_customer_for(request.user)
+                        db_customer.last4 = last4
+                        db_customer.type = ctype
+                        db_customer.save()
+                    else:
+                        customer = stripe.Customer.create(
+                            card=token,
+                            description=page.name
+                        )
+                        customer = Customers(user=request.user, page=page, stripe_id=customer.id, section='B')
+                        customer.last4 = last4
+                        customer.type = ctype
+                        customer.save()
+                except stripe.CardError, e:
+                    body = e.json_body
+                    err = body['error']
+                    stripe_error = err.get('message', 'Card was declined')
+                except:
+                    stripe_error = 'An error occurred while processing your card'
         # bidding
         elif amount or lamount:
             # loves
             if lamount:
-                ch_amount = lamount * 100
-                stripe_id = page.get_stripe_id_for(request.user)
-                try:
-                    stripe.Charge.create(
-                        amount=ch_amount, # 1500 - $15.00 this time
-                        currency="usd",
-                        customer=stripe_id,
-                        description="Loves for %s, user: %s" % (page.name, request.user)
-                    )
-                    page.loves_limit = page.loves_limit + lamount
-                    # TODO: need testing
-                    users_inq = PageLoves.objects.filter(page=page,status='Q')[:lamount]
-                    for quser in users_inq:
-                        quser.status='A'
-                        quser.save()
-                        page.loves_limit = page.loves_limit - 1
-                    page.save()
-                except:
-                    love_error = 'An error occurred while processing your card'
+                # if mod 100
+                if lamount%100 == 0:
+                    ch_amount = lamount * 100
+                    stripe_id = page.get_love_stripe_id(request.user)
+                    try:
+                        stripe.Charge.create(
+                            amount=ch_amount, # 1500 - $15.00 this time
+                            currency="usd",
+                            customer=stripe_id,
+                            description="Loves for %s, user: %s" % (page.name, request.user)
+                        )
+                        Summary.objects.create(user=request.user, page=page, amount=lamount, type='L') 
+                        page.loves_limit = page.loves_limit + lamount
+                        users_inq = PageLoves.objects.filter(page=page,status='Q')[:lamount]
+                        for quser in users_inq:
+                            quser.status='A'
+                            quser.save()
+                            page.loves_limit = page.loves_limit - 1
+                        page.save()
+                    except:
+                        love_error = 'An error occurred while processing your card'
             # bids
             if amount:
                 ebid = page.get_max_bid()

@@ -19,6 +19,7 @@ class MySeleniumTests(LiveServerTestCase):
         super(MySeleniumTests, cls).tearDownClass()
 
     def test_login(self):
+        import time
         from django.contrib.auth.models import User
 
         from selenium.webdriver.support.wait import WebDriverWait
@@ -54,7 +55,7 @@ class MySeleniumTests(LiveServerTestCase):
         admin = user
         Pages.objects.create(name='test', username='test', user = admin, type='BS', loves_limit=5)
 
-        for user in users[:0]:
+        for user in users[:10]:
             self.selenium.get('%s%s' % (self.live_server_url, '/account/login/'))
             username_input = self.selenium.find_element_by_id("id_login-email")
             username_input.send_keys(user.username)
@@ -71,6 +72,8 @@ class MySeleniumTests(LiveServerTestCase):
 
             self.selenium.get('%s%s' % (self.live_server_url, '/account/logout/'))
 
+        time.sleep(10)
+
         self.selenium.get('%s%s' % (self.live_server_url, '/account/login/'))
         username_input = self.selenium.find_element_by_id("id_login-email")
         username_input.send_keys(admin.username)
@@ -83,6 +86,7 @@ class MySeleniumTests(LiveServerTestCase):
         self.selenium.get('%s%s' % (self.live_server_url, '/pages/page/test/settings/'))
 
         self.selenium.find_element_by_id("loves_settings").click()
+        self.selenium.find_element_by_id("add_loves_card").click()
 
         card = self.selenium.find_element_by_class_name("card-number")
         card.send_keys('378282246310005')
@@ -97,12 +101,14 @@ class MySeleniumTests(LiveServerTestCase):
         self.selenium.find_element_by_id("submit-card").click()
 
         WebDriverWait(self.selenium, timeout).until(
-        lambda driver: driver.find_element_by_name('stripeToken'))
+        lambda driver: driver.find_element_by_name('stripeToken_loves'))
 
         #self.selenium.find_element_by_id("loves_settings").click()
+        self.selenium.execute_script("$('#loves-value').val('$3')")
 
         self.selenium.find_element_by_id("submit-card").click()
 
+        time.sleep(10)
 
 
 

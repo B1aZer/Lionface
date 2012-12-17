@@ -35,58 +35,76 @@ LionFace.PagesSettings.prototype = {
         }
 
         $(document).on('click','#admins_settings',function(){
-            $('#basics').hide();
-            $('#loves').hide();
-            $('#basics_header').hide(); 
-            $('#loves_header').hide(); 
-            $('#basics_settings').removeClass('active');
-            $('#loves_settings').removeClass('active');
+            $('.settings_content').hide();
+            $('.settings_header').hide();
+            $('.active').removeClass('active');
+
             $('#privacy').show();
             $('#privacy_header').show(); 
             $('#admins_settings').addClass('active');
+
             $('#submit_button').hide();
             $('#submit-card').hide();
             $('#cancel-bid').hide();
+
             $('#active_input').val('admins');
         });
 
         $(document).on('click','#basics_settings',function(){
+            $('.settings_content').hide();
+            $('.settings_header').hide();
+            $('.active').removeClass('active');
+
             $('#basics').show();
             $('#basics_header').show(); 
             $('#basics_settings').addClass('active');
-            $('#privacy').hide();
-            $('#loves').hide();
-            $('#privacy_header').hide(); 
-            $('#loves_header').hide(); 
-            $('#admins_settings').removeClass('active');
-            $('#loves_settings').removeClass('active');
+
             $('#submit_button').show();
             $('#submit-card').hide();
             $('#cancel-bid').hide();
+
             $('#active_input').val('basics');
         });
 
         $(document).on('click','#loves_settings',function(){
+            $('.settings_content').hide();
+            $('.settings_header').hide();
+            $('.active').removeClass('active');
+
             $('#loves').show();
             $('#loves_header').show(); 
             $('#loves_settings').addClass('active');
-            $('#privacy').hide();
-            $('#basics').hide();
-            $('#privacy_header').hide(); 
-            $('#basics_header').hide(); 
-            $('#admins_settings').removeClass('active');
-            $('#basics_settings').removeClass('active');
+
             $('#submit-card').show();
             $('#submit_button').hide();
+
             $('#active_input').val('loves');
+
             $('#cancel-bid').show();
             if ( $('.no_bidding').length ) {
                 $('#submit-card').hide();
             }
         });
 
+        $(document).on('click','#donations_settings',function(){
+            $('.settings_content').hide();
+            $('.settings_header').hide();
+            $('.active').removeClass('active');
+
+            $('#donations').show();
+            $('#donations_header').show(); 
+            $('#donations_settings').addClass('active');
+
+            $('#submit_button').show();
+
+            $('#active_input').val('donations');
+        });
+
         if ( $('#active_input').val() == 'loves' ) {
             $('#loves_settings').click();
+        }
+        if ( $('#active_input').val() == 'donations' ) {
+            $('#donations_settings').click();
         }
 
         $(document).on('click','#delete_page', function (e) {
@@ -190,6 +208,14 @@ LionFace.PagesSettings.prototype = {
     bind_loves: function() {
         $(document).on('click','#show_card_info',function(e) {
             e.preventDefault();
+            if ($('#show_love_card_info').data('toggled')) {
+                $('#card_info_loves').hide();
+                $('#show_love_card_info').data('toggled',false);
+            }
+            if ($('#add_loves_card').data('toggled')) {
+                $('#card_info_loves').hide();
+                $('#add_loves_card').data('toggled',false);
+            }
             if (!$(this).data('toggled')) {
                 $('#card_info').show();
                 $(this).data('toggled',true);
@@ -200,6 +226,66 @@ LionFace.PagesSettings.prototype = {
             }
         });
         
+        $(document).on('click','#show_love_card_info',function(e) {
+            e.preventDefault();
+            if ($('#show_card_info').data('toggled')) {
+                $('#card_info').hide();
+                $('#show_card_info').data('toggled',false);
+            }
+            if ($('#add_bidding_card').data('toggled')) {
+                $('#card_info').hide();
+                $('#add_bidding_card').data('toggled',false);
+            }
+            if (!$(this).data('toggled')) {
+                $('#card_info_loves').show();
+                $(this).data('toggled',true);
+            }
+            else {
+                $('#card_info_loves').hide();
+                $(this).data('toggled',false);
+            }
+        });
+        
+        $(document).on('click','#add_bidding_card',function(e) {
+            e.preventDefault();
+            if ($('#add_loves_card').data('toggled')) {
+                $('#card_info_loves').hide();
+                $('#add_loves_card').data('toggled',false);
+            }
+            if ($('#add_loves_card').data('toggled')) {
+                $('#card_info_loves').hide();
+                $('#add_loves_card').data('toggled',false);
+            }
+            if (!$(this).data('toggled')) {
+                $('#card_info').show();
+                $(this).data('toggled',true);
+            }
+            else {
+                $('#card_info').hide();
+                $(this).data('toggled',false);
+            }
+        });
+
+        $(document).on('click','#add_loves_card',function(e) {
+            e.preventDefault();
+            if ($('#show_card_info').data('toggled')) {
+                $('#card_info').hide();
+                $('#show_card_info').data('toggled',false);
+            }
+            if ($('#add_bidding_card').data('toggled')) {
+                $('#card_info').hide();
+                $('#add_bidding_card').data('toggled',false);
+            }
+            if (!$(this).data('toggled')) {
+                $('#card_info_loves').show();
+                $(this).data('toggled',true);
+            }
+            else {
+                $('#card_info_loves').hide();
+                $(this).data('toggled',false);
+            }
+        });
+               
     
     
     },

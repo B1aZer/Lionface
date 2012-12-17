@@ -37,6 +37,11 @@ iframe {
 	box-shadow: 0 4px 8px -4px #333;;
 }
 
+.share_content iframe {
+	position: relative;
+	left: -17px;
+}
+
 /* News Feed */
 
 #editbox { width: 100px; margin-right: 5px; padding: 3px; border: 1px solid #CCC; }
@@ -258,8 +263,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', end
 }
 
 a.excerpt:link, a.excerpt:active, a.excerpt:visited, a.show_less:link, a.show_less:active, a.show_less:visited {
-	padding: 4px 10px;
-	background: #;
+	padding: 6px 10px 4px 10px;
 	color: #555;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -277,10 +281,17 @@ a.excerpt:link, a.excerpt:active, a.excerpt:visited, a.show_less:link, a.show_le
 }
 
 a.excerpt:hover, a.show_less:hover {
-	color: #555;
+	color: #FFF;
 	text-decoration: none;
-	-moz-box-shadow: inset 0 2px 4px -2px #777;
-	box-shadow: inset 0 2px 4px -2px #777;
+	background: #7bc9e5; /* Old browsers */
+	background: -moz-linear-gradient(top, #7bc9e5 0%, #2ab4ea 50%, #19afe5 51%, #2ab4ea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7bc9e5), color-stop(50%,#2ab4ea), color-stop(51%,#19afe5), color-stop(100%,#2ab4ea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #7bc9e5 0%,#2ab4ea 50%,#19afe5 51%,#2ab4ea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #7bc9e5 0%,#2ab4ea 50%,#19afe5 51%,#2ab4ea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #7bc9e5 0%,#2ab4ea 50%,#19afe5 51%,#2ab4ea 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #7bc9e5 0%,#2ab4ea 50%,#19afe5 51%,#2ab4ea 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7bc9e5', endColorstr='#2ab4ea',GradientType=0 ); /* IE6-9 */
+	border-color: #EEE;
 
 }
 
@@ -364,11 +375,6 @@ a.post:link {
 a.post:hover, .submit_comment:hover, .send:hover {
 	text-decoration: none;
 	background: #2ab4ea;
-<<<<<<< HEAD
-=======
-	-moz-box-shadow: inset 0 2px 6px -2px #777;
-	box-shadow: inset 0 2px 6px -2px #777;
->>>>>>> postbox
 	color: #FFF;
 }
 
@@ -386,11 +392,6 @@ a.profile_nav:link, a.profile_nav:active, a.profile_nav:visited {
 	text-decoration: none;
 	color: #777;
 	border-color: #DDD;
-<<<<<<< HEAD
-=======
-	-moz-box-shadow: inset 0 2px 4px -2px #777;
-	box-shadow: inset 0 2px 4px -2px #777;
->>>>>>> postbox
 }
 
 a.profile_nav:hover {
@@ -882,7 +883,7 @@ a.profile_btn:hover {
 .album_shadow:before, .album_shadow:after
 {
     position: absolute;
-    width: 95px;
+    width: 45%;
     height: 10px;
     content: ' ';
     right: 10px;
@@ -1892,20 +1893,10 @@ a.nav_messages:link, a.nav_messages:active, a.nav_messages:visited, a.nav_notifi
 	width: 30px;
 	height: 30px;
 	margin: 3px 0;
-<<<<<<< HEAD
 	border: 1px solid #DDD;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	text-align: center;
-=======
-	border: 1px solid #EEE;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	text-align: center;
-	-moz-box-shadow: inset 0 2px 4px -2px #777;
-	box-shadow: inset 0 2px 4px -2px #777;
->>>>>>> postbox
-	position: relative;
 }
 
 a.nav_messages:link, a.nav_messages:active, a.nav_messages:visited {
@@ -1932,17 +1923,10 @@ a.nav_messages:hover {
 	background: url(../images/IconMessages.png) #FFF;
 	background-position: center center;
 	background-repeat: no-repeat;
-<<<<<<< HEAD
 	-webkit-background-size: 18px 18px !important;
 	-moz-background-size: 18px 18px !important;
 	background-size: 18px 18px;
 	border-color: #CCC;
-=======
-	-webkit-background-size: 18px 18px !important;
-	-moz-background-size: 18px 18px !important;
-	background-size: 18px 18px;
->>>>>>> postbox
-
 }
 
 a.nav_notifications:hover {
@@ -2197,7 +2181,7 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 	width: 200px;
 }
 
-#basics, #privacy, #loves {
+.settings_content {
 	margin: 75px 0;
 	background: #EEE;
 	-moz-border-radius: 3px;
@@ -2217,7 +2201,7 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 	padding: 10px;
 }
 
-#privacy_header, #basics_header, #loves_header {
+.settings_header {
 	position: absolute; left: 0px; top: 0px; padding: 15px 10px 12px 25px; width: 665px;
 	background: #fafafa; /* Old browsers */
 	background: -moz-linear-gradient(top, #fafafa 0%, #eeeeee 100%); /* FF3.6+ */
@@ -2324,6 +2308,20 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 }
 
 /* Pages */
+
+.page_results_micro {
+	display: block; width: 600px; position: relative; left: -20px;
+}
+
+.result_search .page_results_micro {
+	left: -90px;
+}
+
+.no_bidding {
+	padding: 8px 0 6px 17px;
+	border-left: 5px solid #900;
+	position: relative; left: 17px;
+}
 
 #page_browser {
 	position: relative;
@@ -2746,14 +2744,7 @@ a.admin_name:link, a.admin_name:active, a.admin_name:visited, a.admin_name:hover
 }
 
 .friend_container {
-<<<<<<< HEAD
 	background: #E0E3E5;
- 	padding: 10px 10px 10px 10px;
-	width: 230px;
-	position: relative; left: -10px;
-	text-align: center;
-	-moz-box-shadow: 0px 4px 8px -4px #999;
-=======
 	background: #ededde; /* Old browsers */
 	background: -moz-linear-gradient(left, #ededde 0%, #e3e5c5 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#ededde), color-stop(100%,#e3e5c5)); /* Chrome,Safari4+ */
@@ -2767,7 +2758,6 @@ a.admin_name:link, a.admin_name:active, a.admin_name:visited, a.admin_name:hover
 	position: relative; left: -10px;
 	text-align: center;
 	-moz-box-shadow: 0px 4px 8px -4px #999;
->>>>>>> postbox
 	box-shadow: 0px 4px 8px -4px #999;
 }
 
@@ -2969,6 +2959,7 @@ a.school_nav:hover {
 	background: #FFF;
 	-moz-box-shadow: 0 4px 8px -4px #999;
 	box-shadow: 0 4px 8px -4px #999;
+	z-index: 99999;
 }
 
 .chat_container li {
