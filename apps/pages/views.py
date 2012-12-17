@@ -804,6 +804,7 @@ def settings(request, slug=None):
                             customer=stripe_id,
                             description="Loves for %s, user: %s" % (page.name, request.user)
                         )
+                        Summary.objects.create(user=request.user, page=page, amount=lamount, type='L') 
                         page.loves_limit = page.loves_limit + lamount
                         users_inq = PageLoves.objects.filter(page=page,status='Q')[:lamount]
                         for quser in users_inq:

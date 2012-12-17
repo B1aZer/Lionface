@@ -113,6 +113,9 @@ class Pages(models.Model):
         verbose_name = "Page"
         verbose_name_plural = "Pages"
 
+    def __unicode__(self):
+        return self.username
+
     def __repr__ (self):
         return '<Page %s> %s: %s' % (self.id, self.username, self.loves)
 
