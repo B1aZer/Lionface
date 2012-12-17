@@ -1,5 +1,4 @@
 ##next###
-partial amount charge
 ### DoS ###
 loop problem
 

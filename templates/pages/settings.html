@@ -54,6 +54,9 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <li id="loves_settings" {% if active == 'loves' %} class="active" {% endif %}>Loves</li>
                 {% endif %}
             {% endif %}
+            {% if page.type == 'NP' %}
+                <li id="donations_settings" {% if active == 'donations' %} class="active" {% endif %}>Donations</li>
+            {% endif %}
         </ul>
     </div>
     {% endblock %}
@@ -62,21 +65,25 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
 <div class="right_col">
     {% block right_col %}
 
-<div id="basics_header" {% if active == 'loves' or active == 'admins' %} style="display:none" {% endif %}>
-    <span style="font-size: 18px;">Basics</span></strong>
+<div id="basics_header" class="settings_header" {% if active == 'loves' or active == 'admins' or active == 'donations' %} style="display:none" {% endif %}>
+    <span style="font-size: 18px;">Basics</span>
 </div>
 
-<div id="privacy_header" {% if active == 'loves' or active == 'basics' %} style="display:none" {% endif %}>
-    <span style="font-size: 18px;">Admins</span></strong>
+<div id="privacy_header" class="settings_header" {% if active == 'loves' or active == 'basics'  or active == 'donations' %} style="display:none" {% endif %}>
+    <span style="font-size: 18px;">Admins</span>
 </div>
 
-<div id="loves_header" {% if active == 'admins' or active == 'basics' %} style="display:none" {% endif %}>
-    <span style="font-size: 18px;">Loves</span></strong>
+<div id="loves_header" class="settings_header" {% if active == 'admins' or active == 'basics'  or active == 'donations' %} style="display:none" {% endif %}>
+    <span style="font-size: 18px;">Loves</span>
+</div>
+
+<div id="donations_header" class="settings_header" {% if active == 'admins' or active == 'basics' or active == 'loves' %} style="display:none" {% endif %}>
+    <span style="font-size: 18px;">Donations</span>
 </div>
 
 <form action="" id="page_settings_form" method="post">{% csrf_token %}
 <div align="center">
-    <table id="basics">
+    <table id="basics" class="settings_content">
         <tr>
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
@@ -122,7 +129,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
     </table>
 
 
-   <table id="privacy">
+   <table id="privacy" style="display:none" class="settings_content">
         <tr>
             <td colspan="2" align="left" style="padding: 4px 20px; border-bottom: 1px solid #CCC;"><span style="margin-right: 10px;">Add an Admin</span>
                 <input id="id_admins" type="text" name="admins" value="" maxlength="200">
@@ -147,7 +154,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
     </table>
 
     {% if page.type == 'BS' %}
-   <table id="loves">
+    <table id="loves"  style="display:none" class="settings_content">
         <tr>
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
@@ -325,6 +332,23 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
     </table>
     {% endif %}
 
+    {% if page.type == 'NP' %}
+    <table id="donations"  class="settings_content">
+        <tr>
+            <td width="150" align="right">&nbsp;</td>
+            <td width="405">&nbsp;</td>
+        </tr>
+		<tr>
+			<td colspan="2" style="padding: 17px; text-align: left;">
+			<span style="font-size: 11pt; font-weight: bold;">Donations</span>
+			</td>
+		</tr>
+        <tr>
+            <td width="150" align="right">&nbsp;</td>
+            <td width="405">&nbsp;</td>
+        </tr>
+    </table>
+    {% endif %}
 
 
 </div>
