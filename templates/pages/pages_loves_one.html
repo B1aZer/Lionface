@@ -1,6 +1,6 @@
 {% load format_results %}
 
-                <div id="page_{{ page.id }}" style="display: block; width: 600px; position: relative; left: -20px;">
+                <div id="page_{{ page.id }}" class="page_results_micro">
 				<table width="100%"><tr><td width="85" align="right"><div style="position: relative; top: -10px; left: -5px;">
                 {% if page.type == 'BS' %}
                 <a href="{% url business-page slug=page.username %}">

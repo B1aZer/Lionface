@@ -10,9 +10,9 @@
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     {% block thumbnail %}
     {% if item.get_type == 'page post' %}
-    <a href="{{item.get_page_url}}"><div class="user_thumbnail" style="background: url('{{ item.get_page_thumb }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
+    <a href="{{item.get_page_url}}"><div class="user_thumbnail" style="background: url('{{ item.get_page_thumb }}') #FFF; -webkit-background-size: 50px 50px; -moz-background-size: 50px 50px !important; background-size: 50px 50px;"></div></a>
     {% else %}
-    <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background: url('/{{ item.get_owner.photo.thumb_name }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
+    <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background: url('/{{ item.get_owner.photo.thumb_name }}') #FFF; -webkit-background-size: 50px 50px; -moz-background-size: 50px 50px !important; background-size: 50px 50px;"></div></a>
     {% endif %}
 
     {% endblock %}
