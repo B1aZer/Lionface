@@ -2146,7 +2146,7 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 	width: 200px;
 }
 
-#basics, #privacy, #loves {
+.settings_content {
 	margin: 75px 0;
 	background: #EEE;
 	-moz-border-radius: 3px;
