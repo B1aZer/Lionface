@@ -108,6 +108,7 @@ class Pages(models.Model):
     # bidding
     featured = models.BooleanField(default=False)
     is_disabled = models.DateTimeField(null=True, blank=True)
+    exempt = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Page"

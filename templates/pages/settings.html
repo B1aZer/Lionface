@@ -177,7 +177,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <div style="margin-left: 15px;">{{ page.get_page_loves_limit }}</div>
             </td>
         </tr>
-        {% if request.user|is_lcustomer_for:page %}
+        {% if request.user|is_lcustomer_for:page or page.exempt %}
         <tr>
             <td align="right">Buy loves: </td>
             <td>
@@ -198,12 +198,14 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <input name="loves_value" id="loves-value" type="text" value="$0" style="margin: 15px;" readonly/>
             </td>
         </tr>
+        {% if request.user|is_customer_for:page %}
         <tr>
             <td align="right">&nbsp;</td>
             <td>
                 <span style="padding-left: 21px;"> {{ request.user|get_love_card_type_for:page }}: **** **** **** {{ request.user|get_love_last_4:page }}</span><a id="show_love_card_info" href="#" style="margin: 15px;">Replace Card</a>
             </td>
         </tr> 
+        {% endif %}
         {% else %}
         <tr>
             <td align="right">&nbsp;</td>
@@ -251,7 +253,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
 <span style="font-size: 8pt; color: #777;">To bid, you must enter a valid credit card.</span>
 			</td>
 		</tr>
-        {% if request.user|is_customer_for:page %}
+        {% if request.user|is_customer_for:page or page.exempt %}
             {% if show_bids %}
                 {% if page.is_disabled %}
                 <tr>
@@ -300,12 +302,14 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                     </td>
                 </tr>
                     {% endif %}
+                {% if request.user|is_customer_for:page %}
                 <tr>
                     <td align="right">&nbsp;</td>
                     <td>
                         <span style="padding-left: 21px;"> {{ request.user|get_card_type:page }}: **** **** **** {{ request.user|get_last_four:page }}</span><a id="show_card_info" href="#" style="margin: 15px;">Replace Card</a>
                     </td>
                 </tr> 
+                {% endif %}
                 {% endif %}
             {% else %}
             <tr>

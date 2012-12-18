@@ -796,15 +796,17 @@ def settings(request, slug=None):
                 # if mod 100
                 if lamount%100 == 0:
                     ch_amount = lamount * 100
-                    stripe_id = page.get_love_stripe_id(request.user)
+                    if not page.exempt:
+                        stripe_id = page.get_love_stripe_id(request.user)
                     try:
-                        stripe.Charge.create(
-                            amount=ch_amount, # 1500 - $15.00 this time
-                            currency="usd",
-                            customer=stripe_id,
-                            description="Loves for %s, user: %s" % (page.name, request.user)
-                        )
-                        Summary.objects.create(user=request.user, page=page, amount=lamount, type='L')
+                        if not page.exempt:
+                            stripe.Charge.create(
+                                amount=ch_amount, # 1500 - $15.00 this time
+                                currency="usd",
+                                customer=stripe_id,
+                                description="Loves for %s, user: %s" % (page.name, request.user)
+                            )
+                            Summary.objects.create(user=request.user, page=page, amount=lamount, type='L')
                         page.loves_limit = page.loves_limit + lamount
                         users_inq = PageLoves.objects.filter(page=page,status='Q')[:lamount]
                         for quser in users_inq:

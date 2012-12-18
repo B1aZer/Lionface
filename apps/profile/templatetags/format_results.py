@@ -397,7 +397,7 @@ def show_charts(cl):
         ys.append(int(oldest.amount))
         for res in results.exclude(id=oldest.id):
             diff = res.date - oldest.date
-            hours = diff.seconds / 60 / 60.0
+            hours = diff.seconds / 60 / 60.0 + diff.days * 86400 / 60 / 60.0
             xs.append(hours)
             ys.append(int(res.amount))
     return {'summaries':results,
