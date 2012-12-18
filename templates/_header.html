@@ -10,12 +10,10 @@
 			 {{ request.user.first_name }}</a></li>
         <li><a href="{% url profile.views.feed username=request.user.username %}">News Feed</a></li>
         <li><a href="{% url pages.views.main %}">Pages</a></li>
-<div onMouseOver="ShowContent('signout'); return false;" onMouseOut="HideContent('signout'); return false;" style="display: inline-block;">
 		<li>
 			<a href="{% url profile.views.settings request.user.username %}" class="settings">Account</a>
 			</li>
 		<li><a href="{% url django.contrib.auth.views.logout_then_login %}" id="signout" title=" Log Out " target="_top" style="padding: 7px 3px 8px 4px; position: relative; left: -10px;">x</a></li>
-</div>
       </ul>
     </div>
 
