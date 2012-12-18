@@ -31,7 +31,7 @@ LionFace.PagesSettings.prototype = {
             !LionFace.User.options['pages_admins__'+LionFace.User.page_id]) {
                 $('#basics').hide();
                 $('#loves').show();
-                $('#submit-card').show();
+                //$('.submit_loves').show();
         }
 
         $(document).on('click','#admins_settings',function(){
@@ -44,8 +44,9 @@ LionFace.PagesSettings.prototype = {
             $('#admins_settings').addClass('active');
 
             $('#submit_button').hide();
-            $('#submit-card').hide();
-            $('#cancel-bid').hide();
+            //$('.submit_loves').hide();
+            //$('#cancel-bid').hide();
+            $('#delete_page').hide();
 
             $('#active_input').val('admins');
         });
@@ -60,8 +61,9 @@ LionFace.PagesSettings.prototype = {
             $('#basics_settings').addClass('active');
 
             $('#submit_button').show();
-            $('#submit-card').hide();
-            $('#cancel-bid').hide();
+            $('#delete_page').show();
+            //$('#submit-card').hide();
+            //$('#cancel-bid').hide();
 
             $('#active_input').val('basics');
         });
@@ -75,8 +77,9 @@ LionFace.PagesSettings.prototype = {
             $('#loves_header').show(); 
             $('#loves_settings').addClass('active');
 
-            $('#submit-card').show();
+            $('.submit_loves').show();
             $('#submit_button').hide();
+            $('#delete_page').hide();
 
             $('#active_input').val('loves');
 
@@ -95,7 +98,8 @@ LionFace.PagesSettings.prototype = {
             $('#donations_header').show(); 
             $('#donations_settings').addClass('active');
 
-            $('#submit_button').show();
+            $('#submit_button').hide();
+            $('#delete_page').hide();
 
             $('#active_input').val('donations');
         });

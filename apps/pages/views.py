@@ -792,7 +792,7 @@ def settings(request, slug=None):
         # bidding
         elif amount or lamount:
             # loves
-            if lamount:
+            if lamount and 'submit_loves' in request.POST:
                 # if mod 100
                 if lamount%100 == 0:
                     ch_amount = lamount * 100
@@ -804,7 +804,7 @@ def settings(request, slug=None):
                             customer=stripe_id,
                             description="Loves for %s, user: %s" % (page.name, request.user)
                         )
-                        Summary.objects.create(user=request.user, page=page, amount=lamount, type='L') 
+                        Summary.objects.create(user=request.user, page=page, amount=lamount, type='L')
                         page.loves_limit = page.loves_limit + lamount
                         users_inq = PageLoves.objects.filter(page=page,status='Q')[:lamount]
                         for quser in users_inq:
@@ -815,7 +815,7 @@ def settings(request, slug=None):
                     except:
                         love_error = 'An error occurred while processing your card'
             # bids
-            if amount:
+            if amount and 'submit_bids' in request.POST:
                 ebid = page.get_max_bid()
                 if ebid:
                     bid = ebid

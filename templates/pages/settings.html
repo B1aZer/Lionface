@@ -159,13 +159,25 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
         </tr>
-        {% if request.user|is_lcustomer_for:page %}
+        <tr>
+            <td align="right">Current Loves: </td>
+            <td>
+                <div style="margin-left: 15px;">{{ page.get_lovers_active_count }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Loves Pending: </td>
+            <td>
+                <div style="margin-left: 15px;">{{ page.get_lovers_pending_count }}</div>
+            </td>
+        </tr>
         <tr>
             <td align="right">Loves Remaining: </td>
             <td>
                 <div style="margin-left: 15px;">{{ page.get_page_loves_limit }}</div>
             </td>
         </tr>
+        {% if request.user|is_lcustomer_for:page %}
         <tr>
             <td align="right">Buy loves: </td>
             <td>
@@ -223,6 +235,15 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                   </div>
                   <!--</form>-->
             </td>
+        </tr>
+        <tr>
+            <td>
+                <div style="margin-left: 21px;">
+                {% if request.user|check_pages_loves:page %}
+                <button id="submit_loves" type="submit" name="submit_loves" class="blue_btn submit_loves" style="display:none;">Submit</button>
+                {% endif %}
+                </div>
+            <td>
         </tr>
 		<tr>
 			<td colspan="2" style="padding: 17px; text-align: left;">
@@ -326,6 +347,18 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             </td>
         </tr>
         <tr>
+            <td>
+                <div style="margin-left: 21px;">
+                {% if request.user|check_pages_loves:page %}
+                <button id="submit_bids" type="submit" name="submit_bids" class="blue_btn submit_loves" style="display:none;">Submit</button>
+                {% endif %}
+                {% if page.get_max_bid and show_bids %}
+                <button id="cancel-bid" type="submit" name="cancel_bid" class="blue_btn" style="display:none;">Cancel Bid</button>
+                {% endif %}
+                </div>
+            <td>
+        </tr>
+        <tr>
             <td align="right">&nbsp;</td>
             <td>&nbsp;</td>
         </tr>
@@ -359,12 +392,6 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
 {% if request.user|check_pages_basics:page %}
 <input id="submit_button" type="submit" class="blue_btn" style="color: #FFF;" name="save" value="Save" /> 
 {% endif %}
-{% if request.user|check_pages_loves:page %}
-<button id="submit-card" type="submit" name="submit-card" class="blue_btn" style="display:none;">Submit</button>
-{% endif %}
-{% if page.get_max_bid and show_bids %}
-<button id="cancel-bid" type="submit" name="cancel_bid" class="blue_btn" style="display:none;">Cancel Bid</button>
-{% endif %}
 </form>
 {% if request.user|check_pages_delete:page %} 
 <a href="#" id="delete_page" style="font-size: 11px; color: #CCC; margin-left: 10px;">Delete Page</a>
@@ -387,19 +414,22 @@ $(document).ready(function() {
     function stripeResponseHandler(status, response) {
         var card_info = false;
         var card_type = 'bids';
+        var submit = false;
         if ($('#card_info').is(":visible")) {
             card_info = $('#card_info');
             card_type = 'bids';
+            submit = $('#submit_bids');
         }
         if ($('#card_info_loves').is(":visible")) {
             card_info = $('#card_info_loves');
             card_type = 'loves';
+            submit = $('#submit_loves');
         }
         card_info.find(".payment-errors").html('');
         if (response.error) {
             // show the errors on the form
             card_info.find(".payment-errors").text(response.error.message);
-            $("#submit-card").removeAttr("disabled");
+            submit.removeAttr("disabled");
         } else {
             var form$ = $("#page_settings_form");
             // token contains id, last4, and card type
@@ -413,17 +443,20 @@ $(document).ready(function() {
         }
     }
 
-    $(document).on('click','#submit-card', function(event) {
+    $(document).on('click','.submit_loves', function(event) {
         var card_info = false;
+        var submit = false;
         if ($('#card_info').is(":visible")) {
             card_info = $('#card_info');
+            submit = $('#submit_bids');
         }
         if ($('#card_info_loves').is(":visible")) {
             card_info = $('#card_info_loves');
+            submit = $('#submit_loves');
         }
-        if (card_info) {
+        if (card_info && $(this).attr('id') == submit.attr('id')) {
             // disable the submit button to prevent repeated clicks
-            $('#submit-card').attr("disabled", "disabled");
+            submit.attr("disabled", "disabled");
 
             Stripe.createToken({
                 number: card_info.find('.card-number').val(),
@@ -467,7 +500,7 @@ $(document).ready(function() {
             value:0,
             range: "min",
             min: 0,
-            max: 3500,
+            max: 10000,
             step: 100,
             slide: function( event, ui ) {
                 $( "#loves-value" ).val( '$' + ui.value );
