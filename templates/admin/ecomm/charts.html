@@ -1,0 +1,50 @@
+{% if summaries %}
+<script type="text/javascript">
+(function($) {
+    $(document).ready(function($) {
+                var r = Raphael('holder');
+                // Creates a simple line chart at 40, 0
+                // width 600, height 260
+                var lines = r.linechart(80, 20, 
+                     600, 260, 
+                     {{ xs }},
+                     {{ ys }}, 
+                     { shade: true, symbol: "circle", axis:"0 0 0 1"}
+                )
+                 .hoverColumn(function () {
+                    this.tags = r.set();
+
+                    for (var i = 0, ii = this.y.length; i < ii; i++) {
+                        this.tags.push(
+                            r.tag(this.x, this.y[i], this.values[i], 160, 10)
+                                .insertBefore(this).attr([{ 
+                                        fill: "#fff" 
+                                    }, 
+                                    { 
+                                        fill: this.symbols[i].attr("fill") 
+                                    }]
+                                )
+                            );
+                    }
+                }, function () {
+                    this.tags && this.tags.remove();
+                });
+
+                lines.symbols.attr({ r: 6 });
+    });
+})(django.jQuery);
+</script>
+<style>
+/* CSS */
+#holder {
+    margin: 0 auto;
+    width: auto !important;
+    margin-right: 160px !important;
+    height: 300px;
+}
+</style>
+                
+<div id="holder"></div>
+{% endif %}
+                
+

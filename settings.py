@@ -274,6 +274,11 @@ MEDIA_BUNDLES = (
     ('timePicker.js',
         'js/jquery.timePicker.min.js',
     ),
+    ('raphael.js',
+        'js/graphs/raphael-min.js',
+        'js/graphs/g.raphael-min.js',
+        'js/graphs/g.line-min.js',
+    ),
 )
 
 HAYSTACK_SITECONF = 'search_sites'

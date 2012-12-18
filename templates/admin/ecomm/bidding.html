@@ -1,0 +1,8 @@
+{% if pages %}
+<span> Pages that have the highest 3 Bids: </span>
+    {% for page in pages %}
+    <div> {{ page.username }} </div>
+    {% endfor %}
+{% endif %}
+                
+

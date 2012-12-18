@@ -384,3 +384,28 @@ def format_date(dt):
     if dt == 0:
         dt = ''
     return dt
+
+
+@register.inclusion_tag('admin/ecomm/charts.html')
+def show_charts(cl):
+    results = cl.result_list.order_by('date')
+    xs =[]
+    ys = []
+    if results:
+        oldest = results[0]
+        xs.append(0)
+        ys.append(int(oldest.amount))
+        for res in results.exclude(id=oldest.id):
+            diff = res.date - oldest.date
+            hours = diff.seconds / 60 / 60.0
+            xs.append(hours)
+            ys.append(int(res.amount))
+    return {'summaries':results,
+            'xs':xs,
+            'ys':ys}
+
+@register.inclusion_tag('admin/ecomm/bidding.html')
+def show_bidding(cl):
+    results = cl.result_list.order_by('-amount')[:3]
+    pages = [r.page for r in results]
+    return {'pages':pages}

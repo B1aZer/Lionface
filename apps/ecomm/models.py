@@ -54,3 +54,7 @@ class Summary(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     currency = models.CharField(max_length=200, default='usd')
     type = models.CharField(max_length=1, choices=BIDDING_SECTION)
+
+    class Meta:
+        verbose_name = "Summary"
+        verbose_name_plural = "Summary"
