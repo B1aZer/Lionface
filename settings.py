@@ -279,6 +279,9 @@ MEDIA_BUNDLES = (
         'js/graphs/g.raphael-min.js',
         'js/graphs/g.line-min.js',
     ),
+    ('jquery.validate.js',
+        'js/jquery.validate.min.js',
+    ),
 )
 
 HAYSTACK_SITECONF = 'search_sites'

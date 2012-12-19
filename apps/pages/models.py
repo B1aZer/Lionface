@@ -36,6 +36,19 @@ PAGE_LOVE_STATUS = (
         ('Q', 'Queue'),
 )
 
+TOPIC_PRIVACY_SET = (
+        ('P', 'Public'),
+        ('I', 'Inter-Page'),
+        ('H', 'In-House'),
+)
+
+TOPIC_MEMBERS_SET = (
+        ('A','Admins'),
+        ('E','Employees'),
+        ('I','Interns'),
+        ('V','Volunteers'),
+)
+
 
 class PageRequest(models.Model):
     from_page = models.ForeignKey('Pages', related_name='from_page')
@@ -561,5 +574,15 @@ class Membership(models.Model):
         self.get_user().set_option('pages_removed__%s__%s' % (self.page.id, self.type), datetime.today().strftime('%m/%d/%Y'))
         self.delete()
 
+
+class Topics(models.Model):
+    name = models.CharField(max_length='2000')
+    user = models.ForeignKey(UserProfile)
+    page = models.ForeignKey(Pages)
+    privacy = models.CharField(max_length=1, choices=TOPIC_PRIVACY_SET, default='P')
+    members = models.CharField(max_length=1, choices=TOPIC_MEMBERS_SET, default='A')
+    tagged = models.ManyToManyField(Pages, related_name="tagged_in_topics", null=True, blank=True)
+    content = models.TextField(blank=True)
+    viewed = models.ForeignKey(UserProfile, related_name="viewed_topics", null=True, blank=True)
 
 

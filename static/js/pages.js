@@ -554,6 +554,20 @@ LionFace.Pages.prototype = {
                 }
             });
         });
+
+        $(document).on('click','#duscussbutton',function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            if ($("#topicForm").valid()) {
+                make_request({
+                    url:url,
+                    data:$("#topicForm").serialize(),
+                    callback: function(data) {
+                    }
+                });
+            }
+        });
+        
     },
     /*
      * moved to user.js

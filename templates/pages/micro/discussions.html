@@ -1,4 +1,9 @@
 {% load media %}
+<script>
+$(document).ready(function(){
+        $("#topicForm").validate();
+});
+</script>
 
 <div class="float_left" align="left">
 	<div style="font-size: 14pt; padding: 5px; border-bottom: 1px solid #CCC;">Topics <span style="font-size: 8pt; color: #AAA; margin-left: 4px;">Ordered by Most Recent Activity</span></div>
@@ -19,13 +24,20 @@
 <div class="page_center">
     <div style="padding: 15px;">
 
+        <form id="topicForm" class="cmxform" method="POST" action="">
         <div id="postbox">
             <div style="padding: 10px;" align="center">
 				<div align="left" style="padding: 5px;">
 					<table width="100%"><tr><td align="left">
-					Topic: <input type="Text" style="padding: 4px; border: 1px solid #BBB; width: 200px;" />
+                    <label for="id_name">Topic: </label>
+                    <input id="id_name" type="text" class="required" name="name" maxlength="500" style="padding: 4px; border: 1px solid #BBB; width: 200px;"/>
 					</td><td align="right">
-					Privacy: <select><option selected>Public</option><option>Inter-Page</option><option>In-House</option></select>
+                    <label for="id_privacy">Privacy:</label> 
+                    <select name="privacy" id="id_privacy"> 
+                        <option value="P" selected="selected">Public</option>
+                        <option value="I">Inter-Page</option>
+                        <option value="H">In-House</option>
+					</select>
 					</td></tr></table>
 				</div><div align="left" style="padding: 5px;">
 					<table width="100%"><tr><td align="left" style="font-size: 8pt;">
@@ -36,11 +48,14 @@
 				</div><div align="left" style="padding: 5px;">
 					<table width="100%"><tr><td align="left">
 					</td><td align="right">
-					<span style="margin: 5px;">Current: </span> <span style="margin: 5px;"><input type="checkbox" /> Admins</span> <span style="margin: 5px;"><input type="checkbox" /> Employees</span> <span style="margin: 5px;"><input type="checkbox" /> Interns</span> <span style="margin: 5px;"><input type="checkbox" /> Volunteers</span>
+					<span style="margin: 5px;">Current: </span> 
+                    <span style="margin: 5px;"><input type="checkbox" name="members" value="A" checked disabled="disabled"/> Admins</span> 
+                    <span style="margin: 5px;"><input type="checkbox" name="members" value="E" /> Employees</span> 
+                    <span style="margin: 5px;"><input type="checkbox" name="members" value="I" /> Interns</span>
+                    <span style="margin: 5px;"><input type="checkbox" name="members" value="I" /> Volunteers</span>
 					</td></tr></table>
 				</div>
-                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
-
+                <textarea id="id_content" class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
                 <br />
                 <div class="postoptions_container" >
                     <table width="100%"><tr>
@@ -48,12 +63,15 @@
                             </td>
                                     <td align="right">
 									<span style="color: #CCC; font-size: 8pt; margin: 4px;"><span style="margin: 4px;">#</span> <span style="margin: 4px;">embed</span> <span style="margin: 4px;">href</span></span>
-									<div class="attach">Attach</div> <a href="#" class="post feedback_post" id="postboxbutton">Start New Topic</a>
+                                    <div class="attach">Attach</div>
+                                    <a href="{% url pages.views.start_topic slug=page.username %}" class="post" id="duscussbutton" >Start New Topic</a>
                                     </td>
                 </tr></table>
                 </div>
             </div>
-        </div><br /><br />
+        </div>
+        </form>
+        <br /><br />
 <span style="font-size: 16pt;">Most Popular Discussions</span>
 <table width="600"border="0"><tr><td width="50%" align="center">
 	<div class="dis_topics" style="left: 0px;">(Topic from Topic Input - Limit to 1 Line)<br />

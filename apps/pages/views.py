@@ -123,6 +123,7 @@ def page(request, slug=None):
     target_width = 900
     resize = False
 
+    # micro templates
     if request.method == 'GET' and 'ajax' in request.GET:
         data = {}
         template_name = request.GET.get('template_name', None)
@@ -1840,3 +1841,24 @@ def card_form(request, slug):
         },
         RequestContext(request)
     )
+
+
+def start_topic(request, slug):
+    data = {'status': 'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    if request.method == 'POST':
+        form = PageTopicForm(request.POST)
+        topic = form.save(commit=False)
+        topic.user = request.user
+        topic.page = page
+        members = request.POST.getlist('members', None)
+        if members:
+            members.append("A")
+            topic.members = ",".join(members)
+        topic.save()
+
+
+    return HttpResponse(json.dumps(data), "application/json")
