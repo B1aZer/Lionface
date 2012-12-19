@@ -179,3 +179,10 @@ class PageTopicForm(forms.ModelForm):
         model = Topics
         fields = ('name','privacy','content', )
 
+    def __init__(self, *args, **kwargs):
+        super(PageTopicForm, self).__init__(*args, **kwargs)
+
+        if 'privacy' in self.fields:
+            self.fields['privacy'].required = False
+
+

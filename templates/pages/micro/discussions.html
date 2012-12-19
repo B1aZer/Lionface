@@ -33,21 +33,27 @@ $(document).ready(function(){
 					<table width="100%"><tr><td align="left">
                     <label for="id_name">Topic: </label>
                     <input id="id_name" type="text" class="required" name="name" maxlength="500" style="padding: 4px; border: 1px solid #BBB; width: 200px;"/>
-					</td><td align="right">
+					</td>
+                    {% if request.user|check_pages_updates:page or request.user|check_pages_community:page %}
+                    <td align="right">
                     <label for="id_privacy">Privacy:</label> 
                     <select name="privacy" id="id_privacy"> 
                         <option value="P" selected="selected">Public</option>
                         <option value="I">Inter-Page</option>
                         <option value="H">In-House</option>
 					</select>
-					</td></tr></table>
-				</div><div align="left" style="padding: 5px;">
+					</td>
+                    {% endif %}
+                    </tr></table>
+				</div>
+                <div id="topic_tagged" align="left" style="padding: 5px;display:none;">
 					<table width="100%"><tr><td align="left" style="font-size: 8pt;">
 					<a href="#">(Tagged Page)</a>
 					</td><td align="right">
 					Add Pages: <input type="Text" style="padding: 4px; border: 1px solid #BBB; width: 150px;" />
 					</td></tr></table>
-				</div><div align="left" style="padding: 5px;">
+				</div>
+                <div id="topic_members" align="left" style="padding: 5px;display:none;">
 					<table width="100%"><tr><td align="left">
 					</td><td align="right">
 					<span style="margin: 5px;">Current: </span> 

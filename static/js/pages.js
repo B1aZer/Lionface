@@ -563,6 +563,9 @@ LionFace.Pages.prototype = {
                     url:url,
                     data:$("#topicForm").serialize(),
                     callback: function(data) {
+                        if (data.status == 'OK') {
+                            $('.page_center').replaceWith(data.html);
+                        }
                     }
                 });
             }
@@ -599,6 +602,22 @@ LionFace.Pages.prototype = {
                         }
                     }
                 });
+            }
+        });
+
+        $(document).on('change','#id_privacy', function(e) {
+            privacy = $(this).val();
+            if (privacy == 'P') {
+                $('#topic_tagged').hide();
+                $('#topic_members').hide();
+            }
+            if (privacy == 'I') {
+                $('#topic_tagged').show();
+                $('#topic_members').show();
+            }
+            if (privacy == 'H') {
+                $('#topic_tagged').hide();
+                $('#topic_members').show();
             }
         });
         

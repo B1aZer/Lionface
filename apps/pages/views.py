@@ -1796,8 +1796,6 @@ def share_event(request, slug):
 
 def card_form(request, slug):
     if request.method == 'POST' and not request.user.is_customer():
-        import pdb
-        pdb.set_trace()
         # set your secret key: remember to change this to your live secret key in production
         # see your keys here https://manage.stripe.com/account
         stripe.api_key = "GfdATJpLDgriMZ66PPrK0Kf9XuCsZU9w"
@@ -1851,15 +1849,22 @@ def start_topic(request, slug):
         raise Http404
     if request.method == 'POST':
         form = PageTopicForm(request.POST)
-        topic = form.save(commit=False)
-        topic.user = request.user
-        topic.page = page
-        members = request.POST.getlist('members', None)
-        if members:
-            members.append("A")
-            topic.members = ",".join(members)
-        topic.save()
-        topic.tagged.add(page)
+        if form.is_valid():
+            topic = form.save(commit=False)
+            topic.user = request.user
+            topic.page = page
+            members = request.POST.getlist('members', None)
+            if members:
+                members.append("A")
+                topic.members = ",".join(members)
+            topic.save()
+            topic.tagged.add(page)
+            data['html'] = render_to_string('pages/micro/discussions.html',
+                                    {
+                                    'page': page,
+                                    }, context_instance=RequestContext(request))
+        else:
+            data['status'] =  'FAIL'
 
     return HttpResponse(json.dumps(data), "application/json")
 
