@@ -165,16 +165,24 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 <div style="margin-left: 15px;">{{ page.get_lovers_active_count }}</div>
             </td>
         </tr>
+        {% if page.get_lovers_pending_count %}
         <tr>
             <td align="right">Loves Pending: </td>
             <td>
                 <div style="margin-left: 15px;">{{ page.get_lovers_pending_count }}</div>
             </td>
         </tr>
+        {% endif %}
         <tr>
             <td align="right">Loves Remaining: </td>
             <td>
                 <div style="margin-left: 15px;">{{ page.get_page_loves_limit }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Current Limit: </td>
+            <td>
+                <div style="margin-left: 15px;">{{ page.get_page_loves_limit|add:page.get_lovers_active_count }}</div>
             </td>
         </tr>
         {% if request.user|is_lcustomer_for:page or page.exempt %}
