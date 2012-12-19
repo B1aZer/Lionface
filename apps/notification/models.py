@@ -171,11 +171,13 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
         #notifiaction for events
         #Notification(user=comment.content_object.get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
         pass
+    if isinstance(news_post,NewsItem):
+        news_post = news_post.get_post()
     else:
         #creating notification for owner if following
         if news_post.get_owner() != comment.user and news_post.get_owner() in news_post.get_post().following.all() \
                 and comment.user not in news_post.get_owner().get_blocked():
-            Notification(user=comment.content_object.get_post().get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
+            Notification(user=news_post.get_post().get_owner(), type='CS', other_user=comment.user, content_object=news_post).save()
         #create notifiactions for all followers of this post
         try:
             post = news_post.get_post()

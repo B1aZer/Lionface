@@ -97,6 +97,10 @@ class Post(models.Model):
             return self.feedbackpost
         except Exception:
             pass
+        try:
+            return self.discusspost
+        except Exception:
+            pass
         return self
 
     # Return a list of users who are involved with this post (i.e. should see
@@ -380,6 +384,7 @@ class DiscussPost(Post):
 
     def privacy(self):
         return 'P'
+
 
 
 class PageSharePost(PagePost):

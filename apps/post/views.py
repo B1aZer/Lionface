@@ -266,44 +266,11 @@ def show(request):
     if request.method == 'POST' and 'post_id' in request.POST:
         post_type = request.POST['post_type']
         post_id = request.POST['post_id']
-        post_model = request.POST.get('post_model', None)
+        #post_model = request.POST.get('post_model', None)
 
-        if post_type == 'content post':
-            try:
-                cont_post = ContentPost.objects.get(id=int(post_id))
-            except ObjectDoesNotExist:
-                data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json")
-            items = NewsItem.objects.filter(post=cont_post)
+        items = []
 
-        if post_type == 'share post':
-            try:
-                share_post = SharePost.objects.get(id=int(post_id))
-            except ObjectDoesNotExist:
-                data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json")
-            items = NewsItem.objects.filter(post=share_post)
-
-        if post_type == 'pageshare post':
-            try:
-                items = Post.objects.filter(id=int(post_id))
-            except ObjectDoesNotExist:
-                data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json")
-
-        if post_type == 'comment post':
-            if post_model == 'post_post':
-                try:
-                    items = Post.objects.filter(id=int(post_id))
-                except ObjectDoesNotExist:
-                    data['html'] = "Sorry no such post"
-                    return HttpResponse(json.dumps(data), "application/json")
-            else:
-                try:
-                    items = NewsItem.objects.filter(id=int(post_id))
-                except ObjectDoesNotExist:
-                    data['html'] = "Sorry no such post"
-                    return HttpResponse(json.dumps(data), "application/json")
+        items = Post.objects.filter(id=int(post_id))
 
         if post_type in ('shared_multiple', 'profile_multiple'):
             from notification.models import Extra
@@ -323,6 +290,8 @@ def show(request):
                                    'notification': True,
                                    })
                 data['html'] = t.render(c)
+        else:
+            data['html'] = "Sorry no such post"
 
     return HttpResponse(json.dumps(data), "application/json")
 
