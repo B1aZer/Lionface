@@ -96,7 +96,7 @@ LionFace.Profile.prototype = {
         });
         $("#postbox .postcontent").focusout(function() {
             //$("#postbox .postoptions").slideUp();
-            if($(this).val() == '') {
+            if($(this).val() === '') {
                 $(this).val("Share something...");
             }
         });
@@ -175,7 +175,7 @@ LionFace.Profile.prototype = {
                 e.target.files[0],
                 function (img) {
                     $attached_images.find("ul li:last").append(img);
-                    $attached_images.sortable();
+                    // $attached_images.sortable();
                 },
                 {
                     maxWidth: 190

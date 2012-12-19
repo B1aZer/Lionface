@@ -66,8 +66,7 @@ def images(request, username, rows_show=4):
         raise Http404
 
     ctype = ContentType.objects.get_for_model(UserProfile)
-    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id,
-                              post__isnull=True)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
     manage_perm = request.user == profile_user
 
     if request.method == 'POST' and manage_perm:
@@ -146,8 +145,7 @@ def images_ajax(request, username):
         raise Http404
 
     ctype = ContentType.objects.get_for_model(UserProfile)
-    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id,
-                              post__isnull=True)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
     manage_perm = request.user == profile_user
 
     if method in ['activity', 'delete', 'change_position'] and not manage_perm:
@@ -239,8 +237,7 @@ def images_comments_ajax(request, username):
         raise Http404
 
     ctype = ContentType.objects.get_for_model(UserProfile)
-    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id,
-                              post__isnull=True)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
     manage_perm = request.user == profile_user
 
     try:

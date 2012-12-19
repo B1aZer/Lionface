@@ -677,11 +677,10 @@ a.profile_btn:hover {
 	height: 160px;
 }
 
-@media DISABLED {
 #image_settings.feed {
 	display: block;
 	height: 25px;
-	width: 170px;
+	width: 158px;
 	background: #555555; /* Old browsers */
 	background: -moz-linear-gradient(top, #555555 0%, #333333 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#555555), color-stop(100%,#333333)); /* Chrome,Safari4+ */
@@ -698,15 +697,14 @@ a.profile_btn:hover {
 	-moz-opacity: 0.55;
 	opacity: 0.55;
 }
-}
 
-/*#image_settings.feed:hover {
+/*#image_settings:hover {
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
 	-moz-opacity: 1;
 	opacity: 1;
 }
 */
-/*#image_settings.feed a:link, #image_settings.feed a:active, #image_settings.feed a:visited {
+/*#image_settings a:link, #image_settings a:active, #image_settings a:visited {
 	padding: 4px 6px 2px 6px;
 	color: #DDD;
 	-moz-border-radius: 2px;
@@ -715,7 +713,7 @@ a.profile_btn:hover {
 }
 */
 @media DISABLED {
-#image_settings.feed a:hover {
+#image_settings a:hover {
 	background: #FFF; /* Old browsers */
 	background: -moz-linear-gradient(top, #FFF 0%, #eeeeee 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */

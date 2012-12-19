@@ -1,0 +1,47 @@
+{% load media %}
+<div class="image_popup">
+    <div class="image_overlay"></div>
+    <div class="image_zone">
+        <div class="image_zone_view">
+            <div class="loader" style="display: none; height: 100%;"><img src="{% media_url 'images/loader.gif' %}" /></div>
+            <div class="prev"><img src="{% media_url 'images/prev.png' %}" /></div>
+            <div class="next"><img src="{% media_url 'images/next.png' %}" /></div>
+            <div class="image" style="display: none;"></div>
+        </div>
+        <div class="image_zone_info">
+            <div class="close"><a href="#" class="ui-icon ui-icon-closethick" style="margin: 0 0 0 auto;" title="Press Esc for exit"></a></div>
+            <div class="scroll_area">
+                <div class="owner">
+                    {% comment %}
+                  {% if page %}
+                    <a href="{{ page.get_absolute_url }}">
+                        <div class="thumb{% if manage_perm %} images_page_thumb{% endif %}" style="background: url('/{{ page.photo.thumb_name }}') #FFF;"></div>
+                        <div class="fullname">{{ page.name }}</div>
+                        <div class="username">{{ page.category }}</div>
+                    </a>
+                  {% else %}
+                    {% endcomment %}
+                    <a href="{{ profile_user.get_absolute_url }}">
+                        <div class="thumb{% if manage_perm %} images_profile_thumb{% endif %}" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF;"></div>
+                        <div class="fullname">{{ profile_user.full_name }}</div>
+                        <div class="username">{{ profile_user.username }}</div>
+                    </a>
+                  {# {% endif %} #}
+                </div>
+                <div class="comments">
+                    <div style="height: 100%; position: relative; right: 0px; width: 10px;"></div>
+                    <ul></ul>
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class="make_comment">
+                <div class="thumb{% if manage_perm %} images_profile_thumb{% endif %}" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF;"></div>
+                <form>
+                    <textarea name="add_comment_text" placeholder="Add comment..."></textarea>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
