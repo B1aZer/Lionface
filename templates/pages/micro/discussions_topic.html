@@ -1,0 +1,30 @@
+{% load media format_results %}
+
+<div class="page_center">
+    <div style="padding: 15px;">
+
+        <div>
+            <div style="padding: 10px;" align="center">
+
+                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
+
+                <br />
+                <div class="postoptions_container" >
+                    <table width="100%"><tr>
+                            <td align="left" style="color: #999; font-size: 8pt;" width="50%">          
+                            </td>
+                                    <td align="right">
+									<span style="color: #CCC; font-size: 8pt; margin: 4px;"><span style="margin: 4px;">#</span> <span style="margin: 4px;">embed</span> <span style="margin: 4px;">href</span></span>
+                                    <div class="attach">Attach</div> <a href="{% url pages.views.list_topic slug=page.username topic_id=topic.id %}" class="post" id="posttopicbutton">Post</a>
+                                    </td>
+                </tr></table>
+                </div>
+            </div>
+        </div>
+
+        <div id="page_feed" style="position: relative; left: -50px;">
+            {% include 'post/_topic_feed.html' %}
+        </div>
+
+    </div>
+</div>

@@ -567,6 +567,40 @@ LionFace.Pages.prototype = {
                 });
             }
         });
+
+        $(document).on('click','.page_topics',function(e) {
+            e.preventDefault();
+            var topic_id = get_int($(this).attr('id'));
+            var url = 'list_topic/'+ topic_id + '/';
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        $('.page_center').replaceWith(data.html);
+                    }
+                }
+            });
+        });
+        
+        /** topic post button */
+        $(document).on('click','#posttopicbutton',function(e) {
+            e.preventDefault();     
+            var url = $(this).attr('href');
+            var content = $('.postbox_textarea').val();
+            if (content) {
+                make_request({
+                    url:url,
+                    data: {
+                        'content': content,
+                    },
+                    callback:function(data) {
+                        if (data.status == 'OK') {
+                            $('.page_center').replaceWith(data.html);
+                        }
+                    }
+                });
+            }
+        });
         
     },
     /*

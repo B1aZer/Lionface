@@ -1859,6 +1859,30 @@ def start_topic(request, slug):
             members.append("A")
             topic.members = ",".join(members)
         topic.save()
+        topic.tagged.add(page)
 
+    return HttpResponse(json.dumps(data), "application/json")
 
+def list_topic(request, slug, topic_id):
+    data = {'status': 'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    try:
+        topic = Topics.objects.get(id=topic_id)
+    except Topics.DoesNotExist:
+        raise Http404
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        topic.posts.create(user=request.user, content=content)
+
+    items = topic.get_feed()
+
+    data['html'] = render_to_string('pages/micro/discussions_topic.html',
+                                    {
+                                    'topic': topic,
+                                    'items': items,
+                                    'page': page,
+                                    }, context_instance=RequestContext(request))
     return HttpResponse(json.dumps(data), "application/json")

@@ -449,6 +449,10 @@ class Pages(models.Model):
         except:
             return False
 
+    def get_topics(self):
+        topics = self.tagged_in_topics.all()
+        return topics
+
     @models.permalink
     def get_absolute_url(self):
         if self.type == 'BS':
@@ -584,5 +588,15 @@ class Topics(models.Model):
     tagged = models.ManyToManyField(Pages, related_name="tagged_in_topics", null=True, blank=True)
     content = models.TextField(blank=True)
     viewed = models.ForeignKey(UserProfile, related_name="viewed_topics", null=True, blank=True)
+
+    def get_privacy(self):
+        privacy = self.privacy
+        for pr in TOPIC_PRIVACY_SET:
+            if privacy in pr:
+                return pr[1]
+
+    def get_feed(self):
+        feed = self.posts.all()
+        return feed
 
 

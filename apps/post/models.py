@@ -1,7 +1,7 @@
 from django.db import models
 from account.models import UserProfile
 from tags.models import Tag
-from pages.models import Pages
+from pages.models import Pages, Topics
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -35,6 +35,7 @@ class QuerySet(models.query.QuerySet):
     @classmethod
     def as_manager(cls, ManagerClass=QuerySetManager):
         return ManagerClass(cls)
+
 
 
 class CustomQuerySet(QuerySet):
@@ -179,6 +180,7 @@ class Post(models.Model):
         return self.users_loved.all()
 
 
+
 class FriendPost(Post):
     friend = models.ForeignKey(UserProfile)
 
@@ -193,6 +195,7 @@ class FriendPost(Post):
 
     def privacy(self):
         return ""
+
 
 
 class FeedbackPost(Post):
@@ -265,6 +268,7 @@ class FeedbackPost(Post):
         return 'P'
 
 
+
 class PagePost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='posts')
@@ -321,6 +325,58 @@ class PagePost(Post):
 
     def get_page_url(self):
         return self.page.get_absolute_url()
+
+    def privacy(self):
+        return 'P'
+
+
+
+class DiscussPost(Post):
+    content = models.CharField(max_length=5000)
+    topic = models.ForeignKey(Topics, related_name='posts')
+
+    def render(self):
+        import bleach
+        from oembed.core import replace
+        # Clean
+        self.content = bleach.clean(self.content)
+        # Embed videos
+        self.content = replace(self.content, max_width=527, fixed_width=527)
+        # Linkify
+        self.content = bleach.linkify(
+            self.content, target='_blank', filter_url=add_http)
+
+        post_template = render_to_string('post/_discpost.html',
+                                         {'user': self.user,
+                                          'content': mark_safe(self.content),
+                                          })
+        # replace last linebreak
+        post_template = post_template.strip()
+
+        return post_template
+
+    def name(self):
+        return self._meta.verbose_name
+
+    def get_page_type(self):
+        return self.page.type
+
+    @property
+    def timestamp(self):
+        return self.date
+
+    @property
+    def post(self):
+        return self
+
+    def get_post(self):
+        return self.post_ptr
+
+    def get_type(self):
+        return self._meta.verbose_name
+
+    def get_owner(self):
+        return self.user
 
     def privacy(self):
         return 'P'
@@ -424,6 +480,7 @@ class ContentPost(Post):
     @property
     def get_privacy(self):
         return self.privacy
+
 
 
 class SharePost(Post):
@@ -658,6 +715,7 @@ class NewsItem(models.Model):
     @property
     def timestamp(self):
         return self.date
+
 
 
 def add_post_to_followings(sender, instance, created, **kwargs):

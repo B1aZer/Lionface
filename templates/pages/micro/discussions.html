@@ -1,4 +1,4 @@
-{% load media %}
+{% load media format_results %}
 <script>
 $(document).ready(function(){
         $("#topicForm").validate();
@@ -12,13 +12,15 @@ $(document).ready(function(){
 			 <span class="blue_btn" style="font-size: 7pt;">Inter-Page</span> 
 			 <span class="blue_btn" style="font-size: 7pt;">In-House</span></div>
 
-	<div class="dis_topics">(Topic from Topic Input - Limit to 1 Line)<br />
+    {% for topic in page.get_topics %}
+    <div id="topic_{{topic.id}}" class="dis_topics page_topics">{{ topic.name|truncatesmart:40 }}<br />
 		<div style="font-size: 8pt; color: #777; padding: 3px 0;">
-		<span style="color: #49D; margin-right: 8px">(Privacy)</span>
-		<span style="margin-right: 8px">Views: (count)</span>
-		<span style="margin-right: 8px">Posts: (count)</span>
+            <span style="color: #49D; margin-right: 8px">{{ topic.get_privacy }}</span>
+            <span style="margin-right: 8px">Views: (count)</span>
+            <span style="margin-right: 8px">Posts: (count)</span>
 		</div>
 	</div>
+    {% endfor %}
 </div>
 
 <div class="page_center">

@@ -1,0 +1,47 @@
+{% extends 'post/_feed.html' %}
+{% load media comments format_results friends %}
+{% load oembed_tags %}
+
+{% block subtext %}
+<span id="hide_comment_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
+    <a class="toggle_comments" href="">Comment</a>
+    {% ifequal item.get_post|get_comment_counter:request.user 0 %} {% else %}
+        <span style="color: #555; padding: 2px;">{{ item.get_post|get_comment_counter:request.user }}</span>
+    {% endifequal %}
+    <span style="color: transparent;"> - | - </span>
+</span>
+{% if news_feed and item.user|has_friend:request.user and not request.user|in_hidden:item.user %}
+<a href="#" class="hide_feed">Hide Feed</a>
+{% endif %}
+{% if news_feed and item.user|in_followers:request.user and not item.user|has_friend:request.user %}
+<a href="#" class="unfollow_feed link-unfollow { user: '{{ item.user.id }}' }">- Unfollow</a>
+{% endif %}
+{% endblock %}
+
+{% block post_settings %}
+<form>
+    <input type="checkbox" name="comment_settings" value="on" 
+        {% if request.user != page.user %}
+            checked="checked" disabled="disabled"
+        {% else %}
+            {% if item.get_comment_settings %}
+                checked="checked" 
+            {% endif %} 
+        {% endif %} >
+        Comments
+</form>
+{% endblock %}
+
+{% block empty %}
+    {% if request.user.get_filters or request.user.get_active_tags %}
+    <p class="no_posts_feed">There is nothing to share.</p>
+    {% else %}
+    <p class="no_posts_feed">No filters have been selected.</p>
+    {% endif %}
+{% endblock %}
+
+{% block see_more %}
+
+<a id="see_more_feed" href="?page={{ items.next_page_number }}" style="position: relative; left: 25px; padding-left: 25px; width: 615px;"> See More </a>
+
+{% endblock %}

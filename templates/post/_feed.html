@@ -20,6 +20,7 @@
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>
+            {% block subtext %}
             {% if item.get_type != 'feedback post' %}
             <span id="love_post_{{ item.get_post.id }}" data-love-color="#2AB4EA" data-loved-color="#F58">
                 {% if request.user in item.get_post.get_lovers %}
@@ -70,6 +71,7 @@
             {% if news_feed and item.user|in_followers:request.user and not item.user|has_friend:request.user %}
             <a href="#" class="unfollow_feed link-unfollow { user: '{{ item.user.id }}' }">- Unfollow</a>
             {% endif %}
+            {% endblock %}
         </div>
         <div class="share_text" style="display: none;">
         </div>
@@ -134,7 +136,7 @@
     <div id="{{item.id}}" {% if item.get_type != 'friend post' %} style="display: none;" {% endif %}>
 
         <div class="post_timestamp">
-            {% if item.get_type != 'friend post' %}
+            {% if item.get_type != 'friend post' and item.get_type != 'discuss post' %}
                 <span id="hide_follow_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                     {% if item|follows:request.user %}
                     <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %}
@@ -151,7 +153,7 @@
             {% if not del_false %}
             <!--This will fire on news feed-->
                 {% if item.get_owner.id == request.user.id  or item.get_post.user_to.id == request.user.id %}
-                    {% if item.get_type != 'friend post' and item.get_type != 'feedback post' and item.get_owner == request.user %}
+                    {% if item.get_type != 'friend post' and item.get_type != 'feedback post' and item.get_type != 'discuss post' and item.get_owner == request.user %}
                     <a href="#" class="toggle_settings" >Settings</a>
                     {% endif %}
                     {% if item.get_type == 'friend post' and item.user != request.user %}
