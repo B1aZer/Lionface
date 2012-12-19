@@ -1854,9 +1854,12 @@ def start_topic(request, slug):
             topic.user = request.user
             topic.page = page
             members = request.POST.getlist('members', None)
+            privacy = request.POST.get('privacy', None)
             if members:
                 members.append("A")
                 topic.members = ",".join(members)
+            if not privacy:
+                topic.privacy = "P"
             topic.save()
             topic.tagged.add(page)
             data['html'] = render_to_string('pages/micro/discussions.html',
