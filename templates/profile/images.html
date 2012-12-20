@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block left_col %}
-<div class="noPhoto images_profile_thumb" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 67px 67px; -moz-background-size: 67px 67px; background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px; margin-bottom: 12px; background-repeat: no-repeat;">
+<div class="noPhoto images_profile_thumb" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 67px 67px; -moz-background-size: 67px 67px; background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px; margin-bottom: 12px; background-repeat: no-repeat; cursor: default;">
 	{% if request.user == profile_user %}
 	<div style="position: relative; top: 4px; left: 72px; display: block; width: 126px; background: #FFF; z-index: 997;" align="center">
 		<a id="upload_picture" class="upload" style="display:none;">Upload</a><br />

@@ -419,7 +419,7 @@ class PageSharePost(PagePost):
 
     def render(self):
         #import pdb;pdb.set_trace()
-        return mark_safe("""<a href='%s'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
+        return mark_safe("""<a href='' style='font-size: 14pt;'>Page Name</a> <a href='%s' class='admin_name'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
                             <div class='share_content'>%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
 
 
