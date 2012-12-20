@@ -21,10 +21,10 @@
                     </a>
                   {% else %}
                     {% endcomment %}
-                    <a href="{{ profile_user.get_absolute_url }}">
-                        <div class="thumb{% if manage_perm %} images_profile_thumb{% endif %}" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF;"></div>
-                        <div class="fullname">{{ profile_user.full_name }}</div>
-                        <div class="username">{{ profile_user.username }}</div>
+                    <a class="user_absolute_url" href="">
+                        <div class="thumb" style=""></div>
+                        <div class="fullname"></div>
+                        <div class="username"></div>
                     </a>
                   {# {% endif %} #}
                 </div>

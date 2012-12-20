@@ -379,7 +379,7 @@ LionFace.Site.prototype = {
 
     del_post: function (elem) {
         if (LionFace.User.is_anonymous) {
-            return
+            return;
         }
         var data = $('.post_'+elem).metadata();
         url = "/posts/del/" + elem + "?user="+data.user+"&type="+data.type+"&model="+data.model;
