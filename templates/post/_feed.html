@@ -7,7 +7,7 @@
 {% if not notification %}
     <hr style="position: relative; left: 50px; border: 1px solid #E7E7E7; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
-{% with user=item.get_post.get_inherited.user %}
+{% with user=item.get_original_author %}
 <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ user.username }}', user_full_name: '{{ user.full_name }}', user_photo_thumb: '/{{ user.photo.thumb_name }}', user_absolute_url: '{{ user.get_absolute_url }}' }">
 {% endwith %}
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">

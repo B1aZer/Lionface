@@ -614,6 +614,13 @@ class NewsItem(models.Model):
             return False
         return original.user
 
+    def get_original_author(self):
+        try:
+            original = self.get_post().get_inherited()
+            return original.user
+        except:
+            return False
+
     def get_wall_user(self):
         return self.user
 
