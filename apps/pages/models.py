@@ -5,6 +5,7 @@ from django.db.models.signals import m2m_changed
 from django.db.models import F
 from datetime import datetime
 from django.utils import timezone
+from django.core.paginator import Paginator
 import logging
 import cPickle
 
@@ -451,7 +452,23 @@ class Pages(models.Model):
 
     def get_topics(self):
         topics = self.tagged_in_topics.all()
+        paginator = Paginator(topics, 7)
+        topics = paginator.page(1)
         return topics
+
+    def get_topics_for(self, user):
+        # OPTIMIZE: query filter like
+        priv_topics = []
+        topics = self.tagged_in_topics.all()
+        roles = user.get_user_roles_for(self)
+        for topic in topics:
+            for role in roles:
+                if role in topic.members or topic.privacy == 'P':
+                    priv_topics.append(topic)
+                    break
+                else:
+                    pass
+        return priv_topics
 
     @models.permalink
     def get_absolute_url(self):
@@ -587,7 +604,7 @@ class Topics(models.Model):
     members = models.CharField(max_length=1, choices=TOPIC_MEMBERS_SET, default='A')
     tagged = models.ManyToManyField(Pages, related_name="tagged_in_topics", null=True, blank=True)
     content = models.TextField(blank=True)
-    viewed = models.ForeignKey(UserProfile, related_name="viewed_topics", null=True, blank=True)
+    viewed = models.ManyToManyField(UserProfile, related_name="viewed_topics", null=True, blank=True)
 
     def get_privacy(self):
         privacy = self.privacy
@@ -599,4 +616,11 @@ class Topics(models.Model):
         feed = self.posts.all()
         return feed
 
+    def get_views_count(self):
+        viewed = self.viewed.count()
+        return viewed
+
+    def get_posts_count(self):
+        viewed = self.posts.count()
+        return viewed
 

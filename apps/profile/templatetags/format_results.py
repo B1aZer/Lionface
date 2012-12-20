@@ -335,6 +335,7 @@ def is_intern_for(user, page):
 
 @register.assignment_tag
 def has_community_privileges(user, page, topic):
+    """ {% has_community_privileges user page topic as privelege %} """
     for role in user.get_user_roles_for(page):
         if role in topic.members:
             return True
@@ -478,4 +479,9 @@ def truncatesmart(value, limit=80):
 
     # Join the words and return
     return ' '.join(words) + '...'
+
+
+@register.filter
+def get_topics_for(page, user):
+    return page.get_topics_for(user)
 

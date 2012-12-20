@@ -1,0 +1,24 @@
+{% load media format_results %}
+    {% for topic in topics %}
+    <div id="topic_{{topic.id}}" class="dis_topics page_topics">{{ topic.name|truncatesmart:40 }}<br />
+		<div style="font-size: 8pt; color: #777; padding: 3px 0;">
+            <span style="color: #49D; margin-right: 8px">{{ topic.get_privacy }}</span>
+            <span style="margin-right: 8px">Views: <span class="topic_views_count">{{ topic.get_views_count }}</span></span>
+            <span style="margin-right: 8px">Posts: {{ topic.get_posts_count }}</span>
+		</div>
+	</div>
+    {% endfor %}
+
+    {% if topics %}
+            {% if topics.has_previous %}
+            <a href="{% url pages.views.topics_paging slug=page.username %}?page={{ topics.previous_page_number }}" class="profile_nav nav_link topic_forward">< Newer</a>
+            {% else %}
+            <a href="javascript:;" class="" style="color:#BBB; padding: 7px; cursor: default; text-decoration: none;">< Newer</a>
+            {% endif %}
+            <span align="center" width="" style="color: #AAA; font-size: 7pt;">{{ topics.number }} of {{ topics.paginator.num_pages }}</span>
+            {% if topics.has_next %}
+            <a href="{% url pages.views.topics_paging slug=page.username %}?page={{ topics.next_page_number }}" class="profile_nav nav_link topic_backward">Older ></a>
+            {% else %}
+            <a href="javascript:;" class="" style="color:#BBB; padding: 7px; cursor: default; text-decoration: none;">Older ></a>
+            {% endif %}
+    {% endif %}

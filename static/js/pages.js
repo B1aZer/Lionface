@@ -573,6 +573,7 @@ LionFace.Pages.prototype = {
 
         $(document).on('click','.page_topics',function(e) {
             e.preventDefault();
+            var self = $(this);
             var topic_id = get_int($(this).attr('id'));
             var url = 'list_topic/'+ topic_id + '/';
             make_request({
@@ -580,6 +581,7 @@ LionFace.Pages.prototype = {
                 callback: function(data) {
                     if (data.status == 'OK') {
                         $('.page_center').replaceWith(data.html);
+                        self.find('.topic_views_count').html(data.views);
                     }
                 }
             });
@@ -619,6 +621,20 @@ LionFace.Pages.prototype = {
                 $('#topic_tagged').hide();
                 $('#topic_members').show();
             }
+        });
+
+        /** topic pagination */
+        $(document).on('click','.topic_forward, .topic_backward',function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        $('#topic_container').html(data.html);
+                    }
+                }
+            });
         });
         
     },

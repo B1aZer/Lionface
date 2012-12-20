@@ -44,6 +44,7 @@ try:
 except ImportError:
     import simplejson as json
 
+TOPICS_PER_PAGE = 5
 
 def main(request):
 
@@ -126,12 +127,18 @@ def page(request, slug=None):
     # micro templates
     if request.method == 'GET' and 'ajax' in request.GET:
         data = {}
+        topics = []
         template_name = request.GET.get('template_name', None)
+        if template_name == 'discussions':
+            topics = page.get_topics_for(request.user)
+            paginator = Paginator(topics, TOPICS_PER_PAGE)
+            topics = paginator.page(1)
         if template_name:
             try:
                 data['html'] = render_to_string('pages/micro/%s.html' % template_name,
                                                 {
                                                 'page': page,
+                                                'topics':topics,
                                                 }, context_instance=RequestContext(request))
             except TemplateDoesNotExist:
                 data['html'] = "Sorry! Wrong template."
@@ -1900,6 +1907,8 @@ def list_topic(request, slug, topic_id):
         topic.posts.create(user=request.user, content=content)
 
     items = topic.get_feed()
+    # viewed once
+    topic.viewed.add(request.user)
 
     data['html'] = render_to_string('pages/micro/discussions_topic.html',
                                     {
@@ -1907,4 +1916,41 @@ def list_topic(request, slug, topic_id):
                                     'items': items,
                                     'page': page,
                                     }, context_instance=RequestContext(request))
+    data['views'] = topic.get_views_count()
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def topics_paging(request, slug):
+    data = {'status': 'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+
+    items = page.get_topics_for(request.user)
+
+    # PAGINATION #
+    paginator = Paginator(items, TOPICS_PER_PAGE)
+    items = paginator.page(1)
+
+    if request.method == 'GET':
+        page_num = request.GET.get('page', None)
+        if page_num:
+            try:
+                items = paginator.page(page_num)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                items = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                items = paginator.page(paginator.num_pages)
+        else:
+            page_num = 1
+
+    data['html'] = render_to_string('pages/micro/discussions_topics.html',
+                                    {
+                                    'topics': items,
+                                    'page': page,
+                                    }, context_instance=RequestContext(request))
+    data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")

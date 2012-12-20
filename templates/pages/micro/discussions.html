@@ -52,18 +52,9 @@ $(document).ready(function(){
 			 <span class="blue_btn" style="font-size: 7pt;">Inter-Page</span> 
 			 <span class="blue_btn" style="font-size: 7pt;">In-House</span></div>
 
-    {% for topic in page.get_topics %}
-    {% has_community_privileges user page topic as privelege %}
-    {% if privelege %}
-    <div id="topic_{{topic.id}}" class="dis_topics page_topics">{{ topic.name|truncatesmart:40 }}<br />
-		<div style="font-size: 8pt; color: #777; padding: 3px 0;">
-            <span style="color: #49D; margin-right: 8px">{{ topic.get_privacy }}</span>
-            <span style="margin-right: 8px">Views: (count)</span>
-            <span style="margin-right: 8px">Posts: (count)</span>
-		</div>
-	</div>
-    {% endif %}
-    {% endfor %}
+         <div id="topic_container">
+             {% include 'pages/micro/discussions_topics.html' %}
+         </div>
 </div>
 
 <div class="page_center">
