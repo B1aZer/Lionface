@@ -44,7 +44,7 @@ try:
 except ImportError:
     import simplejson as json
 
-TOPICS_PER_PAGE = 5
+TOPICS_PER_PAGE = 7
 
 def main(request):
 
