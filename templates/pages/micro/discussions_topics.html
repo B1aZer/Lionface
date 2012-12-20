@@ -8,7 +8,6 @@
 		</div>
 	</div>
     {% endfor %}
-
     {% if topics %}
             {% if topics.has_previous %}
             <a href="{% url pages.views.topics_paging slug=page.username %}?page={{ topics.previous_page_number }}" class="profile_nav nav_link topic_forward">< Newer</a>

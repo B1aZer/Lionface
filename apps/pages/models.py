@@ -1,11 +1,19 @@
 from django.db import models
 from account.models import UserProfile
+
+from django.contrib import comments
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import validate_slug, URLValidator
+
 from django.db.models.signals import m2m_changed
 from django.db.models import F
-from datetime import datetime
+
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.conf import settings
+
+from datetime import datetime
+import datetime as dateclass
 import logging
 import cPickle
 
@@ -458,6 +466,25 @@ class Pages(models.Model):
 
     def get_topics_for(self, user):
         # OPTIMIZE: query filter like
+        now = timezone.now()
+        delta = dateclass.timedelta(days=365 * 5)
+        old_date = now - delta
+
+        def sort_by_both_values(topic):
+            date1 = topic.get_last_post_date()
+            date2 = topic.get_last_comment_date()
+            if date1 and date2:
+                if date1 > date2:
+                    return date1
+                elif date2 > date1:
+                    return date2
+                else:
+                    return date1
+            elif date1:
+                return date1
+            # dummy return
+            return old_date
+
         priv_topics = []
         topics = self.tagged_in_topics.all()
         roles = user.get_user_roles_for(self)
@@ -468,6 +495,16 @@ class Pages(models.Model):
                     break
                 else:
                     pass
+        # this will sort by 1st then second (we need by both)
+        # sorted by 2 dates (tuples for None compare)
+        """
+        priv_topics = sorted(priv_topics, key=lambda s: (
+                (s.get_last_post_date() is not None, s.get_last_post_date()),
+                (s.get_last_comment_date() is not None, s.get_last_comment_date())
+                ), reverse = True
+            )
+        """
+        priv_topics = sorted(priv_topics, key=sort_by_both_values, reverse = True)
         return priv_topics
 
     @models.permalink
@@ -623,4 +660,38 @@ class Topics(models.Model):
     def get_posts_count(self):
         viewed = self.posts.count()
         return viewed
+
+    def get_last_post_date(self):
+        posts = self.posts.all()
+        if posts:
+            post = posts.latest('date')
+            return post.date
+        else:
+            return None
+
+    def get_last_comment_date(self):
+        # Im so sorry, db
+        now = timezone.now()
+        delta = dateclass.timedelta(days=365 * 5)
+        latest_date = now - delta
+        oldest = latest_date
+        # find all posts in topic
+        posts = self.posts.all()
+        # find latest comment date for each
+        if posts:
+            for post in posts:
+                comms = comments.get_model().objects.filter(
+                        content_type=ContentType.objects.get_for_model(post.get_post()),
+                        object_pk=post.pk,
+                        site__pk=settings.SITE_ID,
+                        is_removed=False,
+                        )
+                if comms:
+                    new_date = comms.latest('submit_date')
+                    if new_date.submit_date > latest_date:
+                        latest_date = new_date.submit_date
+        if latest_date != oldest:
+            return latest_date
+        else:
+            return None
 
