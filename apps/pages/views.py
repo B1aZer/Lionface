@@ -1855,6 +1855,7 @@ def start_topic(request, slug):
             topic.page = page
             members = request.POST.getlist('members', None)
             privacy = request.POST.get('privacy', None)
+            tagged = request.POST.get('tagged_pages', None)
             if members:
                 members.append("A")
                 topic.members = ",".join(members)
@@ -1862,6 +1863,18 @@ def start_topic(request, slug):
                 topic.privacy = "P"
             topic.save()
             topic.tagged.add(page)
+            if tagged:
+                pages = tagged.split(',')
+                pages = set(pages)
+                for one_page in pages:
+                    username = one_page.strip()
+                    if username:
+                        try:
+                            tagged_page = Pages.objects.get(username = username)
+                            if tagged_page in page.get_friends():
+                                topic.tagged.add(tagged_page)
+                        except:
+                            pass
             data['html'] = render_to_string('pages/micro/discussions.html',
                                     {
                                     'page': page,

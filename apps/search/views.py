@@ -75,3 +75,20 @@ def auto_calendar(request, slug=None):
         dic = {'label':pg.name,'value':pg.username,'id':pg.id}
         data.append(dic)
     return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def auto_discussions(request, slug=None):
+    data = []
+    pages = []
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    term = request.GET.get('term',None)
+    if term:
+        pages =  page.get_friends().filter(name__icontains=term).exclude(id=page.id).all()
+    for pg in pages:
+        dic = {'label':pg.name,'value':pg.username,'id':pg.id}
+        data.append(dic)
+    return HttpResponse(json.dumps(data), "application/json")

@@ -2,6 +2,46 @@
 <script>
 $(document).ready(function(){
         $("#topicForm").validate();
+
+        /** Autocomplete for pages */
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+            return split( term ).pop();
+        }    
+        var url_auto = '{% url search.views.auto_discussions slug=page.username %}';
+        $("#page_name_input")
+            // don't navigate away from the field on tab when selecting an item
+            .bind( "keydown", function( event ) {
+                if ( event.keyCode === $.ui.keyCode.TAB &&
+                        $( this ).data( "autocomplete" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                source: function( request, response ) {
+                    $.getJSON( url_auto, {
+                        term: extractLast( request.term )
+                    }, response );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    return false;
+                }
+                
+            }); 
 });
 </script>
 
@@ -13,6 +53,8 @@ $(document).ready(function(){
 			 <span class="blue_btn" style="font-size: 7pt;">In-House</span></div>
 
     {% for topic in page.get_topics %}
+    {% has_community_privileges user page topic as privelege %}
+    {% if privelege %}
     <div id="topic_{{topic.id}}" class="dis_topics page_topics">{{ topic.name|truncatesmart:40 }}<br />
 		<div style="font-size: 8pt; color: #777; padding: 3px 0;">
             <span style="color: #49D; margin-right: 8px">{{ topic.get_privacy }}</span>
@@ -20,6 +62,7 @@ $(document).ready(function(){
             <span style="margin-right: 8px">Posts: (count)</span>
 		</div>
 	</div>
+    {% endif %}
     {% endfor %}
 </div>
 
@@ -50,7 +93,7 @@ $(document).ready(function(){
 					<table width="100%"><tr><td align="left" style="font-size: 8pt;">
 					<a href="#">(Tagged Page)</a>
 					</td><td align="right">
-					Add Pages: <input type="Text" style="padding: 4px; border: 1px solid #BBB; width: 150px;" />
+					Add Pages: <input id="page_name_input" name="tagged_pages" type="Text" style="padding: 4px; border: 1px solid #BBB; width: 150px;" />
 					</td></tr></table>
 				</div>
                 <div id="topic_members" align="left" style="padding: 5px;display:none;">

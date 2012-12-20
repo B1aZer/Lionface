@@ -160,14 +160,17 @@ def check_message_sending(user, current):
     return user.check_visiblity('send_message', current)
 
 
+
 @register.filter(name='check_friend_request')
 def check_friend_request(user, current):
     return user.check_visiblity('add_friend', current)
 
 
+
 @register.filter(name='escaping')
 def escaping(value):
     return escape(value)
+
 
 
 @register.filter(name='follows')
@@ -180,6 +183,7 @@ def follows(item, user):
 @register.filter(name='following')
 def following(item):
     return item.get_post().following.count()
+
 
 
 @register.filter(is_safe=True, needs_autoescape=True)
@@ -201,7 +205,6 @@ def mark_read(message):
     return ""
 
 # Permission filters for pages
-
 
 @register.filter(name="check_pages_basics")
 def check_pages_basics(user, page):
@@ -266,6 +269,7 @@ def check_profile_eiv(user, current):
     return user.check_visiblity('vie_profile', current)
 
 
+
 @register.filter(name="check_pages_eiv_private")
 def check_pages_eiv_private(user, current):
     if user == current:
@@ -297,9 +301,11 @@ def get_community_pages_friends(user, page):
     return user.get_community_pages_friends(page)
 
 
+
 @register.filter(name="get_community_friends_for")
 def get_community_friends_for(user, page):
     return user.get_community_pages_count(page)
+
 
 
 @register.filter(name="show_membership")
@@ -308,6 +314,33 @@ def show_membership(page, user):
         return []
     return page.show_membership(user)
 
+
+@register.filter(name="is_employee_for")
+def is_employee_for(user, page):
+    if user.is_anonymous():
+        return False
+    return user.is_employee_for(page)
+
+@register.filter(name="is_volunteer_for")
+def is_volunteer_for(user, page):
+    if user.is_anonymous():
+        return False
+    return user.is_volunteer_for(page)
+
+@register.filter(name="is_intern_for")
+def is_intern_for(user, page):
+    if user.is_anonymous():
+        return False
+    return user.is_intern_for(page)
+
+@register.assignment_tag
+def has_community_privileges(user, page, topic):
+    for role in user.get_user_roles_for(page):
+        if role in topic.members:
+            return True
+    if 'P' in topic.privacy:
+        return True
+    return False
 
 @register.filter(name="show_connections")
 def show_connections(page, user):
@@ -341,6 +374,7 @@ def posted_review_for(user, page):
     return user.posted_review_for(page)
 
 
+
 @register.filter(name="get_current_bid_for")
 def get_current_bid_for(user, page):
     bid = user.get_current_bid_for(page)
@@ -349,7 +383,6 @@ def get_current_bid_for(user, page):
     else:
         bid = 0
     return bid
-
 
 @register.filter(name="is_customer_for")
 def is_customer_for(user, page):
@@ -374,6 +407,7 @@ def get_love_card_type_for(user,page):
 @register.filter(name="get_card_type")
 def get_card_type(user, page):
     return user.get_card_type_for(page)
+
 
 
 @register.filter(name="format_date")
@@ -403,6 +437,7 @@ def show_charts(cl):
     return {'summaries':results,
             'xs':xs,
             'ys':ys}
+
 
 @register.inclusion_tag('admin/ecomm/bidding.html')
 def show_bidding(cl):

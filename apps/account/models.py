@@ -476,6 +476,24 @@ class UserProfile(User):
             roles.append('I')
         return roles
 
+    def is_employee_for(self, page):
+        qry = self.membership_set.filter(page=page,type='EM', is_confirmed=True).count()
+        if qry:
+            return True
+        return False
+
+    def is_volunteer_for(self, page):
+        qry = self.membership_set.filter(page=page,type='VL', is_confirmed=True).count()
+        if qry:
+            return True
+        return False
+
+    def is_intern_for(self, page):
+        qry = self.membership_set.filter(page=page,type='IN', is_confirmed=True).count()
+        if qry:
+            return True
+        return False
+
     def posted_review_for(self, page):
         reviews = page.feedback_posts.filter(user=self).order_by('-date');
         if reviews.count():
