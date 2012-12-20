@@ -514,6 +514,7 @@ def change_settings(request):
         if 'attach_to_album' in request.POST:
             album_id = request.POST['attach_to_album']
             post_album = post.album
+            import pdb; pdb.set_trace()
             try:
                 alb_obj = Albums.objects.get(id=album_id, user=request.user)
                 if alb_obj != post_album:
@@ -529,7 +530,7 @@ def change_settings(request):
         else:
             if hasattr(post, 'albums_set'):
                 post.albums_set.clear()
-    return  HttpResponse(json.dumps(data), "application/json")
+    return HttpResponse(json.dumps(data), "application/json")
 
 
 @login_required

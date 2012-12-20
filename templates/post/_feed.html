@@ -113,7 +113,7 @@
                 {% endif %}
                 {% if request.user.get_albums %}
                 <span style="color: transparent;"> -- -- -- - </span>Album: <select name="attach_to_album">
-                    <option value=""{% if not item.get_album %}selected="selected"{% endif %}></option>
+                    <option value=""{% if not item.get_album %} selected="selected"{% endif %}></option>
                     {% for album in request.user.get_albums %}
                     <option value="{{ album.id }}" {% if album == item.get_album %} selected="selected" {% endif %}>{{ album.name }}</option>
                     {% endfor %}

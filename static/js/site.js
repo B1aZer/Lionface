@@ -680,13 +680,13 @@ LionFace.Site.prototype = {
         });
 
         /** Post settings. */
-        $(document).on('change','.post_settings form :input', function(e) {
+        $(document).on('change', '.post_settings form :input', function(e) {
             var form_data = $(this).closest('form').serialize();
-            var url = '/posts/change_settings/'
+            var url = '/posts/change_settings/';
             var post = $(this).closest('.result');
             var meta = $(this).parents('.result').metadata();
             var post_id = post.attr("id").replace( /^\D+/g, '');
-            data = "post_id="+post_id+"&post_type="+meta.type
+            data = "post_id="+post_id+"&post_type="+meta.type;
             if (form_data) { data = data + "&" + form_data; }
             make_request({
                 url:url,
