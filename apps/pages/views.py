@@ -1871,6 +1871,7 @@ def start_topic(request, slug):
 
     return HttpResponse(json.dumps(data), "application/json")
 
+
 def list_topic(request, slug, topic_id):
     data = {'status': 'OK'}
     try:
