@@ -514,14 +514,15 @@ def change_settings(request):
         if 'attach_to_album' in request.POST:
             album_id = request.POST['attach_to_album']
             post_album = post.album
-            import pdb; pdb.set_trace()
             try:
                 alb_obj = Albums.objects.get(id=album_id, user=request.user)
                 if alb_obj != post_album:
                     alb_obj.posts.add(post)
                     alb_obj.save()
                     data['album'] = alb_obj.name
-                    data['album_url'] = reverse('profile.views.album_posts', kwargs={'album_id': alb_obj.id})
+                    data['album_url'] = reverse('profile.views.album_posts',
+                        kwargs={'album_id': alb_obj.id,
+                        'username': request.user.username})
             except:
                 if post.album:
                     #remove post from album
