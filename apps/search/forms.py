@@ -13,6 +13,8 @@ class SearchForm(ModelSearchForm):
             if result.model is Pages:
                 return '--'
             try:
+                if result.object.in_followers(user):
+                    return 1
                 v = result.object.get_degree_for(user)
             except:
                 # this could happen
