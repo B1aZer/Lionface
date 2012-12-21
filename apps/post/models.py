@@ -1,7 +1,7 @@
 from django.db import models
 from account.models import UserProfile
 from tags.models import Tag
-from pages.models import Pages
+from pages.models import Pages, Topics
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
@@ -37,6 +37,7 @@ class QuerySet(models.query.QuerySet):
         return ManagerClass(cls)
 
 
+
 class CustomQuerySet(QuerySet):
     def get_news_post(self, ids=None):
         """ getting news feed for post ids"""
@@ -49,7 +50,7 @@ class CustomQuerySet(QuerySet):
 
 
 def add_http(url):
-    if re.search('http://', url):
+    if re.search('http://', url) or re.search('https://', url):
         pass
     else:
         if not url.startswith('/'):
@@ -94,6 +95,10 @@ class Post(models.Model):
             pass
         try:
             return self.feedbackpost
+        except Exception:
+            pass
+        try:
+            return self.discusspost
         except Exception:
             pass
         return self
@@ -179,6 +184,7 @@ class Post(models.Model):
         return self.users_loved.all()
 
 
+
 class FriendPost(Post):
     friend = models.ForeignKey(UserProfile)
 
@@ -193,6 +199,7 @@ class FriendPost(Post):
 
     def privacy(self):
         return ""
+
 
 
 class FeedbackPost(Post):
@@ -265,6 +272,7 @@ class FeedbackPost(Post):
         return 'P'
 
 
+
 class PagePost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='posts')
@@ -326,6 +334,59 @@ class PagePost(Post):
         return 'P'
 
 
+
+class DiscussPost(Post):
+    content = models.CharField(max_length=5000)
+    topic = models.ForeignKey(Topics, related_name='posts')
+
+    def render(self):
+        import bleach
+        from oembed.core import replace
+        # Clean
+        self.content = bleach.clean(self.content)
+        # Embed videos
+        self.content = replace(self.content, max_width=527, fixed_width=527)
+        # Linkify
+        self.content = bleach.linkify(
+            self.content, target='_blank', filter_url=add_http)
+
+        post_template = render_to_string('post/_discpost.html',
+                                         {'user': self.user,
+                                          'content': mark_safe(self.content),
+                                          })
+        # replace last linebreak
+        post_template = post_template.strip()
+
+        return post_template
+
+    def name(self):
+        return self._meta.verbose_name
+
+    def get_page(self):
+        return self.topic.page
+
+    @property
+    def timestamp(self):
+        return self.date
+
+    @property
+    def post(self):
+        return self
+
+    def get_post(self):
+        return self.post_ptr
+
+    def get_type(self):
+        return self._meta.verbose_name
+
+    def get_owner(self):
+        return self.user
+
+    def privacy(self):
+        return 'P'
+
+
+
 class PageSharePost(PagePost):
     id_news = models.IntegerField(default=0)
     content_type = models.ForeignKey(ContentType, null=True, blank=True)
@@ -358,8 +419,14 @@ class PageSharePost(PagePost):
 
     def render(self):
         #import pdb;pdb.set_trace()
-        return mark_safe("""<a href='%s'>%s</a> <span style='color: #AAA;'>shared a post from</span> <a href='%s'>%s</a>
-                            <div class='share_content'>%s</div>""" % (self.user_to.get_absolute_url(), self.user_to.get_full_name(), self.user.get_absolute_url(), self.user.get_full_name(), self.content))
+        post_template = render_to_string('post/_pagesharepost.html',
+                                         {'user': self.user,
+                                          'user_to': self.user_to,
+                                          'page': self.page,
+                                          'content': mark_safe(self.content),
+                                          })
+        post_template = post_template.strip()
+        return post_template
 
 
 class ContentPost(Post):
@@ -424,6 +491,7 @@ class ContentPost(Post):
     @property
     def get_privacy(self):
         return self.privacy
+
 
 
 class SharePost(Post):
@@ -658,6 +726,7 @@ class NewsItem(models.Model):
     @property
     def timestamp(self):
         return self.date
+
 
 
 def add_post_to_followings(sender, instance, created, **kwargs):

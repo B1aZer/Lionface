@@ -20,6 +20,7 @@
     <div class="subtext">
     {% if item.get_type != 'friend post' %}
         <div>
+            {% block subtext %}
             {% if item.get_type != 'feedback post' %}
             <span id="love_post_{{ item.get_post.id }}" data-love-color="#2AB4EA" data-loved-color="#F58">
                 {% if request.user in item.get_post.get_lovers %}
@@ -70,6 +71,7 @@
             {% if news_feed and item.user|in_followers:request.user and not item.user|has_friend:request.user %}
             <a href="#" class="unfollow_feed link-unfollow { user: '{{ item.user.id }}' }">- Unfollow</a>
             {% endif %}
+            {% endblock %}
         </div>
         <div class="share_text" style="display: none;">
         </div>
@@ -134,7 +136,7 @@
     <div id="{{item.id}}" {% if item.get_type != 'friend post' %} style="display: none;" {% endif %}>
 
         <div class="post_timestamp">
-            {% if item.get_type != 'friend post' %}
+            {% if item.get_type != 'friend post' and item.get_type != 'discuss post' %}
                 <span id="hide_follow_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                     {% if item|follows:request.user %}
                     <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %}
@@ -147,11 +149,12 @@
             {% endif %}
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
+        {% block post_bottom %}
         <div class="post_bottom">
             {% if not del_false %}
             <!--This will fire on news feed-->
                 {% if item.get_owner.id == request.user.id  or item.get_post.user_to.id == request.user.id %}
-                    {% if item.get_type != 'friend post' and item.get_type != 'feedback post' and item.get_owner == request.user %}
+                    {% if item.get_type != 'friend post' and item.get_type != 'feedback post' and item.get_type != 'discuss post' and item.get_owner == request.user %}
                     <a href="#" class="toggle_settings" >Settings</a>
                     {% endif %}
                     {% if item.get_type == 'friend post' and item.user != request.user %}
@@ -183,6 +186,7 @@
             {% url users-albums-posts username=item.get_owner.username album_id=item.get_album.id as the_url %}
             <a href="{{ the_url }}" class="album_name" style="color: #C92;{% if not the_url %} display:none;{% endif %}">{{ item.get_album.name }}</a>
         </div>
+        {% endblock %}
         </div>
     </div>
 </div>

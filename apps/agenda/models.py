@@ -59,6 +59,7 @@ class Events(models.Model):
         super(Events, self).save(*args, **kwargs)
         self.tagged.add(self.page)
 
+
 class Locations(models.Model):
     event = models.ForeignKey(Events)
     location = models.CharField(max_length='2000', blank=True)

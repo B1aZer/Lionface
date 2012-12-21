@@ -554,6 +554,117 @@ LionFace.Pages.prototype = {
                 }
             });
         });
+
+        $(document).on('click','#duscussbutton',function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            if ($("#topicForm").valid()) {
+                make_request({
+                    url:url,
+                    data:$("#topicForm").serialize(),
+                    callback: function(data) {
+                        if (data.status == 'OK') {
+                            //$('.page_center').replaceWith(data.html);
+                            $('.page_container').html(data.html);
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).on('click','.page_topics',function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var topic_id = get_int($(this).attr('id'));
+            var url = 'list_topic/'+ topic_id + '/';
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        $('.page_center').replaceWith(data.html);
+                        self.find('.topic_views_count').html(data.views);
+                        $('.active_topic').removeClass('active_topic');
+                        self.addClass('active_topic');
+                    }
+                }
+            });
+        });
+        
+        /** topic post button */
+        $(document).on('click','#posttopicbutton',function(e) {
+            e.preventDefault();     
+            var url = $(this).attr('href');
+            var content = $('.postbox_textarea').val();
+            if (content) {
+                make_request({
+                    url:url,
+                    data: {
+                        'content': content,
+                    },
+                    callback:function(data) {
+                        if (data.status == 'OK') {
+                            $('.page_center').replaceWith(data.html);
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).on('change','#id_privacy', function(e) {
+            privacy = $(this).val();
+            if (privacy == 'P') {
+                $('#topic_tagged').hide();
+                $('#topic_members').hide();
+            }
+            if (privacy == 'I') {
+                $('#topic_tagged').show();
+                $('#topic_members').show();
+            }
+            if (privacy == 'H') {
+                $('#topic_tagged').hide();
+                $('#topic_members').show();
+            }
+        });
+
+        var filter_by = false;
+        /** topic pagination */
+        $(document).on('click','.topic_forward, .topic_backward',function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            if (filter_by) {
+                url = url + '&' + 'filter=' + filter_by;
+            }
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        $('#topic_container').html(data.html);
+                    }
+                }
+            });
+        });
+        
+        /** privacy selectors for topics */
+        $(document).on('click','.topic_pr_selector',function(e) {
+            e.preventDefault();
+            var self = $(this);
+            $('.active_privacy').removeClass('active_privacy');
+            $(this).addClass('active_privacy');
+            var url = LionFace.User.topic_selector_url;
+            filter_by = self.attr('id');
+            var data = {
+                    'filter': filter_by,
+            }
+            make_request({
+                url:url,
+                type:'GET',
+                data: data,
+                callback: function (data) {
+                    $('#topic_container').html(data.html);
+                }
+            });
+
+        });
     },
     /*
      * moved to user.js

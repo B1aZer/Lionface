@@ -160,14 +160,17 @@ def check_message_sending(user, current):
     return user.check_visiblity('send_message', current)
 
 
+
 @register.filter(name='check_friend_request')
 def check_friend_request(user, current):
     return user.check_visiblity('add_friend', current)
 
 
+
 @register.filter(name='escaping')
 def escaping(value):
     return escape(value)
+
 
 
 @register.filter(name='follows')
@@ -180,6 +183,7 @@ def follows(item, user):
 @register.filter(name='following')
 def following(item):
     return item.get_post().following.count()
+
 
 
 @register.filter(is_safe=True, needs_autoescape=True)
@@ -201,7 +205,6 @@ def mark_read(message):
     return ""
 
 # Permission filters for pages
-
 
 @register.filter(name="check_pages_basics")
 def check_pages_basics(user, page):
@@ -266,6 +269,7 @@ def check_profile_eiv(user, current):
     return user.check_visiblity('vie_profile', current)
 
 
+
 @register.filter(name="check_pages_eiv_private")
 def check_pages_eiv_private(user, current):
     if user == current:
@@ -297,9 +301,11 @@ def get_community_pages_friends(user, page):
     return user.get_community_pages_friends(page)
 
 
+
 @register.filter(name="get_community_friends_for")
 def get_community_friends_for(user, page):
     return user.get_community_pages_count(page)
+
 
 
 @register.filter(name="show_membership")
@@ -308,6 +314,34 @@ def show_membership(page, user):
         return []
     return page.show_membership(user)
 
+
+@register.filter(name="is_employee_for")
+def is_employee_for(user, page):
+    if user.is_anonymous():
+        return False
+    return user.is_employee_for(page)
+
+@register.filter(name="is_volunteer_for")
+def is_volunteer_for(user, page):
+    if user.is_anonymous():
+        return False
+    return user.is_volunteer_for(page)
+
+@register.filter(name="is_intern_for")
+def is_intern_for(user, page):
+    if user.is_anonymous():
+        return False
+    return user.is_intern_for(page)
+
+@register.assignment_tag
+def has_community_privileges(user, page, topic):
+    """ {% has_community_privileges user page topic as privelege %} """
+    for role in user.get_user_roles_for(page):
+        if role in topic.members:
+            return True
+    if 'P' in topic.privacy:
+        return True
+    return False
 
 @register.filter(name="show_connections")
 def show_connections(page, user):
@@ -341,6 +375,7 @@ def posted_review_for(user, page):
     return user.posted_review_for(page)
 
 
+
 @register.filter(name="get_current_bid_for")
 def get_current_bid_for(user, page):
     bid = user.get_current_bid_for(page)
@@ -349,7 +384,6 @@ def get_current_bid_for(user, page):
     else:
         bid = 0
     return bid
-
 
 @register.filter(name="is_customer_for")
 def is_customer_for(user, page):
@@ -376,6 +410,7 @@ def get_card_type(user, page):
     return user.get_card_type_for(page)
 
 
+
 @register.filter(name="format_date")
 def format_date(dt):
     dt = int(dt) / 100
@@ -397,15 +432,60 @@ def show_charts(cl):
         ys.append(int(oldest.amount))
         for res in results.exclude(id=oldest.id):
             diff = res.date - oldest.date
-            hours = diff.seconds / 60 / 60.0
+            hours = diff.seconds / 60 / 60.0 + diff.days * 86400 / 60 / 60.0
             xs.append(hours)
             ys.append(int(res.amount))
     return {'summaries':results,
             'xs':xs,
             'ys':ys}
 
+
 @register.inclusion_tag('admin/ecomm/bidding.html')
 def show_bidding(cl):
     results = cl.result_list.order_by('-amount')[:3]
     pages = [r.page for r in results]
     return {'pages':pages}
+
+
+@register.filter
+def truncatesmart(value, limit=80):
+    """
+    Truncates a string after a given number of chars keeping whole words.
+
+    Usage:
+        {{ string|truncatesmart }}
+        {{ string|truncatesmart:50 }}
+    """
+
+    try:
+        limit = int(limit)
+    # invalid literal for int()
+    except ValueError:
+        # Fail silently.
+        return value
+
+    # Make sure it's unicode
+    value = unicode(value)
+
+    # Return the string itself if length is smaller or equal to the limit
+    if len(value) <= limit:
+        return value
+
+    # Cut the string
+    value = value[:limit]
+
+    # Break into words and remove the last
+    words = value.split(' ')[:-1]
+
+    # Join the words and return
+    return ' '.join(words) + '...'
+
+
+@register.filter
+def get_topics_for(page, user):
+    return page.get_topics_for(user)
+
+
+@register.filter
+def have_shared_topic_with(user, page):
+    return user.have_shared_topic_with(page)

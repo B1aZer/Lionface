@@ -266,44 +266,11 @@ def show(request):
     if request.method == 'POST' and 'post_id' in request.POST:
         post_type = request.POST['post_type']
         post_id = request.POST['post_id']
-        post_model = request.POST.get('post_model', None)
+        #post_model = request.POST.get('post_model', None)
 
-        if post_type == 'content post':
-            try:
-                cont_post = ContentPost.objects.get(id=int(post_id))
-            except ObjectDoesNotExist:
-                data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json")
-            items = NewsItem.objects.filter(post=cont_post)
+        items = []
 
-        if post_type == 'share post':
-            try:
-                share_post = SharePost.objects.get(id=int(post_id))
-            except ObjectDoesNotExist:
-                data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json")
-            items = NewsItem.objects.filter(post=share_post)
-
-        if post_type == 'pageshare post':
-            try:
-                items = Post.objects.filter(id=int(post_id))
-            except ObjectDoesNotExist:
-                data['html'] = "Sorry no such post"
-                return HttpResponse(json.dumps(data), "application/json")
-
-        if post_type == 'comment post':
-            if post_model == 'post_post':
-                try:
-                    items = Post.objects.filter(id=int(post_id))
-                except ObjectDoesNotExist:
-                    data['html'] = "Sorry no such post"
-                    return HttpResponse(json.dumps(data), "application/json")
-            else:
-                try:
-                    items = NewsItem.objects.filter(id=int(post_id))
-                except ObjectDoesNotExist:
-                    data['html'] = "Sorry no such post"
-                    return HttpResponse(json.dumps(data), "application/json")
+        items = Post.objects.filter(id=int(post_id))
 
         if post_type in ('shared_multiple', 'profile_multiple'):
             from notification.models import Extra
@@ -323,6 +290,8 @@ def show(request):
                                    'notification': True,
                                    })
                 data['html'] = t.render(c)
+        else:
+            data['html'] = "Sorry no such post"
 
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -343,6 +312,7 @@ def delete_own_comment(request, message_id):
 
 @login_required
 def delete(request, post_id=None):
+    # OPTIMIZE: delete only Post
     data = {'status': 'FAIL'}
     if request.method == 'GET' and 'type' in request.GET and 'ajax' in request.GET:
         #this will fire on ajax post posting
@@ -375,6 +345,7 @@ def delete(request, post_id=None):
                     original.content_object.save()
         if (post_type == 'page post' and post_model == 'post_pagepost') \
                 or (post_type == 'feedback post' and post_model == 'post_feedbackpost') \
+                or (post_type == 'discuss post' and post_model == 'post_discusspost') \
                 or post_model == 'post_post':
             obj = Post.objects.get(id=post_id)
             obj.newsitem_set.delete()

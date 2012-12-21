@@ -15,6 +15,7 @@
     {% else %}
         LionFace.User.options['pages_calendar__'+{{ page.id }}] = false;
     {% endif %} 
+    LionFace.User.topic_selector_url = '{% url pages.views.topics_paging slug=page.username %}';
 </script>
 
 <!--includes for calendar micro page-->
@@ -26,6 +27,8 @@
 <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_whB_IRY-li58j9PzS4xi62Q4ErI6p3g&sensor=true">
 </script>
+<!--includes for discussions micro-->
+<script type='text/javascript' src='{% media_url 'jquery.validate.js' %}'></script>
 
 {% endblock %}  
 

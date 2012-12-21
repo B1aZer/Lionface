@@ -14,17 +14,19 @@ class Command(BaseCommand):
         max_three = Bids.objects.filter(status=1).order_by('-amount')[:3]
         if max_three.count():
             for bid in max_three:
-                stripe_id = bid.get_stripe_id()
-                amount = bid.amount * 100
+                if not bid.page.exempt:
+                    stripe_id = bid.get_stripe_id()
+                    amount = bid.amount * 100
                 try:
-                    stripe.Charge.create(
-                        amount=amount, # 1500 - $15.00 this time
-                        currency="usd",
-                        customer=stripe_id,
-                        description="Charge for %s, user: %s" % (bid.page.name, bid.user)
-                    )
-                    Summary.objects.create(user=bid.user, page=bid.page, amount=bid.amount, type='B') 
-                    self.stdout.write('Charging: %s' % stripe_id)
+                    if not bid.page.exempt:
+                        stripe.Charge.create(
+                            amount=amount, # 1500 - $15.00 this time
+                            currency="usd",
+                            customer=stripe_id,
+                            description="Charge for %s, user: %s" % (bid.page.name, bid.user)
+                        )
+                        Summary.objects.create(user=bid.user, page=bid.page, amount=bid.amount, type='B') 
+                        self.stdout.write('Charging: %s' % stripe_id)
                     if winnc < 3:
                         bid.status = 3
                         bid.save()

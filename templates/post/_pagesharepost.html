@@ -1,0 +1,9 @@
+{% spaceless %}
+                {% if page.type == 'BS' %}
+                    <a href="{{ page.get_absolute_url }}" style="color:#3ea8d2; font-size: 14pt;">{{ page.name }}</a> 
+                {% else %}   
+                    <a href="{{ page.get_absolute_url }}" style="color:#909E4A; font-size: 14pt;">{{ page.name }}</a> 
+                {% endif %}
+<a href='{{ user_to.get_absolute_url }}' class='admin_name'>{{ user_to.get_full_name }}</a> <span class='share_post'>shared a post from</span> <a href='{{ user.get_absolute_url }}'> {{ user.get_full_name }}</a>
+<div class='share_content'>{{ content }}</div>
+{% endspaceless %}

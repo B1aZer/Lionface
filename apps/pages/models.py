@@ -1,10 +1,19 @@
 from django.db import models
 from account.models import UserProfile
+
+from django.contrib import comments
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import validate_slug, URLValidator
+
 from django.db.models.signals import m2m_changed
 from django.db.models import F
-from datetime import datetime
+
 from django.utils import timezone
+from django.core.paginator import Paginator
+from django.conf import settings
+
+from datetime import datetime
+import datetime as dateclass
 import logging
 import cPickle
 
@@ -34,6 +43,19 @@ MEMBERSHIP_TYPE = (
 PAGE_LOVE_STATUS = (
         ('A', 'Active'),
         ('Q', 'Queue'),
+)
+
+TOPIC_PRIVACY_SET = (
+        ('P', 'Public'),
+        ('I', 'Inter-Page'),
+        ('H', 'In-House'),
+)
+
+TOPIC_MEMBERS_SET = (
+        ('A','Admins'),
+        ('E','Employees'),
+        ('I','Interns'),
+        ('V','Volunteers'),
 )
 
 
@@ -108,6 +130,7 @@ class Pages(models.Model):
     # bidding
     featured = models.BooleanField(default=False)
     is_disabled = models.DateTimeField(null=True, blank=True)
+    exempt = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Page"
@@ -435,6 +458,73 @@ class Pages(models.Model):
         except:
             return False
 
+    def get_topics(self):
+        topics = self.tagged_in_topics.all()
+        paginator = Paginator(topics, 7)
+        topics = paginator.page(1)
+        return topics
+
+    def get_topics_for(self, user):
+        # OPTIMIZE: query filter like
+        now = timezone.now()
+        delta = dateclass.timedelta(days=365 * 5)
+        old_date = now - delta
+
+        def sort_by_both_values(topic):
+            date1 = topic.get_last_post_date()
+            date2 = topic.get_last_comment_date()
+            if date1 and date2:
+                if date1 > date2:
+                    return date1
+                elif date2 > date1:
+                    return date2
+                else:
+                    return date1
+            elif date1:
+                return date1
+            # dummy return
+            return old_date
+
+        priv_topics = []
+        topics = self.tagged_in_topics.all()
+        roles = user.get_user_roles_for(self)
+        for topic in topics:
+            for role in roles:
+                if role in topic.members \
+                        or topic.privacy == 'P' \
+                        or (topic.privacy == 'I' and user == topic.user):
+                    priv_topics.append(topic)
+                    break
+                else:
+                    pass
+        # this will sort by 1st then second (we need by both)
+        # sorted by 2 dates (tuples for None compare)
+        """
+        priv_topics = sorted(priv_topics, key=lambda s: (
+                (s.get_last_post_date() is not None, s.get_last_post_date()),
+                (s.get_last_comment_date() is not None, s.get_last_comment_date())
+                ), reverse = True
+            )
+        """
+        priv_topics = sorted(priv_topics, key=sort_by_both_values, reverse = True)
+        return priv_topics
+
+    def get_popular_topics(self):
+        # owned topics
+        topics = self.topics_set.all()
+        def popular_sort(topic):
+            # (1 point per view) + 
+            # total posts (1 point) + 
+            # total comments (.5 point)
+            value = 0
+            value = value + topic.get_views_count()
+            value = value + topic.get_posts_count()
+            value = value + (topic.get_comment_count() * 0.5)
+            return value
+        topics = sorted(topics, key=popular_sort, reverse=True)
+        topics = topics[:4]
+        return topics
+
     @models.permalink
     def get_absolute_url(self):
         if self.type == 'BS':
@@ -561,4 +651,80 @@ class Membership(models.Model):
         self.delete()
 
 
+class Topics(models.Model):
+    name = models.CharField(max_length='2000')
+    user = models.ForeignKey(UserProfile)
+    page = models.ForeignKey(Pages)
+    privacy = models.CharField(max_length=1, choices=TOPIC_PRIVACY_SET, default='P')
+    members = models.CharField(max_length=20, choices=TOPIC_MEMBERS_SET, default='A')
+    tagged = models.ManyToManyField(Pages, related_name="tagged_in_topics", null=True, blank=True)
+    content = models.TextField(blank=True)
+    viewed = models.ManyToManyField(UserProfile, related_name="viewed_topics", null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def get_privacy(self):
+        privacy = self.privacy
+        for pr in TOPIC_PRIVACY_SET:
+            if privacy in pr:
+                return pr[1]
+
+    def get_feed(self):
+        feed = self.posts.all()
+        return feed
+
+    def get_views_count(self):
+        viewed = self.viewed.count()
+        return viewed
+
+    def get_posts_count(self):
+        viewed = self.posts.count()
+        return viewed
+
+    def get_comment_count(self):
+        count = 0
+        # find all posts in topic
+        posts = self.posts.all()
+        for post in posts:
+            comms_count = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post.get_post()),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).count()
+            count = count + comms_count
+        return count
+
+    def get_last_post_date(self):
+        posts = self.posts.all()
+        if posts:
+            post = posts.latest('date')
+            return post.date
+        else:
+            return None
+
+    def get_last_comment_date(self):
+        # Im so sorry, db
+        now = timezone.now()
+        delta = dateclass.timedelta(days=365 * 5)
+        latest_date = now - delta
+        oldest = latest_date
+        # find all posts in topic
+        posts = self.posts.all()
+        # find latest comment date for each
+        if posts:
+            for post in posts:
+                comms = comments.get_model().objects.filter(
+                        content_type=ContentType.objects.get_for_model(post.get_post()),
+                        object_pk=post.pk,
+                        site__pk=settings.SITE_ID,
+                        is_removed=False,
+                        )
+                if comms:
+                    new_date = comms.latest('submit_date')
+                    if new_date.submit_date > latest_date:
+                        latest_date = new_date.submit_date
+        if latest_date != oldest:
+            return latest_date
+        else:
+            return None
 

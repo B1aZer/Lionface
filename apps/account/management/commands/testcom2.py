@@ -15,21 +15,23 @@ class Command(BaseCommand):
         winnc = Bids.objects.filter(status=3).count()
         error_bids = Bids.objects.filter(status=2)
         for bid in error_bids:
-            stripe_id = bid.get_stripe_id()
-            amount = bid.amount * 100
+            if not bid.page.exempt:
+                stripe_id = bid.get_stripe_id()
+                amount = bid.amount * 100
             # remove error notifiers
             prs = PageRequest.objects.filter(to_page = bid.page, type = 'BE')
             for pr in prs:
                 pr.delete()
             try:
-                stripe.Charge.create(
-                    amount=amount, # 1500 - $15.00 this time
-                    currency="usd",
-                    customer=stripe_id,
-                    description="Recharge for %s, user: %s" % (bid.page.name, bid.user)
-                )
-                Summary.objects.create(user=bid.user, page=bid.page, amount=bid.amount, type='B')
-                self.stdout.write('ReCharging: %s' % stripe_id)
+                if not bid.page.exempt:
+                    stripe.Charge.create(
+                        amount=amount, # 1500 - $15.00 this time
+                        currency="usd",
+                        customer=stripe_id,
+                        description="Recharge for %s, user: %s" % (bid.page.name, bid.user)
+                    )
+                    Summary.objects.create(user=bid.user, page=bid.page, amount=bid.amount, type='B') 
+                    self.stdout.write('ReCharging: %s' % stripe_id)
                 if winnc < 3:
                     bid.status = 3
                     bid.save()

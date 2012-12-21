@@ -44,6 +44,7 @@ try:
 except ImportError:
     import simplejson as json
 
+TOPICS_PER_PAGE = 7
 
 def main(request):
 
@@ -123,14 +124,21 @@ def page(request, slug=None):
     target_width = 900
     resize = False
 
+    # micro templates
     if request.method == 'GET' and 'ajax' in request.GET:
         data = {}
+        topics = []
         template_name = request.GET.get('template_name', None)
+        if template_name == 'discussions':
+            topics = page.get_topics_for(request.user)
+            paginator = Paginator(topics, TOPICS_PER_PAGE)
+            topics = paginator.page(1)
         if template_name:
             try:
                 data['html'] = render_to_string('pages/micro/%s.html' % template_name,
                                                 {
                                                 'page': page,
+                                                'topics':topics,
                                                 }, context_instance=RequestContext(request))
             except TemplateDoesNotExist:
                 data['html'] = "Sorry! Wrong template."
@@ -436,18 +444,20 @@ def love_count(request):
                     if page.type == 'BS' \
                             and loves_limit <= 0:
                         # go away and wait for love
-                        PageLoves.objects.create(user=request.user,page=page,status='Q').save()
-                        data['status'] = 'OK'
-                        data['loved'] = page.get_lovers_active_count()
+                        if request.user not in page.get_lovers_pending():
+                            PageLoves.objects.create(user=request.user,page=page,status='Q').save()
+                            data['status'] = 'OK'
+                            data['loved'] = page.get_lovers_active_count()
                     else:
-                        page.loves = page.get_lovers().count() + 1
-                        #page.users_loved.add(request.user)
-                        PageLoves.objects.create(user=request.user,page=page).save()
-                        if page.type == 'BS':
-                            page.loves_limit = page.loves_limit - 1
-                        page.save()
-                        data['status'] = 'OK'
-                        data['loved'] = page.get_lovers_active_count()
+                        if request.user not in page.get_lovers_active():
+                            page.loves = page.get_lovers().count() + 1
+                            #page.users_loved.add(request.user)
+                            PageLoves.objects.create(user=request.user,page=page).save()
+                            if page.type == 'BS':
+                                page.loves_limit = page.loves_limit - 1
+                            page.save()
+                            data['status'] = 'OK'
+                            data['loved'] = page.get_lovers_active_count()
                 if vote == 'down':
                     page.loves = page.get_lovers().count() - 1
                     if page.type == 'BS' \
@@ -796,15 +806,17 @@ def settings(request, slug=None):
                 # if mod 100
                 if lamount%100 == 0:
                     ch_amount = lamount * 100
-                    stripe_id = page.get_love_stripe_id(request.user)
+                    if not page.exempt:
+                        stripe_id = page.get_love_stripe_id(request.user)
                     try:
-                        stripe.Charge.create(
-                            amount=ch_amount, # 1500 - $15.00 this time
-                            currency="usd",
-                            customer=stripe_id,
-                            description="Loves for %s, user: %s" % (page.name, request.user)
-                        )
-                        Summary.objects.create(user=request.user, page=page, amount=lamount, type='L')
+                        if not page.exempt:
+                            stripe.Charge.create(
+                                amount=ch_amount, # 1500 - $15.00 this time
+                                currency="usd",
+                                customer=stripe_id,
+                                description="Loves for %s, user: %s" % (page.name, request.user)
+                            )
+                            Summary.objects.create(user=request.user, page=page, amount=lamount, type='L')
                         page.loves_limit = page.loves_limit + lamount
                         users_inq = PageLoves.objects.filter(page=page,status='Q')[:lamount]
                         for quser in users_inq:
@@ -1793,8 +1805,6 @@ def share_event(request, slug):
 
 def card_form(request, slug):
     if request.method == 'POST' and not request.user.is_customer():
-        import pdb
-        pdb.set_trace()
         # set your secret key: remember to change this to your live secret key in production
         # see your keys here https://manage.stripe.com/account
         stripe.api_key = "GfdATJpLDgriMZ66PPrK0Kf9XuCsZU9w"
@@ -1838,3 +1848,139 @@ def card_form(request, slug):
         },
         RequestContext(request)
     )
+
+
+def start_topic(request, slug):
+    data = {'status': 'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    if request.method == 'POST':
+        form = PageTopicForm(request.POST)
+        if form.is_valid():
+            topic = form.save(commit=False)
+            topic.user = request.user
+            topic.page = page
+            members = request.POST.getlist('members', None)
+            privacy = request.POST.get('privacy', None)
+            tagged = request.POST.get('tagged_pages', None)
+            content = request.POST.get('content', None)
+            if members:
+                members.append("A")
+                topic.members = ",".join(members)
+            if not privacy:
+                topic.privacy = "P"
+            topic.save()
+            topic.tagged.add(page)
+            if content:
+                topic.posts.create(user=request.user, content=content)
+            if tagged:
+                pages = tagged.split(',')
+                pages = set(pages)
+                for one_page in pages:
+                    username = one_page.strip()
+                    if username:
+                        try:
+                            tagged_page = Pages.objects.get(username = username)
+                            if tagged_page in page.get_friends():
+                                topic.tagged.add(tagged_page)
+                        except:
+                            pass
+            topics = page.get_topics_for(request.user)
+            paginator = Paginator(topics, TOPICS_PER_PAGE)
+            topics = paginator.page(1)
+            data['html'] = render_to_string('pages/micro/discussions.html',
+                                    {
+                                    'page': page,
+                                    'topics':topics,
+                                    }, context_instance=RequestContext(request))
+        else:
+            data['status'] =  'FAIL'
+
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def list_topic(request, slug, topic_id):
+    data = {'status': 'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    try:
+        topic = Topics.objects.get(id=topic_id)
+    except Topics.DoesNotExist:
+        raise Http404
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        topic.posts.create(user=request.user, content=content)
+
+    items = topic.get_feed()
+    # viewed once
+    topic.viewed.add(request.user)
+
+    data['html'] = render_to_string('pages/micro/discussions_topic.html',
+                                    {
+                                    'topic': topic,
+                                    'items': items,
+                                    'page': page,
+                                    }, context_instance=RequestContext(request))
+    data['views'] = topic.get_views_count()
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def topics_paging(request, slug):
+    data = {'status': 'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+
+    def filter_topics(topics, filter_by):
+        out = []
+        for topic in topics:
+            if topic.privacy == filter_by:
+                out.append(topic)
+            else:
+                pass
+        return out
+
+    items = page.get_topics_for(request.user)
+
+    filter_by = request.GET.get('filter', None)
+    if filter_by:
+        if filter_by == 'All':
+            pass
+        elif filter_by == 'Public':
+            items = filter_topics(items, 'P')
+        elif filter_by == 'Inter':
+            items = filter_topics(items, 'I')
+        elif filter_by == 'House':
+            items = filter_topics(items, 'H')
+
+    # PAGINATION #
+    paginator = Paginator(items, TOPICS_PER_PAGE)
+    items = paginator.page(1)
+
+    if request.method == 'GET':
+        page_num = request.GET.get('page', None)
+        if page_num:
+            try:
+                items = paginator.page(page_num)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                items = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                items = paginator.page(paginator.num_pages)
+        else:
+            page_num = 1
+
+    data['html'] = render_to_string('pages/micro/discussions_topics.html',
+                                    {
+                                    'topics': items,
+                                    'page': page,
+                                    }, context_instance=RequestContext(request))
+    data['page_num'] = page_num
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
