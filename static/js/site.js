@@ -713,10 +713,10 @@ LionFace.Site.prototype = {
                         else {
                             $('#hide_share_'+post_id).show();
                         }
-                        if (data_back.album || data_back.album == '') {
+                        if (data_back.album || data_back.album === '') {
                             post.find('.album_name').html(data_back.album);
                             post.find('.album_name').attr('href',data_back.album_url);
-                            if (data_back.album != '') {
+                            if (data_back.album !== '') {
                                 post.find('.album_name').show();
                             }
                             else {

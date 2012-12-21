@@ -11,8 +11,8 @@ LionFace.PostImages = function(options) {
 LionFace.PostImages.prototype = {
 
     init : function() {
-        var _this = this,
-            current_post = undefined;
+        var _this = this;
+        this.$popup_posts = undefined;
         $('.image_popup').appendTo($('body'));
         $('.post_feed').each(function(index, newsitem) {
             $(newsitem).find('li').each(function(index, elem) {
@@ -222,40 +222,40 @@ LionFace.PostImages.prototype = {
         return d;
     },
 
-    sort_images: function() {
-        var selector = '.image_container li';
-        var _this = this;
-        function swap(elem1, elem2) {
-            _this.swap_images(elem1, elem2, 0);
-        }
-        function cmp_images(a, b) {
-            a = parseInt($(a).data('position'));
-            b = parseInt($(b).data('position'));
-            if (a > b) return 1;
-            if (a < b) return -1;
-            return 0;
-        }
-        function qsort(left, right) {
-            var l = left, r = right;
-            var c = Math.round((l+r)/2);
-            while (l <= r) {
-                while (cmp_images($(selector).get(l), $(selector).get(c)) == -1)
-                    l++;
-                while (cmp_images($(selector).get(r), $(selector).get(c)) == 1)
-                    r--;
-                if (l <= r) {
-                    swap($(selector).get(l), $(selector).get(r));
-                    l++;
-                    r--;
-                }
-            }
-            if (left < r)
-                qsort(left, r);
-            if (l < right)
-                qsort(l, right);
-        }
-        qsort(0, $(selector).length-1);
-    },
+    // sort_images: function() {
+    //     var selector = '.image_container li';
+    //     var _this = this;
+    //     function swap(elem1, elem2) {
+    //         _this.swap_images(elem1, elem2, 0);
+    //     }
+    //     function cmp_images(a, b) {
+    //         a = parseInt($(a).data('position'));
+    //         b = parseInt($(b).data('position'));
+    //         if (a > b) return 1;
+    //         if (a < b) return -1;
+    //         return 0;
+    //     }
+    //     function qsort(left, right) {
+    //         var l = left, r = right;
+    //         var c = Math.round((l+r)/2);
+    //         while (l <= r) {
+    //             while (cmp_images($(selector).get(l), $(selector).get(c)) == -1)
+    //                 l++;
+    //             while (cmp_images($(selector).get(r), $(selector).get(c)) == 1)
+    //                 r--;
+    //             if (l <= r) {
+    //                 swap($(selector).get(l), $(selector).get(r));
+    //                 l++;
+    //                 r--;
+    //             }
+    //         }
+    //         if (left < r)
+    //             qsort(left, r);
+    //         if (l < right)
+    //             qsort(l, right);
+    //     }
+    //     qsort(0, $(selector).length-1);
+    // },
 
     set_positions_images: function(data, resort) {
         if (data == undefined)
@@ -411,26 +411,30 @@ LionFace.PostImages.prototype = {
     },
 
     popup_to_prev: function() {
-        var now = $('.image_container li[popup=true]', this.current_post);
+        // console.log(this.$popup_posts);
+        // console.log($('.image_container li', this.$popup_posts));
+        var now = $('.image_container li[popup=true]', this.$popup_posts);
+        console.log($(now));
         var next = undefined;
-        if ($('.image_container li', this.current_post).length > 1) {
+        if ($('.image_container li', this.$popup_posts).length > 1) {
             if ($(now).prev().length > 0) {
                 next = $(now).prev();
             } else {
-                next = $('.image_container li:last', this.current_post);
+                next = $('.image_container li:last', this.$popup_posts);
             }
+            // console.log($(next));
             this.popup_change_item($(next));
         }
     },
 
     popup_to_next: function() {
-        var now = $('.image_container li[popup=true]', this.current_post);
+        var now = $('.image_container li[popup=true]', this.$popup_posts);
         var next = undefined;
-        if ($('.image_container li', this.current_post).length > 1) {
+        if ($('.image_container li', this.$popup_posts).length > 1) {
             if ($(now).next().length > 0) {
                 next = $(now).next();
             } else {
-                next = $('.image_container li:first', this.current_post);
+                next = $('.image_container li:first', this.$popup_posts);
             }
             console.log($(next));
             this.popup_change_item($(next));
@@ -521,7 +525,16 @@ LionFace.PostImages.prototype = {
     popup_start: function(item, newsitem) {
         var user_data = $(newsitem).metadata();
 
-        this.current_post = newsitem;
+        var album_name = $(newsitem).find('.album_name').html();
+        if (album_name === '') {
+            this.$popup_posts = newsitem;
+        } else {
+            var $related_posts = $('.post_feed .album_name:contains("'
+                + album_name + '")').closest('.result');
+            this.$popup_posts = $related_posts;
+        }
+        console.log(this.$popup_posts);
+
         $('.image_popup .image_zone, .image_popup .image_info').show();
         $('.image_popup').fadeIn(this.options.popup_fadeDuration);
 
@@ -541,7 +554,7 @@ LionFace.PostImages.prototype = {
     },
 
     popup_end: function() {
-        this.current_post = undefined;
+        this.$popup_posts = undefined;
         $('.image_popup .image_zone, .image_popup .image_info').hide();
         $('.image_popup').fadeOut(this.options.popup_fadeDuration);
         this.popup_disableKeyboard();
