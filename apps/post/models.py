@@ -50,7 +50,7 @@ class CustomQuerySet(QuerySet):
 
 
 def add_http(url):
-    if re.search('http://', url):
+    if re.search('http://', url) or re.search('https://', url):
         pass
     else:
         if not url.startswith('/'):
@@ -362,8 +362,8 @@ class DiscussPost(Post):
     def name(self):
         return self._meta.verbose_name
 
-    def get_page_type(self):
-        return self.page.type
+    def get_page(self):
+        return self.topic.page
 
     @property
     def timestamp(self):

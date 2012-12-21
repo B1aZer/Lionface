@@ -149,6 +149,7 @@
             {% endif %}
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
+        {% block post_bottom %}
         <div class="post_bottom">
             {% if not del_false %}
             <!--This will fire on news feed-->
@@ -185,6 +186,7 @@
             {% url users-albums-posts username=item.get_owner.username album_id=item.get_album.id as the_url %}
             <a href="{{ the_url }}" class="album_name" style="color: #C92;{% if not the_url %} display:none;{% endif %}">{{ item.get_album.name }}</a>
         </div>
+        {% endblock %}
         </div>
     </div>
 </div>

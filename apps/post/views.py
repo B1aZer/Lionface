@@ -312,6 +312,7 @@ def delete_own_comment(request, message_id):
 
 @login_required
 def delete(request, post_id=None):
+    # OPTIMIZE: delete only Post
     data = {'status': 'FAIL'}
     if request.method == 'GET' and 'type' in request.GET and 'ajax' in request.GET:
         #this will fire on ajax post posting
@@ -344,6 +345,7 @@ def delete(request, post_id=None):
                     original.content_object.save()
         if (post_type == 'page post' and post_model == 'post_pagepost') \
                 or (post_type == 'feedback post' and post_model == 'post_feedbackpost') \
+                or (post_type == 'discuss post' and post_model == 'post_discusspost') \
                 or post_model == 'post_post':
             obj = Post.objects.get(id=post_id)
             obj.newsitem_set.delete()
