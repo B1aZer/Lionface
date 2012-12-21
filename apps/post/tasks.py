@@ -1,6 +1,6 @@
 from celery.task import Task
 from celery.registry import tasks
-from celery.contrib import rdb
+# from celery.contrib import rdb
 
 
 class UpdateNewsFeeds(Task):

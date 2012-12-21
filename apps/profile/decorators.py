@@ -5,6 +5,7 @@ from account.models import UserProfile
 
 from functools import wraps
 
+
 def unblocked_users(func):
     """ Restrict access for blocked users"""
     @wraps(func, assigned=available_attrs(func))
@@ -12,7 +13,7 @@ def unblocked_users(func):
         if request.user.is_anonymous():
             return func(request, *args, **kwargs)
         if request.user.get_blocked():
-            username = kwargs.get('username',None)
+            username = kwargs.get('username', None)
             if username != None:
                 try:
                     profile_user = UserProfile.objects.get(username=username)
@@ -29,6 +30,7 @@ def unblocked_users(func):
             return func(request, *args, **kwargs)
     return decorator
 
+
 def default_user(func):
     """ Passing optional arg to view """
     @wraps(func, assigned=available_attrs(func))
@@ -39,4 +41,3 @@ def default_user(func):
         else:
             return func(request, *args, **kwargs)
     return decorator
-

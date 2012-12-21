@@ -96,7 +96,7 @@ LionFace.Profile.prototype = {
         });
         $("#postbox .postcontent").focusout(function() {
             //$("#postbox .postoptions").slideUp();
-            if($(this).val() == '') {
+            if($(this).val() === '') {
                 $(this).val("Share something...");
             }
         });
@@ -168,14 +168,22 @@ LionFace.Profile.prototype = {
         }
         var $attached_images = $(attached_images);
         $attached_images.find("ul").append("<li><input class='attach-image-file' type='file' name='image' style='display: none;'></li>");
+        // document.getElementsByClassName('attach-image-file')[0].addEventListener('change', uploadImage, false);
         $(".attach-image-file").on("change", function(e) {
+        // function uploadImage(e) {
             // TODO: check uploaded image size
             // if(e.target.files[0].size > 3145728) {
+            console.log('hi');
+            var image = e.target.files[0];
+            if (image === undefined) {
+                console.log('file not select');
+                return;
+            }
             window.loadImage(
-                e.target.files[0],
+                image,
                 function (img) {
                     $attached_images.find("ul li:last").append(img);
-                    $attached_images.sortable();
+                    // $attached_images.sortable();
                 },
                 {
                     maxWidth: 190
