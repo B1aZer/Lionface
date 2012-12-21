@@ -507,6 +507,22 @@ class Pages(models.Model):
         priv_topics = sorted(priv_topics, key=sort_by_both_values, reverse = True)
         return priv_topics
 
+    def get_popular_topics(self):
+        # owned topics
+        topics = self.topics_set.all()
+        def popular_sort(topic):
+            # (1 point per view) + 
+            # total posts (1 point) + 
+            # total comments (.5 point)
+            value = 0
+            value = value + topic.get_views_count()
+            value = value + topic.get_posts_count()
+            value = value + (topic.get_comment_count() * 0.5)
+            return value
+        topics = sorted(topics, key=popular_sort, reverse=True)
+        topics = topics[:4]
+        return topics
+
     @models.permalink
     def get_absolute_url(self):
         if self.type == 'BS':
@@ -661,6 +677,20 @@ class Topics(models.Model):
     def get_posts_count(self):
         viewed = self.posts.count()
         return viewed
+
+    def get_comment_count(self):
+        count = 0
+        # find all posts in topic
+        posts = self.posts.all()
+        for post in posts:
+            comms_count = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post.get_post()),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).count()
+            count = count + comms_count
+        return count
 
     def get_last_post_date(self):
         posts = self.posts.all()

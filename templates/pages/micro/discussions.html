@@ -115,36 +115,34 @@ $(document).ready(function(){
         </form>
         <br /><br />
 <span style="font-size: 16pt;">Most Popular Discussions</span>
-<table width="600"border="0"><tr><td width="50%" align="center">
-	<div class="dis_topics" style="left: 0px;">(Topic from Topic Input - Limit to 1 Line)<br />
-		<div style="font-size: 8pt; color: #777; padding: 3px 0;">
-		<span style="color: #49D; margin-right: 8px">(Privacy)</span>
-		<span style="margin-right: 8px">Views: (count)</span>
-		<span style="margin-right: 8px">Posts: (count)</span>
-		</div>
-	</div></td><td width="50%" align="center">
-	<div class="dis_topics" style="left: 0px;">(Topic from Topic Input - Limit to 1 Line)<br />
-		<div style="font-size: 8pt; color: #777; padding: 3px 0;">
-		<span style="color: #49D; margin-right: 8px">(Privacy)</span>
-		<span style="margin-right: 8px">Views: (count)</span>
-		<span style="margin-right: 8px">Posts: (count)</span>
-		</div>
-	</div></td></tr><tr><td width="50%" align="center">
-	<div class="dis_topics" style="left: 0px;">(Topic from Topic Input - Limit to 1 Line)<br />
-		<div style="font-size: 8pt; color: #777; padding: 3px 0;">
-		<span style="color: #49D; margin-right: 8px">(Privacy)</span>
-		<span style="margin-right: 8px">Views: (count)</span>
-		<span style="margin-right: 8px">Posts: (count)</span>
-		</div>
-	</div></td><td width="50%" align="center">
-	<div class="dis_topics" style="left: 0px;">(Topic from Topic Input - Limit to 1 Line)<br />
-		<div style="font-size: 8pt; color: #777; padding: 3px 0;">
-		<span style="color: #49D; margin-right: 8px">(Privacy)</span>
-		<span style="margin-right: 8px">Views: (count)</span>
-		<span style="margin-right: 8px">Posts: (count)</span>
-		</div>
-	</div>
-	</td></tr></table>
+<table width="600"border="0">
+    <tr>
+        {% for topic in page.get_popular_topics|slice:":2" %}
+        <td width="50%" align="center">
+            <div class="dis_topics" style="left: 0px;">{{ topic.name|truncatesmart:40 }}<br />
+                <div style="font-size: 8pt; color: #777; padding: 3px 0;">
+                <span style="color: #49D; margin-right: 8px">{{ topic.get_privacy }}</span>
+                <span style="margin-right: 8px">Views: {{ topic.get_views_count }}</span>
+                <span style="margin-right: 8px">Posts: {{ topic.get_posts_count }}</span>
+                </div>
+            </div>
+        </td>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for topic in page.get_popular_topics|slice:"2:" %}
+        <td width="50%" align="center">
+            <div class="dis_topics" style="left: 0px;">{{ topic.name|truncatesmart:40 }}<br />
+                <div style="font-size: 8pt; color: #777; padding: 3px 0;">
+                <span style="color: #49D; margin-right: 8px">{{ topic.get_privacy }}</span>
+                <span style="margin-right: 8px">Views: {{ topic.get_views_count }}</span>
+                <span style="margin-right: 8px">Posts: {{ topic.get_posts_count }}</span>
+                </div>
+            </div>
+        </td>
+        {% endfor %}
+    </tr>
+</table>
 
 
         <div id="page_feed" style="position: relative; left: -50px;">
