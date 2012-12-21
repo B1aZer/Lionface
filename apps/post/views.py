@@ -222,7 +222,7 @@ def save(request):
         t = loader.get_template('post/_feed.html')
         new_post = post
         c = RequestContext(request, {'items': [new_post],
-                                     'user': post.user,
+                                     'post_user': post.user,
                                      'del_false': True})
         data['html'] = t.render(c)
 

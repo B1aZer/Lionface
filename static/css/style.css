@@ -782,10 +782,6 @@ a.profile_btn:hover {
 
 
 .image_container_attach ul {
-	/*padding: 10px;*/
-}
-
-.image_container_attach ul {
 	display: inline-block;
 	list-style-type: none;
 	/*width: 535px;*/
@@ -797,7 +793,7 @@ a.profile_btn:hover {
 	float: left;
 	width: 190px;
 	height: 160px;
-	overflow: hidden;;
+	overflow: hidden;
 
 	margin-left: 4px;
 	margin-bottom: 4px;

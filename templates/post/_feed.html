@@ -8,12 +8,12 @@
     <hr style="position: relative; left: 50px; border: 1px solid #E7E7E7; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
 {# using metadata to pass user's info in popup window #}
-{% if not user %}
-    {% with user=item.get_original_author %}
-        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ user.username }}', user_full_name: '{{ user.full_name }}', user_photo_thumb: '/{{ user.photo.thumb_name }}', user_absolute_url: '{{ user.get_absolute_url }}' }">
+{% if not post_user %}
+    {% with news_item_user=item.get_original_author %}
+        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', news_item_user: '{{ item.news_item_user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ news_item_user.username }}', user_full_name: '{{ news_item_user.full_name }}', user_photo_thumb: '/{{ news_item_user.photo.thumb_name }}', user_absolute_url: '{{ news_item_user.get_absolute_url }}' }">
     {% endwith %}
 {% else %}
-    <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ user.username }}', user_full_name: '{{ user.full_name }}', user_photo_thumb: '/{{ user.photo.thumb_name }}', user_absolute_url: '{{ user.get_absolute_url }}' }">
+    <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ post_user.username }}', user_full_name: '{{ post_user.full_name }}', user_photo_thumb: '/{{ post_user.photo.thumb_name }}', user_absolute_url: '{{ post_user.get_absolute_url }}' }">
 {% endif %}
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     {% block thumbnail %}
