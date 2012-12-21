@@ -1865,6 +1865,7 @@ def start_topic(request, slug):
             members = request.POST.getlist('members', None)
             privacy = request.POST.get('privacy', None)
             tagged = request.POST.get('tagged_pages', None)
+            content = request.POST.get('content', None)
             if members:
                 members.append("A")
                 topic.members = ",".join(members)
@@ -1872,6 +1873,8 @@ def start_topic(request, slug):
                 topic.privacy = "P"
             topic.save()
             topic.tagged.add(page)
+            if content:
+                topic.posts.create(user=request.user, content=content)
             if tagged:
                 pages = tagged.split(',')
                 pages = set(pages)
@@ -1884,9 +1887,13 @@ def start_topic(request, slug):
                                 topic.tagged.add(tagged_page)
                         except:
                             pass
+            topics = page.get_topics_for(request.user)
+            paginator = Paginator(topics, TOPICS_PER_PAGE)
+            topics = paginator.page(1)
             data['html'] = render_to_string('pages/micro/discussions.html',
                                     {
                                     'page': page,
+                                    'topics':topics,
                                     }, context_instance=RequestContext(request))
         else:
             data['status'] =  'FAIL'

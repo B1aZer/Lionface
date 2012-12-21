@@ -2339,7 +2339,7 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 	text-align: left;
 }
 
-.dis_topics:hover {
+.dis_topics:hover, .active_topic {
 	background: #FFF;
 	color: #F58;
 	border-color: #DDD;

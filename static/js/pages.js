@@ -582,6 +582,8 @@ LionFace.Pages.prototype = {
                     if (data.status == 'OK') {
                         $('.page_center').replaceWith(data.html);
                         self.find('.topic_views_count').html(data.views);
+                        $('.active_topic').removeClass('active_topic');
+                        self.addClass('active_topic');
                     }
                 }
             });

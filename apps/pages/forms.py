@@ -174,10 +174,11 @@ class PageSettingsForm(forms.ModelForm):
             else:
                 self.fields['category'].widget = forms.Select(choices=NONPROFIT_CATEGORY)
 
+
 class PageTopicForm(forms.ModelForm):
     class Meta:
         model = Topics
-        fields = ('name','privacy','content', )
+        fields = ('name','privacy',)
 
     def __init__(self, *args, **kwargs):
         super(PageTopicForm, self).__init__(*args, **kwargs)
