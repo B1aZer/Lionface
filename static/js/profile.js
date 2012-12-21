@@ -193,6 +193,7 @@ LionFace.Profile.prototype = {
         /** Create album */
         $(document).on('submit','#create_album_form',function(e) {
             e.preventDefault();
+            var self = $(this);
             var albums = parseInt(LionFace.User.album_count);
             var url = 'album_create/';
             make_request({
@@ -206,6 +207,10 @@ LionFace.Profile.prototype = {
                         albums = albums + 1;
                         LionFace.User.album_count = albums;
                         self_class.hide_album_hint();
+                        self.hide();
+                        if ($('#create_album_link').data('toggled')) {
+                            $('#create_album_link').data('toggled',false);
+                        }
                     }
                 },
                 errorback:function(){
