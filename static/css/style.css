@@ -47,7 +47,7 @@ iframe {
 #editbox { width: 100px; margin-right: 5px; padding: 3px; border: 1px solid #CCC; }
 #button_save { font-size: 8pt; color: #FFF; }
 
-.find_friends {
+.find_friends, .share_post {
 	color: #AAA;
 }
 
@@ -3003,7 +3003,7 @@ a.school_nav:hover {
 	border-radius: 3px;
 }
 
-.bid-value, .bid-min {
+.bid-value, .bid-min, #loves-value {
 	background: transparent;
 	color: #124;
 	border-color: transparent;

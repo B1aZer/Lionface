@@ -116,7 +116,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             </td>    
         </tr>
         <tr>
-            <td align="right" valign="top">About<br />{{ page.name }}<br /><br /><span style="color: #AAA; font-size: 8pt;">225 character max<br />including spaces</span></td>
+            <td align="right" valign="center">About<br />{{ page.name }}<br /><br /><span style="color: #AAA; font-size: 8pt;">225 character max<br />including spaces</span></td>
             <td class="content">        
                 {{ form.content.errors }}
                 {{ form.content }}
@@ -159,36 +159,44 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td width="150" align="right">&nbsp;</td>
             <td width="405">&nbsp;</td>
         </tr>
+		<tr>
+			<td colspan="2" style="padding: 17px; text-align: left;">
+			<span style="font-size: 11pt; font-weight: bold; color: #F58; font-size: 14pt;">Loves</span><br /><br />
+			We have no advertisements on Lionface. We believe the best form of marketing works to create personal relationships with customers. On Lionface, this is accomplished through the "Love" button. Before a user has Loved your Page, they will not have access to certain parts of your Page, such as discussions, the calendar, and the community section. Once they Love your Page, these sections become available, and your Updates appear in their News Feed.<br /><br />
+			There is a limit to the number of Loves your Page can receive, however this limit can be changed at any time. New Pages always start out with a limit of 100. To riase your limit, make a purchase below. Please note, raising your limit does not guarantee that people will love your Page; Loving is at the discretion of the user.<br /><br />
+			If your Page exceeds its limit, users who try to Love your Page will be added to a waiting list on a first-come-first-serve basis. These users will be receive your Page Updates, and will not be granted full access to the sections on your Page, until you raise your limit to incorporate them.
+			</td>
+		</tr>
         <tr>
-            <td align="right">Current Loves: </td>
-            <td>
+            <td align="right" style="color: #000;">Current Loves: </td>
+            <td style="padding: 8px 0; color: #F58;">
                 <div style="margin-left: 15px;">{{ page.get_lovers_active_count }}</div>
             </td>
         </tr>
         {% if page.get_lovers_pending_count %}
         <tr>
-            <td align="right">Loves Pending: </td>
-            <td>
+            <td align="right" style="color: #000;">Loves Pending: </td>
+            <td style="padding: 8px 0; color: #900;">
                 <div style="margin-left: 15px;">{{ page.get_lovers_pending_count }}</div>
             </td>
         </tr>
         {% endif %}
         <tr>
-            <td align="right">Loves Remaining: </td>
-            <td>
+            <td align="right" style="color: #000;">Loves Remaining: </td>
+            <td style="padding: 8px 0; color: #F58;">
                 <div style="margin-left: 15px;">{{ page.get_page_loves_limit }}</div>
             </td>
         </tr>
         <tr>
-            <td align="right">Current Limit: </td>
-            <td>
+            <td align="right" style="color: #000;">Current Limit: </td>
+            <td style="padding: 8px 0; color: #F58;">
                 <div style="margin-left: 15px;">{{ page.get_page_loves_limit|add:page.get_lovers_active_count }}</div>
             </td>
         </tr>
         {% if request.user|is_lcustomer_for:page or page.exempt %}
         <tr>
-            <td align="right">Buy loves: </td>
-            <td>
+            <td align="right" style="color: #000;">Buy Loves: </td>
+            <td style="padding: 0 10px;">
                  <div id="loves-slider" style="width: 260px; margin: 15px;"></div>
             </td>
         </tr>
@@ -201,16 +209,17 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
         </tr>
         {% endif %}
         <tr>
-            <td align="right">Loves price: </td>
-            <td>
-                <input name="loves_value" id="loves-value" type="text" value="$0" style="margin: 15px;" readonly/>
+            <td align="right" style="color: #000;">Loves Price: </td>
+            <td style="padding: 8px 17px;">
+                <input name="loves_value" id="loves-value" type="text" value="$0" readonly/><br />
+				<span style="font-size: 8pt; color: #F58;">The current price is $1 per Love. $100 will raise your limit by 100 Loves.</span>
             </td>
         </tr>
         {% if request.user|is_customer_for:page %}
         <tr>
             <td align="right">&nbsp;</td>
             <td>
-                <span style="padding-left: 21px;"> {{ request.user|get_love_card_type_for:page }}: **** **** **** {{ request.user|get_love_last_4:page }}</span><a id="show_love_card_info" href="#" style="margin: 15px;">Replace Card</a>
+                <span style="padding-left: 17px;"> {{ request.user|get_love_card_type_for:page }}: **** **** **** {{ request.user|get_love_last_4:page }}</span><a id="show_love_card_info" href="#" style="margin: 15px;">Replace Card</a>
             </td>
         </tr> 
         {% endif %}
@@ -250,7 +259,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
             <td>
                 <div style="margin-left: 21px;">
                 {% if request.user|check_pages_loves:page %}
-                <button id="submit_loves" type="submit" name="submit_loves" class="blue_btn submit_loves" style="display:none;">Submit</button>
+                <button id="submit_loves" type="submit" name="submit_loves" class="blue_btn submit_loves" style="display:none;">Increase Limit</button>
                 {% endif %}
                 </div>
             <td>
@@ -283,7 +292,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
                 </tr>
                 <tr>
                     <td align="right">Make a bid: </td>
-                    <td>
+                    <td style="padding: 0 10px;">
                          <div id="bid-slider" style="width: 260px; margin: 15px;"></div>
                     </td>
                 </tr>
@@ -360,9 +369,9 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
         </tr>
         <tr>
             <td>
-                <div style="margin-left: 21px;">
+                <div style="margin-left: 17px;">
                 {% if request.user|check_pages_loves:page %}
-                <button id="submit_bids" type="submit" name="submit_bids" class="blue_btn submit_loves" style="display:none;">Submit</button>
+                <button id="submit_bids" type="submit" name="submit_bids" class="blue_btn submit_loves" style="display:none;">Submit Bid</button>
                 {% endif %}
                 {% if page.get_max_bid and show_bids %}
                 <button id="cancel-bid" type="submit" name="cancel_bid" class="blue_btn" style="display:none;">Cancel Bid</button>
@@ -385,7 +394,12 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
         </tr>
 		<tr>
 			<td colspan="2" style="padding: 17px; text-align: left;">
-			<div style="font-size: 11pt; font-weight: bold;">Donations</div>
+			<div style="font-size: 11pt; font-weight: bold;">Donations</div><br />
+			One of the core pillars of Lionface is to "contribute to the community in a meaningful and positive way," and we believe working with Nonprofits, like you, is one of the most effective ways to do that.<br /><br />
+			We've identified three things we believe would benefit Nonprofits: publicity, volunteers and donations.<br /><br />
+			Building a strong platform, however, takes time, and we cannot actualize all of our ideas instantly. While we have worked hard to ensure Nonprofits have a good footing on Lionface in terms of publicity and networking with volunteers, building an infrastructure for donations  will take a lot of hard work and dedication on our part.<br /><br />
+			We cannot make any promises, but we've decided to include the Donations settings tab, and this message here, to let know about our intentions and aspirations.<br /><br />
+			Most importantly to us, if there are any features or services you would like to see developed, that would help <i>you</i> in your Nonprofit work, please leave Feedback on our Page, or email us at info@lionface.org. We will listen, and work as quickly and thoroughly as we can to ensure you have everything you need.
 			</td>
 		</tr>
         <tr>
