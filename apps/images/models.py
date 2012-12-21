@@ -42,9 +42,6 @@ class Image(models.Model):
     rating = models.IntegerField(blank=True, null=True)
     activity = models.BooleanField(default=False)
 
-    post = models.ForeignKey('post.Post', related_name='images', blank=True,
-                             null=True)
-
     objects = ImageQuerySet.as_manager()
 
     def __unicode__(self):

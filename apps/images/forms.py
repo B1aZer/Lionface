@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from account.models import UserProfile
 from pages.models import Pages
+from post.models import ContentPost
 from .models import Image, ImageCounter
 
 
@@ -21,7 +22,7 @@ class ImageForm(forms.Form):
             raise forms.ValidationError("Image file too large ( > 1mb )")
         return image
 
-    def save(self, owner, post=None):
+    def save(self, owner):
         ctype = ContentType.objects.get_for_model(owner.__class__)
         try:
             counter = ImageCounter.objects \
@@ -45,6 +46,8 @@ class ImageForm(forms.Form):
                 name += '_n'
             else:
                 name += '_unknown'
+        elif isinstance(owner, ContentPost):
+            name = owner.user.username
         else:
             name = 'unknown'
         self.cleaned_data['image'].name = '%s_%d%s' % (
@@ -54,8 +57,7 @@ class ImageForm(forms.Form):
         )
         image = Image.objects.create(
             image=self.cleaned_data['image'],
-            owner=owner,
-            post=post
+            owner=owner
         )
         image.save()
         return image

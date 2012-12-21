@@ -36,6 +36,8 @@ class QuerySet(models.query.QuerySet):
     def as_manager(cls, ManagerClass=QuerySetManager):
         return ManagerClass(cls)
 
+from images.models import Image
+
 
 
 class CustomQuerySet(QuerySet):
@@ -449,7 +451,11 @@ class ContentPost(Post):
         self.content = bleach.linkify(
             self.content, target='_blank', filter_url=add_http)
 
-        c = { 'images': self.images.all() }
+        ctype = ContentType.objects.get_for_model(self)
+        images = Image.objects.filter(owner_type=ctype, owner_id=self.id)
+        print('post_id', self.id, 'images', images)
+
+        c = { 'images': images }
         render_images = render_to_string('post/_post_images.html', c)
 
         return mark_safe("<a href='%s'>%s</a><br />"
@@ -676,6 +682,13 @@ class NewsItem(models.Model):
             return False
         return original.user
 
+    def get_original_author(self):
+        try:
+            original = self.get_post().get_inherited()
+            return original.user
+        except:
+            return False
+
     def get_wall_user(self):
         return self.user
 
@@ -813,3 +826,14 @@ def remove_all_comments(sender, instance, **kwargs):
         site__pk=settings.SITE_ID)
     comms.delete()
 post_delete.connect(remove_all_comments, sender=Post)
+
+
+def remove_all_images(sender, instance, **kwargs):
+    """ remove images
+    after removing post, pk for post remains in objects model
+    this is not good"""
+    images = Image.objects.filter(
+        owner_type=ContentType.objects.get_for_model(instance.get_inherited()),
+        owner_id=instance.pk)
+    images.delete()
+post_delete.connect(remove_all_images, sender=Post)

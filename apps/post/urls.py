@@ -14,5 +14,7 @@ urlpatterns = patterns('',
     url(r'share/(?P<post_id>\d+)/$', views.share),
     url(r'test/$', views.test),
     url(r'timeline/(?P<post_num>\d+)/$', views.timeline),
-    url(r'toggle_privacy/$', views.toggle_privacy)
+    url(r'toggle_privacy/$', views.toggle_privacy),
+    url(r'images/ajax/comments/$', views.images_comments_ajax,
+        name='post_images_ajax_comments')
 )

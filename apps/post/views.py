@@ -7,7 +7,9 @@ from .models import *
 from account.models import UserProfile
 from tags.models import Tag
 from pages.models import Pages
+from profile.decorators import unblocked_users
 
+from images.models import Image, ImageComments
 from images.forms import ImageForm
 
 from tasks import DeleteNewsFeeds
@@ -30,6 +32,7 @@ except ImportError:
 
 def feed(request, user_id=None):
     data = {}
+    profile_user = None
     news_feed_flag = False
     #news feed
     if not user_id:
@@ -72,6 +75,8 @@ def feed(request, user_id=None):
             items = sorted(items, key=lambda post: post.date, reverse=True)
     else:
         page_type = 'profile_feed'
+
+        profile_user = get_object_or_404(UserProfile, id=user_id)
         # items =
         # NewsItem.objects.get_profile_wall(request.user).order_by('-date')
         items = NewsItem.objects.filter(
@@ -113,6 +118,7 @@ def feed(request, user_id=None):
     data['html'] = loader.render_to_string(
         'post/_feed.html',
         {
+            'profile_user': profile_user,
             'items': items,
             'news_feed': news_feed_flag,
             'page': page,
@@ -187,7 +193,7 @@ def save(request):
         for image in request.FILES.getlist('image'):
             image_form = ImageForm(None, {'image': image})
             if image_form.is_valid():
-                img = image_form.save(request.user, post)
+                img = image_form.save(post)
                 # img.make_activity()
                 img.generate_thumbnail(158, 158)
             else:
@@ -496,7 +502,84 @@ def change_settings(request):
         else:
             if hasattr(post, 'albums_set'):
                 post.albums_set.clear()
-    return  HttpResponse(json.dumps(data), "application/json")
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+@unblocked_users
+def images_comments_ajax(request):
+    # import pdb; pdb.set_trace()
+    if not request.is_ajax():
+        raise Http404
+
+    newsitem_id = request.REQUEST.get('newsitem-pk', None)
+    post_id = request.REQUEST.get('post-pk', None)
+    if newsitem_id:
+        item = get_object_or_404(NewsItem, id=newsitem_id)
+        post = item.get_post().get_inherited()
+    elif post_id:
+        post = get_object_or_404(Post, id=post_id)
+        post = post.get_inherited()
+
+    # is_visible = profile_user.check_visiblity('profile_image', request.user)
+    # if not is_visible:
+        # raise Http404
+
+    method = request.REQUEST.get('method', None)
+    if method not in ['create', 'list', 'delete']:
+        raise Http404
+
+    ctype = ContentType.objects.get_for_model(post)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=post.id)
+    # qs = post.images.all()
+    manage_perm = request.user.is_authenticated()
+        # and request.user in page.get_admins() \
+        # and request.user.check_option('pages_photos__%s' % page.id)
+
+    # try:
+    #     image = post.images.get(pk=request.REQUEST.get('pk', None))
+    # except Image.DoesNotExist as e:
+    #     return HttpResponseBadRequest('Bad pk was received.')
+    image_pk = request.REQUEST.get('image-pk', None)
+    image = get_object_or_404(qs, pk=image_pk)
+
+    data = {}
+    try:
+        if method == 'create':
+            try:
+                message = request.POST['message']
+            except KeyError:
+                return HttpResponseBadRequest("Comment wasn't received.")
+            comment = ImageComments.objects.create(
+                image=image,
+                owner=request.user,
+                message=message
+            )
+        elif method == 'list':
+            pass
+        elif method == 'delete':
+            try:
+                comment = image.comments.get(
+                    pk=request.POST.get('comment_pk', None))
+            except ImageComments.DoesNotExist:
+                return HttpResponseBadRequest('Bad comment_pk was received.')
+            if request.user not in [comment.owner]:
+                raise Http404
+            comment.delete()
+        else:
+            raise Http404
+        data['comments'] = render_to_string('images/li_comment.html', {
+            # 'profile_user': profile_user,
+            'image': image,
+            'comments': image.comments.all(),
+            'manage_perm': manage_perm,
+        }, context_instance=RequestContext(request))
+    except Exception as e:
+        print(e)
+        data['status'] = 'fail'
+    else:
+        data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
 
 
 @login_required

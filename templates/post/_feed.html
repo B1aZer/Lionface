@@ -1,12 +1,16 @@
 {% load media comments format_results friends %}
 {% load oembed_tags %}
-{# {% include_media 'images.js' %} #}
+{% include_media "post.js" %}
+{% include "post/_popup.html" %}
 
 {% for item in items %}
 {% if not notification %}
     <hr style="position: relative; left: 50px; border: 1px solid #E7E7E7; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
 {% endif %}
-<div id="post_{{ item.get_post.id }}" class="result post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}' }">
+{# using metadata to pass user's info in popup window #}
+{% with user=item.get_original_author %}
+<div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ user.username }}', user_full_name: '{{ user.full_name }}', user_photo_thumb: '/{{ user.photo.thumb_name }}', user_absolute_url: '{{ user.get_absolute_url }}' }">
+{% endwith %}
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     {% block thumbnail %}
     {% if item.get_type == 'page post' %}
@@ -112,7 +116,7 @@
                 {% endif %}
                 {% if request.user.get_albums %}
                 <span style="color: transparent;"> -- -- -- - </span>Album: <select name="attach_to_album">
-                    <option value=""{% if not item.get_album %}selected="selected"{% endif %}></option>
+                    <option value=""{% if not item.get_album %} selected="selected"{% endif %}></option>
                     {% for album in request.user.get_albums %}
                     <option value="{{ album.id }}" {% if album == item.get_album %} selected="selected" {% endif %}>{{ album.name }}</option>
                     {% endfor %}
@@ -208,3 +212,16 @@
 
 {% endblock %}
 {% endif %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function() {
+        LionFace.User['images_type'] = 'post';
+        // LionFace.User['images_manage'] = {% if request.user == profile_user %}true{% else %}false{% endif %};
+        // LionFace.User['images_total_rows'] = {{ total_rows }};
+        // LionFace.User['images_now_rows'] = {{ image_rows|length }};
+        {#LionFace.User['images_ajax'] = "{% url pages.views.images_ajax page.username %}"; #}
+        LionFace.User['images_comments_ajax'] = "{% url post_images_ajax_comments %}";
+    });
+</script>
+{% endblock %}
