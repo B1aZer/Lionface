@@ -1,7 +1,9 @@
 {% load format_results %}
 
+                {% block position %}
                 <div id="page_{{ page.id }}" class="page_results_micro">
 				<table width="100%"><tr><td width="85" align="right"><div style="position: relative; top: -10px; left: -5px;">
+                {% endblock %}
                 {% if page.type == 'BS' %}
                 <a href="{% url business-page slug=page.username %}">
                      <img src="/{{ page.photo.thumb_name }}" alt="{{page.id}}" width="50" height="50"  />
