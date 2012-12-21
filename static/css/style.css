@@ -870,36 +870,6 @@ a.profile_btn:hover {
 	background: #EEE;
 }
 
-.album_shadow:before, .album_shadow:after
-{
-    position: absolute;
-    width: 45%;
-    height: 10px;
-    content: ' ';
-    right: 10px;
-    bottom: 8px;
-    background: transparent;
-    -webkit-transform: skew(-3deg) rotate(-3deg);
-    -moz-transform: skew(-3deg) rotate(-3deg);
-    -ms-transform: skew(-3deg) rotate(-3deg);
-    -o-transform: skew(-3deg) rotate(-3deg);
-    transform: skew(-3deg) rotate(-3deg);
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-    z-index: 1;
-}
-.album_shadow:after
-{
-    right: auto;
-    left: 10px;
-    -webkit-transform: skew(3deg) rotate(3deg);
-    -moz-transform: skew(3deg) rotate(3deg);
-    -ms-transform: skew(3deg) rotate(3deg);
-    -o-transform: skew(3deg) rotate(3deg);
-    transform: skew(3deg) rotate(3deg);
-}
-
 /* !!! jquery class */
 .ui-state-default {
     /*margin: 10px 3px 10px 3px;*/
