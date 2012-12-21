@@ -1936,7 +1936,27 @@ def topics_paging(request, slug):
     except Pages.DoesNotExist:
         raise Http404
 
+    def filter_topics(topics, filter_by):
+        out = []
+        for topic in topics:
+            if topic.privacy == filter_by:
+                out.append(topic)
+            else:
+                pass
+        return out
+
     items = page.get_topics_for(request.user)
+
+    filter_by = request.GET.get('filter', None)
+    if filter_by:
+        if filter_by == 'All':
+            pass
+        elif filter_by == 'Public':
+            items = filter_topics(items, 'P')
+        elif filter_by == 'Inter':
+            items = filter_topics(items, 'I')
+        elif filter_by == 'House':
+            items = filter_topics(items, 'H')
 
     # PAGINATION #
     paginator = Paginator(items, TOPICS_PER_PAGE)
@@ -1961,5 +1981,6 @@ def topics_paging(request, slug):
                                     'topics': items,
                                     'page': page,
                                     }, context_instance=RequestContext(request))
+    data['page_num'] = page_num
     data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")

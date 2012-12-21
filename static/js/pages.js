@@ -625,10 +625,14 @@ LionFace.Pages.prototype = {
             }
         });
 
+        var filter_by = false;
         /** topic pagination */
         $(document).on('click','.topic_forward, .topic_backward',function(e) {
             e.preventDefault();
             var url = $(this).attr('href');
+            if (filter_by) {
+                url = url + '&' + 'filter=' + filter_by;
+            }
             make_request({
                 url:url,
                 callback: function(data) {
@@ -639,6 +643,34 @@ LionFace.Pages.prototype = {
             });
         });
         
+        /*var page_num = false;*/
+        /** privacy selectors for topics */
+        $(document).on('click','.topic_pr_selector',function(e) {
+            e.preventDefault();
+            var self = $(this);
+            $('.active_privacy').removeClass('active_privacy');
+            $(this).addClass('active_privacy');
+            var url = LionFace.User.topic_selector_url;
+            filter_by = self.attr('id');
+            var data = {
+                    'filter': filter_by,
+            }
+            /*
+            if (page_num) {
+                data['page_num'] = page_num;
+            }
+            */
+            make_request({
+                url:url,
+                type:'GET',
+                data: data,
+                callback: function (data) {
+                    $('#topic_container').html(data.html);
+                    /*page_num = data.page_num;*/
+                }
+            });
+
+        });
     },
     /*
      * moved to user.js

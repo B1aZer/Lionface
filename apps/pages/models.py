@@ -490,7 +490,9 @@ class Pages(models.Model):
         roles = user.get_user_roles_for(self)
         for topic in topics:
             for role in roles:
-                if role in topic.members or topic.privacy == 'P':
+                if role in topic.members \
+                        or topic.privacy == 'P' \
+                        or (topic.privacy == 'I' and user == topic.user):
                     priv_topics.append(topic)
                     break
                 else:
@@ -654,7 +656,7 @@ class Topics(models.Model):
     user = models.ForeignKey(UserProfile)
     page = models.ForeignKey(Pages)
     privacy = models.CharField(max_length=1, choices=TOPIC_PRIVACY_SET, default='P')
-    members = models.CharField(max_length=1, choices=TOPIC_MEMBERS_SET, default='A')
+    members = models.CharField(max_length=20, choices=TOPIC_MEMBERS_SET, default='A')
     tagged = models.ManyToManyField(Pages, related_name="tagged_in_topics", null=True, blank=True)
     content = models.TextField(blank=True)
     viewed = models.ManyToManyField(UserProfile, related_name="viewed_topics", null=True, blank=True)

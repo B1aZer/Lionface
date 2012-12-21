@@ -485,3 +485,7 @@ def truncatesmart(value, limit=80):
 def get_topics_for(page, user):
     return page.get_topics_for(user)
 
+
+@register.filter
+def have_shared_topic_with(user, page):
+    return user.have_shared_topic_with(page)

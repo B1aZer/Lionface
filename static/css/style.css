@@ -1690,7 +1690,7 @@ a.send_message:hover {
 	cursor: pointer;
 }
 
-.blue_btn:hover, .blue_btn a:hover {
+.blue_btn:hover, .blue_btn a:hover, .active_privacy {
 	text-decoration: none;
 	background: #2ab4ea;
 	background: -moz-linear-gradient(top, #7bc9e5 0%, #2ab4ea 50%, #19afe5 51%, #2ab4ea 100%); /* FF3.6+ */

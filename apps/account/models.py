@@ -552,6 +552,11 @@ class UserProfile(User):
         else:
             return False
 
+    def have_shared_topic_with(self, page):
+        shared = self.topics_set.filter(tagged=page, privacy='I').count()
+        return shared
+
+
     @models.permalink
     def get_absolute_url(self):
         return ('profile.views.profile', [str(self.username)])

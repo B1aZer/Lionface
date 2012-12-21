@@ -15,6 +15,7 @@
     {% else %}
         LionFace.User.options['pages_calendar__'+{{ page.id }}] = false;
     {% endif %} 
+    LionFace.User.topic_selector_url = '{% url pages.views.topics_paging slug=page.username %}';
 </script>
 
 <!--includes for calendar micro page-->

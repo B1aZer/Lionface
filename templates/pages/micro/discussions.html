@@ -47,10 +47,21 @@ $(document).ready(function(){
 
 <div class="float_left" align="left">
 	<div style="font-size: 14pt; padding: 5px; border-bottom: 1px solid #CCC;">Topics <span style="font-size: 8pt; color: #AAA; margin-left: 4px;">Ordered by Most Recent Activity</span></div>
-		<div style="padding: 8px 0 2px 0;"><span class="blue_btn" style="font-size: 7pt;">All</span> 
-			 <span class="blue_btn" style="font-size: 7pt;">Public</span> 
-			 <span class="blue_btn" style="font-size: 7pt;">Inter-Page</span> 
-			 <span class="blue_btn" style="font-size: 7pt;">In-House</span></div>
+        {% if request.user in page.get_admins %}
+		<div style="padding: 8px 0 2px 0;">
+            <span id="All" class="blue_btn topic_pr_selector" style="font-size: 7pt;">All</span> 
+			<span id="Public" class="blue_btn topic_pr_selector" style="font-size: 7pt;">Public</span> 
+			<span id="Inter" class="blue_btn topic_pr_selector" style="font-size: 7pt;">Inter-Page</span> 
+			<span id="House" class="blue_btn topic_pr_selector" style="font-size: 7pt;">In-House</span>
+        </div>
+        {% elif request.user|have_shared_topic_with:page %} 
+		<div style="padding: 8px 0 2px 0;">
+            <span id="All" class="blue_btn topic_pr_selector" style="font-size: 7pt;">All</span> 
+			<span id="Public" class="blue_btn topic_pr_selector" style="font-size: 7pt;">Public</span> 
+			<span id="Inter" class="blue_btn topic_pr_selector" style="font-size: 7pt;">Inter-Page</span> 
+        </div>
+        {% else %}
+        {% endif %}
 
          <div id="topic_container">
              {% include 'pages/micro/discussions_topics.html' %}
