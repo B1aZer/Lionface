@@ -1,6 +1,19 @@
 {% extends 'pages/pages_loves_one.html' %}
 {% load media friends format_results %}
 
+{% comment %}
+you can change parts of the extended template 
+by writing blocks with arbitrary name
+1. make block in parent template
+2. copy this block to a child template
+3. replace content
+{% endcomment %}
+
+{% block position %}
+<div id="page_{{ page.id }}" class="page_results_micro" style="left: -94px;">
+<table width="100%"><tr><td width="85" align="right"><div style="position: relative; top: -10px; left: -5px;">
+{% endblock %}
+
 {% block love_button %}
     {% if current_user in page.get_lovers %}
         <a href="#" class="love love_button loved" style="font-size: 8pt; border: 3px solid #FAFAFA; color: #F58;">Loved</a>

@@ -9,6 +9,7 @@ from account.models import UserProfile
 from django.db.models import Count, Max
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils import timezone
 
 try:
     import json
@@ -47,9 +48,18 @@ def messages(request, username=None):
             link = message.user.get_absolute_url()
             image = message.user.photo
             id_user = message.user.id
-            last_mess = Messaging.objects.filter(Q(user_to=message.user, user = user) | Q(user=message.user, user_to = user)).latest('date').date
+            last_obj = Messaging.objects.filter(Q(user_to=message.user, user = user) | Q(user=message.user, user_to = user)).latest('date')
+            last_mess = last_obj.date
+            now = timezone.now()
+            diff_date = now - last_mess
+            if diff_date.days <= 0:
+                last_date = last_mess.strftime("%I:%M %p")
+            elif diff_date.days >0 and last_mess.year == now.year:
+                last_date = last_mess.strftime("%b %d")
+            else:
+                last_date = last_mess.strftime("%b %Y")
             names.append({ 'name':message.user.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new,
-                'link':link, 'image':image, 'id': id_user, 'last_mess' : last_mess})
+                'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_mess' : last_mess})
         # This counter is for main page only
         message.mark_viewed()
 
@@ -63,8 +73,17 @@ def messages(request, username=None):
             link = message.user_to.get_absolute_url()
             image = message.user_to.photo
             id_user = message.user_to.id
-            last_mess = Messaging.objects.filter(Q(user_to=message.user_to, user = user) | Q(user=message.user_to, user_to = user)).latest('date').date
-            names.append({ 'name':message.user_to.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user, 'last_mess' : last_mess})
+            last_obj = Messaging.objects.filter(Q(user_to=message.user_to, user = user) | Q(user=message.user_to, user_to = user)).latest('date')
+            last_mess = last_obj.date
+            now = timezone.now()
+            diff_date = now - last_mess
+            if diff_date.days <= 0:
+                last_date = last_mess.strftime("%I:%M %p")
+            elif diff_date.days >0 and last_mess.year == now.year:
+                last_date = last_mess.strftime("%b %d")
+            else:
+                last_date = last_mess.strftime("%b %Y")
+            names.append({ 'name':message.user_to.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_mess' : last_mess})
 
     #sorting by last message date
     names = sorted(names, key=lambda(s): s['last_mess'], reverse=True)

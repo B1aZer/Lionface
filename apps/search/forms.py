@@ -10,9 +10,17 @@ class SearchForm(ModelSearchForm):
 
     def search(self):
         def sorting_by_degree(result):
-            if isinstance(result.object,Pages):
+            if result.model is Pages:
                 return '--'
-            return result.object.get_degree_for(user)
+            try:
+                if result.object.in_followers(user):
+                    return 1
+                v = result.object.get_degree_for(user)
+            except:
+                # this could happen
+                # run rebuild_index
+                v = '--'
+            return v
         #res = super(SearchForm, self).search()
         #res = SearchQuerySet().filter(username_auto=self.cleaned_data['q'])
         if len(self.cleaned_data['q'].strip().split(" ")) > 1:
