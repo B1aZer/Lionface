@@ -564,7 +564,8 @@ LionFace.Pages.prototype = {
                     data:$("#topicForm").serialize(),
                     callback: function(data) {
                         if (data.status == 'OK') {
-                            $('.page_center').replaceWith(data.html);
+                            //$('.page_center').replaceWith(data.html);
+                            $('.page_container').html(data.html);
                         }
                     }
                 });
@@ -643,7 +644,6 @@ LionFace.Pages.prototype = {
             });
         });
         
-        /*var page_num = false;*/
         /** privacy selectors for topics */
         $(document).on('click','.topic_pr_selector',function(e) {
             e.preventDefault();
@@ -655,18 +655,12 @@ LionFace.Pages.prototype = {
             var data = {
                     'filter': filter_by,
             }
-            /*
-            if (page_num) {
-                data['page_num'] = page_num;
-            }
-            */
             make_request({
                 url:url,
                 type:'GET',
                 data: data,
                 callback: function (data) {
                     $('#topic_container').html(data.html);
-                    /*page_num = data.page_num;*/
                 }
             });
 
