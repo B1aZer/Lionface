@@ -444,18 +444,20 @@ def love_count(request):
                     if page.type == 'BS' \
                             and loves_limit <= 0:
                         # go away and wait for love
-                        PageLoves.objects.create(user=request.user,page=page,status='Q').save()
-                        data['status'] = 'OK'
-                        data['loved'] = page.get_lovers_active_count()
+                        if request.user not in page.get_lovers_pending():
+                            PageLoves.objects.create(user=request.user,page=page,status='Q').save()
+                            data['status'] = 'OK'
+                            data['loved'] = page.get_lovers_active_count()
                     else:
-                        page.loves = page.get_lovers().count() + 1
-                        #page.users_loved.add(request.user)
-                        PageLoves.objects.create(user=request.user,page=page).save()
-                        if page.type == 'BS':
-                            page.loves_limit = page.loves_limit - 1
-                        page.save()
-                        data['status'] = 'OK'
-                        data['loved'] = page.get_lovers_active_count()
+                        if request.user not in page.get_lovers_active():
+                            page.loves = page.get_lovers().count() + 1
+                            #page.users_loved.add(request.user)
+                            PageLoves.objects.create(user=request.user,page=page).save()
+                            if page.type == 'BS':
+                                page.loves_limit = page.loves_limit - 1
+                            page.save()
+                            data['status'] = 'OK'
+                            data['loved'] = page.get_lovers_active_count()
                 if vote == 'down':
                     page.loves = page.get_lovers().count() - 1
                     if page.type == 'BS' \

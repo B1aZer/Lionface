@@ -45,12 +45,17 @@ jQuery.expr[':'].parents = function(a,i,m){
 };
 
 
+var process_request = false;
 function make_request(input) {
     var url = input.url;
     var data = input.data || false;
     var callback = input.callback;
     var error_call = input.errorback || false;
     var type = input.type || false;
+    var multi = input.multi || false;
+
+    if (process_request && !multi) return;
+    process_request = true;
 
     /*
     if (window.location.pathname.indexOf('/lionface/') >= 0)
@@ -75,6 +80,7 @@ function make_request(input) {
             type: request_type,
             data: data,
             success: function(data_success) {
+                process_request = false;
 
                 if ($.isFunction(callback)) {
                     callback(data_success);
@@ -82,6 +88,7 @@ function make_request(input) {
 
             },
             error: function() {
+                process_request = false;
                 console.log("error during request");
                 if ($.isFunction(error_call)) {
                     error_call();
@@ -454,6 +461,7 @@ LionFace.Site.prototype = {
         var url = '/check/messages/'
         make_request({
                 url:url,
+                multi:true,
                 callback: function(data) {
                     if (data.mess) {
                         if (parseInt(data.mess) > 0) {
@@ -484,7 +492,9 @@ LionFace.Site.prototype = {
         var url = '/check/notifications/'
 
         make_request(
-            {url:url, callback:function (data) {
+            {url:url, 
+            multi:true,
+            callback:function (data) {
 
                 if (parseInt(data.notfs) > 0) {
                     if ($('#notifications_id_notif').find('span').text() != data.notfs) {
