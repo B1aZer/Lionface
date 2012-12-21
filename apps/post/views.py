@@ -222,6 +222,7 @@ def save(request):
         t = loader.get_template('post/_feed.html')
         new_post = post
         c = RequestContext(request, {'items': [new_post],
+                                     'user': post.user,
                                      'del_false': True})
         data['html'] = t.render(c)
 
@@ -443,7 +444,7 @@ def toggle_privacy(request):
         if post.user == request.user:
             post.save()
             data['status'] = 'OK'
-    return  HttpResponse(json.dumps(data), "application/json")
+    return HttpResponse(json.dumps(data), "application/json")
 
 
 @login_required
@@ -520,6 +521,8 @@ def images_comments_ajax(request):
     elif post_id:
         post = get_object_or_404(Post, id=post_id)
         post = post.get_inherited()
+    else:
+        raise Http404
 
     # is_visible = profile_user.check_visiblity('profile_image', request.user)
     # if not is_visible:

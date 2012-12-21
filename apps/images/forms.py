@@ -23,6 +23,10 @@ class ImageForm(forms.Form):
         return image
 
     def save(self, owner):
+        post = None
+        if isinstance(owner, ContentPost):
+            post = owner
+            owner = owner.user
         ctype = ContentType.objects.get_for_model(owner.__class__)
         try:
             counter = ImageCounter.objects \
@@ -38,6 +42,8 @@ class ImageForm(forms.Form):
         counter.save()
         if isinstance(owner, UserProfile):
             name = owner.username
+            if post:
+                name += '_p'
         elif isinstance(owner, Pages):
             name = owner.username
             if owner.type == 'BS':
@@ -46,8 +52,6 @@ class ImageForm(forms.Form):
                 name += '_n'
             else:
                 name += '_unknown'
-        elif isinstance(owner, ContentPost):
-            name = owner.user.username
         else:
             name = 'unknown'
         self.cleaned_data['image'].name = '%s_%d%s' % (
@@ -55,6 +59,8 @@ class ImageForm(forms.Form):
             number,
             os.path.splitext(self.cleaned_data['image'].name)[1],
         )
+        if post:
+            owner = post
         image = Image.objects.create(
             image=self.cleaned_data['image'],
             owner=owner

@@ -1,3 +1,5 @@
+//@ sourceURL=post.js
+
 LionFace.PostImages = function(options) {
     this.options = $.extend({
         'swap_images_delay': 500,
@@ -525,15 +527,15 @@ LionFace.PostImages.prototype = {
     popup_start: function(item, newsitem) {
         var user_data = $(newsitem).metadata();
 
-        var album_name = $(newsitem).find('.album_name').html();
-        if (album_name === '') {
-            this.$popup_posts = newsitem;
-        } else {
-            var $related_posts = $('.post_feed .album_name:contains("'
-                + album_name + '")').closest('.result');
-            this.$popup_posts = $related_posts;
-        }
-        console.log(this.$popup_posts);
+        this.$popup_posts = newsitem;
+        // var album_name = $(newsitem).find('.album_name').html();
+        // if (album_name === '') {
+        // } else {
+        //     var $related_posts = $('.post_feed .album_name:contains("'
+        //         + album_name + '")').closest('.result');
+        //     this.$popup_posts = $related_posts;
+        // }
+        // console.log(this.$popup_posts);
 
         $('.image_popup .image_zone, .image_popup .image_info').show();
         $('.image_popup').fadeIn(this.options.popup_fadeDuration);
@@ -564,7 +566,7 @@ LionFace.PostImages.prototype = {
 
     popup_comments_refresh: function($comments) {
         var _this = this,
-        $ul = $('.comments ul');
+        $ul = $('.image_comments ul');
         $ul.fadeOut(200, function() {
             $ul.html('');
             $comments.each(function(index, item) {
@@ -614,7 +616,7 @@ LionFace.PostImages.prototype = {
     popup_comments_add: function($textarea) {
         var _this = this,
             postid = $textarea.data('newsitem-pk'),
-            $ul = $('.comments ul'),
+            $ul = $('.image_comments ul'),
             val = $textarea.val();
         if (val.length < 1)
             return;
@@ -651,7 +653,7 @@ LionFace.PostImages.prototype = {
 
     popup_comments_list: function($item) {
         var _this = this,
-            $ul = $('.comments ul');
+            $ul = $('.image_comments ul');
         $ul.data('image-pk', $item.data('pk'));
         $ul.data('post-pk', $item.data('post-pk'));
         $.ajax({
@@ -674,9 +676,10 @@ LionFace.PostImages.prototype = {
 
     popup_comments_delete: function($item) {
         var _this = this,
-            $ul = $('.comments ul');
+            $ul = $('.image_comments ul');
+        console.log($('.image_comments'));
         $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
-         .appendTo($('.comments')).dialog({
+         .appendTo($('.image_comments')).dialog({
             resizable: false,
             height: 150,
             width: 400,
@@ -700,6 +703,7 @@ LionFace.PostImages.prototype = {
                         },
                     });
                     $(this).dialog('close');
+                    console.log('close');
                 },
                 "Cancel": function() {
                     $(this).dialog('close');

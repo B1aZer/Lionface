@@ -781,8 +781,8 @@ a.profile_btn:hover {
 /* style for attached images */
 
 
-.image_container_attach {
-	padding: 10px;
+.image_container_attach ul {
+	/*padding: 10px;*/
 }
 
 .image_container_attach ul {
@@ -804,11 +804,11 @@ a.profile_btn:hover {
 }
 
 .image_container_attach ul li:first-child {
-	margin-left: 0;
+	margin-left: 10px;
 }
 
 .image_container_attach ul li:nth-child(3n + 4) {
-	margin-left : 0;
+	margin-left: 10px;
 }
 
 /* end style for attached images*/
