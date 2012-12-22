@@ -53,7 +53,7 @@ class FriendRequest(models.Model):
         # for followers
         if self.to_user in self.from_user.get_followers_active():
             self.from_user.block_follower(self.to_user)
-        Notification(user=self.from_user, type='FA', other_user=self.to_user, content_object = self).save()
+        Notification(user=self.from_user, type='FA', other_user=self.to_user, content_object=self).save()
         FriendPost(user=self.from_user, friend=self.to_user, user_to=self.to_user).save()
         #AddFriendToFeed.delay(self.from_user, self.to_user)
         #AddFriendToFeed.delay(self.to_user, self.from_user)
@@ -176,13 +176,13 @@ class UserProfile(User):
     def get_blocked(self):
         blocked = [x for x in self.blocked.all()]
         blocked_from = [x for x in self.blocked_from.all()]
-        blocked_all = list(set(list(chain(blocked,blocked_from))))
+        blocked_all = list(set(list(chain(blocked, blocked_from))))
         return blocked_all
 
     def get_blocked_ids(self):
         blocked = [x.id for x in self.blocked.all()]
         blocked_from = [x.id for x in self.blocked_from.all()]
-        blocked_all = list(set(list(chain(blocked,blocked_from))))
+        blocked_all = list(set(list(chain(blocked, blocked_from))))
         return blocked_all
 
     def get_blocked_self(self):
@@ -212,7 +212,7 @@ class UserProfile(User):
         # Following
         if 'W' in filters:
             following = self.get_following_active()
-            following = [x for x in following if x.check_visiblity('follow',self)]
+            following = [x for x in following if x.check_visiblity('follow', self)]
         else:
             following = []
         # Blocked
@@ -220,7 +220,7 @@ class UserProfile(User):
             blocked = [x for x in self.get_blocked()]
         else:
             blocked = []
-        user_list = list(set(list(chain(user_list,following))))
+        user_list = list(set(list(chain(user_list, following))))
         return NewsItem.objects.filter(user__in=user_list).exclude(user__in=blocked).exclude(post__user=self).order_by('date').reverse()
 
     def get_filters(self):
@@ -250,7 +250,7 @@ class UserProfile(User):
     def get_album_count(self):
         return self.albums_set.count()
 
-    def check_option(self,name,value=None):
+    def check_option(self, name, value=None):
         name = "option_%s" % name
         try:
             option = self.useroptions_set.get(name=name)
@@ -294,16 +294,16 @@ class UserProfile(User):
 
         return visible
 
-    def set_option(self,name,value):
+    def set_option(self, name, value):
         name = "option_%s" % name
         try:
             option = self.useroptions_set.get(name=name)
             option.value = value
             option.save()
         except ObjectDoesNotExist:
-            self.useroptions_set.create(name=name,value=value)
+            self.useroptions_set.create(name=name, value=value)
 
-    def remove_option(self,name):
+    def remove_option(self, name):
         name = "option_%s" % name
         try:
             option = self.useroptions_set.get(name=name)
@@ -312,12 +312,12 @@ class UserProfile(User):
         except ObjectDoesNotExist:
             return False
 
-    def find_options(self,name,page=None):
+    def find_options(self, name, page=None):
         name = "option_%s" % name
         options = self.useroptions_set.filter(name__startswith=name)
         if page:
             page_name = "__%s" % (page.id)
-            options = self.useroptions_set.filter(name__startswith=name,name__endswith=page_name)
+            options = self.useroptions_set.filter(name__startswith=name, name__endswith=page_name)
         return options
 
     def new_messages(self):
@@ -325,8 +325,8 @@ class UserProfile(User):
 
     def new_notifcations(self):
         return self.notification_set.filter(read=False) \
-                .exclude(type__in=['MC', 'MI', 'MF', 'MS', 'MM', 'FM', 'MP']) \
-                .count()
+            .exclude(type__in=['MC', 'MI', 'MF', 'MS', 'MM', 'FM', 'MP']) \
+            .count()
 
     def add_follower(self, person):
         relationship, created = Relationship.objects.get_or_create(
@@ -369,7 +369,7 @@ class UserProfile(User):
             count = Relationship.objects.filter(to_user=self, status=1).exclude(from_user__in=self.get_blocked()).count()
         else:
             count = Relationship.objects.filter(to_user=self, status=1).exclude(from_user__in=self.get_blocked()).\
-                    exclude(from_user__id=user.id).count()
+                exclude(from_user__id=user.id).count()
         return count
 
     def get_followers_count(self, user=None):
@@ -377,10 +377,10 @@ class UserProfile(User):
             count = Relationship.objects.filter(from_user=self, status=1).exclude(to_user__in=self.get_blocked()).count()
         else:
             count = Relationship.objects.filter(from_user=self, status=1).exclude(to_user__in=self.get_blocked()).\
-                    exclude(to_user__id=user.id).count()
+                exclude(to_user__id=user.id).count()
         return count
 
-    def in_followers(self,user):
+    def in_followers(self, user):
         followers = Relationship.objects.filter(from_user=self)
         followers = [x.to_user for x in followers]
         if user in followers:
@@ -390,36 +390,36 @@ class UserProfile(User):
 
     def remove_following(self, user):
         Relationship.objects.filter(
-                from_user=user,
-                to_user=self).delete()
+            from_user=user,
+            to_user=self).delete()
         return
 
     def block_following(self, user):
         following = Relationship.objects.filter(
-                from_user=user,
-                to_user=self)
-        following.update(status = 0)
+            from_user=user,
+            to_user=self)
+        following.update(status=0)
         return
 
     def block_follower(self, user):
         follower = Relationship.objects.filter(
-                from_user=self,
-                to_user=user)
-        follower.update(status = 0)
+            from_user=self,
+            to_user=user)
+        follower.update(status=0)
         return
 
     def activate_following(self, user):
         following = Relationship.objects.filter(
-                from_user=user,
-                to_user=self)
-        following.update(status = 1)
+            from_user=user,
+            to_user=self)
+        following.update(status=1)
         return
 
     def activate_follower(self, user):
         following = Relationship.objects.filter(
-                from_user=self,
-                to_user=user)
-        following.update(status = 1)
+            from_user=self,
+            to_user=user)
+        following.update(status=1)
         return
 
     def get_loved(self):
@@ -460,7 +460,7 @@ class UserProfile(User):
                 comm_pages.remove(page)
             topage_requests = [one_page.from_page for one_page in page.get_requests()]
             page_friends = page.get_friends()
-            sum_pages = set(chain(page_friends,topage_requests))
+            sum_pages = set(chain(page_friends, topage_requests))
             comm_pages = [one_page for one_page in comm_pages if one_page not in sum_pages]
         return len(comm_pages)
 
@@ -468,34 +468,34 @@ class UserProfile(User):
         roles = ['P']
         if self in page.get_admins():
             roles.append('A')
-        if self.membership_set.filter(page=page,type='EM', is_confirmed=True).count():
+        if self.membership_set.filter(page=page, type='EM', is_confirmed=True).count():
             roles.append('E')
-        if self.membership_set.filter(page=page,type='VL', is_confirmed=True).count():
+        if self.membership_set.filter(page=page, type='VL', is_confirmed=True).count():
             roles.append('E')
-        if self.membership_set.filter(page=page,type='IN', is_confirmed=True).count():
+        if self.membership_set.filter(page=page, type='IN', is_confirmed=True).count():
             roles.append('I')
         return roles
 
     def is_employee_for(self, page):
-        qry = self.membership_set.filter(page=page,type='EM', is_confirmed=True).count()
+        qry = self.membership_set.filter(page=page, type='EM', is_confirmed=True).count()
         if qry:
             return True
         return False
 
     def is_volunteer_for(self, page):
-        qry = self.membership_set.filter(page=page,type='VL', is_confirmed=True).count()
+        qry = self.membership_set.filter(page=page, type='VL', is_confirmed=True).count()
         if qry:
             return True
         return False
 
     def is_intern_for(self, page):
-        qry = self.membership_set.filter(page=page,type='IN', is_confirmed=True).count()
+        qry = self.membership_set.filter(page=page, type='IN', is_confirmed=True).count()
         if qry:
             return True
         return False
 
     def posted_review_for(self, page):
-        reviews = page.feedback_posts.filter(user=self).order_by('-date');
+        reviews = page.feedback_posts.filter(user=self).order_by('-date')
         if reviews.count():
             now = timezone.now()
             delta = dateclass.timedelta(days=7)
@@ -524,28 +524,28 @@ class UserProfile(User):
             bids = bids[0]
         return bids
 
-    def get_love_last_4(self,page):
+    def get_love_last_4(self, page):
         if self.is_lcustomer_for(page):
             customer = self.customer.get(page=page, section='L')
             return customer.get_last_four()
         else:
             return False
 
-    def get_last_4(self,page):
+    def get_last_4(self, page):
         if self.is_customer_for(page):
             customer = self.customer.get(page=page, section='B')
             return customer.get_last_four()
         else:
             return False
 
-    def get_love_card_type_for(self,page):
+    def get_love_card_type_for(self, page):
         if self.is_lcustomer_for(page):
             customer = self.customer.get(page=page, section='L')
             return customer.get_type()
         else:
             return False
 
-    def get_card_type_for(self,page):
+    def get_card_type_for(self, page):
         if self.is_customer_for(page):
             customer = self.customer.get(page=page, section='B')
             return customer.get_type()
@@ -555,7 +555,6 @@ class UserProfile(User):
     def have_shared_topic_with(self, page):
         shared = self.topics_set.filter(tagged=page, privacy='I').count()
         return shared
-
 
     @models.permalink
     def get_absolute_url(self):
@@ -586,12 +585,12 @@ class Relationship(models.Model):
 
     def save(self, *args, **kwargs):
         follow = False
-        if self.from_user.check_option('follow',"Public"):
+        if self.from_user.check_option('follow', "Public"):
             follow = True
-        elif self.from_user.check_option('follow',"Friend's Friends"):
+        elif self.from_user.check_option('follow', "Friend's Friends"):
             if self.from_user.has_friends_friend(self.to_user):
                 follow = True
-        elif self.from_user.check_option('follow',"Off"):
+        elif self.from_user.check_option('follow', "Off"):
             pass
         else:
             follow = True
@@ -604,5 +603,3 @@ class UserOptions(models.Model):
     name = models.CharField(max_length='100')
     value = models.CharField(max_length='100')
     user = models.ForeignKey(UserProfile)
-
-

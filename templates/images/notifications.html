@@ -7,7 +7,7 @@
     width: 100%;
 }
 </style>
-<div class="image_container" data-pk={{ image.pk }}>
+<div class="image_container" data-pk='{{ image.pk }}' data-post-pk='{{ image.owner.id }}'>
     <table width="100%"><tr><td valign="top">
         <div style="background: url('/{{ image.image.thumb_name }}') #FFF; cursor: default;" class="image_album" style="text-align: center;"></div>
     </td><td valign="top">
@@ -19,7 +19,7 @@
         </div>
         <div class="image_zone_info">
             <div class="scroll_area" style="background: #FFF;">
-                <div class="comments" style="width: 400px; position: relative; left: -8px;">
+                <div class="{% ifequal owner 'user' %}comments{% else %}{% ifequal owner 'post' %}comments image_comments{% endifequal %}{% endifequal %}" style="width: 400px; position: relative; left: -8px;">
                     <ul style="width: 445px;"></ul>
                 </div>
             </div>

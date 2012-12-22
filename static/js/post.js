@@ -615,7 +615,6 @@ LionFace.PostImages.prototype = {
 
     popup_comments_add: function($textarea) {
         var _this = this,
-            postid = $textarea.data('newsitem-pk'),
             $ul = $('.image_comments ul'),
             val = $textarea.val();
         if (val.length < 1)
@@ -627,7 +626,7 @@ LionFace.PostImages.prototype = {
                 'method': 'create',
                 'message': val,
                 'image-pk': $ul.data('image-pk'),
-                'newsitem-pk': postid
+                'post-pk': $ul.data('post-pk')
             },
             beforeSend: function(jqXHR, settings) {
                 $textarea.data('val', val);
@@ -647,7 +646,7 @@ LionFace.PostImages.prototype = {
             },
             complete: function(jqXHR, textStatus) {
                 $textarea.prop('disabled', false);
-            },
+            }
         });
     },
 
@@ -670,64 +669,80 @@ LionFace.PostImages.prototype = {
                 if (data.status == 'ok') {
                     _this.popup_comments_refresh($(data.comments).filter('li'));
                 }
-            },
+            }
         });
     },
 
     popup_comments_delete: function($item) {
         var _this = this,
             $ul = $('.image_comments ul');
-        console.log($('.image_comments'));
-        $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
-         .appendTo($('.image_comments')).dialog({
-            resizable: false,
-            height: 150,
-            width: 400,
-            modal: true,
-            closeOnEscape: false,
-            buttons: {
-                "Delete": function() {
-                    $.ajax({
-                        url: LionFace.User['images_comments_ajax'],
-                        type: 'POST',
-                        data: {
-                            'method': 'delete',
-                            'comment_pk': $item.data('pk'),
-                            'post-pk': $ul.data('post-pk'),
-                            'image-pk': $ul.data('image-pk')
-                        },
-                        success: function(data, textStatus, jqXHR) {
-                            if (data.status == 'ok') {
-                                _this.popup_comments_refresh($(data.comments).filter('li'));
-                            }
-                        },
-                    });
-                    $(this).dialog('close');
-                    console.log('close');
-                },
-                "Cancel": function() {
-                    $(this).dialog('close');
+
+        $.ajax({
+            url: LionFace.User['images_comments_ajax'],
+            type: 'POST',
+            data: {
+                'method': 'delete',
+                'comment_pk': $item.data('pk'),
+                'post-pk': $ul.data('post-pk'),
+                'image-pk': $ul.data('image-pk')
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 'ok') {
+                    _this.popup_comments_refresh($(data.comments).filter('li'));
                 }
-            },
-            open: function(event, ui) {
-                _this.popup_disableKeyboard();
-                var $dialog = $(this).parent();
-                return;
-                $dialog.find('.ui-dialog-titlebar').remove();
-                $dialog.find(this).css({'overflow': 'hidden'});
-                $dialog.find('.ui-dialog-buttonpane').css({
-                    'border-width': 0,
-                    'margin': 0,
-                    'padding': 0,
-                });
-                $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
-            },
-            close: function(event, ui) {
-                _this.popup_enableKeyboard();
-                $(this).dialog('destroy').remove();
-            },
-            zIndex: 10002,
+            }
         });
+
+        // $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
+        //  .appendTo($('.image_comments')).dialog({
+        //     resizable: false,
+        //     height: 150,
+        //     width: 400,
+        //     modal: true,
+        //     closeOnEscape: false,
+        //     buttons: {
+        //         "Delete": function() {
+        //             $.ajax({
+        //                 url: LionFace.User['images_comments_ajax'],
+        //                 type: 'POST',
+        //                 data: {
+        //                     'method': 'delete',
+        //                     'comment_pk': $item.data('pk'),
+        //                     'post-pk': $ul.data('post-pk'),
+        //                     'image-pk': $ul.data('image-pk')
+        //                 },
+        //                 success: function(data, textStatus, jqXHR) {
+        //                     if (data.status == 'ok') {
+        //                         _this.popup_comments_refresh($(data.comments).filter('li'));
+        //                     }
+        //                 }
+        //             });
+        //             $(this).dialog('close');
+        //             console.log('close');
+        //         },
+        //         "Cancel": function() {
+        //             $(this).dialog('close');
+        //         }
+        //     },
+        //     open: function(event, ui) {
+        //         _this.popup_disableKeyboard();
+        //         var $dialog = $(this).parent();
+        //         return;
+        //         $dialog.find('.ui-dialog-titlebar').remove();
+        //         $dialog.find(this).css({'overflow': 'hidden'});
+        //         $dialog.find('.ui-dialog-buttonpane').css({
+        //             'border-width': 0,
+        //             'margin': 0,
+        //             'padding': 0,
+        //         });
+        //         $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
+        //     },
+        //     close: function(event, ui) {
+        //         _this.popup_enableKeyboard();
+        //         $(this).dialog('destroy').remove();
+        //     },
+        //     zIndex: 10002,
+        // });
     },
 
     bind_popup: function() {

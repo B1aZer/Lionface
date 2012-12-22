@@ -513,12 +513,14 @@ def images_comments_ajax(request):
     if not request.is_ajax():
         raise Http404
 
-    newsitem_id = request.REQUEST.get('newsitem-pk', None)
+    # newsitem_id = request.REQUEST.get('newsitem-pk', None)
     post_id = request.REQUEST.get('post-pk', None)
-    if newsitem_id:
-        item = get_object_or_404(NewsItem, id=newsitem_id)
-        post = item.get_post().get_inherited()
-    elif post_id:
+    # if newsitem_id:
+    #     item = get_object_or_404(NewsItem, id=newsitem_id)
+    #     post = item.get_post().get_inherited()
+    #     if isinstance(post, SharePost):
+    #         post = post.get_original_post()
+    if post_id:
         post = get_object_or_404(Post, id=post_id)
         post = post.get_inherited()
     else:

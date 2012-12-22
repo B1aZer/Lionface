@@ -1,6 +1,6 @@
 LionFace.Notification = function(options) {
     this.options = $.extend({
-        
+
     }, options || {});;
     this.init();
 };
@@ -14,28 +14,28 @@ LionFace.Notification.prototype = {
         this.reset_notificaton_count();
     },
 
-    reset_notificaton_count: function() {  
+    reset_notificaton_count: function() {
         if ($('#notifications_id_notif span').length) {
             $('#notifications_id_notif span').remove();
         }
     },
 
-    load_post: function(post, type, model) { 
+    load_post: function(post, type, _model) {
         var url = "/posts/show/";
-        var model = model || '';
+        var model = _model || '';
         var $elem = $('.right_content');
 
-        $elem.html("").addClass("large_loader"); 
+        $elem.html("").addClass("large_loader");
         make_request({
             url: url,
             data: {
                 post_id: post,
                 post_type: type,
-                post_model: model,
+                post_model: model
             },
             callback: function(data) {
-                $elem.removeClass("large_loader")
-                if (data.html != undefined) {
+                $elem.removeClass("large_loader");
+                if (data.html !== undefined) {
                     $elem.html(data.html);
                     make_excerpts();
                 }
@@ -43,28 +43,37 @@ LionFace.Notification.prototype = {
             errorback: function() {
                 $elem.removeClass("large_loader");
                 alert('Unable to retrieve data.');
-            },
+            }
         });
     },
 
-    load_image_comments: function(pk) {
-        if (pk == undefined)
+    load_image_comments: function(pk, owner_id, owner_type) {
+        if (pk === undefined)
             return;
+        var data = {'pk': pk};
+        if (owner_id !== undefined && owner_type !== undefined) {
+            data['owner_id'] = owner_id;
+            data['owner_type'] = owner_type;
+        }
         var $elem = $('.right_content');
         $.ajax({
             url: '/images/notifications/',
-            data: {
-                'pk': pk,
-            },
+            data: data,
             beforeSend: function(jqXHR, settings) {
                 $elem.html('').addClass('large_loader');
             },
             success: function(data, textStatus, jqXHR) {
                 if (data.status == 'ok') {
                     $elem.html(data.html);
+                    // ???: should this be post_images_comment_ajax?
                     LionFace.User['images_comments_ajax'] = data.images_comments_ajax;
-                    LionFace.Images.popup_comments_list($($elem.find('.image_container')));
-                    LionFace.Images.popup_comments_bind_make_comment();
+                    if (data.owner === 'user') {
+                        LionFace.Images.popup_comments_list($($elem.find('.image_container')));
+                        LionFace.Images.popup_comments_bind_make_comment();
+                    } else if (data.owner === 'post') {
+                        LionFace.PostImages.popup_comments_list($($elem.find('.image_container')));
+                        LionFace.PostImages.popup_comments_bind_make_comment();
+                    }
                 } else {
                     this.error(jqXHR, textStatus);
                 }
@@ -74,9 +83,9 @@ LionFace.Notification.prototype = {
             },
             complete: function(jqXHR, textStatus) {
                 $elem.removeClass('large_loader');
-            },
+            }
         });
-        
+
     },
 
     bind_load_content: function() {
@@ -87,10 +96,11 @@ LionFace.Notification.prototype = {
             '.comment_submitted',
             '.comment_image',
             '.follow_comment',
-            '.follow_shared',
+            '.follow_shared'
         ];
 
         $(document).on('click', selectors.join(','), function(e) {
+            console.log('hi');
             var starter = document.elementFromPoint(e.clientX, e.clientY);
             if ($(starter).is('a')) {
                 return;
@@ -98,9 +108,13 @@ LionFace.Notification.prototype = {
             var meta = $(this).metadata();
             if (meta.id) {
                 if ($(this).hasClass('comment_image')) {
-                    _this.load_image_comments(meta.id);
+                    if (meta.owner_type === '') {
+                        _this.load_image_comments(meta.id);
+                    } else {
+                        _this.load_image_comments(meta.id, meta.owner_id, meta.owner_type);
+                    }
                 } else {
-                    _this.load_post(meta.id, meta.type, meta.model)
+                    _this.load_post(meta.id, meta.type, meta.model);
                 }
             } else {
                 $('.right_content').html("");
@@ -117,7 +131,7 @@ LionFace.Notification.prototype = {
     },
 
     bind_nav: function() {
-        $(document).on('click', '.nav_link', function() { 
+        $(document).on('click', '.nav_link', function() {
             $.ajax({
                 type: 'GET',
                 url: $(this).attr('href'),
@@ -134,6 +148,6 @@ LionFace.Notification.prototype = {
 
 };
 
-$(function() {         
+$(function() {
     LionFace.Notification = new LionFace.Notification();
 });
