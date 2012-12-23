@@ -540,8 +540,8 @@ LionFace.PostImages.prototype = {
         $('.image_popup .image_zone, .image_popup .image_info').show();
         $('.image_popup').fadeIn(this.options.popup_fadeDuration);
 
-        postid = $(newsitem).metadata().postid;
-        $('.image_popup').find('textarea').data('newsitem-pk', postid);
+        // postid = $(newsitem).metadata().postid;
+        // $('.image_popup').find('textarea').data('newsitem-pk', postid);
 
         var owner = $('.image_popup .owner');
         owner.find('.user_absolute_url').prop('href', user_data.user_absolute_url);
