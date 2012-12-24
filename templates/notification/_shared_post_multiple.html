@@ -1,3 +1,4 @@
+{% load format_results %}
 <li class="shared_post notification {type: 'shared_multiple', id: '{{ notification.id }}'}">
   <div style="padding: 15px;" class="link-output">
       <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}>
@@ -7,7 +8,7 @@
               {{ notification.people_counter }} people
           {% endif %}
       </span><br /><span style="color: #5AE;">shared</span> your post.
-			<br /><div style="color: #999; font-size: 8pt; padding: 5px 0 0 0;">Post Preview</div>
+			<br /><div style="color: #999; font-size: 8pt; padding: 5px 0 0 0;">{{ notification.get_preview|truncatesmart:30 }}</div>
   </div>
   <div class="separator"></div>
 </li>

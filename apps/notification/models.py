@@ -126,11 +126,27 @@ class Notification(models.Model):
                 original_notfs.update(read=True)
 
     def get_people_names(self):
-        user_ids = [u.user_id for u in self.extra_set.all()]
+        user_ids = [u.user_id for u in self.extra_set.all() if u.user_id]
         users = UserProfile.objects.filter(id__in=user_ids)
         user_names = ["<a href=\"%s\">%s</a>" % (u.get_absolute_url(), u.get_full_name()) for u in users]
         user_names = ", ".join(user_names)
         return user_names
+
+    def get_preview(self):
+        preview = ''
+        if self.type in ("PP","PS"):
+            post = self.content_object
+            if isinstance(post, SharePost):
+                post = post.content_object
+            preview = post.content
+        if self.type in ("MP","MS"):
+            post_ids = [p.item_id for p in self.extra_set.all() if p.item_id]
+            post = Post.objects.filter(id__in=post_ids).order_by('date')[0]
+            post = post.get_inherited()
+            if isinstance(post, SharePost):
+                post = post.content_object
+            preview = post.content
+        return preview
 
 
 def create_friend_request_notification(sender, instance, created, **kwargs):

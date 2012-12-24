@@ -251,7 +251,7 @@ $(document).ready(function() {
         var starter = document.elementFromPoint(e.clientX, e.clientY);
         var self = $(this);
         //used for proper linking in div
-        if ($(starter).is('a')) {
+        if ($(starter).is('a') || $(starter).hasClass('message_thumbnail')) {
             return
             }
         $('.active_message').removeClass('active_message');
