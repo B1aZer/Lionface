@@ -3,6 +3,9 @@ from django.db.models.signals import post_save, pre_delete, post_delete
 from django.contrib.comments.signals import comment_was_posted
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.contrib import comments
+
+from django.conf import settings
 
 from account.models import *
 from agenda.models import *
@@ -134,18 +137,39 @@ class Notification(models.Model):
 
     def get_preview(self):
         preview = ''
-        if self.type in ("PP","PS"):
+        if self.type in ("PP","PS","FS"):
             post = self.content_object
             if isinstance(post, SharePost):
                 post = post.content_object
             preview = post.content
-        if self.type in ("MP","MS"):
+        if self.type in ("MP","MS","MM"):
             post_ids = [p.item_id for p in self.extra_set.all() if p.item_id]
             post = Post.objects.filter(id__in=post_ids).order_by('date')[0]
             post = post.get_inherited()
             if isinstance(post, SharePost):
                 post = post.content_object
             preview = post.content
+        if self.type in ('CS','FC'):
+            if self.related_object:
+                preview = self.related_object.comment
+            else:
+                post = self.content_object
+                comment = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).order_by('-submit_date')[0]
+                preview = comment.comment
+        if self.type in ('MC','MF'):
+            post = self.content_object
+            comment = comments.get_model().objects.filter(
+                        content_type=ContentType.objects.get_for_model(post),
+                        object_pk=post.pk,
+                        site__pk=settings.SITE_ID,
+                        is_removed=False,
+                        ).order_by('submit_date')[0]
+            preview = comment.comment
         return preview
 
 
@@ -200,7 +224,11 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
         #creating notification for owner if following
         if news_post.get_owner() != comment.user and news_post.get_owner() in news_post.get_post().following.all() \
                 and comment.user not in news_post.get_owner().get_blocked():
-            Notification(user=news_post.get_post().get_owner(), type='CS', other_user=comment.user, content_object=news_post).save()
+            Notification(user=news_post.get_post().get_owner(),
+                    type='CS',
+                    other_user=comment.user,
+                    content_object=news_post,
+                    related_object = comment).save()
         #create notifiactions for all followers of this post
         try:
             post = news_post.get_post()
@@ -208,7 +236,11 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
                 for user in post.following.all():
                     if user != comment.user and user != post.get_owner() \
                             and comment.user not in user.get_blocked():
-                        Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
+                        Notification(user=user,
+                                type='FC',
+                                other_user=comment.user,
+                                content_object=comment.content_object,
+                                related_object = comment).save()
         except:
             import logging
             logger = logging.getLogger(__name__)
