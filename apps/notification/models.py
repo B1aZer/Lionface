@@ -153,6 +153,7 @@ class Notification(models.Model):
             if self.related_object:
                 preview = self.related_object.comment
             else:
+                # old version
                 post = self.content_object
                 comment = comments.get_model().objects.filter(
                             content_type=ContentType.objects.get_for_model(post),
@@ -162,13 +163,20 @@ class Notification(models.Model):
                             ).order_by('-submit_date')[0]
                 preview = comment.comment
         if self.type in ('MC','MF'):
-            post = self.content_object
-            comment = comments.get_model().objects.filter(
-                        content_type=ContentType.objects.get_for_model(post),
-                        object_pk=post.pk,
-                        site__pk=settings.SITE_ID,
-                        is_removed=False,
-                        ).order_by('submit_date')[0]
+            comm_ids = [c.item_id for c in self.extra_set.all() if c.item_id]
+            if comm_ids:
+                comment = comments.get_model().objects.filter(
+                            id__in=comm_ids
+                            ).order_by('submit_date')[0]
+            else:
+                # old version
+                post = self.content_object
+                comment = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).order_by('submit_date')[0]
             preview = comment.comment
         return preview
 
@@ -358,6 +366,7 @@ def update_notification_count(sender, instance, **kwargs):
                                                #content_type=instance.content_type,
                                                object_id=object_id,
                                                read=False)
+            # create M notifiaction
             if not notf.count():
                 obj = Notification(user=instance.user,
                                    type=notification_type,
@@ -366,16 +375,24 @@ def update_notification_count(sender, instance, **kwargs):
                 # people counter
                 obj.save()
                 for user_notf in notfs:
-                    if obj.extra_set.all():
-                        if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
-                            obj.extra_set.create(user_id=user_notf.other_user.id)
+                    if instance.type in ('CS'):
+                        obj.extra_set.create(item_id=user_notf.related_object.id)
                     else:
-                        obj.extra_set.create(user_id=user_notf.other_user.id)
+                        if obj.extra_set.all():
+                            if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                                obj.extra_set.create(user_id=user_notf.other_user.id)
+                        else:
+                            obj.extra_set.create(user_id=user_notf.other_user.id)
+
+            # update extra set
             else:
                 obj = notf.get()
-                if obj.extra_set.all():
-                    if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
-                        obj.extra_set.create(user_id=instance.other_user.id)
+                if instance.type in ('CS'):
+                    obj.extra_set.create(item_id=instance.related_object.id)
+                else:
+                    if obj.extra_set.all():
+                        if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                            obj.extra_set.create(user_id=instance.other_user.id)
             # hide all original notifications
             Notification.objects.filter(**data) \
                 .filter(hidden=False) \
