@@ -9,15 +9,19 @@
 	</div>
     {% endfor %}
     {% if topics %}
+<table width="100%" style="position: relative; top: 8px;"><tr><td>
             {% if topics.has_previous %}
             <a href="{% url pages.views.topics_paging slug=page.username %}?page={{ topics.previous_page_number }}" class="profile_nav nav_link topic_forward">< Newer</a>
             {% else %}
             <a href="javascript:;" class="" style="color:#BBB; padding: 7px; cursor: default; text-decoration: none;">< Newer</a>
             {% endif %}
+</td><td align="center">
             <span align="center" width="" style="color: #AAA; font-size: 7pt;">{{ topics.number }} of {{ topics.paginator.num_pages }}</span>
+</td><td align="right">
             {% if topics.has_next %}
             <a href="{% url pages.views.topics_paging slug=page.username %}?page={{ topics.next_page_number }}" class="profile_nav nav_link topic_backward">Older ></a>
             {% else %}
             <a href="javascript:;" class="" style="color:#BBB; padding: 7px; cursor: default; text-decoration: none;">Older ></a>
             {% endif %}
+</td></tr></table>
     {% endif %}
