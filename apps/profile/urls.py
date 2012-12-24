@@ -3,6 +3,7 @@ from django.conf.urls.defaults import patterns, url
 urlpatterns = patterns('profile.views',
     url(r'^(?P<username>\w+)/delete/$', 'delete_profile'),
     url(r'^(?P<username>\w+)/account/$', 'settings'),
+    url(r'^(?P<username>\w+)/send_message/$', 'send_message'),
 
     url(r'^(?P<username>\w+)/feed/$', 'feed'),
     url(r'^(?P<username>\w+)/related/$', 'related_users'),

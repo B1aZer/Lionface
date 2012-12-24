@@ -72,8 +72,35 @@ LionFace.Profile.prototype = {
         });
 
         $("#send_message").click(function(event){
+            event.preventDefault();
             event.stopPropagation();
-            $('.send_message_form').show();
+            var self = $(this);
+            if (self.data('toggled')) {
+                $('.send_message_form').hide();
+                self.data('toggled',false);
+            }
+            else {
+                $('.send_message_form').show();
+                self.data('toggled',true);
+            }
+        });
+
+        $(document).on('submit', ".send_message_form", function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('action');
+            make_request({
+                url:url,
+                data: self.serialize(),
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        console.log(' all good' );
+                        $('#id_content').val('');
+                        self.hide();
+                        $("#send_message").data('toggled',false);
+                    }
+                }
+            });
         });
 
         $('.noPhoto').hover(

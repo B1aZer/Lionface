@@ -2096,7 +2096,7 @@ a.new_notification, span.new_notification {
 
 }
 
-.message:hover {
+.message:hover, .active_message {
 	background: url(../images/arrow.png) #FFF;
 	-webkit-background-size: 20px 20px !important;
 	-moz-background-size: 20px 20px !important;
