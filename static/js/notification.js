@@ -106,6 +106,21 @@ LionFace.Notification.prototype = {
                 $('.right_content').html("");
             }
         });
+
+        $(document).on('click', ".hide_notification", function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var $this = $(this);
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        $this.parents('.notification').hide();
+                    }
+                }
+            });
+        });
+        
     },
 
     bind_mark_notification: function() {

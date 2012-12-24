@@ -125,6 +125,13 @@ class Notification(models.Model):
             if original_notfs.count():
                 original_notfs.update(read=True)
 
+    def get_people_names(self):
+        user_ids = [u.user_id for u in self.extra_set.all()]
+        users = UserProfile.objects.filter(id__in=user_ids)
+        user_names = ["<a href=\"%s\">%s</a>" % (u.get_absolute_url(), u.get_full_name()) for u in users]
+        user_names = ", ".join(user_names)
+        return user_names
+
 
 def create_friend_request_notification(sender, instance, created, **kwargs):
     #import pdb;pdb.set_trace()

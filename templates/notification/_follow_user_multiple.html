@@ -1,12 +1,9 @@
 <li class="follow_user notification">
   <div style="padding: 15px; background: transparent; cursor: default;" class="link-output">
       <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}>
-          {% if notification.people_counter == 1 %}
-              1 person
-          {% else %}
-              {{ notification.people_counter }} people
-          {% endif %}
+              {{ notification.get_people_names|safe }}
       </span><br /><span style="color: #896;">started following you.</span>
+      <a class="hide_notification" href="{% url notification.views.hide_notification username=notification.user.username notf_id=notification.id %}"> hide </a>
   </div>
   <div class="separator"></div>
 </li>
