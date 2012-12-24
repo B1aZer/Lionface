@@ -128,6 +128,8 @@ LionFace.Notification.prototype = {
             if ($(this).find('.new_notification').length) {
                 $(this).find('.new_notification').removeClass('new_notification');
             }
+            $('.active_notification').removeClass('active_notification');
+            $(this).find('.link-output').addClass('active_notification');
         });
     },
 
