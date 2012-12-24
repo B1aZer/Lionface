@@ -130,7 +130,7 @@ $(document).ready(function(){
     <tr>
         {% for topic in page.get_popular_topics|slice:":2" %}
         <td width="50%" align="center">
-            <div class="dis_topics" style="left: 0px;">{{ topic.name|truncatesmart:40 }}<br />
+            <div id="topic_{{topic.id}}" class="dis_topics page_topics topics_bottom" style="left: 0px;">{{ topic.name|truncatesmart:40 }}<br />
                 <div style="font-size: 8pt; color: #777; padding: 3px 0;">
                 <span style="color: #49D; margin-right: 8px">{{ topic.get_privacy }}</span>
                 <span style="margin-right: 8px">Views: {{ topic.get_views_count }}</span>
@@ -143,7 +143,7 @@ $(document).ready(function(){
     <tr>
         {% for topic in page.get_popular_topics|slice:"2:" %}
         <td width="50%" align="center">
-            <div class="dis_topics" style="left: 0px;">{{ topic.name|truncatesmart:40 }}<br />
+            <div id="topic_{{topic.id}}" class="dis_topics page_topics topics_bottom" style="left: 0px;">{{ topic.name|truncatesmart:40 }}<br />
                 <div style="font-size: 8pt; color: #777; padding: 3px 0;">
                 <span style="color: #49D; margin-right: 8px">{{ topic.get_privacy }}</span>
                 <span style="margin-right: 8px">Views: {{ topic.get_views_count }}</span>

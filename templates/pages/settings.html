@@ -370,7 +370,7 @@ LionFace.User.options['pages_loves__'+{{ page.id }}] = false;
         <tr>
             <td>
                 <div style="margin-left: 17px;">
-                {% if request.user|check_pages_loves:page %}
+                {% if request.user|check_pages_loves:page and show_bids %}
                 <button id="submit_bids" type="submit" name="submit_bids" class="blue_btn submit_loves" style="display:none;">Submit Bid</button>
                 {% endif %}
                 {% if page.get_max_bid and show_bids %}
