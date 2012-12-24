@@ -68,6 +68,8 @@ Website<br /><br />
 
 {% block right_col %}
 {% include_media 'feed.js' %}
+{% include "post/_popup.html" %}
+
 <div style="padding: 10px; position: relative; left: 40px;">
 
 	{% if profile_user|has_friend:request.user or request.user == profile_user %}

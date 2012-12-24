@@ -221,6 +221,7 @@ MEDIA_BUNDLES = (
     ),
     ('feed.js',
         'js/feed.js',
+        'js/post.js',
     ),
     ('images.js',
         'js/images.js',

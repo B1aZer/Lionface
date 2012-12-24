@@ -28,13 +28,15 @@ function loadNewsFeed(elem, page) {
             if (hash) {
                 var ids = hash.replace("#","");
                 var offs = $('html, body').find('#post_'+ids).offset();
-                $('html, body').animate({scrollTop:offs.top}, 500); 
+                $('html, body').animate({scrollTop:offs.top}, 500);
             }
             */
             make_excerpts();
             if (data.page) {
                 $(document).data('feed_page', data.page);
             }
+
+            LionFace.PostImages.bind_settings();
         },
         errorback: function() {
             $elem.html('Unable to retrieve data.');
@@ -42,18 +44,18 @@ function loadNewsFeed(elem, page) {
     });
 }
 
-function del_post_single(elem) { 
+function del_post_single(elem) {
     var data = $('.post_'+elem).metadata();
 
     if(data.type !== undefined) {
 
     url = "/posts/del/" + elem + "?type="+data.type+"&ajax=true";
 
-  if (window.location.pathname.indexOf('lionface') >= 0) 
-  { 
+  if (window.location.pathname.indexOf('lionface') >= 0)
+  {
     url = '/lionface' +  url;
   }
-    
+
     }
     $.ajax(url,
     {
@@ -64,21 +66,21 @@ function del_post_single(elem) {
       error: function() {
         alert('Unable to delete data.');
       }
-    }); 
+    });
 
-}     
+}
 
-function hide_add_link() { 
+function hide_add_link() {
   if ($('.tagged').length >= 7) {
         $('.tags').hide();
         }
   else {
-   $('.tags').show(); 
+   $('.tags').show();
    }
 
-}    
+}
 
-      
+
 
 $(document).ready(function(){
 
@@ -95,7 +97,7 @@ $(document).ready(function(){
   $('.feed_type').live('click',function () {
   self = $(this)
   var tag_val = $(this).contents()[0];
-  var send = 'filter_name='+tag_val.textContent; 
+  var send = 'filter_name='+tag_val.textContent;
 
     if ($(this).hasClass('filterON')) {
     url = '/account/filter/remove/';
@@ -104,9 +106,9 @@ $(document).ready(function(){
                 data: send,
                 callback: function(html) {
                     if (html.status == 'OK') {
-                        
+
                         self.removeClass('filterON');
-                        self.addClass('filter'); 
+                        self.addClass('filter');
                         self.attr('title','Turn filter on.');
                         loadNewsFeed($("#news_feed"));
                     }
@@ -115,8 +117,8 @@ $(document).ready(function(){
                     alert('Sorry! impossible to deactivate filter');
                 }
 
-        }); 
-    
+        });
+
     }
     else {
     url = '/account/filter/add/';
@@ -125,9 +127,9 @@ $(document).ready(function(){
                 data: send,
                 callback: function(html, textStatus) {
                     if (html.status == 'OK') {
-                        
+
                         self.removeClass('filter');
-                        self.addClass('filterON'); 
+                        self.addClass('filterON');
                         self.attr('title','Turn filter off.');
                         loadNewsFeed($("#news_feed"));
                     }
@@ -136,21 +138,21 @@ $(document).ready(function(){
                     alert('Sorry! impossible to deactivate filter');
                 }
 
-        });      
-        
+        });
+
     }
   });
 
   $('.tagged').live('click',function () {
         var self = $(this)
         var tag_val = $(this).contents()[0];
-        var send = 'tag_name='+tag_val.textContent;  
+        var send = 'tag_name='+tag_val.textContent;
     if ($(this).hasClass('filterON')) {
             url = '/tags/deact/';
-             if (window.location.pathname.indexOf('lionface') >= 0) 
-              { 
+             if (window.location.pathname.indexOf('lionface') >= 0)
+              {
                 url = '/lionface' +  url;
-              } 
+              }
 
               $.ajax({
                 type: "POST",
@@ -166,14 +168,14 @@ $(document).ready(function(){
                     alert('Sorry! impossible to deactivate tag');
                 }
 
-              }); 
+              });
     }
     else {
          url = '/tags/act/';
-             if (window.location.pathname.indexOf('lionface') >= 0) 
-              { 
+             if (window.location.pathname.indexOf('lionface') >= 0)
+              {
                 url = '/lionface' +  url;
-              } 
+              }
 
               $.ajax({
                 type: "POST",
@@ -189,7 +191,7 @@ $(document).ready(function(){
                     alert('Sorry! impossible to activate tag');
                 }
 
-              });  
+              });
     }
     });
 
@@ -206,15 +208,15 @@ $(document).ready(function(){
       var form = $('<form id="foma" />');
       form.html('<input type="text" id="editbox" name="tags"><input id="button_save" type="submit" name="submit" class="blue_btn" value="Follow">')
       $('.tags').html(form);
-      $('#editbox').focus(); 
+      $('#editbox').focus();
 
       form.submit(function(e) {
         e.preventDefault();
         url = '/tags/add/';
-         if (window.location.pathname.indexOf('lionface') >= 0) 
-              { 
+         if (window.location.pathname.indexOf('lionface') >= 0)
+              {
                 url = '/lionface' +  url;
-              }    
+              }
 
               $.ajax({
                 type: "POST",
@@ -223,7 +225,7 @@ $(document).ready(function(){
                 success: function(html, textStatus) {
                 console.log(html.tags);
                     if (html.tags && html.tags.length < 2)
-                    { 
+                    {
                         link.html(html.tags).addClass('tagged');
                         link.append('<span class="remove_tag" style="float:right; display:none">x</span>');
                         link.hover(function () {
@@ -236,11 +238,11 @@ $(document).ready(function(){
                         link.addClass('filterON');
                         link.attr('title','Turn filter off.');
                         link.after(link_add);
-                        hide_add_link(); 
-                    }   
-                    else if (html.tags && html.tags.length >= 2) 
+                        hide_add_link();
+                    }
+                    else if (html.tags && html.tags.length >= 2)
                     {
-                        for (var i=0; i<html.tags.length; i++) 
+                        for (var i=0; i<html.tags.length; i++)
                         {
                             link_tag = link.clone()
                             link_tag.html(html.tags[i]).addClass('tagged');
@@ -260,9 +262,9 @@ $(document).ready(function(){
                         }
                         link.remove();
                         last_link.after(link_add);
-                        hide_add_link(); 
+                        hide_add_link();
                     }
-                    else 
+                    else
                     {
                         link.html(link_add.html())
                     }
@@ -274,7 +276,7 @@ $(document).ready(function(){
                     alert('Sorry! impossible to save tag');
                 }
 
-            });     
+            });
 
 
         });
@@ -283,20 +285,20 @@ $(document).ready(function(){
           if ($(this).parent().parent().is(':hover') === false) {
               link.html('<span class="add_tag" >Add +</span>');
               }
-            
+
       });
 
   });
 
     $('.remove_tag').live('click',function (e) {
         e.preventDefault();
-        e.stopPropagation(); 
+        e.stopPropagation();
 
         url = '/tags/rem/';
-        if (window.location.pathname.indexOf('lionface') >= 0) 
-          { 
+        if (window.location.pathname.indexOf('lionface') >= 0)
+          {
             url = '/lionface' +  url;
-          }    
+          }
 
        var link = $(this).parent()
        var tag_val = $(this).parent().contents()[0];
@@ -308,7 +310,7 @@ $(document).ready(function(){
             url: url,
             success: function(html, textStatus) {
             if (html.status == 'OK' )
-                { 
+                {
                 link.fadeOut();
                 link.remove();
                 hide_add_link();
@@ -319,9 +321,9 @@ $(document).ready(function(){
                 alert('Impossible to delete tag');
             }
 
-        }); 
-    }); 
-    
+        });
+    });
+
     /** Load more post in newsfeed */
     $(document).on('click','#see_more_feed',function(e){
         e.preventDefault();

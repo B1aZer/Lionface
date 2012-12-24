@@ -123,6 +123,7 @@ LionFace.Profile.prototype = {
                     }
                     $("#attached-images ul").html("");
                     this.attach_image_count = 0;
+                    LionFace.PostImages.bind_settings($('#news_feed .post_feed:first'));
                 }
             };
             $("#postform").ajaxSubmit(options);
