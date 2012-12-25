@@ -10,7 +10,7 @@
 {# using metadata to pass user's info in popup window #}
 {% if not post_user %}
     {% with news_item_user=item.get_original_author %}
-        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', news_item_user: '{{ item.news_item_user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ news_item_user.username }}', user_full_name: '{{ news_item_user.full_name }}', user_photo_thumb: '/{{ news_item_user.photo.thumb_name }}', user_absolute_url: '{{ news_item_user.get_absolute_url }}' }">
+        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', news_item_user: '{{ item.news_item_user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ news_item_user.username }}', user_full_name: '{{ news_item_user.full_name }}', user_photo_thumb: '/{{ news_item_user.photo.thumb_name }}', user_absolute_url: '{{ news_item_user.get_absolute_url }}' }">
     {% endwith %}
 {% else %}
     <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ post_user.username }}', user_full_name: '{{ post_user.full_name }}', user_photo_thumb: '/{{ post_user.photo.thumb_name }}', user_absolute_url: '{{ post_user.get_absolute_url }}' }">
