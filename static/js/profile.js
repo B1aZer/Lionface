@@ -135,7 +135,7 @@ LionFace.Profile.prototype = {
                 type: "POST",
                 dataType: "JSON",
                 beforeSubmit: function() {
-                    var loading = $('<div class="large_loader"></div>');
+                    var loading = $('<div class="large_loader" style="padding-left: 0;"></div>');
                     $('#attached-images ul').html(loading);
                 },
                 success: function(data) {
