@@ -107,6 +107,10 @@ LionFace.Profile.prototype = {
                 url: "/posts/save/",
                 type: "POST",
                 dataType: "JSON",
+                beforeSubmit: function() {
+                    var loading = $('<div class="large_loader"></div>');
+                    $('#attached-images ul').html(loading);
+                },
                 success: function(data) {
                     if (data.status === 'OK') {
                         $("#news_feed").prepend(data.html);
@@ -122,8 +126,11 @@ LionFace.Profile.prototype = {
                         }
                     }
                     $("#attached-images ul").html("");
-                    this.attach_image_count = 0;
                     LionFace.PostImages.bind_settings($('#news_feed .post_feed:first'));
+                    this.attach_image_count = 0;
+                },
+                error: function() {
+                    $('#attached-images ul').html('Error.');
                 }
             };
             $("#postform").ajaxSubmit(options);
@@ -133,6 +140,12 @@ LionFace.Profile.prototype = {
         $(document).on('click','.post_option',function(){
             $(this).find('input').prop('checked', true);
         });
+
+        $('#postbox').on('dragover', function(e) {
+            e = e.originalEvent;
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }).on('drop', this.attach_dropped_image);
 
     /*
     //Submit on enter
@@ -159,22 +172,23 @@ LionFace.Profile.prototype = {
         });
     */
 
+        $('#attached-images').sortable();
         $('.postbox_textarea').autosize();
     },
 
-    attach_image: function(attached_images) {
+    attach_image: function(event) {
+        event.preventDefault();
         if (this.attach_image_count > MAX_UPLOAD_IMAGES) {
             create_message("Too many images", "error");
             return;
         }
-        var $attached_images = $(attached_images);
+        var $attached_images = $('#attached-images');
         $attached_images.find("ul").append("<li><input class='attach-image-file' type='file' name='image' style='display: none;'></li>");
         // document.getElementsByClassName('attach-image-file')[0].addEventListener('change', uploadImage, false);
         $(".attach-image-file").on("change", function(e) {
         // function uploadImage(e) {
             // TODO: check uploaded image size
             // if(e.target.files[0].size > 3145728) {
-            console.log('hi');
             var image = e.target.files[0];
             if (image === undefined) {
                 console.log('file not select');
@@ -193,6 +207,31 @@ LionFace.Profile.prototype = {
         });
         $attached_images.find(".attach-image-file:last").click();
         this.attach_image_count += 1;
+    },
+
+    attach_dropped_image: function (e) {
+        console.log('1');
+        var $attached_images = $('#attached-images');
+        e = e.originalEvent;
+        e.preventDefault();
+        var image = (e.dataTransfer || e.target).files[0];
+        console.log(image);
+        window.loadImage(
+            image,
+            function (img) {
+                $attached_images.find('ul').append(img);
+                var data = {
+                    image: image
+                };
+                // $.post('/posts/save/', data, function (data) {
+                //     alert('hi');
+                // }, 'JSON');
+                console.log(img);
+            },
+            {
+                maxWidth: 190
+            }
+        );
     },
 
     bind_albums : function() {

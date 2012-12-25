@@ -459,7 +459,6 @@ class ContentPost(Post):
 
         ctype = ContentType.objects.get_for_model(self)
         images = Image.objects.filter(owner_type=ctype, owner_id=self.id)
-        print('post_id', self.id, 'images', images)
 
         c = { 'images': images }
         render_images = render_to_string('post/_post_images.html', c)
