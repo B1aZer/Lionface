@@ -1,14 +1,25 @@
 from django import template
 from django.template.loader import render_to_string
 from django.template import RequestContext
-from django.contrib.auth.models import User
-from django.utils.html import escape
-from django.utils.safestring import mark_safe
+
 from tags.models import *
 from pages.models import Pages
 from smileys.models import Smiley
+
 import re
+
 from pages.forms import BUSINESS_CATEGORY, NONPROFIT_CATEGORY
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+from django.contrib import comments
+
+from django.conf import settings
+
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -489,3 +500,23 @@ def get_topics_for(page, user):
 @register.filter
 def have_shared_topic_with(user, page):
     return user.have_shared_topic_with(page)
+
+
+@register.simple_tag(takes_context=True)
+def render_comment_list_for(context, item):
+    comment_list = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(item),
+                            object_pk=item.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).order_by('-submit_date')
+
+    paginator = Paginator(comment_list, 7)
+    comment_list = paginator.page(1)
+    # reorder comments
+    comment_list.object_list = sorted(comment_list.object_list, key = lambda c: c.submit_date)
+
+    comment_render = render_to_string('comments/list.html',
+                        {'comment_list':comment_list},
+                        context)
+    return comment_render

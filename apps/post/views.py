@@ -21,6 +21,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
 from django.contrib import comments
 
+from django.conf import settings
+
 from itertools import chain
 
 
@@ -606,5 +608,53 @@ def test(request):
                        'comment': comment,
                        })
     data['html'] = t.render(c)
+
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def comments_pagination(request, post_id, page):
+    data = {'status': 'FAIL'}
+    try:
+        post = Post.objects.get(id=post_id)
+    except Posts.DoesNotExist:
+        raise Http404
+
+    comment_list = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).order_by('-submit_date')
+
+    paginator = Paginator(comment_list, 7)
+    comment_list = paginator.page(1)
+
+    if request.method == 'GET':
+        page_num = page
+        if page_num:
+            try:
+                comment_list = paginator.page(page_num)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                comment_list = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                comment_list = paginator.page(paginator.num_pages)
+        else:
+            page_num = 1
+
+    # reorder comments
+    comment_list.object_list = sorted(comment_list.object_list, key = lambda c: c.submit_date)
+
+    data['html'] = render_to_string('comments/list.html',
+                        {
+                            'comment_list':comment_list,
+                            'item': post,
+                        },
+                        RequestContext(request))
+
+    if comment_list.has_next():
+        data['next'] = comment_list.next_page_number()
+    data['status'] = 'OK'
 
     return HttpResponse(json.dumps(data), "application/json")

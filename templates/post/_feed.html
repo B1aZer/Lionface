@@ -134,7 +134,7 @@
         <div id="hide_comment_{{ item.get_post.id }}" {% if not item.get_comment_settings %}  style="display:none" {% endif %} >
             <div class="comments comment_{{ item.id }}" style="display: none;">
                 <div class="comment_container">
-                {% render_comment_list for item.get_post %}
+                {% render_comment_list_for item.get_post %}
                 {% render_comment_form for item.get_post %}
                 </div>
             </div>

@@ -16,5 +16,6 @@ urlpatterns = patterns('',
     url(r'timeline/(?P<post_num>\d+)/$', views.timeline),
     url(r'toggle_privacy/$', views.toggle_privacy),
     url(r'images/ajax/comments/$', views.images_comments_ajax,
-        name='post_images_ajax_comments')
+        name='post_images_ajax_comments'),
+    url(r'(?P<post_id>\d+)/comments_page/(?P<page>\d+)/$', views.comments_pagination),
 )
