@@ -36,7 +36,9 @@
 {% endblock %}
 
 {% block see_more %}
+{% if items.has_next %}
 
 <a id="see_more_feed" href="?page={{ items.next_page_number }}" style="position: relative; left: 25px; padding-left: 25px; width: 615px;"> See More </a>
 
+{% endif %}
 {% endblock %}

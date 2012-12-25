@@ -204,7 +204,12 @@ class FriendPost(Post):
         return self.user.friends.all() | self.friend.friends.all()
 
     def render(self):
-        return mark_safe("<a href='%s'>%s</a> and <a href='%s'>%s</a> are now friends." % (self.user.get_absolute_url(), self.user.get_full_name(), self.friend.get_absolute_url(), self.friend.get_full_name()))
+        post_template = render_to_string('post/_friendpost.html',
+                                         {'user': self.user,
+                                          'friend': self.friend,
+                                          })
+        post_template = post_template.strip()
+        return post_template
 
     def privacy(self):
         return ""

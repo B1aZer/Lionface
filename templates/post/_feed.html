@@ -19,14 +19,26 @@
     {% block thumbnail %}
     {% if item.get_type == 'page post' %}
         <a href="{{item.get_page_url}}"><div class="user_thumbnail" style="background: url('{{ item.get_page_thumb }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
+    {% elif item.get_type == 'friend post' %}
     {% else %}
         <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background: url('/{{ item.get_owner.photo.thumb_name }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
     {% endif %}
 
     {% endblock %}
-    {{ item.render|smileys|excerpt|linebreaks|color_tags }}
-    <div class="subtext">
     {% if item.get_type != 'friend post' %}
+    {{ item.render|smileys|excerpt|linebreaks|color_tags }}
+    {% else %}
+    {{ item.render|safe }}
+            {% spaceless %}
+            <span class="subtext">
+            <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
+            <a href="javascript:LionFace.Site.del_post({{item.id}});">Delete</a>
+            <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>
+            </span>
+            {% endspaceless %}
+    {% endif %}
+    {% if item.get_type != 'friend post' %}
+    <div class="subtext">
         <div>
             {% block subtext %}
             {% if item.get_type != 'feedback post' %}
@@ -139,9 +151,8 @@
                 </div>
             </div>
         </div>
-    {% endif %}
 
-    <div id="{{item.id}}" {% if item.get_type != 'friend post' %} style="display: none;" {% endif %}>
+    <div id="{{item.id}}"  style="display: none;" >
 
         <div class="post_timestamp">
             {% if item.get_type != 'friend post' and item.get_type != 'discuss post' %}
@@ -197,6 +208,10 @@
         {% endblock %}
         </div>
     </div>
+    {% comment %}
+    if not friend post endif
+    {% endcomment %}
+    {% endif %}
 </div>
 </div>
 {% empty %}
@@ -209,13 +224,13 @@
 {% endblock %}
 {% endfor %}
 
-{% if items.has_next %}
 {% block see_more %}
+{% if has_next %}
 
-<a id="see_more_feed" href="?page={{ items.next_page_number }}"> See More </a>
+<a id="see_more_feed" href="?page={{ next_page_number }}"> See More </a>
 
-{% endblock %}
 {% endif %}
+{% endblock %}
 
 {% block js %}
 <script type="text/javascript">
