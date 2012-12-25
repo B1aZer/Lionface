@@ -178,7 +178,7 @@ def timeline(request, post_num=5):
 
 @login_required
 def save(request):
-    import pudb; pudb.set_trace()
+    #import pudb; pudb.set_trace()
     data = {'status': 'OK'}
     if request.method == 'POST' and 'content' in request.POST:
         user_to = None
