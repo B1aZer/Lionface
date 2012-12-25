@@ -180,6 +180,13 @@ class Notification(models.Model):
             preview = comment.comment
         return preview
 
+    def get_events_count(self):
+        count = "None"
+        if self.type in ('MC','MF','MS','MM','MD','MP'):
+            comments = [c.item_id for c in self.extra_set.all() if c.item_id]
+            count = len(comments)
+        return count
+
 
 def create_friend_request_notification(sender, instance, created, **kwargs):
     #import pdb;pdb.set_trace()
@@ -375,24 +382,22 @@ def update_notification_count(sender, instance, **kwargs):
                 # people counter
                 obj.save()
                 for user_notf in notfs:
-                    if instance.type in ('CS'):
+                    if instance.type in ('CS','FC'):
                         obj.extra_set.create(item_id=user_notf.related_object.id)
-                    else:
-                        if obj.extra_set.all():
-                            if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
-                                obj.extra_set.create(user_id=user_notf.other_user.id)
-                        else:
+                    if obj.extra_set.all():
+                        if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
                             obj.extra_set.create(user_id=user_notf.other_user.id)
+                    else:
+                        obj.extra_set.create(user_id=user_notf.other_user.id)
 
             # update extra set
             else:
                 obj = notf.get()
-                if instance.type in ('CS'):
+                if instance.type in ('CS','FC'):
                     obj.extra_set.create(item_id=instance.related_object.id)
-                else:
-                    if obj.extra_set.all():
-                        if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
-                            obj.extra_set.create(user_id=instance.other_user.id)
+                if obj.extra_set.all():
+                    if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                        obj.extra_set.create(user_id=instance.other_user.id)
             # hide all original notifications
             Notification.objects.filter(**data) \
                 .filter(hidden=False) \
