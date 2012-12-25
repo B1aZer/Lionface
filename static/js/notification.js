@@ -20,7 +20,17 @@ LionFace.Notification.prototype = {
         }
     },
 
+    toggle_comments: function() {
+        $('.comment_counter').each( function(i,e) {
+            if (get_int($(e).html()) > 0) {
+                //$(e).parents('.toggle_comments').click();
+                $(e).parents('.result').find('.comments').show();
+            }
+        });
+    },
+
     load_post: function(post, type, model) { 
+        var cls = this;
         var url = "/posts/show/";
         var model = model || '';
         var $elem = $('.right_content');
@@ -38,6 +48,7 @@ LionFace.Notification.prototype = {
                 if (data.html != undefined) {
                     $elem.html(data.html);
                     make_excerpts();
+                    cls.toggle_comments();
                 }
             },
             errorback: function() {
