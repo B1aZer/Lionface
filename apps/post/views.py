@@ -196,7 +196,7 @@ def love(request):
             request.user.posts_loved.add(post)
             data['type'] = 'up'
         data['count'] = post.loves
-    except Exception as e:
+    except Exception:
         data['status'] = 'fail'
     else:
         data['status'] = 'ok'
@@ -218,6 +218,7 @@ def timeline(request, post_num=5):
 
 @login_required
 def save(request):
+    #import pudb; pudb.set_trace()
     data = {'status': 'OK'}
     if request.method == 'POST' and 'content' in request.POST:
         user_to = None
@@ -551,16 +552,12 @@ def change_settings(request):
 @login_required
 @unblocked_users
 def images_comments_ajax(request):
-    # import pdb; pdb.set_trace()
+    # import pudb; pudb.set_trace()
     if not request.is_ajax():
         raise Http404
 
-    newsitem_id = request.REQUEST.get('newsitem-pk', None)
     post_id = request.REQUEST.get('post-pk', None)
-    if newsitem_id:
-        item = get_object_or_404(NewsItem, id=newsitem_id)
-        post = item.get_post().get_inherited()
-    elif post_id:
+    if post_id:
         post = get_object_or_404(Post, id=post_id)
         post = post.get_inherited()
     else:
@@ -619,8 +616,7 @@ def images_comments_ajax(request):
             'comments': image.comments.all(),
             'manage_perm': manage_perm,
         }, context_instance=RequestContext(request))
-    except Exception as e:
-        print(e)
+    except Exception:
         data['status'] = 'fail'
     else:
         data['status'] = 'ok'

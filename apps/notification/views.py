@@ -12,6 +12,7 @@ try:
 except ImportError:
     import simplejson as json
 
+
 @login_required
 def notifications(request, username=None):
     #import pdb;pdb.set_trace()
@@ -34,7 +35,7 @@ def notifications(request, username=None):
     result_list = paginator.page(1)
 
     if request.method == 'GET':
-        page = request.GET.get('page',None)
+        page = request.GET.get('page', None)
         if page:
             try:
                 result_list = paginator.page(page)

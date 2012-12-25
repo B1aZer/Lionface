@@ -129,6 +129,13 @@ class Post(models.Model):
             return False
         return original.user
 
+    def get_original_author(self):
+        try:
+            original = self.get_post().get_inherited()
+            return original.user
+        except:
+            return False
+
     def get_type(self):
         try:
             original = self.get_inherited()
@@ -191,7 +198,6 @@ class Post(models.Model):
 
     def get_lovers(self):
         return self.users_loved.all()
-
 
 
 class FriendPost(Post):
@@ -465,7 +471,6 @@ class ContentPost(Post):
 
         ctype = ContentType.objects.get_for_model(self)
         images = Image.objects.filter(owner_type=ctype, owner_id=self.id)
-        print('post_id', self.id, 'images', images)
 
         c = { 'images': images }
         render_images = render_to_string('post/_post_images.html', c)
