@@ -76,7 +76,7 @@
 </div>
 
 <div class="send_message_shadow" align="center">
-<form action="." method="post" class="send_message_form" style="display:none; text-align: left;" id="message_form">
+    <form action="{% url profile.views.send_message username=profile_user.username %}" method="post" class="send_message_form" style="display:none; text-align: left;" id="message_form">
     {% csrf_token %}
 
     {% if form_mess.non_field_errors %}

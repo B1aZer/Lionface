@@ -56,6 +56,7 @@ def timeline(request):
 @login_required
 @unblocked_users
 def images(request, username, rows_show=4):
+    form_mess = MessageForm()
     try:
         profile_user = UserProfile.objects.get(username=username)
     except UserProfile.DoesNotExist:
@@ -98,6 +99,7 @@ def images(request, username, rows_show=4):
         {
             'profile_user': profile_user,
             'form': form,
+            'form_mess':form_mess,
             'image_rows': qs.get_rows(0, rows_show),
             'total_rows': qs.total_rows(),
             'photos_count': qs.count(),
@@ -352,10 +354,27 @@ def profile(request, username):
     )
 
 
+def send_message(request, username):
+    data = {'status':'FAIL'}
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
+    form_mess = MessageForm(request.POST)
+    if form_mess.is_valid():
+        user_to = profile_user
+        content = form_mess.cleaned_data['content']
+        mess = Messaging(user=request.user,user_to=user_to,content=content)
+        mess.save()
+        data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 @login_required
 @unblocked_users
 def albums(request, username):
     """Albums view"""
+    form_mess = MessageForm()
     try:
         profile_user = UserProfile.objects.get(username=username)
     except UserProfile.DoesNotExist:
@@ -365,6 +384,7 @@ def albums(request, username):
         'profile/albums.html',
         {
             'profile_user': profile_user,
+            'form_mess':form_mess,
             'albums' : profile_user.albums_set.all().order_by('position'),
         },
         RequestContext(request)
@@ -567,6 +587,7 @@ def delete_profile(request, username):
 @login_required
 @unblocked_users
 def related_users(request,username):
+    form_mess = MessageForm()
     if not username:
         profile_user = request.user
     else:
@@ -613,6 +634,7 @@ def related_users(request,username):
         {
             'profile_user' : profile_user,
             'current_user' : profile_user,
+            'form_mess':form_mess,
             'users' : users,
         },
         RequestContext(request)
@@ -623,6 +645,7 @@ def related_users(request,username):
 @unblocked_users
 def loves(request, username):
     data = {}
+    form_mess = MessageForm()
     if not username:
         profile_user = request.user
     else:
@@ -651,6 +674,7 @@ def loves(request, username):
         {
             'profile_user' : profile_user,
             'current_user' : profile_user,
+            'form_mess':form_mess,
             'pages' : pages,
         },
         RequestContext(request)

@@ -58,7 +58,7 @@ def messages(request, username=None):
                 last_date = last_mess.strftime("%b %d")
             else:
                 last_date = last_mess.strftime("%b %Y")
-            names.append({ 'name':message.user.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new,
+            names.append({ 'name':message.user.full_name, 'thumb':message.user.get_thumb(), 'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new,
                 'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_mess' : last_mess})
         # This counter is for main page only
         message.mark_viewed()
@@ -83,7 +83,7 @@ def messages(request, username=None):
                 last_date = last_mess.strftime("%b %d")
             else:
                 last_date = last_mess.strftime("%b %Y")
-            names.append({ 'name':message.user_to.full_name,'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_mess' : last_mess})
+            names.append({ 'name':message.user_to.full_name, 'thumb':message.user.get_thumb(), 'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_mess' : last_mess})
 
     #sorting by last message date
     names = sorted(names, key=lambda(s): s['last_mess'], reverse=True)

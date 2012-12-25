@@ -61,18 +61,18 @@ def feed(request, user_id=None):
                 logger.warning('Error in retrirving Post')
             items = list(chain(items, tagged_posts))
             items = list(set(items))
-            items = sorted(items, key=lambda post: post.date, reverse=True)
+            items = sorted(items, key=lambda post: post.timestamp, reverse=True)
         # adding page filter here, since we need to extend the query
         if 'B' in filters:
             business_pages = NewsItem.objects.get_business_feed(request.user)
             items = list(chain(items, business_pages))
             items = list(set(items))
-            items = sorted(items, key=lambda post: post.date, reverse=True)
+            items = sorted(items, key=lambda post: post.timestamp, reverse=True)
         if 'N' in filters:
             nonprofit_pages = NewsItem.objects.get_nonprofit_feed(request.user)
             items = list(chain(items, nonprofit_pages))
             items = list(set(items))
-            items = sorted(items, key=lambda post: post.date, reverse=True)
+            items = sorted(items, key=lambda post: post.timestamp, reverse=True)
     else:
         page_type = 'profile_feed'
 
@@ -92,6 +92,8 @@ def feed(request, user_id=None):
         # privacy
         if request.user.id != int(user_id):
             items = items.get_public_posts(request.user)
+        # order by timestamp
+        items = sorted(items, key=lambda post: post.timestamp, reverse=True)
     #import pdb;pdb.set_trace()
     #if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) != int(user_id):
         #items = items.get_public_posts()

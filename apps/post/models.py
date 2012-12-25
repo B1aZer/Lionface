@@ -77,6 +77,9 @@ class Post(models.Model):
     album = models.ForeignKey('Albums', related_name="posts", on_delete=models.SET_NULL, null=True, blank=True)
     objects = CustomQuerySet.as_manager()
 
+    class Meta:
+        ordering = ['-date']
+
     # Function to attempt to return the inherited object for this item.
     def get_inherited(self):
         try:
@@ -109,6 +112,10 @@ class Post(models.Model):
     # it)
     def get_involved(self):
         return self.user.friends.all()
+
+    @property
+    def timestamp(self):
+        return self.date
 
     def render(self):
         return self.get_inherited().render()
@@ -743,7 +750,7 @@ class NewsItem(models.Model):
 
     @property
     def timestamp(self):
-        return self.date
+        return self.post.date
 
 
 

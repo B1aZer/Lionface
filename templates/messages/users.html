@@ -8,7 +8,7 @@
                 <div class="message user_id_{{ user.id }} {user: '{{ user.id }}' }">
                     <a href="{{ user.link }}">
                         {# original user.image is exist? #}
-                        <div class="message_thumbnail" style="background: url('/{{ user.photo.thumb_name }}') #FFF; -moz-background-size: 25px 25px; background-size: 25px 25px;">
+                        <div class="message_thumbnail" style="background: url('{{ user.thumb }}') #FFF; -moz-background-size: 25px 25px; background-size: 25px 25px;">
                         </div>
                     </a>
                     <a id="name_link_{{ user.id }}" href="{{ user.link }}" {% if user.mess_new %} style="color: #900;" {% endif %}>{{ user.name }}</a><br />

@@ -15,10 +15,11 @@
         <div class="right_col" style="border-width: 1px 0 0 0;">
             {% block right_col %}
             <ul class="notifications_list"> 
-            {% for notification in notifications %}
-                {% if notification.type == 'FR' %}
+            {% for notification in notification_requests %}
                     {{ notification|format_notification }}
-                {% endif %}
+            {% endfor %}
+            {% for notification in notifications_friends %}
+                    {{ notification|format_notification }}
             {% endfor %}
             </ul> 
             <div class="right_content"><div class="notif_land">Click on a notification to the left<br /> to view its details.</div></div>

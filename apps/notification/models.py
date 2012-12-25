@@ -3,6 +3,9 @@ from django.db.models.signals import post_save, pre_delete, post_delete
 from django.contrib.comments.signals import comment_was_posted
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.contrib import comments
+
+from django.conf import settings
 
 from account.models import *
 from agenda.models import *
@@ -125,6 +128,65 @@ class Notification(models.Model):
             if original_notfs.count():
                 original_notfs.update(read=True)
 
+    def get_people_names(self):
+        user_ids = [u.user_id for u in self.extra_set.all() if u.user_id]
+        users = UserProfile.objects.filter(id__in=user_ids)
+        user_names = ["<a href=\"%s\">%s</a>" % (u.get_absolute_url(), u.get_full_name()) for u in users]
+        user_names = ", ".join(user_names)
+        return user_names
+
+    def get_preview(self):
+        preview = ''
+        if self.type in ("PP","PS","FS"):
+            post = self.content_object
+            if isinstance(post, SharePost):
+                post = post.content_object
+            preview = post.content
+        if self.type in ("MP","MS","MM"):
+            post_ids = [p.item_id for p in self.extra_set.all() if p.item_id]
+            post = Post.objects.filter(id__in=post_ids).order_by('date')[0]
+            post = post.get_inherited()
+            if isinstance(post, SharePost):
+                post = post.content_object
+            preview = post.content
+        if self.type in ('CS','FC'):
+            if self.related_object:
+                preview = self.related_object.comment
+            else:
+                # old version
+                post = self.content_object
+                comment = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).order_by('-submit_date')[0]
+                preview = comment.comment
+        if self.type in ('MC','MF'):
+            comm_ids = [c.item_id for c in self.extra_set.all() if c.item_id]
+            if comm_ids:
+                comment = comments.get_model().objects.filter(
+                            id__in=comm_ids
+                            ).order_by('submit_date')[0]
+            else:
+                # old version
+                post = self.content_object
+                comment = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).order_by('submit_date')[0]
+            preview = comment.comment
+        return preview
+
+    def get_events_count(self):
+        count = "None"
+        if self.type in ('MC','MF','MS','MM','MD','MP'):
+            comments = [c.item_id for c in self.extra_set.all() if c.item_id]
+            count = len(comments)
+        return count
+
 
 def create_friend_request_notification(sender, instance, created, **kwargs):
     #import pdb;pdb.set_trace()
@@ -177,7 +239,11 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
         #creating notification for owner if following
         if news_post.get_owner() != comment.user and news_post.get_owner() in news_post.get_post().following.all() \
                 and comment.user not in news_post.get_owner().get_blocked():
-            Notification(user=news_post.get_post().get_owner(), type='CS', other_user=comment.user, content_object=news_post).save()
+            Notification(user=news_post.get_post().get_owner(),
+                    type='CS',
+                    other_user=comment.user,
+                    content_object=news_post,
+                    related_object = comment).save()
         #create notifiactions for all followers of this post
         try:
             post = news_post.get_post()
@@ -185,7 +251,11 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
                 for user in post.following.all():
                     if user != comment.user and user != post.get_owner() \
                             and comment.user not in user.get_blocked():
-                        Notification(user=user, type='FC', other_user=comment.user, content_object=comment.content_object).save()
+                        Notification(user=user,
+                                type='FC',
+                                other_user=comment.user,
+                                content_object=comment.content_object,
+                                related_object = comment).save()
         except:
             import logging
             logger = logging.getLogger(__name__)
@@ -303,6 +373,7 @@ def update_notification_count(sender, instance, **kwargs):
                                                #content_type=instance.content_type,
                                                object_id=object_id,
                                                read=False)
+            # create M notifiaction
             if not notf.count():
                 obj = Notification(user=instance.user,
                                    type=notification_type,
@@ -311,13 +382,19 @@ def update_notification_count(sender, instance, **kwargs):
                 # people counter
                 obj.save()
                 for user_notf in notfs:
+                    if instance.type in ('CS','FC'):
+                        obj.extra_set.create(item_id=user_notf.related_object.id)
                     if obj.extra_set.all():
                         if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
                             obj.extra_set.create(user_id=user_notf.other_user.id)
                     else:
                         obj.extra_set.create(user_id=user_notf.other_user.id)
+
+            # update extra set
             else:
                 obj = notf.get()
+                if instance.type in ('CS','FC'):
+                    obj.extra_set.create(item_id=instance.related_object.id)
                 if obj.extra_set.all():
                     if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
                         obj.extra_set.create(user_id=instance.other_user.id)

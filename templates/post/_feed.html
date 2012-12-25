@@ -43,7 +43,7 @@
             <span id="hide_comment_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                 <a class="toggle_comments" href="">Comment</a>
                 {% ifequal item.get_post|get_comment_counter:request.user 0 %} {% else %}
-                    <span style="color: #555; padding: 2px;">{{ item.get_post|get_comment_counter:request.user }}</span>
+                    <span style="color: #555; padding: 2px;" class="comment_counter" >{{ item.get_post|get_comment_counter:request.user }}</span>
                 {% endifequal %}
                 <span style="color: transparent;"> - | - </span>
             </span>

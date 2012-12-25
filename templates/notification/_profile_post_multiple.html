@@ -1,13 +1,14 @@
+{% load format_results %}
 <li class="profile_post notification {type: 'profile_multiple', id: '{{ notification.id }}'}">
 <div style="padding: 15px;" class="link-output">
       <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}>
           {% if notification.people_counter == 1 %}
-              1 person
+              1 person ({{ notification.get_events_count }} events)
           {% else %}
-              {{ notification.people_counter }} people
+              {{ notification.people_counter }} people ({{ notification.get_events_count }} events)
           {% endif %}
       </span><br /><span style="color: #5AE;">posted</span> to your profile.
-			<br /><div style="color: #999; font-size: 8pt; padding: 5px 0 0 0;">Post Preview</div>
+			<br /><div style="color: #999; font-size: 8pt; padding: 5px 0 0 0;">{{ notification.get_preview|truncatesmart:30 }}</div>
   </div>
   <div class="separator"></div>
 </li>

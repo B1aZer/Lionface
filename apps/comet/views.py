@@ -12,7 +12,7 @@ except ImportError:
 @login_required
 def messages_check(request):
     data = {'status':'ok'}
-    new_messages = Messaging.objects.filter(user_to = request.user, viewed=False).count()
+    new_messages = request.user.new_messages()
 
     data['mess'] = new_messages
 

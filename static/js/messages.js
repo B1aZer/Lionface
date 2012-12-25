@@ -249,10 +249,13 @@ $(document).ready(function() {
     $(document).on('click', '.message', function(e) {
         //getting element under cursor
         var starter = document.elementFromPoint(e.clientX, e.clientY);
+        var self = $(this);
         //used for proper linking in div
-        if ($(starter).is('a')) {
+        if ($(starter).is('a') || $(starter).hasClass('message_thumbnail')) {
             return
             }
+        $('.active_message').removeClass('active_message');
+        self.addClass('active_message');
         var meta = $(this).metadata();
         load_messages(meta.user,false,1);
     });

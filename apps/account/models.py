@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 from django.db.models.signals import pre_save, post_save, pre_delete, post_delete
 from django.db.models.query import Q
+from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
 from django.utils import timezone
 import datetime as dateclass
@@ -321,12 +322,20 @@ class UserProfile(User):
         return options
 
     def new_messages(self):
-        return self.message_to.filter(viewed=False).count()
+        #messages = self.message_to.filter(viewed=False).count()
+        messages = self.message_to.filter(viewed=False).aggregate(Count('user',distinct='True'))
+        return messages.get('user__count')
 
     def new_notifcations(self):
-        return self.notification_set.filter(read=False) \
-            .exclude(type__in=['MC', 'MI', 'MF', 'MS', 'MM', 'FM', 'MP']) \
-            .count()
+        """
+        notifications_count = self.notification_set.filter(read=False) \
+                .exclude(type__in=['MC', 'MI', 'MF', 'MS', 'MD', 'MM', 'FM', 'MP']) \
+                .count()
+        """
+        notifications_count = self.notification_set.filter(read=False,
+                hidden=False) \
+                .count()
+        return notifications_count
 
     def add_follower(self, person):
         relationship, created = Relationship.objects.get_or_create(
