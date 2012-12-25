@@ -891,6 +891,23 @@ LionFace.Site.prototype = {
         $(document).on('click','.follow_post', function(e) {
             e.preventDefault();
         });
+
+        /** comments pagination */
+        $(document).on('click','.coomments_see_more', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        self.siblings('#comments').prepend(data.html);
+                        self.remove();
+                    }
+                }
+            });
+        });
+        
     },
     page_members : function () {
         /** PAGE MEMBERS CHAOS */

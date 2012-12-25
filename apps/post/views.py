@@ -21,6 +21,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
 from django.contrib import comments
 
+from django.conf import settings
+
+from django.utils import timezone
+import datetime as dateclass
+
 from itertools import chain
 
 
@@ -98,8 +103,43 @@ def feed(request, user_id=None):
     #if not request.user.has_friend(UserProfile.objects.get(id=user_id)) and int(request.user.id) != int(user_id):
         #items = items.get_public_posts()
 
+
     # PAGINATION #
-    paginator = Paginator(items, 7)
+    now = timezone.now()
+    delta = dateclass.timedelta(days=365 * 5)
+    fake_date = now + delta
+    def sort_friend_posts(post):
+        if post.get_type() == 'friend post':
+            return fake_date
+        return post.timestamp
+
+    max_count = 7
+    page_next = int(request.GET.get('page', 0))
+    if page_next == 1:
+        page_next = 0
+
+    # do not count friend posts in pagination
+    friend_posts = [p for p in items[page_next:page_next + max_count] if p.get_type() == 'friend post']
+    fp_count = len(friend_posts)
+    this_count = max_count+fp_count
+    next_count = page_next + this_count
+
+    if len(items) > next_count:
+        has_next = True
+    else:
+        has_next = False
+
+    items = items[page_next:next_count]
+
+    items = sorted(items, key=sort_friend_posts, reverse=True)
+
+
+    """
+    page = request.GET.get('page', 1)
+    if int(page) > 1:
+        paginator = Paginator(items, 7+fp_count)
+    else:
+        paginator = Paginator(items, 7)
     items = paginator.page(1)
 
     if request.method == 'GET':
@@ -116,20 +156,20 @@ def feed(request, user_id=None):
                 items = paginator.page(paginator.num_pages)
         else:
             page = 1
+    """
 
     data['html'] = loader.render_to_string(
         'post/_feed.html',
         {
             'profile_user': profile_user,
             'items': items,
+            'has_next': has_next,
+            'next_page_number': next_count,
             'news_feed': news_feed_flag,
-            'page': page,
             'page_type': page_type,
         },
         RequestContext(request)
     )
-
-    data['page'] = page
 
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -602,5 +642,53 @@ def test(request):
                        'comment': comment,
                        })
     data['html'] = t.render(c)
+
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def comments_pagination(request, post_id, page):
+    data = {'status': 'FAIL'}
+    try:
+        post = Post.objects.get(id=post_id)
+    except Posts.DoesNotExist:
+        raise Http404
+
+    comment_list = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).order_by('-submit_date')
+
+    paginator = Paginator(comment_list, 7)
+    comment_list = paginator.page(1)
+
+    if request.method == 'GET':
+        page_num = page
+        if page_num:
+            try:
+                comment_list = paginator.page(page_num)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                comment_list = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                comment_list = paginator.page(paginator.num_pages)
+        else:
+            page_num = 1
+
+    # reorder comments
+    comment_list.object_list = sorted(comment_list.object_list, key = lambda c: c.submit_date)
+
+    data['html'] = render_to_string('comments/list.html',
+                        {
+                            'comment_list':comment_list,
+                            'item': post,
+                        },
+                        RequestContext(request))
+
+    if comment_list.has_next():
+        data['next'] = comment_list.next_page_number()
+    data['status'] = 'OK'
 
     return HttpResponse(json.dumps(data), "application/json")
