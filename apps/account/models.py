@@ -92,6 +92,9 @@ class UserProfile(User):
     def get_cover_photo(self):
         return "/%s" % self.cover_photo.url
 
+    def get_default_cover_photo(self):
+        return "/%s" % self.cover_photo.field.default
+
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0
 

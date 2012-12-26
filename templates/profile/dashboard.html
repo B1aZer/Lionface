@@ -102,10 +102,14 @@
             height: {{ data_uri.height }}px; 
             width: {{ data_uri.width }}px;
             background: url({{ data_uri }}); 
-            {% else %}
+            {% elif profile_user|check_cover_image_visibility:request.user %}
             height: {{ request.user.cover_photo.height }}px; 
             width: {{ request.user.cover_photo.width }}px;
-            background: url({{ request.user.get_cover_photo }}); 
+            background: url({{ profile_user.get_cover_photo }}); 
+            {% else %}
+            height: 300px; 
+            width: 600px;
+            background: url({{ profile_user.get_default_cover_photo }}); 
             {% endif %}
             "
             class="profile_cover" >

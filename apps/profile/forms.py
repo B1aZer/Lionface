@@ -39,6 +39,7 @@ class UserInfoForm(forms.ModelForm):
     option_loves = forms.ChoiceField(required=False, choices=( LOVES_DEFAULT ))
     option_vie_profile = forms.ChoiceField(required=False, choices=( VIA_PROFILE ))
     option_vie_pages = forms.ChoiceField(required=False, choices=( VIA_PAGES ))
+    option_cover_image = forms.ChoiceField(required=False, choices=( PROFILE_IMAGE ))
 
     class Meta:
         model = UserProfile
