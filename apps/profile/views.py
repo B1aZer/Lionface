@@ -16,6 +16,10 @@ from messaging.forms import MessageForm
 from images.forms import ImageForm
 from .forms import *
 
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image as pilImage
+from StringIO import StringIO
+
 from django.db.models import F
 
 from .decorators import unblocked_users, default_user
@@ -294,6 +298,7 @@ def profile(request, username):
         raise Http404
 
     form_mess = MessageForm()
+    cover_form = ImageCoverForm()
     form_mess.fields['content'].widget.attrs['rows'] = 7
 
     if request.method == 'POST':
@@ -343,16 +348,132 @@ def profile(request, username):
             RequestContext(request)
         )
 
-    return render_to_response(
-        'profile/profile.html',
-        {
-            'profile_user': profile_user,
-            'form' : form,
-            'form_mess' : form_mess,
-        },
-        RequestContext(request)
-    )
+    data_uri = ''
+    restrict_height = 300
+    target_width = 900
+    resize = False
+    if request.method == 'POST' \
+            and 'cover_image' in request.POST:
+        cover_form = ImageCoverForm(request.POST, request.FILES)
+        if cover_form.is_valid():
+            image = cover_form.cleaned_data['cover_photo']
+            # save to memory
+            f = StringIO(image.read())
+            # PIL image
+            img = pilImage.open(f)
+            (width, height) = img.size
+            if width < target_width:
+                target_height = int(height * (1.0 * target_width / width))
+                img = img.resize((target_width, target_height))
+            elif width > target_width:
+                target_height = int(height * (1.0 * target_width / width))
+                img.thumbnail((target_width, target_height), pilImage.ANTIALIAS)
+            else:
+                pass
+            (new_width, new_height) = img.size
+            if new_height != restrict_height:
+                resize = True
+            # save to memory
+            thumb = StringIO()
+            img.save(thumb, 'JPEG')
+            thumb.seek(0)
+            thumb_file = InMemoryUploadedFile(thumb, None, image.name, image.content_type, thumb.len, image.charset)
 
+            # we can save it
+            #if page.cover_photo and page.cover_photo.name != page.cover_photo.field.default:
+                #page.cover_photo.delete()
+            if not resize:
+                request.user.cover_photo = thumb_file
+                request.user.save()
+            # or we can return it to template
+
+            class DataURI:
+                def __init__(self):
+                    self.width = 0
+                    self.height = 0
+                    self.data_uri = None
+
+                def __repr__(self):
+                    return self.data_uri
+
+            data_uri = DataURI()
+            data_uri.data_uri = 'data:image/jpg;base64,'
+            data_uri.data_uri += thumb.getvalue().encode('base64').replace('\n', '')
+            data_uri.width = new_width
+            data_uri.height = new_height
+
+            image_height = data_uri.height
+
+    if resize:
+        cover_offset = (image_height - restrict_height -45 -95) * -1
+        return render_to_response(
+            'profile/profile_cover.html',
+            {
+                'profile_user': profile_user,
+                'form' : form,
+                'cover_form': cover_form,
+                'form_mess' : form_mess,
+                'cover_offset': cover_offset,
+                'data_uri': data_uri,
+            },
+            RequestContext(request)
+        )
+    else:
+        return render_to_response(
+            'profile/profile.html',
+            {
+                'profile_user': profile_user,
+                'form' : form,
+                'cover_form': cover_form,
+                'form_mess' : form_mess,
+                'show_cover_form' : True,
+            },
+            RequestContext(request)
+        )
+
+def reposition(request, username):
+    data = {'status': 'FAIL'}
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST' and 'top' in request.POST:
+        top_pos = abs(int(request.POST['top']))
+        b64image = request.POST.get('image', None)
+        #decoded_image = base64.b64decode(b64image + '=' * (-len(b64image) % 4))
+        imgstr = re.search(r'base64,(.*)', b64image).group(1)
+        mem_image = StringIO(imgstr.decode('base64'))
+        #image = page.cover_photo
+        img = pilImage.open(mem_image)
+        box = (0, top_pos, 900, top_pos + 300)
+        img = img.crop(box)
+
+        cropped = StringIO()
+        img.save(cropped, 'JPEG')
+        cropped.seek(0)
+        image_name = "%s_cover_image.jpg" % profile_user.username
+        cropped_file = InMemoryUploadedFile(cropped, None, image_name, 'image/jpeg', cropped.len, None)
+        #cropped_file = InMemoryUploadedFile(cropped, image.field, image.name, 'image/jpeg', cropped.len, None)
+        if profile_user.cover_photo.name != profile_user.cover_photo.field.default:
+            profile_user.cover_photo.delete()
+        profile_user.cover_photo = cropped_file
+        profile_user.save()
+    return HttpResponse(json.dumps(data), "application/json")
+
+def reset_picture(request, username):
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404
+
+    if profile_user == request.user:
+        if profile_user.cover_photo.name != profile_user.cover_photo.field.default:
+            profile_user.cover_photo.delete()
+        profile_user.cover_photo = profile_user.cover_photo.field.default
+        profile_user.save()
+    redrct = redirect('profile.views.profile', username=request.user.username)
+    return redrct
 
 def send_message(request, username):
     data = {'status':'FAIL'}

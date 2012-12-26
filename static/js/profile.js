@@ -61,15 +61,60 @@ LionFace.Profile.prototype = {
             $('.upload_form').show();
         });
 
+        $(document).on('click','#upload_cover_profile', function(e) {
+            e.stopPropagation();
+            $('.upload_pforile_cover_form').show();
+        });
+
         $('#upload_cancel').click(function(event) {
             $('.upload_form').fadeOut(function(){
                 $('#id_image').val('');
             });
         });
 
-        $("#reset_picture").click(function(event){
+        $(document).on('click','#cancel_cover_profile_btn', function(e) {
+            $('.upload_pforile_cover_form').fadeOut();
+        });
+
+        $("#reset_profile_picture").click(function(event){
             event.stopPropagation();
         });
+
+        /** restrict image cover uploads */
+         $(document).on('change','#id_cover_photo',function() {
+                if(this.files[0].size > 3145728) {  
+                    $('#submit_cover_profile_btn').hide();
+                    if ($('.errorlist').length) {
+                        $('.errorlist').html('<li>Image file too large ( &gt; 3mb )</li>');
+                    }
+                    else {
+                        $('.upload_pforile_cover_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 3mb )</li></ul>');
+                    } 
+                }
+                else if(this.files[0].type == 'image/gif') {
+                    $('#submit_cover_profile_btn').hide();
+                    if ($('.errorlist').length) {
+                        $('.errorlist').html('<li>Gif images are not allowed</li>');
+                    }
+                    else {
+                        $('.upload_pforile_cover_form').prepend('<ul class="errorlist"><li>Gif images are not allowed</li></ul>');
+                    }      
+                }
+                else if(this.files[0].type.indexOf("image") == -1) {
+                    $('#submit_cover_profile_btn').hide();
+                    if ($('.errorlist').length) {
+                        $('.errorlist').html('<li>Please upload a valid image</li>');
+                    }
+                    else {
+                        $('.upload_pforile_cover_form').prepend('<ul class="errorlist"><li>Please upload a valid image</li></ul>');
+                    }      
+                }       
+                else{
+                    $('#submit_cover_profile_btn').show();
+                    $('.errorlist').html(''); 
+                }        
+        });
+
 
         $("#send_message").click(function(event){
             event.preventDefault();
@@ -111,6 +156,33 @@ LionFace.Profile.prototype = {
                 $('.upload').hide();
             }
         );
+
+        $('.profile_cover').hover(
+            function(){
+                $('.upload_cover').show();
+            },
+            function(){
+                $('.upload_cover').hide();
+            }
+        );
+
+        /** reposition page cover image */
+        $(document).on('click','#save_image_profile',function(e){
+            e.preventDefault();
+            var post = $('.profile_cover').position();
+            var url = 'reposition/';
+            var pattern = /url\(|\)|"|'/g;
+            make_request({
+                url:url,
+                data:{
+                    'top':post.top,
+                    'image':$('.profile_cover').css('backgroundImage').replace(pattern,""),
+                },
+                callback:function(data) {
+                    history.go(0);
+                }
+            });
+        });
     },
 
     bind_postbox : function() {

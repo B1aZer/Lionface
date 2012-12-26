@@ -7,6 +7,8 @@ urlpatterns = patterns('profile.views',
 
     url(r'^(?P<username>\w+)/feed/$', 'feed'),
     url(r'^(?P<username>\w+)/related/$', 'related_users'),
+    url(r'^(?P<username>\w+)/reset_picture/$', 'reset_picture'),
+    url(r'^(?P<username>\w+)/reposition/$', 'reposition'),
     url(r'^(?P<username>\w+)/images/$', 'images'),
     url(r'^(?P<username>\w+)/images/reset/$', 'images_reset'),
     url(r'^(?P<username>\w+)/images/ajax/$', 'images_ajax'),

@@ -1000,7 +1000,7 @@ a.profile_btn:hover {
     transform: skew(5deg) rotate(5deg);
 }
 
-.upload {
+.upload, .upload_cover {
 	position: relative;
 	display: inline-block;
 	width: 70px;
@@ -1023,7 +1023,7 @@ a.profile_btn:hover {
 	border: 1px solid #DDD;
 }
 
-.upload:hover {
+.upload:hover, .upload_cover:hover {
 	background: #FFF;
 	border-color: #EEE;
 	color: #555;
@@ -1370,6 +1370,14 @@ a.profile_btn:hover {
 .DoS_profile:hover {
 	color: #FFF;
 	background: #333;
+}
+
+.profile_cover_conteiner {
+    width: 900px;
+    height: 300px;
+    background: #DDD;
+    position: relative;
+    z-index: 500;
 }
 
 /* Albums */

@@ -96,4 +96,27 @@
 </form> 
 </div>
 
-<div style="display: block; height: 296px; width: 896px; background: #DDD; border: 2px solid #FFF; background: url({% media_url 'images/bg-cover.png' %}); background-position: center center;"></div>
+<div class="profile_cover_conteiner" style="overflow:hidden;">
+<div style="background: #DDD; 
+            {% if data_uri %}
+            height: {{ data_uri.height }}px; 
+            width: {{ data_uri.width }}px;
+            background: url({{ data_uri }}); 
+            {% else %}
+            height: {{ request.user.cover_photo.height }}px; 
+            width: {{ request.user.cover_photo.width }}px;
+            background: url({{ request.user.get_cover_photo }}); 
+            {% endif %}
+            "
+            class="profile_cover" >
+                        {% block inpicture %}
+                        {% if request.user == profile_user and show_cover_form %}
+                        <div style="position: relative; top: 270px; left: -13px; display: block; width: 200px;" align="center">
+                            <a id="upload_cover_profile" class="upload_cover" style="display:none; cursor: pointer;">Upload</a>
+                            <a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_profile_picture" class="upload_cover" style="display:none; color:#555;">Clear</a>
+                        </div>                                
+                        {% endif %}
+                        {% endblock %}
+                        
+</div>
+</div>

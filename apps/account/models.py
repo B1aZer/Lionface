@@ -80,6 +80,7 @@ class UserProfile(User):
     hidden = models.ManyToManyField('self', symmetrical=False, related_name='hidden_from')
     blocked = models.ManyToManyField('self', symmetrical=False, related_name='blocked_from')
     photo = ImageWithThumbField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='uploads/images/noProfilePhoto.png')
+    cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/bg_cover.png')
     filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
@@ -87,6 +88,9 @@ class UserProfile(User):
 
     def get_thumb(self):
         return "/%s" % self.photo.thumb_name
+
+    def get_cover_photo(self):
+        return "/%s" % self.cover_photo.url
 
     def has_friend(self, user):
         return self.friends.filter(id=user.id).count() > 0

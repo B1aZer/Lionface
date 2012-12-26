@@ -241,7 +241,7 @@ LionFace.Pages.prototype = {
                     'image':$('#cover_image').css('backgroundImage').replace(pattern,""),
                 },
                 callback:function(data) {
-                    location.reload();
+                    history.go(0);
                 }
             });
         });

@@ -89,6 +89,26 @@ class UserInfoForm(forms.ModelForm):
         return user
 
 
+class ImageCoverForm(forms.ModelForm):
+
+    class Meta:
+        model = UserProfile
+        fields = ('cover_photo',)
+
+    def clean_cover_photo(self):
+        try:
+            image = self.cleaned_data['cover_photo']
+            if image == self.fields['cover_photo'].initial:
+                raise forms.ValidationError("No Image specified")
+        except KeyError:
+            raise forms.ValidationError("Couldn't read uploaded image")
+        if image.content_type == 'image/gif':
+            raise forms.ValidationError("Sorry! Gif is prohibited.")
+        if image._size > 3*1024*1024:
+            raise forms.ValidationError("Image file too large ( > 3mb )")
+        return image
+
+
 
 
 
