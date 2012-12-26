@@ -552,7 +552,7 @@ def change_settings(request):
 @login_required
 @unblocked_users
 def images_comments_ajax(request):
-    # import pudb; pudb.set_trace()
+    # import pdb; pdb.set_trace()
     if not request.is_ajax():
         raise Http404
 

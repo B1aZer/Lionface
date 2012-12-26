@@ -204,6 +204,7 @@ LionFace.Profile.prototype = {
     },
 
     attach_image: function(event) {
+        var _this = this;
         event.preventDefault();
         if (this.attach_image_count > MAX_UPLOAD_IMAGES) {
             create_message("Too many images", "error");
@@ -224,7 +225,33 @@ LionFace.Profile.prototype = {
             window.loadImage(
                 image,
                 function (img) {
-                    $attached_images.find("ul li:last").append(img);
+                    var $li = $attached_images.find('ul li').last();
+                    $li.attr('id', 'img-' + _this.attach_image_count);
+                    $li = $attached_images.find('#img-' + _this.attach_image_count);
+                    console.log($li);
+                    $li.append(" \
+                    <div id='image_settings' class='feed'> \
+                        <a href='#' id='fullsize' style='float: left;' title='Make full-size in the post'>+</a> \
+                        <a href='#' id='delete' style='float: right;' title='Delete Photo'>x</a> \
+                    </div> \
+                    ");
+                    $li.append(img);
+
+                    $image_settings = $li.find('#image_settings');
+                    console.log($li);
+                    console.log($image_settings);
+                    if ($image_settings.length != 1)
+                        return;
+                    $image_settings.hide();
+                    $li.hover(
+                        function() {
+                            $image_settings.show();
+                        },
+                        function() {
+                            $image_settings.hide();
+                        }
+                    );
+
                     // $attached_images.sortable();
                 },
                 {
@@ -438,4 +465,21 @@ LionFace.Profile.prototype = {
 $(function() {
     LionFace.Profile = new LionFace.Profile();
     LionFace.Profile.hide_album_hint();
+
+    // $li = $('#attached-images ul li');
+    // $image_settings = $li.find('#image_settings');
+    // console.log($li);
+    // console.log($image_settings);
+    // if ($image_settings.length != 1)
+    //     return;
+    // $image_settings.hide();
+    // $li.hover(
+    //     function() {
+    //         $image_settings.show();
+    //     },
+    //     function() {
+    //         $image_settings.hide();
+    //     }
+    // );
+
 });

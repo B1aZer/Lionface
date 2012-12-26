@@ -32,8 +32,8 @@ LionFace.Notification.prototype = {
     load_post: function(post, type, model) {
         var cls = this;
         var url = "/posts/show/";
-        var model = _model || '';
         var $elem = $('.right_content');
+        model = model || '';
 
         $elem.html("").addClass("large_loader");
         make_request({
@@ -49,6 +49,7 @@ LionFace.Notification.prototype = {
                     $elem.html(data.html);
                     make_excerpts();
                     cls.toggle_comments();
+                    LionFace.PostImages.bind_settings();
                 }
             },
             errorback: function() {
