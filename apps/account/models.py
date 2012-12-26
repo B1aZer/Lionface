@@ -129,6 +129,8 @@ class UserProfile(User):
         for friend in my_freinds:
             if friend in his_friends:
                 mutual_friends.append(friend)
+        if mutual_friends:
+            mutual_friends = sorted(mutual_friends, key=lambda u: u.get_full_name())
 
         return mutual_friends
 

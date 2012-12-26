@@ -739,14 +739,14 @@ def related_users(request,username):
             data['html'] = [x.username for x in followers]
         if users:
             # custom ordering
-            # the same as was ?
-            users = sorted(users, key=lambda s: s.first_name)
+            users = list(set(users))
+            users = sorted(users, key=lambda s: s.get_full_name())
 
         if len(data) > 0 and 'ajax' in request.GET:
             data['html'] = render_to_string('profile/related_users.html',
                 {
                     'current_user': profile_user,
-                    'users': list(set(users)),
+                    'users': users,
                 }, context_instance=RequestContext(request))
             return HttpResponse(json.dumps(data), "application/json")
 

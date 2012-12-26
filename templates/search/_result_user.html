@@ -10,7 +10,7 @@
         <div class="mutual_friends">Mutual Friends: <span style="cursor: pointer;">{{ current_user|mutual_friends:user }}</span>
             <div class="mutual_friend_list" style="display:none">
                 {% for friend in current_user|list_mutual_friends:user %}
-                    <span>{{ friend.get_full_name }}</span>
+                <a href="{{ friend.get_absolute_url }}">{{ friend.get_full_name }}</a>
                 {% endfor %}
             </div>
         </div>
