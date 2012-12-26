@@ -178,6 +178,10 @@ def filter_add(request):
     data = {'status': 'OK'}
     if request.method == 'POST' and 'filter_name' in request.POST:
         filter_name = request.POST['filter_name']
+        single = request.POST.get('single', None)
+        if single:
+            request.user.filters = ''
+            request.user.save()
         filters = request.user.filters.split(',')
         if filter_name == 'Friends':
                 if 'F' not in filters:
