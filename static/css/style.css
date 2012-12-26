@@ -1953,6 +1953,16 @@ a.nav_notifications:hover {
   width: 525px; min-height: 50px; padding: 8px; position: relative; left: 108px; margin-bottom: 13px; margin-top: 13px;
 }
 
+.friend_post {
+	width: 525px;
+	min-height: 0px;
+	padding: 0px;
+	position: relative;
+	left: -65px; top: -14px;
+	margin: 0px;
+	height: 20px;
+}
+
 .result_related:hover, .result_search:hover {
 	background: #FAFAFA;
 	-moz-border-radius: 7px;

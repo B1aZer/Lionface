@@ -32,7 +32,7 @@ LionFace.Notification.prototype = {
     load_post: function(post, type, model) {
         var cls = this;
         var url = "/posts/show/";
-        var model = _model || '';
+        var model = model || '';
         var $elem = $('.right_content');
 
         $elem.html("").addClass("large_loader");
