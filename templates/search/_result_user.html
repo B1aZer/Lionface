@@ -1,18 +1,5 @@
 {% load media friends format_results %}
 
-<script>
-$(document).on('click','.mutual_friends',function() {
-        if ($(this).data('toggled')) {
-            $(this).find('.mutual_friend_list').hide();
-            $(this).data('toggled', false);
-        }
-        else {
-            $(this).find('.mutual_friend_list').show();
-            $(this).data('toggled', true);
-        }
-});
-</script>
-
 <a href="{{ user.get_absolute_url }}"><div class="user_thumbnail" style="background: url('/{{ user.photo.thumb_name }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
 
 <table height="55"><tr><td>
@@ -57,10 +44,14 @@ This is your friend!
 </div>
 {% endif %}
 </td>
-{% if current_user|degree_of_separation:user or current_user|degree_of_separation:user == 0  %}
-<td align="left" title="{{ current_user|degree_of_separation:user }}" style="font-size: 16pt;">{{ current_user|degree_of_separation:user }}</td>
+{% if user == request.user %}
+<td align="left" title="This is you." style="font-size: 10pt;">This is you.</td>
 {% else %}
-<td align="left" title="Unknown" style="font-size: 16pt;">--</td>
+    {% if current_user|degree_of_separation:user or current_user|degree_of_separation:user == 0  %}
+    <td align="left" title="{{ current_user|degree_of_separation:user }}" style="font-size: 16pt;">{{ current_user|degree_of_separation:user }}</td>
+    {% else %}
+    <td align="left" title="Unknown" style="font-size: 16pt;">--</td>
+    {% endif %}
 {% endif %}
 </tr></table></div>
 </span>

@@ -723,8 +723,10 @@ def related_users(request,username):
 
         if 'Friends' in request.GET and profile_user.check_visiblity('friend_list',request.user):
             friends = profile_user.get_friends()
+            """
             if friends:
                 friends = friends.exclude(id=request.user.id)
+            """
             users.extend(friends)
             data['html'] = [x.username for x in friends]
         if 'Following' in request.GET and profile_user.check_visiblity('following_list',request.user):
