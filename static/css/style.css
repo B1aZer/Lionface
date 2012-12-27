@@ -1372,8 +1372,9 @@ a.profile_btn:hover {
 	background: #333;
 }
 
-.profile_cover_conteiner {
-    width: 900px;
+.profile_cover_container {
+    width: 896px;
+	border: 2px solid #FFF;
     height: 300px;
     background: #DDD;
     position: relative;

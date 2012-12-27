@@ -7,10 +7,10 @@
 <span class="subtext" style="margin: 7px 0;">
 
 {% if current_user|mutual_friends:user %} 
-        <div class="mutual_friends">Mutual Friends: <span style="cursor: pointer;">{{ current_user|mutual_friends:user }}</span>
+        <div class="mutual_friends"><span style="cursor: pointer;">Mutual Friends: {{ current_user|mutual_friends:user }}</span>
             <div class="mutual_friend_list" style="display:none">
                 {% for friend in current_user|list_mutual_friends:user %}
-                <a href="{{ friend.get_absolute_url }}">{{ friend.get_full_name }}</a>
+                <a href="{{ friend.get_absolute_url }}">{{ friend.get_full_name }}</a>, 
                 {% endfor %}
             </div>
         </div>
@@ -34,18 +34,23 @@
 {% endif %}
 
 <div class="DoS" onMouseOver="ShowContent('{{ user.username }}'); return false;" onMouseOut="HideContent('{{ user.username }}'); return false;">
-<table width="150" height="100%"><tr><td align="right">
+<table width="150" height="100%"><tr>
+{% if user == request.user %}
+<td></td>
+{% else %}
+<td align="right">
 Degree of Separation:<br />
 {% if current_user|has_friend:user %}
 This is your friend!
 {% else %}
 <div class="lf_ref" id="{{ user.username }}">
 <table width="170" height="100%"><tr><td><span style="font-weight: bold;">Not enough connections?</span><br /> Try inviting more people to Lionface or adding more friends. It will work.</td></tr></table>
+{% endif %}
 </div>
 {% endif %}
 </td>
 {% if user == request.user %}
-<td align="left" title="This is you." style="font-size: 10pt;">This is you.</td>
+<td align="right" title="This is you." style="font-size: 10pt;">This is you.</td>
 {% else %}
     {% if current_user|degree_of_separation:user or current_user|degree_of_separation:user == 0  %}
     <td align="left" title="{{ current_user|degree_of_separation:user }}" style="font-size: 16pt;">{{ current_user|degree_of_separation:user }}</td>

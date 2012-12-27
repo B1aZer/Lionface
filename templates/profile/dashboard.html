@@ -96,7 +96,7 @@
 </form> 
 </div>
 
-<div class="profile_cover_conteiner" style="overflow:hidden;">
+<div class="profile_cover_container" style="overflow:hidden;">
 <div style="background: #DDD; 
             {% if data_uri %}
             height: {{ data_uri.height }}px; 
@@ -115,7 +115,7 @@
             class="profile_cover" >
                         {% block inpicture %}
                         {% if request.user == profile_user and show_cover_form %}
-                        <div style="position: relative; top: 270px; left: -13px; display: block; width: 200px;" align="center">
+                        <div style="position: relative; top: 270px; left: -8px; display: block; width: 200px;" align="center">
                             <a id="upload_cover_profile" class="upload_cover" style="display:none; cursor: pointer;">Upload</a>
                             <a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_profile_picture" class="upload_cover" style="display:none; color:#555;">Clear</a>
                         </div>                                
