@@ -1,7 +1,7 @@
 LionFace.Notification = function(options) {
     this.options = $.extend({
 
-    }, options || {});;
+    }, options || {});
     this.init();
 };
 
@@ -32,8 +32,8 @@ LionFace.Notification.prototype = {
     load_post: function(post, type, model) {
         var cls = this;
         var url = "/posts/show/";
-        var model = model || '';
         var $elem = $('.right_content');
+        model = model || '';
 
         $elem.html("").addClass("large_loader");
         make_request({
@@ -49,6 +49,7 @@ LionFace.Notification.prototype = {
                     $elem.html(data.html);
                     make_excerpts();
                     cls.toggle_comments();
+                    LionFace.PostImages.bind_settings();
                 }
             },
             errorback: function() {
@@ -168,12 +169,11 @@ LionFace.Notification.prototype = {
                 },
                 error: function() {
                     console.log('fail');
-                },
+                }
             });
             return false;
         });
-    },
-
+    }
 };
 
 $(function() {

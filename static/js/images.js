@@ -2,8 +2,8 @@ LionFace.Images = function(options) {
     this.options = $.extend({
         'swap_images_delay': 500,
         'change_thumb_delay': 500,
-        'popup_fadeDuration': 500,
-    }, options || {});;
+        'popup_fadeDuration': 500
+    }, options || {});
     this.init();
 };
 
@@ -27,21 +27,21 @@ LionFace.Images.prototype = {
     set_new_thumb: function(src) {
         var _this = this,
         selector = '.images_'+LionFace.User['images_type']+'_thumb';
-        if (src != undefined) {
-            var src = $('<div></div>').css({
-                'backgroundImage': 'url('+src+')',
+        if (src !== undefined) {
+            src = $('<div></div>').css({
+                'backgroundImage': 'url('+src+')'
             }).css('backgroundImage');
             console.log( $(selector) );
             $(selector).each(function(index, elem) {
                 if ($(this).css('backgroundImage') == src)
                     return;
                 $(elem).animate({
-                    'opacity': 0,
+                    'opacity': 0
                 }, _this.options.change_thumb_delay, function() {
                     $(this).css({
-                        'backgroundImage': src,
+                        'backgroundImage': src
                     }).animate({
-                        'opacity': 1,
+                        'opacity': 1
                     }, _this.options.change_thumb_delay);
                 });
             });
@@ -49,7 +49,7 @@ LionFace.Images.prototype = {
     },
 
     set_photos_count: function(count) {
-        if (count != undefined) {
+        if (count !== undefined) {
             var $elem = $('#photos_count');
             if ($elem.html() != count) {
                 $elem.fadeOut(function() {
@@ -91,7 +91,7 @@ LionFace.Images.prototype = {
                 type: 'POST',
                 data: {
                     'method': 'activity',
-                    'pk': $elem.data('pk'),
+                    'pk': $elem.data('pk')
                 },
                 success: function(data, textStatus, jqXHR) {
                     if ( data.status == 'ok' ) {
@@ -110,7 +110,7 @@ LionFace.Images.prototype = {
                         _this.set_new_thumb(data.thumb_src);
                         _this.set_photos_count(data.photos_count);
                     }
-                },
+                }
             });
             return false;
         });
@@ -121,16 +121,16 @@ LionFace.Images.prototype = {
                 data: {
                     'method': 'delete',
                     'pk': $elem.data('pk'),
-                    'row': LionFace.User['images_now_rows'],
+                    'row': LionFace.User['images_now_rows']
                 },
                 success: function(data, textStatus, jqXHR) {
                     if ( data.status == 'ok' ) {
                         var $li = $elem, $ul = $elem.parent();
                         $ul.animate({
-                            'opacity': 0,
+                            'opacity': 0
                         }, 500, function() {
                             $li.remove();
-                            if (data.html != undefined) {
+                            if (data.html !== undefined) {
                                 var $item = $(data.html).filter('li');
                                 if ($item.data('pk') != $ul.find('li:last').data('pk')) {
                                     _this.create_settings($item);
@@ -139,27 +139,27 @@ LionFace.Images.prototype = {
                             }
                             _this.set_positions_images(data.positions);
                             $ul.animate({
-                                'opacity': 1,
+                                'opacity': 1
                             }, 500);
                         });
                         _this.set_new_thumb(data.thumb_src);
                         _this.set_photos_count(data.photos_count);
                     }
-                },
+                }
             });
             return false;
         });
     },
 
     swap_images: function(li1, li2, delay) {
-        if (li1 == undefined || li2 == undefined)
+        if (li1 === undefined || li2 === undefined)
             return false;
-        if ( delay == undefined )
+        if ( delay === undefined )
             delay = this.options.swap_images_delay;
         var d = $.Deferred(),
         $li1 = $(li1),
         $li2 = $(li2);
-        if (delay == 0) {
+        if (delay === 0) {
             if ( !$li1.is($li2) ) {
                 var $point = $('<span></span>').hide();
                 $li1.after( $point );
@@ -171,25 +171,25 @@ LionFace.Images.prototype = {
         } else {
             if ( $li1.is($li2) ) {
                 $li1.animate({
-                    'opacity': 0,
+                    'opacity': 0
                 }, delay, '', function() {
                     $li1.animate({
-                        'opacity': 1,
+                        'opacity': 1
                     }, delay, '', function() {
                         d.resolve();
                     });
                 });
             } else {
-                var ds = new Array();
+                var ds = [];
                 for (var i = 0; i < 4; ++i)
                     ds.push($.Deferred());
                 $li1.animate({
-                    'opacity': 0,
+                    'opacity': 0
                 }, delay, '', function() {
                     ds[0].resolve();
                 });
                 $li2.animate({
-                    'opacity': 0,
+                    'opacity': 0
                 }, delay, '', function() {
                     ds[1].resolve();
                 });
@@ -200,12 +200,12 @@ LionFace.Images.prototype = {
                     $point.after( $li2 );
                     $point.remove();
                     $li1.animate({
-                        'opacity': 1,
+                        'opacity': 1
                     }, delay, '', function() {
                         ds[2].resolve();
                     });
                     $li2.animate({
-                        'opacity': 1,
+                        'opacity': 1
                     }, delay, '', function() {
                         ds[3].resolve();
                     });
@@ -223,8 +223,8 @@ LionFace.Images.prototype = {
             _this.swap_images(elem1, elem2, 0);
         }
         function cmp_images(a, b) {
-            a = parseInt($(a).data('position'));
-            b = parseInt($(b).data('position'));
+            a = parseInt($(a).data('position'), 10);
+            b = parseInt($(b).data('position'), 10);
             if (a > b) return 1;
             if (a < b) return -1;
             return 0;
@@ -252,9 +252,9 @@ LionFace.Images.prototype = {
     },
 
     set_positions_images: function(data, resort) {
-        if (data == undefined)
+        if (data === undefined)
             return false;
-        if (resort == undefined)
+        if (resort === undefined)
             resort = true;
         $('.image_container li').each(function(index, elem) {
             $(elem).data('position', data[$(elem).data('pk')]);
@@ -276,11 +276,11 @@ LionFace.Images.prototype = {
                 var pos_end = ui.item.index(),
                 $item1 = $($('.image_container li').get(pos_bgn)),
                 $item2 = $($('.image_container li').get(pos_end));
-                if ((pos_bgn == 0 && $item2.find('#make_primary').data('activity') == 1) ||
+                if ((pos_bgn === 0 && $item2.find('#make_primary').data('activity') == 1) ||
                     (pos_bgn == 1 && $item1.find('#make_primary').data('activity') == 1)) {
                     $('.image_container ul').sortable('cancel');
                 } else {
-                    if (pos_bgn >= 2 && pos_end == 0 &&
+                    if (pos_bgn >= 2 && pos_end === 0 &&
                          $($('.image_container li').get(1)).find('#make_primary').data('activity') == 1) {
                         _this.swap_images($item2, $($('.image_container li').get(1)), 0);
                         pos_end = 1;
@@ -296,7 +296,7 @@ LionFace.Images.prototype = {
                         data: {
                             'method': 'change_position',
                             'pk': $item2.data('pk'),
-                            'instead': $item1.data('pk'),
+                            'instead': $item1.data('pk')
                         },
                         success: function(data, textStatus, jqXHR) {
                             if (data.status == 'ok') {
@@ -309,10 +309,10 @@ LionFace.Images.prototype = {
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             _this.sort_images();
-                        },
+                        }
                     });
                 }
-            },
+            }
         }).disableSelection();
     },
 
@@ -328,7 +328,7 @@ LionFace.Images.prototype = {
                     url: LionFace.User['images_ajax'],
                     data: {
                         'method': 'more',
-                        'row': LionFace.User['images_now_rows'],
+                        'row': LionFace.User['images_now_rows']
                     },
                     beforeSend: function(jqXHR, settings) {
                         $(view_more).find('.view_more_loader').fadeIn(250);
@@ -365,7 +365,7 @@ LionFace.Images.prototype = {
                     },
                     complete: function(jqXHR, textStatus) {
                         $(view_more).find('.view_more_loader').fadeOut(500);
-                    },
+                    }
                 });
                 return false;
             });
@@ -377,7 +377,7 @@ LionFace.Images.prototype = {
     popup_enableKeyboard: function(options) {
         var _this = this;
         options = $.extend({
-            esc_only: false,
+            esc_only: false
         }, options || {});
         function keyboard(event) {
             var KEYCODE_ESC = 27;
@@ -406,7 +406,7 @@ LionFace.Images.prototype = {
 
     popup_to_prev: function() {
         var now = $('.image_container li[popup=true]');
-        var next = undefined;
+        var next;
         if ($('.image_container li').length > 1) {
             if ($(now).prev().length > 0) {
                 next = $(now).prev();
@@ -419,7 +419,7 @@ LionFace.Images.prototype = {
 
     popup_to_next: function() {
         var now = $('.image_container li[popup=true]');
-        var next = undefined;
+        var next;
         if ($('.image_container li').length > 1) {
             if ($(now).next().length > 0) {
                 next = $(now).next();
@@ -431,32 +431,30 @@ LionFace.Images.prototype = {
     },
 
     popup_resize: function() {
-        $('.image_popup').css({
+        var $popup = $('.image_popup');
+        $popup.css({
             top: $(window).scrollTop() + 'px',
             left: $(window).scrollLeft() + 'px'
         });
-        $('.image_zone_view').width($('.image_zone').width() - 351);
-        $('.image_zone_view').find('.prev, .next').css({
-            'width': $('.image_zone').width()*0.2 + 'px',
+        $popup.find('.image_zone_view').width($popup.find('.image_zone').width() - 351);
+        $popup.find('.image_zone_view').find('.prev, .next').css({
+            'width': $popup.find('.image_zone').width()*0.2 + 'px'
         }).find('img').css({
-            'margin-top': ($('.image_zone').height()-45)/2,
+            'margin-top': ($popup.find('.image_zone').height()-45)/2
         });
-        $('.image_zone_view .next').css({
-            'margin-left': $('.image_zone').width()*(1 - 0.2) - 351,
+        $popup.find('.image_zone_view .next').css({
+            'margin-left': $popup.find('.image_zone').width()*(1 - 0.2) - 351
         });
-        $('.image_zone_view .loader').css({
-            'line-height': $('.image_zone').height() + 'px',
+        $popup.find('.image_zone_view .loader').css({
+            'line-height': $popup.find('.image_zone').height() + 'px'
         });
-        $('.image_zone_info .scroll_area').height(
-            $('.image_zone_info').height()
-            - $('.image_zone_info .close').height()
-            - $('.image_zone_info .make_comment').height()
-            - 15
+        $popup.find('.image_zone_info .scroll_area').height(
+            $popup.find('.image_zone_info').height() - $popup.find('.image_zone_info .close').height() - $popup.find('.image_zone_info .make_comment').height() - 15
         );
-        var image = $('.image_zone_view .image img');
+        var image = $popup.find('.image_zone_view .image img');
         if ($(image).length) {
-            var winw = $('.image_zone_view').width();
-            var winh = $('.image_zone_view').height();
+            var winw = $popup.find('.image_zone_view').width();
+            var winh = $popup.find('.image_zone_view').height();
             var ratioX, ratioY, scale, newWidth, newHeight;
 
             ratioX = winw / $(image).width();
@@ -466,44 +464,45 @@ LionFace.Images.prototype = {
             newHeight = parseInt($(image).height() * scale, 10);
             $(image).css({
                 "width": newWidth + "px",
-                "height": newHeight + "px",
+                "height": newHeight + "px"
             }).attr({
                 "width": newWidth,
                 "height": newHeight
             });
         }
         $(image).css({
-            'margin-top': ($('.image_zone_view').height() - $(image).height()) / 2,
+            'margin-top': ($popup.find('.image_zone_view').height() - $(image).height()) / 2
         });
         return false;
     },
 
     popup_change_item: function(item, change) {
-        if (item == undefined)
+        if (item === undefined)
             return false;
-        if (change == undefined)
+        if (change === undefined)
             change = true;
         var _this = this;
+        var $popup = $('.image_popup');
         this.popup_resize();
         $('.image_container li[popup=true]').attr('popup', false);
         $(item).attr('popup', true);
-        $('.image_zone_view').find('.prev, .next').hide().find('img').hide();
-        $('.image_zone_view .image').hide().html('');
-        $('.image_zone_view .loader').show();
+        $popup.find('.image_zone_view').find('.prev, .next').hide().find('img').hide();
+        $popup.find('.image_zone_view .image').hide().html('');
+        $popup.find('.image_zone_view .loader').show();
         // load image
         var image = $('<img>');
         $(image).load(function() {
-            $('.image_zone_view .loader').hide();
-            $('.image_zone_view .image').show();
-            $('.image_zone_view').find('.prev, .next').show();
+            $popup.find('.image_zone_view .loader').hide();
+            $popup.find('.image_zone_view .image').show();
+            $popup.find('.image_zone_view').find('.prev, .next').show();
             _this.popup_resize();
         });
-        $('.image_zone_view .image').append( $(image) );
+        $popup.find('.image_zone_view .image').append( $(image) );
         $(image).attr('src', $(item).find('div.image_album').data('original-url'));
         // load comments
         this.popup_comments_list($(item));
         // make comment
-        $('.image_zone_info .make_comment textarea').fadeOut(
+        $popup.find('.image_zone_info .make_comment textarea').fadeOut(
             _this.options.popup_fadeDuration,
             function() {
                 $(this).val('').fadeIn(_this.options.popup_fadeDuration);
@@ -560,10 +559,10 @@ LionFace.Images.prototype = {
         $('.make_comment textarea').autosize({
             callback: function(ta) {
                 _this.popup_resize();
-            },
+            }
         }).focusin(function(event) {
             _this.popup_enableKeyboard({
-                esc_only: true,
+                esc_only: true
             });
         }).focusout(function(event) {
             _this.popup_enableKeyboard();
@@ -590,7 +589,7 @@ LionFace.Images.prototype = {
             data: {
                 'method': 'create',
                 'message': val,
-                'pk': $ul.data('image-pk'),
+                'pk': $ul.data('image-pk')
             },
             beforeSend: function(jqXHR, settings) {
                 $textarea.data('val', val);
@@ -610,7 +609,7 @@ LionFace.Images.prototype = {
             },
             complete: function(jqXHR, textStatus) {
                 $textarea.prop('disabled', false);
-            },
+            }
         });
     },
 
@@ -622,7 +621,7 @@ LionFace.Images.prototype = {
             url: LionFace.User['images_comments_ajax'],
             data: {
                 'method': 'list',
-                'pk': $ul.data('image-pk'),
+                'pk': $ul.data('image-pk')
             },
             beforeSend: function(jqXHR, settings) {
                 $ul.html('');
@@ -631,7 +630,7 @@ LionFace.Images.prototype = {
                 if (data.status == 'ok') {
                     _this.popup_comments_refresh($(data.comments).filter('li'));
                 }
-            },
+            }
         });
     },
 
@@ -654,13 +653,13 @@ LionFace.Images.prototype = {
                         data: {
                             'method': 'delete',
                             'comment_pk': $item.data('pk'),
-                            'pk': $ul.data('image-pk'),
+                            'pk': $ul.data('image-pk')
                         },
                         success: function(data, textStatus, jqXHR) {
                             if (data.status == 'ok') {
                                 _this.popup_comments_refresh($(data.comments).filter('li'));
                             }
-                        },
+                        }
                     });
                     $(this).dialog('close');
                 },
@@ -672,37 +671,40 @@ LionFace.Images.prototype = {
                 _this.popup_disableKeyboard();
                 var $dialog = $(this).parent();
                 return;
+                /*
                 $dialog.find('.ui-dialog-titlebar').remove();
                 $dialog.find(this).css({'overflow': 'hidden'});
                 $dialog.find('.ui-dialog-buttonpane').css({
                     'border-width': 0,
                     'margin': 0,
-                    'padding': 0,
+                    'padding': 0
                 });
                 $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
+                */
             },
             close: function(event, ui) {
                 _this.popup_enableKeyboard();
                 $(this).dialog('destroy').remove();
             },
-            zIndex: 10002,
+            zIndex: 10002
         });
     },
 
     bind_popup: function() {
         var _this = this;
+        var $popup = $('.image_popup');
         $(window).on('resize', this.popup_resize);
         $(document).on('resize', this.popup_resize);
-        $('.image_overlay').click(function() {
+        $popup.find('.image_overlay').click(function() {
             _this.popup_end();
             return false;
         });
-        $('.image_zone_info .close a').click(function() {
+        $popup.find('.image_zone_info .close a').click(function() {
             _this.popup_end();
             return false;
         });
         // arrows
-        $('.image_zone_view').find('.prev, .next').hover(
+        $popup.find('.image_zone_view').find('.prev, .next').hover(
             function(event) {
                 if ($('.image_container li').length > 1) {
                     $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
@@ -718,15 +720,14 @@ LionFace.Images.prototype = {
                 $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
             }
         });
-        $('.image_zone_view .prev').click(function(event) {
+        $popup.find('.image_zone_view .prev').click(function(event) {
             _this.popup_to_prev();
         });
-        $('.image_zone_view .next').click(function(event) {
+        $popup.find('.image_zone_view .next').click(function(event) {
             _this.popup_to_next();
         });
         this.popup_comments_bind_make_comment();
-    },
-
+    }
 };
 
 $(function() {

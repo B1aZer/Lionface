@@ -39,7 +39,6 @@ class QuerySet(models.query.QuerySet):
 from images.models import Image
 
 
-
 class CustomQuerySet(QuerySet):
     def get_news_post(self, ids=None):
         """ getting news feed for post ids"""
@@ -221,7 +220,6 @@ class FriendPost(Post):
         return ""
 
 
-
 class FeedbackPost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='feedback_posts')
@@ -292,7 +290,6 @@ class FeedbackPost(Post):
         return 'P'
 
 
-
 class PagePost(Post):
     content = models.CharField(max_length=5000)
     page = models.ForeignKey(Pages, related_name='posts')
@@ -354,7 +351,6 @@ class PagePost(Post):
         return 'P'
 
 
-
 class DiscussPost(Post):
     content = models.CharField(max_length=5000)
     topic = models.ForeignKey(Topics, related_name='posts')
@@ -404,7 +400,6 @@ class DiscussPost(Post):
 
     def privacy(self):
         return 'P'
-
 
 
 class PageSharePost(PagePost):
@@ -471,16 +466,18 @@ class ContentPost(Post):
 
         ctype = ContentType.objects.get_for_model(self)
         images = Image.objects.filter(owner_type=ctype, owner_id=self.id)
-
-        c = { 'images': images }
-        render_images = render_to_string('post/_post_images.html', c)
+        images_div = ''
+        if len(images) > 0:
+            c = {'images': images}
+            render_images = render_to_string('post/_post_images.html', c)
+            images_div = "<div class='image_container feed'>{0}</div>".format(
+                render_images)
 
         return mark_safe("<a href='%s'>%s</a><br />"
-                         "<div class='post_content'> %s</div>"
-                         "<div class='image_container feed'>%s</div>"
+                         "<div class='post_content'> %s</div>%s"
                          % (self.user.get_absolute_url(),
                          self.user.get_full_name(), self.content,
-                         render_images))
+                         images_div))
 
     def get_id(self):
         return self.id
@@ -514,7 +511,6 @@ class ContentPost(Post):
     @property
     def get_privacy(self):
         return self.privacy
-
 
 
 class SharePost(Post):
@@ -756,7 +752,6 @@ class NewsItem(models.Model):
     @property
     def timestamp(self):
         return self.post.date
-
 
 
 def add_post_to_followings(sender, instance, created, **kwargs):
