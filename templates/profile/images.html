@@ -26,9 +26,9 @@
 {% endblock %}
 
 {% block right_col %}
-<div style="padding: 10px; height: 45px;">
+<div id="image_quote" style="padding: 10px; height: 45px;">
 	<div style="position: relative; top: 18px; left: 25px; color: #CCC;">
-	<i>Whose woods these are I think I know, his house is in the village though. - Robert Frost</i>
+	<i><span id="quote"></span> - <span id="author"></span></i><a href="#" id="reset-quote" style="margin-left: 4px;">Reset</a>
 	</div>
 </div>
 
@@ -56,6 +56,7 @@
         LionFace.User['images_now_rows'] = {{ image_rows|length }};
         LionFace.User['images_ajax'] = "{% url profile.views.images_ajax profile_user.username %}";
         LionFace.User['images_comments_ajax'] = "{% url profile.views.images_comments_ajax profile_user.username %}";
+        LionFace.User['images_quote_ajax'] = '{% url profile-images-quote profile_user.username %}'
     });
 </script>
 {% endblock %}

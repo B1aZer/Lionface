@@ -1,7 +1,7 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -28,7 +28,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 
-from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from PIL import Image as pilImage
 
@@ -46,6 +46,7 @@ def feed(request, username):
         },
         RequestContext(request)
     )
+
 
 @login_required
 def timeline(request):
@@ -103,7 +104,7 @@ def images(request, username, rows_show=4):
         {
             'profile_user': profile_user,
             'form': form,
-            'form_mess':form_mess,
+            'form_mess': form_mess,
             'image_rows': qs.get_rows(0, rows_show),
             'total_rows': qs.total_rows(),
             'photos_count': qs.count(),
@@ -248,7 +249,7 @@ def images_comments_ajax(request, username):
 
     try:
         image = qs.get(pk=request.REQUEST.get('pk', None))
-    except Image.DoesNotExist as e:
+    except Image.DoesNotExist:
         return HttpResponseBadRequest('Bad pk was received.')
 
     data = {}
@@ -268,7 +269,7 @@ def images_comments_ajax(request, username):
         elif method == 'delete':
             try:
                 comment = image.comments.get(pk=request.REQUEST.get('comment_pk', None))
-            except ImageComments.DoesNotExist as e:
+            except ImageComments.DoesNotExist:
                 return HttpResponseBadRequest('Bad comment_pk was received.')
             if request.user not in [profile_user, comment.owner]:
                 raise Http404
@@ -281,14 +282,52 @@ def images_comments_ajax(request, username):
             'comments': image.comments.all(),
             'manage_perm': manage_perm,
         }, context_instance=RequestContext(request))
-    except Exception as e:
+    except Exception:
         data['status'] = 'fail'
     else:
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
 
 
+def images_quote_ajax(request, username):
+    if not request.is_ajax():
+        raise Http404
+
+    profile_user = get_object_or_404(UserProfile, username=username)
+
+    method = request.REQUEST.get('method', None)
+    if method not in ['get', 'change', 'reset']:
+        raise Http404
+
+    data = {}
+    data['success'] = 'true'
+    try:
+        if method == 'get':
+            data['quote'] = profile_user.images_quote
+            data['author'] = profile_user.images_quote_author
+        elif method == 'change':
+            quote = request.REQUEST.get('change[quote]', None)
+            author = request.REQUEST.get('change[author]', None)
+            profile_user.images_quote = quote
+            profile_user.images_quote_author = author
+            profile_user.save()
+        elif method == 'reset':
+            profile_user.images_quote = 'Whose woods these are I think I ' \
+                'know, his house is in the village though.'
+            profile_user.images_quote_author = 'Robert Frost'
+            profile_user.save()
+            data['quote'] = profile_user.images_quote
+            data['author'] = profile_user.images_quote_author
+        else:
+            raise Http404
+    except:
+        data['success'] = 'false'
+
+    return HttpResponse(json.dumps(data), 'application/json')
+
 #@login_required
+
+
 @unblocked_users
 #@default_user
 def profile(request, username):
@@ -304,8 +343,8 @@ def profile(request, username):
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
         if request.user.is_authenticated() \
-         and 'image' in request.POST \
-         and form.is_valid():
+            and 'image' in request.POST \
+                and form.is_valid():
             image = form.save(profile_user)
             image.make_activity()
             image.generate_thumbnail(200, 200)
@@ -330,7 +369,7 @@ def profile(request, username):
             if form_mess.is_valid():
                 user_to = profile_user
                 content = form_mess.cleaned_data['content']
-                mess = Messaging(user=request.user,user_to=user_to,content=content)
+                mess = Messaging(user=request.user, user_to=user_to, content=content)
                 mess.save()
                 return HttpResponseRedirect(request.path)
     else:
@@ -342,8 +381,8 @@ def profile(request, username):
             'profile/albums.html',
             {
                 'profile_user': profile_user,
-                'form_mess' : form_mess,
-                'albums' : request.user.albums_set.all().order_by('position'),
+                'form_mess': form_mess,
+                'albums': request.user.albums_set.all().order_by('position'),
             },
             RequestContext(request)
         )
@@ -405,14 +444,14 @@ def profile(request, username):
             image_height = data_uri.height
 
     if resize:
-        cover_offset = (image_height - restrict_height -45 -95) * -1
+        cover_offset = (image_height - restrict_height - 45 - 95) * -1
         return render_to_response(
             'profile/profile_cover.html',
             {
                 'profile_user': profile_user,
-                'form' : form,
+                'form': form,
                 'cover_form': cover_form,
-                'form_mess' : form_mess,
+                'form_mess': form_mess,
                 'cover_offset': cover_offset,
                 'data_uri': data_uri,
             },
@@ -423,13 +462,14 @@ def profile(request, username):
             'profile/profile.html',
             {
                 'profile_user': profile_user,
-                'form' : form,
+                'form': form,
                 'cover_form': cover_form,
-                'form_mess' : form_mess,
-                'show_cover_form' : True,
+                'form_mess': form_mess,
+                'show_cover_form': True,
             },
             RequestContext(request)
         )
+
 
 def reposition(request, username):
     data = {'status': 'FAIL'}
@@ -461,6 +501,7 @@ def reposition(request, username):
         profile_user.save()
     return HttpResponse(json.dumps(data), "application/json")
 
+
 def reset_picture(request, username):
     try:
         profile_user = UserProfile.objects.get(username=username)
@@ -475,8 +516,9 @@ def reset_picture(request, username):
     redrct = redirect('profile.views.profile', username=request.user.username)
     return redrct
 
+
 def send_message(request, username):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     try:
         profile_user = UserProfile.objects.get(username=username)
     except UserProfile.DoesNotExist:
@@ -485,7 +527,7 @@ def send_message(request, username):
     if form_mess.is_valid():
         user_to = profile_user
         content = form_mess.cleaned_data['content']
-        mess = Messaging(user=request.user,user_to=user_to,content=content)
+        mess = Messaging(user=request.user, user_to=user_to, content=content)
         mess.save()
         data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
@@ -505,11 +547,12 @@ def albums(request, username):
         'profile/albums.html',
         {
             'profile_user': profile_user,
-            'form_mess':form_mess,
-            'albums' : profile_user.albums_set.all().order_by('position'),
+            'form_mess': form_mess,
+            'albums': profile_user.albums_set.all().order_by('position'),
         },
         RequestContext(request)
     )
+
 
 @login_required
 @unblocked_users
@@ -526,11 +569,11 @@ def album_posts(request, username, album_id=None):
             from post.models import Post
             current = Albums.objects.get(id=album_id)
             album = current
-            items = Post.objects.filter(album_id = current.id)
+            items = Post.objects.filter(album_id=current.id)
             #getting news_feed for Post Objects
             items = items.get_news_post()
             items = items.get_public_posts(profile_user)
-            items = sorted(items,key=lambda post: post.date, reverse=True)
+            items = sorted(items, key=lambda post: post.date, reverse=True)
         except:
             items = []
 
@@ -538,33 +581,35 @@ def album_posts(request, username, album_id=None):
         'profile/album_posts.html',
         {
             'profile_user': profile_user,
-            'items' : items,
-            'album':album,
+            'items': items,
+            'album': album,
         },
         RequestContext(request)
     )
 
+
 @login_required
 def album_create(request, username):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if request.method == 'POST' and 'album_name' in request.POST:
-        data = {'status':'OK'}
-        album, created = Albums.objects.get_or_create(name=request.POST['album_name'], user = request.user)
+        data = {'status': 'OK'}
+        album, created = Albums.objects.get_or_create(name=request.POST['album_name'], user=request.user)
         if created:
             data['html'] = render_to_string('profile/album.html',
-                {
-                    'album': album,
-                    'profile_user': request.user,
-                }, context_instance=RequestContext(request))
+                                            {
+                                            'album': album,
+                                            'profile_user': request.user,
+                                            }, context_instance=RequestContext(request))
     return HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def album_postion(request, username):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     if request.method == 'POST' and 'album_id' in request.POST:
-        album_id = request.POST.get('album_id',None)
-        pos_bgn = request.POST.get('position_bgn',None)
-        pos_end = request.POST.get('position_end',None)
+        album_id = request.POST.get('album_id', None)
+        pos_bgn = request.POST.get('position_bgn', None)
+        pos_end = request.POST.get('position_end', None)
         try:
             current = Albums.objects.get(id=album_id)
             current.position = int(pos_end)
@@ -582,41 +627,44 @@ def album_postion(request, username):
             pass
     return HttpResponse(json.dumps(data), "application/json")
 
+
 @login_required
 def change_album_name(request, username):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if request.method == 'POST' and 'album_id' in request.POST:
-        album_id = request.POST.get('album_id',None)
-        album_name = request.POST.get('album_name',None)
+        album_id = request.POST.get('album_id', None)
+        album_name = request.POST.get('album_name', None)
         try:
             current = Albums.objects.get(id=album_id)
             current.name = album_name.strip()
             if request.user == current.user:
                 current.save()
-                data['status']='OK'
+                data['status'] = 'OK'
         except:
             pass
     return HttpResponse(json.dumps(data), "application/json")
 
+
 @login_required
 def delete_album(request, username):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if request.method == 'POST' and 'album_id' in request.POST:
-        album_id = request.POST.get('album_id',None)
+        album_id = request.POST.get('album_id', None)
         try:
             current = Albums.objects.get(id=album_id)
             if request.user == current.user:
                 current.delete()
-                data['status']='OK'
+                data['status'] = 'OK'
         except:
             pass
     return HttpResponse(json.dumps(data), "application/json")
+
 
 @login_required
 def settings(request, username):
     changed = False
     active = 'basics'
-    form = UserInfoForm(instance=request.user,initial = request.user.get_options())
+    form = UserInfoForm(instance=request.user, initial=request.user.get_options())
     form_pass = PasswordChangeForm(user=request.user)
     if request.method == 'POST':
         if 'change_pass' in request.POST:
@@ -626,7 +674,7 @@ def settings(request, username):
                 form_pass.save()
                 changed = True
         elif 'save' in request.POST:
-            form = UserInfoForm(request.POST , instance=request.user)
+            form = UserInfoForm(request.POST, instance=request.user)
             form_pass = PasswordChangeForm(user=request.user)
             for name in request.POST:
                 if name.find('option') >= 0:
@@ -635,7 +683,7 @@ def settings(request, username):
                         option.value = request.POST[name]
                         option.save()
                     except ObjectDoesNotExist:
-                        request.user.useroptions_set.create(name=name,value=request.POST[name])
+                        request.user.useroptions_set.create(name=name, value=request.POST[name])
                 if name == 'block_user':
                     #This is for blocked users
                     user_name = request.POST[name]
@@ -681,17 +729,18 @@ def settings(request, username):
     return render_to_response(
         'profile/settings.html',
         {
-            'form' : form,
-            'form_pass' : form_pass,
-            'changed' : changed,
-            'active' : active,
+            'form': form,
+            'form_pass': form_pass,
+            'changed': changed,
+            'active': active,
         },
         RequestContext(request)
     )
 
+
 @login_required
 def delete_profile(request, username):
-    data = {'status':'FAIL'}
+    data = {'status': 'FAIL'}
     if request.method == 'POST':
         if 'confirm_password' in request.POST:
             password = request.POST['confirm_password']
@@ -705,9 +754,10 @@ def delete_profile(request, username):
             data['message'] = 'Enter password'
     return HttpResponse(json.dumps(data), "application/json")
 
+
 @login_required
 @unblocked_users
-def related_users(request,username):
+def related_users(request, username):
     form_mess = MessageForm()
     if not username:
         profile_user = request.user
@@ -721,7 +771,7 @@ def related_users(request,username):
         data = {}
         users = []
 
-        if 'Friends' in request.GET and profile_user.check_visiblity('friend_list',request.user):
+        if 'Friends' in request.GET and profile_user.check_visiblity('friend_list', request.user):
             friends = profile_user.get_friends()
             """
             if friends:
@@ -729,11 +779,11 @@ def related_users(request,username):
             """
             users.extend(friends)
             data['html'] = [x.username for x in friends]
-        if 'Following' in request.GET and profile_user.check_visiblity('following_list',request.user):
+        if 'Following' in request.GET and profile_user.check_visiblity('following_list', request.user):
             following = profile_user.get_following_active(request.user)
             users.extend(following)
             data['html'] = [x.username for x in following]
-        if 'Followers' in request.GET and profile_user.check_visiblity('follower_list',request.user):
+        if 'Followers' in request.GET and profile_user.check_visiblity('follower_list', request.user):
             followers = profile_user.get_followers_active(request.user)
             users.extend(followers)
             data['html'] = [x.username for x in followers]
@@ -744,21 +794,19 @@ def related_users(request,username):
 
         if len(data) > 0 and 'ajax' in request.GET:
             data['html'] = render_to_string('profile/related_users.html',
-                {
-                    'current_user': profile_user,
-                    'users': users,
-                }, context_instance=RequestContext(request))
+                                            {
+                                            'current_user': profile_user,
+                                            'users': users,
+                                            }, context_instance=RequestContext(request))
             return HttpResponse(json.dumps(data), "application/json")
-
-
 
     return render_to_response(
         'profile/related.html',
         {
-            'profile_user' : profile_user,
-            'current_user' : profile_user,
-            'form_mess':form_mess,
-            'users' : users,
+            'profile_user': profile_user,
+            'current_user': profile_user,
+            'form_mess': form_mess,
+            'users': users,
         },
         RequestContext(request)
     )
@@ -787,18 +835,18 @@ def loves(request, username):
 
     if request.method == 'GET' and 'ajax' in request.GET:
         data['html'] = render_to_string('pages/pages_loves.html',
-                {
-                    'pages': pages,
-                }, context_instance=RequestContext(request))
+                                        {
+                                        'pages': pages,
+                                        }, context_instance=RequestContext(request))
         return HttpResponse(json.dumps(data), "application/json")
 
     return render_to_response(
         'profile/loves.html',
         {
-            'profile_user' : profile_user,
-            'current_user' : profile_user,
-            'form_mess':form_mess,
-            'pages' : pages,
+            'profile_user': profile_user,
+            'current_user': profile_user,
+            'form_mess': form_mess,
+            'pages': pages,
         },
         RequestContext(request)
     )
