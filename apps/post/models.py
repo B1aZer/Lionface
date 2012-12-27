@@ -611,7 +611,7 @@ class CustomQuerySet(QuerySet):
                 self = self.exclude(id=item.id)
         return self
 
-    def get_business_feed(self, user):
+    def get_business_feed(self, user, date=None):
         """
         pages = user.get_loved()
         post_ids = []
@@ -624,21 +624,37 @@ class CustomQuerySet(QuerySet):
         for item in self:
             if isinstance(item.post.get_inherited(), PagePost):
                 if item.post.get_inherited().get_page_type() == 'BS':
-                    pass
+                    if date:
+                        if item.timestamp > date:
+                            pass
+                        else:
+                            self = self.exclude(id=item.id)
                 else:
                     self = self.exclude(id=item.id)
             else:
                 self = self.exclude(id=item.id)
         return self
 
-    def get_nonprofit_feed(self, user):
+    def get_nonprofit_feed(self, user, date=None):
         self = self.filter(user=user)
         for item in self:
             if isinstance(item.post.get_inherited(), PagePost):
                 if item.post.get_inherited().get_page_type() == 'NP':
-                    pass
+                    if date:
+                        if item.timestamp > date:
+                            pass
+                        else:
+                            self = self.exclude(id=item.id)
                 else:
                     self = self.exclude(id=item.id)
+            else:
+                self = self.exclude(id=item.id)
+        return self
+
+    def get_newer_than(self, date):
+        for item in self:
+            if item.timestamp > date:
+                pass
             else:
                 self = self.exclude(id=item.id)
         return self

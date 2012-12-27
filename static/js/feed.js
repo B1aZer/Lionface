@@ -80,6 +80,43 @@ function hide_add_link() {
 
 }
 
+function check_for_new_posts(filter, initial) {
+    var filter = filter || false;
+    var initial = initial || false;
+    var url = LionFace.User.feed_comet_url;
+    var now = new Date(); 
+    var data = {'date':now.toISOString()}
+    if (filter) {
+        data['filter'] = filter;
+    }
+    if (initial) {
+        data['initial'] = initial;
+    }
+    make_request({
+        url:url,
+        type:'GET',
+        data:data,
+        multi:true,
+        callback: function(data) {
+            if (data.count) {
+                if (filter == 'F') {
+                    $('#friends_count').html(data.count);
+                }
+                if (filter == 'W') {
+                    $('#following_count').html(data.count);
+                }
+                if (filter == 'B') {
+                    $('#businesses_count').html(data.count);
+                }
+                if (filter == 'N') {
+                    $('#nonprofits_count').html(data.count);
+                }
+
+            }
+        }
+    });
+}
+
 
 
 $(document).ready(function(){
@@ -87,6 +124,35 @@ $(document).ready(function(){
   loadNewsFeed($("#news_feed"));
 
   hide_add_link();
+
+    check_for_new_posts('', true);
+
+    //checking for new posts
+    if (!LionFace.User.is_anonymous) {
+        setTimeout(function() {
+            setInterval(function() {
+                check_for_new_posts('F');
+            }, 60000);
+        }, 5000);
+        setTimeout(function() {
+            setInterval(function() {
+                check_for_new_posts('W');
+            }, 60000);
+
+        }, 10000);
+        setTimeout(function() {
+            setInterval(function() {
+                check_for_new_posts('B');
+            }, 60000);
+
+        }, 15000);
+        setTimeout(function() {
+            setInterval(function() {
+                check_for_new_posts('N');
+            }, 60000);
+
+        }, 20000);
+    }
 
   var shifted = false;
 

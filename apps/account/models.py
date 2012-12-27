@@ -210,9 +210,9 @@ class UserProfile(User):
         return NewsItem.objects.filter(hidden=False).order_by('date').reverse()
 
     # Return feed dpending on selected filters
-    def get_messages(self):
+    def get_messages(self, filters=None):
         from post.models import NewsItem
-        filters = self.filters.split(',')
+        filters = filters or self.filters.split(',')
         # Friends
         if 'F' in filters:
             hidden_list = [x.id for x in self.hidden.all()]
