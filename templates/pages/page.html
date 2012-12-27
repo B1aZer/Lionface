@@ -81,20 +81,20 @@
         {% block form %}
         <div style="position: relative;">
             <form action="." method="post" class="upload_cover_form" enctype="multipart/form-data" style="display:none;">
-                <div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; margin: 12px 0 0 0; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
+                <div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
                 {% csrf_token %}
                 {{ form.cover_photo.errors }}
-                <label for="id_photo" style="margin-right: 10px;">Upload:</label>
+                <label for="id_photo" style="margin-right: 10px;">Upload Cover Photo:</label>
                 {{ form.cover_photo }}
                 <input id="submit_cover_btn" name="cover_image" type="submit" class="blue_btn" value="Upload" />
                 <input id="cancel_cover_btn" type="button" class="blue_btn" value="Cancel" />
                 </div>
             </form>
             <form action="." method="post" class="upload_album_form" enctype="multipart/form-data" style="display:none;">
-                <div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; margin: 12px 0 0 0; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
+                <div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
                 {% csrf_token %}
                 {{ album_form.image.errors }}
-                <label for="id_photo" style="margin-right: 10px;">Upload:</label>
+                <label for="id_photo" style="margin-right: 10px;">Upload Profile Photo:</label>
                 {{ album_form.image }}
                 <input id="submit_album_image_btn" name="album_image" type="submit" class="blue_btn" value="Upload" />
                 <input id="cancel_album_image_btn" type="button" class="blue_btn" value="Cancel" />
