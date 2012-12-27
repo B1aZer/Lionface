@@ -1,7 +1,7 @@
 LionFace.Notification = function(options) {
     this.options = $.extend({
 
-    }, options || {});;
+    }, options || {});
     this.init();
 };
 
@@ -169,12 +169,11 @@ LionFace.Notification.prototype = {
                 },
                 error: function() {
                     console.log('fail');
-                },
+                }
             });
             return false;
         });
-    },
-
+    }
 };
 
 $(function() {

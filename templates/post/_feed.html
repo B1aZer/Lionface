@@ -10,10 +10,10 @@
 {# using metadata to pass user's info in popup window #}
 {% if not post_user %}
     {% with news_item_user=item.get_original_author %}
-        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', news_item_user: '{{ item.news_item_user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ news_item_user.username }}', user_full_name: '{{ news_item_user.full_name }}', user_photo_thumb: '/{{ news_item_user.photo.thumb_name }}', user_absolute_url: '{{ news_item_user.get_absolute_url }}' }">
+        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', news_item_user: '{{ item.news_item_user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ news_item_user.username }}', user_full_name: '{{ news_item_user.full_name }}', user_photo_thumb: '/{{ news_item_user.photo.thumb_name }}', user_absolute_url: '{{ news_item_user.get_absolute_url }}' } {% if item.get_type == 'friend post' %} friend_post {% endif %}">
     {% endwith %}
 {% else %}
-    <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ post_user.username }}', user_full_name: '{{ post_user.full_name }}', user_photo_thumb: '/{{ post_user.photo.thumb_name }}', user_absolute_url: '{{ post_user.get_absolute_url }}' }">
+    <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ post_user.username }}', user_full_name: '{{ post_user.full_name }}', user_photo_thumb: '/{{ post_user.photo.thumb_name }}', user_absolute_url: '{{ post_user.get_absolute_url }}' } {% if item.get_type == 'friend post' %} friend_post {% endif %}">
 {% endif %}
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     {% block thumbnail %}
@@ -31,9 +31,9 @@
     {{ item.render|safe }}
             {% spaceless %}
             <span class="subtext">
-            <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
-            <a href="javascript:LionFace.Site.del_post({{item.id}});">Delete</a>
-            <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>
+            <span class="timestamp" style="margin: 0 4px;" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
+            <a href="javascript:LionFace.Site.del_post({{item.id}});" style="margin: 0 4px; color: #AAA;">Delete</a>
+            <a style="text-decoration: none;"><span class="toggle_privacy" title="Privacy Settings: Public" style="margin: 0 4px; color: #CCC; text-decoration: none; cursor: default;">Public</span></a>
             </span>
             {% endspaceless %}
     {% endif %}

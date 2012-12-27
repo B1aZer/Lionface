@@ -39,6 +39,7 @@ class UserInfoForm(forms.ModelForm):
     option_loves = forms.ChoiceField(required=False, choices=( LOVES_DEFAULT ))
     option_vie_profile = forms.ChoiceField(required=False, choices=( VIA_PROFILE ))
     option_vie_pages = forms.ChoiceField(required=False, choices=( VIA_PAGES ))
+    option_cover_image = forms.ChoiceField(required=False, choices=( PROFILE_IMAGE ))
 
     class Meta:
         model = UserProfile
@@ -87,6 +88,26 @@ class UserInfoForm(forms.ModelForm):
             user.save()
 
         return user
+
+
+class ImageCoverForm(forms.ModelForm):
+
+    class Meta:
+        model = UserProfile
+        fields = ('cover_photo',)
+
+    def clean_cover_photo(self):
+        try:
+            image = self.cleaned_data['cover_photo']
+            if image == self.fields['cover_photo'].initial:
+                raise forms.ValidationError("No Image specified")
+        except KeyError:
+            raise forms.ValidationError("Couldn't read uploaded image")
+        if image.content_type == 'image/gif':
+            raise forms.ValidationError("Sorry! Gif is prohibited.")
+        if image._size > 3*1024*1024:
+            raise forms.ValidationError("Image file too large ( > 3mb )")
+        return image
 
 
 

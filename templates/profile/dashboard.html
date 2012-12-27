@@ -59,15 +59,15 @@
 <div class="dashboard_related">
 <table width="100%" height="100%"><tr><td>
 {% if profile_user|check_friends_visibility:request.user %}
-<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="db_related">{{ profile_user|show_friend_count:request.user }}</a>
+<a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="db_related">{{ profile_user|show_friend_count }}</a>
 {% endif %}
 <br />
 {% if profile_user|check_follower_visibility:request.user %}
-<a href="{% url profile.views.related_users username=profile_user.username %}?Followers" class="db_related">{{ profile_user|show_followers_count:request.user }} Follower{{ profile_user.get_followers_count|pluralize }}</a>
+<a href="{% url profile.views.related_users username=profile_user.username %}?Followers" class="db_related">{{ profile_user|show_followers_count }} Follower{{ profile_user.get_followers_count|pluralize }}</a>
 {% endif %}
 <br />
 {% if profile_user|check_following_visibility:request.user %}
-<a href="{% url profile.views.related_users username=profile_user.username %}?Following" class="db_related">{{ profile_user|show_following_count:request.user }} Following</a>
+<a href="{% url profile.views.related_users username=profile_user.username %}?Following" class="db_related">{{ profile_user|show_following_count }} Following</a>
 {% endif %}
 </td></tr></table>
 </div>
@@ -96,4 +96,31 @@
 </form> 
 </div>
 
-<div style="display: block; height: 296px; width: 896px; background: #DDD; border: 2px solid #FFF; background: url({% media_url 'images/bg-cover.png' %}); background-position: center center;"></div>
+<div class="profile_cover_conteiner" style="overflow:hidden;">
+<div style="background: #DDD; 
+            {% if data_uri %}
+            height: {{ data_uri.height }}px; 
+            width: {{ data_uri.width }}px;
+            background: url({{ data_uri }}); 
+            {% elif profile_user|check_cover_image_visibility:request.user %}
+            height: {{ request.user.cover_photo.height }}px; 
+            width: {{ request.user.cover_photo.width }}px;
+            background: url({{ profile_user.get_cover_photo }}); 
+            {% else %}
+            height: 300px; 
+            width: 600px;
+            background: url({{ profile_user.get_default_cover_photo }}); 
+            {% endif %}
+            "
+            class="profile_cover" >
+                        {% block inpicture %}
+                        {% if request.user == profile_user and show_cover_form %}
+                        <div style="position: relative; top: 270px; left: -13px; display: block; width: 200px;" align="center">
+                            <a id="upload_cover_profile" class="upload_cover" style="display:none; cursor: pointer;">Upload</a>
+                            <a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_profile_picture" class="upload_cover" style="display:none; color:#555;">Clear</a>
+                        </div>                                
+                        {% endif %}
+                        {% endblock %}
+                        
+</div>
+</div>

@@ -21,7 +21,7 @@ $(document).ready(function() {
         params = [];
 
         $('.filterON').each(function () {
-            params.push("&"+$(this).html());
+            params.push("&"+$(this).attr('id'));
         });
         if (params) {
             params = "?"+params.join("").slice(1)+"&ajax";

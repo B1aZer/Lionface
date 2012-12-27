@@ -907,6 +907,18 @@ LionFace.Site.prototype = {
                 }
             });
         });
+
+        /** search/related mutual friend toogle */
+        $(document).on('click','.mutual_friends',function() {
+            if ($(this).data('toggled')) {
+                $(this).find('.mutual_friend_list').hide();
+                $(this).data('toggled', false);
+            }
+            else {
+                $(this).find('.mutual_friend_list').show();
+                $(this).data('toggled', true);
+            }
+        });
         
     },
     page_members : function () {

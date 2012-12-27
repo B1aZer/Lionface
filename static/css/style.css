@@ -1001,7 +1001,7 @@ a.profile_btn:hover {
     transform: skew(5deg) rotate(5deg);
 }
 
-.upload {
+.upload, .upload_cover {
 	position: relative;
 	display: inline-block;
 	width: 70px;
@@ -1024,7 +1024,7 @@ a.profile_btn:hover {
 	border: 1px solid #DDD;
 }
 
-.upload:hover {
+.upload:hover, .upload_cover:hover {
 	background: #FFF;
 	border-color: #EEE;
 	color: #555;
@@ -1371,6 +1371,14 @@ a.profile_btn:hover {
 .DoS_profile:hover {
 	color: #FFF;
 	background: #333;
+}
+
+.profile_cover_conteiner {
+    width: 900px;
+    height: 300px;
+    background: #DDD;
+    position: relative;
+    z-index: 500;
 }
 
 /* Albums */
@@ -1952,6 +1960,16 @@ a.nav_notifications:hover {
 
 .result_related, .result_post, .result_search {
   width: 525px; min-height: 50px; padding: 8px; position: relative; left: 108px; margin-bottom: 13px; margin-top: 13px;
+}
+
+.friend_post {
+	width: 525px;
+	min-height: 0px;
+	padding: 0px;
+	position: relative;
+	left: -65px; top: -14px;
+	margin: 0px;
+	height: 20px;
 }
 
 .result_related:hover, .result_search:hover {

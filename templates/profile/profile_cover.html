@@ -1,21 +1,19 @@
-{% extends "pages/page.html" %}
+{% extends "profile/profile.html" %}
+
 {% load media %}
 
 {% block inpicture %}
 <style>
-#cover_image {
+.profile_cover {
     cursor: pointer;
 }
 </style>
 {% endblock %}
 
-{% block form %}
-{% endblock %}
-
-{% block page_footer %}
+{% block right_col %}
 <script>
             $(document).ready(function() {
-                    $('#cover_image').draggable({ axis: "y", containment:[0,{{ cover_offset }},0,102]});
+                    $('.profile_cover').draggable({ axis: "y", containment:[0,{{ cover_offset }},0,147]});
             });
         </script>
 
@@ -23,11 +21,10 @@
         Drag the image to adjust.</p>
 
     <div>
-        <a id="save_image" class="profile_btn" href="javacript:;">Save</a>
+        <a id="save_image_profile" class="profile_btn" href="javacript:;">Save</a>
         <a class="profile_btn" href=".">Cancel</a>
     </div>
+{% include_media 'profile.js' %}
 {% endblock %}
 
-{% block page_micro %}
-{% endblock %}
 

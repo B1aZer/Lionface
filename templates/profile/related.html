@@ -14,13 +14,13 @@
     class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat;"></div>
     <div style="position: relative; left: 0px; z-index: 100;">
     {% if profile_user|check_friends_visibility:request.user %}
-    <a href="javascript:;" class="feed_type filter related" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_Friends.png' %}" /> Friends</a>
+    <a id="Friends" href="javascript:;" class="feed_type filter related" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_Friends.png' %}" /> Friends</a>
     {% endif %}
     {% if profile_user|check_follower_visibility:request.user %}
-    <a href="javascript:;" class="feed_type filter related" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Followers</a>
+    <a id="Followers" href="javascript:;" class="feed_type filter related" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Followers</a>
     {% endif %}
     {% if profile_user|check_following_visibility:request.user %}
-    <a href="javascript:;" class="feed_type filter related" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Following</a>
+    <a id="Following" href="javascript:;" class="feed_type filter related" ><img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Following</a>
     {% endif %}
 
 	</div>   

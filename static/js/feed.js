@@ -88,6 +88,10 @@ $(document).ready(function(){
 
   hide_add_link();
 
+  var shifted = false;
+
+  $(document).bind('keyup keydown', function(e){shifted = e.shiftKey} );
+
   $('.tagged').hover(function () {
     $(this).find('.remove_tag').show();
     },function () {
@@ -96,8 +100,15 @@ $(document).ready(function(){
 
   $('.feed_type').live('click',function () {
   self = $(this)
-  var tag_val = $(this).contents()[0];
-  var send = 'filter_name='+tag_val.textContent;
+
+
+  var tag_val = $(this).attr('id');
+  var send = 'filter_name='+tag_val;
+
+    if (shifted) {
+        $('.filterON').removeClass('filterON').addClass('filter');
+        send = send + '&single=1';
+    }
 
     if ($(this).hasClass('filterON')) {
     url = '/account/filter/remove/';

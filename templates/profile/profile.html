@@ -12,6 +12,18 @@
 
 {% block dashboard %}
 	{% include "profile/dashboard.html" %}
+        <div style="position: relative;">
+            <form action="." method="post" class="upload_pforile_cover_form" enctype="multipart/form-data" style="display:none" >
+                <div style="padding: 4px 8px; background: #EEE; border: 1px solid #CCC; margin: 12px 0 0 0; -moz-box-shadow 0 4px 8px -4px #999; box-shadow: 0 4px 8px -4px #999;">
+                {% csrf_token %}
+                {{ cover_form.cover_photo.errors }}
+                <label for="id_cover_photo" style="margin-right: 10px;">Upload:</label>
+                {{ cover_form.cover_photo }}
+                <input id="submit_cover_profile_btn" name="cover_image" type="submit" class="blue_btn" value="Upload" />
+                <input id="cancel_cover_profile_btn" type="button" class="blue_btn" value="Cancel" />
+                </div>
+            </form>
+        </div>
 {% endblock %}
 
 {% block left_col %}
