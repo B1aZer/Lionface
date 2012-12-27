@@ -78,6 +78,19 @@ def auto_calendar(request, slug=None):
 
 
 @login_required
+def auto_fav_pages(request):
+    data = []
+    pages = []
+    term = request.GET.get('term',None)
+    if term:
+        pages =  request.user.get_loved().filter(name__icontains=term)
+    for pg in pages:
+        dic = {'label':pg.name,'value':pg.username,'id':pg.id}
+        data.append(dic)
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
 def auto_discussions(request, slug=None):
     data = []
     pages = []

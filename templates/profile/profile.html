@@ -69,7 +69,17 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 {% endif %}
 
 <div class="bio">
-Favorite Pages<br /><br />
+    {% if profile_user == request.user %}
+    <a id="favorite-pages" href="#">Favorite Pages</a>
+    {% else %}
+    <span>Favorite Pages</span>
+    {% endif %}
+    <input type="text" class="fav-pages" id="favourite_pages_input" style="display:none"/><a id="add_favourite" class="fav-pages" href="#" style="display:none">Add</a><br /><br />
+    {% if profile_user.get_favourite_pages %}
+    <div id="favorite-pages-container">
+        {% include "profile/profile_favourite_page.html" %}
+    </div>
+    {% endif %}
 Relationship<br /><br />
 Bio<br /><br />
 Birthday<br />

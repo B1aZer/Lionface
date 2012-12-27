@@ -83,6 +83,10 @@ function hide_add_link() {
 function check_for_new_posts(filter, initial) {
     var filter = filter || false;
     var initial = initial || false;
+    // if its not news feed
+    if (!LionFace.User.feed_comet_url) {
+        return;
+    }
     var url = LionFace.User.feed_comet_url;
     var now = new Date(); 
     var data = {'date':now.toISOString()}

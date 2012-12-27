@@ -1,0 +1,21 @@
+        {% for page in profile_user.get_favourite_pages %}
+        <div class="micro_page_about">
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        <img src="{{ page.get_thumb }}" width="30" height="30">
+                    </td>
+                    <td><a href="{{ page.get_absolute_url }}">{{ page.name }}</a><br>
+                        <span class="love">{{ page.get_loves }}</span>
+                    </td>
+                    {% if profile_user == request.user %}
+                    <td>
+                        <a class="rem-favourite-page" href="{% url profile.views.remove_favourite_page username=request.user.username page_id=page.id %}">x</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}

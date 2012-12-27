@@ -4,6 +4,8 @@
 {% block js %}
 <script>
 $.extend(LionFace.User,{'album_count':'{{ profile_user.get_album_count }}'});
+LionFace.User['favourite_pages_url'] = '{% url search.views.auto_fav_pages %}';
+LionFace.User['favourite_pages_add_url'] = '{% url profile.views.add_favourite_pages username=request.user.username %}';
 </script>
 {% endblock %}
 

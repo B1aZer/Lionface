@@ -14,6 +14,7 @@ LionFace.Profile.prototype = {
             this.bind_postbox();
             this.bind_albums();
             this.bind_love_list();
+            this.bind_profile_functions();
         }
         this.attach_image_count = 0;
     },
@@ -531,6 +532,101 @@ LionFace.Profile.prototype = {
 
         });
     },
+
+    bind_profile_functions : function () {
+
+        //// Favourite Pages ////
+
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+            return split( term ).pop();
+        }    
+        /** Autocomplete for pages */
+        var url_auto = LionFace.User.favourite_pages_url;
+        $("#favourite_pages_input")
+            // don't navigate away from the field on tab when selecting an item
+            .bind( "keydown", function( event ) {
+                if ( event.keyCode === $.ui.keyCode.TAB &&
+                        $( this ).data( "autocomplete" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                source: function( request, response ) {
+                    $.getJSON( url_auto, {
+                        term: extractLast( request.term )
+                    }, response );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    return false;
+                }
+                
+            }); 
+
+        $(document).on('click','#favorite-pages', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            if (self.data('toggled')) {
+                $('.fav-pages').hide();
+                self.data('toggled',false);
+            }
+            else {
+                $('.fav-pages').show();
+                self.data('toggled',true);
+            }
+        });
+
+        $(document).on('click','#add_favourite', function (e) {
+            e.preventDefault();
+            var url = LionFace.User.favourite_pages_add_url;
+            var pages_usernames = $('#favourite_pages_input').val();
+            if (pages_usernames) {
+                var data = {'pages':pages_usernames};
+            }
+            else {
+                var data = '';
+            }
+            if (data) {
+                make_request({ 
+                    url:url,
+                    data:data,
+                    callback: function (data) {
+                        if (data.pages) {
+                            $('#favorite-pages-container').html(data.pages);
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).on('click','.rem-favourite-page', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        self.parents('.micro_page_about').fadeOut();
+                    }
+                }
+            });
+        });
+    }
 
 }
 

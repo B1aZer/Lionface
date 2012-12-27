@@ -5,6 +5,8 @@ urlpatterns = patterns('profile.views',
     url(r'^(?P<username>\w+)/account/$', 'settings'),
     url(r'^(?P<username>\w+)/send_message/$', 'send_message'),
 
+    url(r'^(?P<username>\w+)/add_favourite_pages/$', 'add_favourite_pages'),
+    url(r'^(?P<username>\w+)/del_favourite_page/(?P<page_id>\d+)$', 'remove_favourite_page'),
     url(r'^(?P<username>\w+)/feed/$', 'feed'),
     url(r'^(?P<username>\w+)/related/$', 'related_users'),
     url(r'^(?P<username>\w+)/reset_picture/$', 'reset_picture'),

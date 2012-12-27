@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from account.models import UserProfile
 from images.models import Image, ImageComments
 from messaging.models import Messaging
+from pages.models import Pages
 from post.models import Albums
 from notification.models import Notification
 
@@ -707,7 +708,7 @@ def delete_profile(request, username):
 
 @login_required
 @unblocked_users
-def related_users(request,username):
+def related_users(request, username):
     form_mess = MessageForm()
     if not username:
         profile_user = request.user
@@ -802,3 +803,46 @@ def loves(request, username):
         },
         RequestContext(request)
     )
+
+
+def add_favourite_pages(request, username):
+    data = {'status':'FAIL'}
+    profile_user = request.user
+    pages_names = []
+
+    try:
+        pages = request.POST['pages']
+        pages = pages.strip().split(',')
+    except:
+        raise Http404
+
+    for page in pages:
+        page = page.strip()
+        if page:
+            try:
+                pageobj = Pages.objects.get(username = page)
+                if profile_user.get_favourite_pages().count() < 7:
+                    profile_user.pages_favourites.add(pageobj)
+                    data['status'] = 'OK'
+                    pages_names.append(pageobj.name)
+            except Pages.DoesNotExist:
+                pass
+    data['pages'] = render_to_string(
+                        'profile/profile_favourite_page.html',
+                        {
+                            'profile_user':profile_user,
+                        }, RequestContext(request)
+                        )
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def remove_favourite_page(request, username, page_id):
+    data = {'status':'FAIL'}
+    profile_user = request.user
+    try:
+        pageobj = Pages.objects.get(id = page_id)
+        profile_user.pages_favourites.remove(pageobj)
+        data['status'] = 'OK'
+    except Pages.DoesNotExist:
+        pass
+    return HttpResponse(json.dumps(data), "application/json")

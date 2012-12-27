@@ -446,6 +446,10 @@ class UserProfile(User):
     def get_pages(self):
         return self.pages.all()
 
+    def get_favourite_pages(self):
+        pages = self.pages_favourites.all()
+        return pages
+
     def get_admin_pages(self):
         return self.pages_admin.all()
 

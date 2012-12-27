@@ -110,6 +110,7 @@ class Pages(models.Model):
     content = models.TextField(null=True, blank=True)
     user = models.ForeignKey(UserProfile, related_name='pages')
     users_loved = models.ManyToManyField(UserProfile, through='PageLoves', related_name='pages_loved', null=True, blank=True)
+    users_favourites = models.ManyToManyField(UserProfile, related_name='pages_favourites', null=True, blank=True)
     admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
     category = models.CharField(max_length=100, default='Undefined')
@@ -144,6 +145,10 @@ class Pages(models.Model):
 
     def get_thumb(self):
         return "/%s" % self.photo.thumb_name
+
+    def get_loves(self):
+        loves = self.loves
+        return loves
 
     def get_lovers(self):
         lovers = self.users_loved.all()
