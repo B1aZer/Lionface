@@ -1,4 +1,10 @@
 ##next###
+commit f943cbf0ed09680316caa7fb7addd89ace399d11
+Author: Dmitry on Server <dmitry.branitskiy@gmail.com>
+Date:   Thu Dec 27 12:51:36 2012 +0400
+
+    server changes
+
 ### DoS ###
 loop problem
 

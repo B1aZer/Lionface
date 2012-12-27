@@ -3,7 +3,7 @@ $(document).ready(function() {
     if (window.location.search) {
         var get_param = window.location.search.replace( "?", "" );
         $('.filter').each(function () {
-            if ($(this).html() == get_param) {
+            if ($(this).attr('id') == get_param) {
                 $(this).toggleClass('filter');
                 $(this).toggleClass('filterON');
             }
