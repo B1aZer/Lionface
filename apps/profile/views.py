@@ -846,3 +846,26 @@ def remove_favourite_page(request, username, page_id):
     except Pages.DoesNotExist:
         pass
     return HttpResponse(json.dumps(data), "application/json")
+
+
+def add_relation(request, username):
+    data = {'status':'FAIL'}
+    profile_user = request.user
+    try:
+        relationtype = request.POST['relationtype']
+    except:
+        raise Http404
+    related_user = request.POST.get('related')
+    if related_user or relationtype != 'S':
+        try:
+            related = UserProfile.objects.get(username = related_user)
+        except:
+            raise Http404
+    profile_user.relationtype = relationtype
+    if related_user:
+        profile_user.in_relationship.add(related)
+        related.relationtype = relationtype
+        #related.save()
+    profile_user.save()
+    return HttpResponse(json.dumps(data), "application/json")
+

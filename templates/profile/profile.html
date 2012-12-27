@@ -80,7 +80,19 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
         {% include "profile/profile_favourite_page.html" %}
     </div>
     {% endif %}
-Relationship<br /><br />
+    <a id="inter_relation_btn" href="#">Relationship</a><br /><br />
+    <select id="inter_relation_select" class="inter-relation" style="display:none">
+        <option value='S' selected="">Single</option>
+        <option value='D' >Dating</option>
+        <option value='E' >Engaged</option>
+        <option value='M' >Married</option>
+    </select>
+    <a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>
+    <input id="inter_relation_input" type="text" style="display:none"/>
+    {% if profile_user.get_relation_type %} 
+        <span>{{ profile_user.get_relation_type }} </span>
+    {% endif %}
+<br /><br /> 
 Bio<br /><br />
 Birthday<br />
 DD MM YYYY<br /><br />

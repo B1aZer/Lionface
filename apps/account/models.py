@@ -30,6 +30,13 @@ RELATIONSHIP_STATUSES = (
     (RELATIONSHIP_BLOCKED, 'Blocked'),
 )
 
+IN_RELATIONSHIP = (
+        ('S', 'Single'),
+        ('D', 'Dating'),
+        ('E', 'Engaged'),
+        ('M', 'Married'),
+)
+
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey('UserProfile', related_name='from_user')
@@ -85,6 +92,8 @@ class UserProfile(User):
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
     timezone = models.CharField(max_length='200', blank=True)
+    in_relationship = models.ManyToManyField('self', related_name='in_relationship')
+    relationtype = models.CharField(max_length='1', choices=IN_RELATIONSHIP, blank=True)
 
     def get_thumb(self):
         return "/%s" % self.photo.thumb_name
@@ -176,6 +185,19 @@ class UserProfile(User):
             friends = friends.exclude(id=user.id)
         friends_count = friends.count()
         return friends_count
+
+    def get_unrelated_friends(self):
+        blocked_ids = [x.id for x in self.get_blocked_self()]
+        friends = self.friends.exclude(id__in=blocked_ids).exclude(relationtype__in=('D','E','M'))
+        return friends
+
+    def get_relation_type(self):
+        relation = self.relationtype
+        if relation:
+            for rlt in IN_RELATIONSHIP:
+                if rlt[0] == relation:
+                    return rlt[1]
+        return relation
 
     def has_friend_request(self, user):
         return FriendRequest.objects.filter(Q(from_user=self, to_user=user) | Q(to_user=self, from_user=user)).count() > 0

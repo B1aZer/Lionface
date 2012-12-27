@@ -78,19 +78,6 @@ def auto_calendar(request, slug=None):
 
 
 @login_required
-def auto_fav_pages(request):
-    data = []
-    pages = []
-    term = request.GET.get('term',None)
-    if term:
-        pages =  request.user.get_loved().filter(name__icontains=term)
-    for pg in pages:
-        dic = {'label':pg.name,'value':pg.username,'id':pg.id}
-        data.append(dic)
-    return HttpResponse(json.dumps(data), "application/json")
-
-
-@login_required
 def auto_discussions(request, slug=None):
     data = []
     pages = []
@@ -105,3 +92,30 @@ def auto_discussions(request, slug=None):
         dic = {'label':pg.name,'value':pg.username,'id':pg.id}
         data.append(dic)
     return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def auto_fav_pages(request):
+    data = []
+    pages = []
+    term = request.GET.get('term',None)
+    if term:
+        pages =  request.user.get_loved().filter(name__icontains=term)
+    for pg in pages:
+        dic = {'label':pg.name,'value':pg.username,'id':pg.id}
+        data.append(dic)
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def auto_relation(request):
+    term = request.GET.get('term',None)
+    if term:
+        friends = request.user.get_unrelated_friends().filter(Q(username__icontains=term) | Q(first_name__icontains=term) | Q(last_name__icontains=term))
+    else:
+        friends = request.user.get_unrelated_friends()
+    dics = []
+    for user in friends:
+        dic = {'label':user._get_full_name(),'value':user.username,'id':user.id}
+        dics.append(dic)
+    return HttpResponse(json.dumps(dics), "application/json")

@@ -626,6 +626,62 @@ LionFace.Profile.prototype = {
                 }
             });
         });
+
+        //// Relationships ////
+
+        $(document).on('click','#inter_relation_btn', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            if (self.data('toggled')) {
+                $('.inter-relation').hide();
+                $('#inter_relation_input').hide();
+                self.data('toggled',false);
+            }
+            else {
+                $('.inter-relation').show();
+                if ($('#inter_relation_select').val() != 'S') {
+                    $('#inter_relation_input').show();
+                }
+                self.data('toggled',true);
+            }
+        });
+
+        $(document).on('change','#inter_relation_select', function(e) {
+            var self = $(this);
+            if (self.val() != 'S') {
+                $('#inter_relation_input').show();
+            }
+            else {
+                $('#inter_relation_input').hide();
+                $('#inter_relation_input').val('');
+            }
+        });
+
+        var url_auto = LionFace.User.relation_auto_url;
+        $( "#inter_relation_input" ).autocomplete({
+            source: url_auto,
+        });
+
+        $(document).on('click', '#save_inter_relation', function(e) {
+            e.preventDefault();
+            var url = LionFace.User.relation_add_url;
+            var data = {'relationtype':$('#inter_relation_select').val()};
+            if ($('#inter_relation_input').val()) {
+                data['related'] = $('#inter_relation_input').val();
+            }
+            if (!data.related && data.relationtype != 'S') {
+                return;
+            }
+            make_request({
+                url:url,
+                data:data,
+                callback: function (data) {
+                    if (data.status == 'OK') {
+                    }
+                }
+            });
+        });
+        
     }
 
 }
