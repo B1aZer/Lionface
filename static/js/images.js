@@ -635,11 +635,10 @@ LionFace.Images.prototype = {
     },
 
     popup_comments_delete: function($item) {
-        var
-         _this = this,
-         $ul = $('.comments ul');
+        var _this = this,
+            $ul = $('.image_popup .comments ul');
         $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
-         .appendTo($('.comments')).dialog({
+         .appendTo($('.image_popup .comments')).dialog({
             resizable: false,
             height: 150,
             width: 400,
