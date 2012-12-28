@@ -447,7 +447,7 @@ LionFace.PostImages.prototype = {
 
     popup_comments_delete: function($item) {
         var _this = this,
-            $ul = $('.image_comments ul');
+            $ul = $('.post_image_popup .image_comments ul');
 
         $.ajax({
             url: LionFace.User['images_comments_ajax'],

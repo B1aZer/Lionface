@@ -120,8 +120,14 @@ class UserProfile(User):
     hidden = models.ManyToManyField('self', symmetrical=False, related_name='hidden_from')
     blocked = models.ManyToManyField('self', symmetrical=False, related_name='blocked_from')
     photo = ImageWithThumbField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='uploads/images/noProfilePhoto.png')
-    cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/bg_cover.png')
-    filters = models.CharField(max_length='10', choices=FILTER_TYPE, default="F")
+    cover_photo = models.ImageField(upload_to="uploads/images",
+        default='uploads/images/bg_cover.png')
+    images_quote = models.CharField(max_length=70, default='Whose woods '
+        'these are I think I know, his house is in the village though.')
+    images_quote_author = models.CharField(max_length=20, default='Robert '
+        'Frost')
+    filters = models.CharField(max_length='10', choices=FILTER_TYPE,
+        default="F")
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
     timezone = models.CharField(max_length='200', blank=True)

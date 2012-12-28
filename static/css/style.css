@@ -3000,3 +3000,11 @@ a.school_nav:hover {
 	padding: 10px 17px;
 	position: relative; left: 17px;
 }
+
+#quote, #author {
+	padding: 2px;
+}
+
+.editable {
+	border: 1px solid #CCC;
+}

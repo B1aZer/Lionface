@@ -24,7 +24,9 @@ $(document).ready(function() {
                 error: function() {
                     console.log('error at public retrieval');
                 }
-            });  
-    });  
+            });
+    });
 
-})
+    var random = Math.round(Math.random() * 10);
+    $('.public_link').eq(random).click();
+});

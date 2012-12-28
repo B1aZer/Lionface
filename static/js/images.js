@@ -22,6 +22,7 @@ LionFace.Images.prototype = {
         }
         this.bind_popup();
         this.bind_view_more_button();
+        this.load_quote();
     },
 
     set_new_thumb: function(src) {
@@ -635,11 +636,10 @@ LionFace.Images.prototype = {
     },
 
     popup_comments_delete: function($item) {
-        var
-         _this = this,
-         $ul = $('.comments ul');
+        var _this = this,
+            $ul = $('.image_popup .comments ul');
         $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
-         .appendTo($('.comments')).dialog({
+         .appendTo($('.image_popup .comments')).dialog({
             resizable: false,
             height: 150,
             width: 400,
@@ -727,6 +727,78 @@ LionFace.Images.prototype = {
             _this.popup_to_next();
         });
         this.popup_comments_bind_make_comment();
+    },
+
+    load_quote: function () {
+        var url = LionFace.User['images_quote_ajax'];
+        $('#reset-quote').hide();
+        $('#image_quote').hover(function () {
+            $('#reset-quote').show();
+        }, function () {
+            $('#reset-quote').hide();
+        });
+        $('#reset-quote').click(function () {
+            var data = {
+                method: 'reset'
+            };
+            make_request({
+                url: url,
+                data: data,
+                callback: function (data) {
+                    if (data.success === 'true') {
+                        $('#quote').text(data.quote);
+                        $('#author').text(data.author);
+                    }
+                }
+            });
+            return false;
+        });
+        make_request({
+            url: url,
+            data: {method: 'get'},
+            callback: function (data) {
+                if (data.success === 'true') {
+                    $('#quote').text(data.quote);
+                    $('#author').text(data.author);
+                }
+            }
+        });
+        var post_quote_change = function () {
+            var quote = $('#quote').text(),
+                author = $('#author').text(),
+                data = {
+                    method: 'change',
+                    change: {
+                        quote: quote,
+                        author: author
+                    }
+                };
+            make_request({
+                url: url,
+                data: data,
+                callback: function () {
+                }
+            });
+        };
+        var $quote = $('#quote, #author');
+        $quote.hover(function () {
+            $(this).prop('contentEditable', true);
+            $(this).addClass('editable');
+            $(this).css('margin', -1);
+        }, function () {
+            $(this).prop('contentEditable', false);
+            $(this).removeClass('editable');
+            $(this).css('margin', 0);
+        });
+        $quote.keypress(function (e) {
+            if (e.which === 13) {
+                $(this).blur();
+                return false;
+            }
+        });
+        $quote.focusout(function () {
+            post_quote_change();
+        });
     }
 };
 
