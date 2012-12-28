@@ -32,6 +32,8 @@ from django.contrib.auth.hashers import check_password
 from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
+from django.core.validators import URLValidator
+
 from datetime import datetime
 
 from PIL import Image as pilImage
@@ -905,5 +907,23 @@ def save_birth_date(request, username):
     data['day'] = date.strftime('%d')
     data['month'] = date.strftime('%m')
     data['year'] = date.strftime('%Y')
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def save_url_field(request, username):
+    data = {'status':'FAIL'}
+    profile_user = request.user
+    url = request.POST.get('url')
+    if not url:
+        return HttpResponse(json.dumps(data), "application/json")
+    valudate_url = URLValidator()
+    try:
+        valudate_url(url)
+        profile_user.url = url
+        profile_user.save()
+        data['status'] = 'OK'
+        data['link'] = profile_user.get_website()
+    except:
+        pass
     return HttpResponse(json.dumps(data), "application/json")
 

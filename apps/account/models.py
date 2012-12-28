@@ -129,6 +129,7 @@ class UserProfile(User):
     relationtype = models.CharField(max_length='1', choices=IN_RELATIONSHIP, blank=True)
     bio_text = models.TextField(blank=True)
     birth_date = models.DateField(null=True, blank=True)
+    url = models.URLField(blank=True)
 
     def get_thumb(self):
         return "/%s" % self.photo.thumb_name
@@ -239,6 +240,13 @@ class UserProfile(User):
 
     def get_birth_date(self):
         return self.birth_date
+
+    def get_website(self):
+        url = self.url
+        if url:
+            link = '<a class="website_link" title="%s" target="_blank" rel="nofollow" href="%s">%s</a>' % (url,url,url)
+            return link
+        return url
 
     def get_related_person(self):
         return self.in_relationship

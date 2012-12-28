@@ -657,10 +657,12 @@ LionFace.Profile.prototype = {
             }
         });
 
-        var url_auto = LionFace.User.relation_auto_url;
+
+        var url_auto_rel = LionFace.User.relation_auto_url;
         $( "#inter_relation_input" ).autocomplete({
-            source: url_auto,
+            source: url_auto_rel,
         });
+        
 
         $(document).on('click', '#save_inter_relation', function(e) {
             e.preventDefault();
@@ -772,6 +774,40 @@ LionFace.Profile.prototype = {
             });
         });
         
+        $(document).on('click', '#show_url_input', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            if (self.data('toggled')) {
+                $('.bio_website').hide();
+                self.data('toggled',false);
+            }
+            else {
+                $('.bio_website').show();
+                self.data('toggled',true);
+            }
+        });
+
+        $(document).on('click', '#save_url_input', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            var data = {'url' : $('#url_input').val()};
+            if (!data.url) {
+                return;
+            }
+            make_request({
+                url:url,
+                data: data,
+                callback : function (data) {
+                    if (data.status == 'OK') {
+                        $('.bio_website').hide();
+                        $('#show_url_input').data('toggled',false);
+                        $('#url_container').html(data.link);
+                        $('#url_input').val('');
+                    }
+                }
+            });
+        });
         
     }
 

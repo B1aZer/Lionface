@@ -142,7 +142,13 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
     </span>
     {% endif %}
     <br /><br />
-Website<br /><br />
+    <a id="show_url_input" href="#">Website</a>
+    <div>
+    <input id="url_input" class="bio_website" type="text" style="display:none"></input>
+    <a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
+    </div>
+    <span id="url_container">{{ profile_user.get_website|safe }}</span>
+    <br /><br />
 </div>
 {% endblock %}
 
