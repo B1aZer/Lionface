@@ -421,6 +421,7 @@ def profile(request, username):
                 'form_mess' : form_mess,
                 'cover_offset': cover_offset,
                 'data_uri': data_uri,
+                'profile_view':True,
             },
             RequestContext(request)
         )
@@ -433,6 +434,7 @@ def profile(request, username):
                 'cover_form': cover_form,
                 'form_mess' : form_mess,
                 'show_cover_form' : True,
+                'profile_view':True,
             },
             RequestContext(request)
         )
@@ -513,6 +515,7 @@ def albums(request, username):
             'profile_user': profile_user,
             'form_mess':form_mess,
             'albums' : profile_user.albums_set.all().order_by('position'),
+            'album_view': True,
         },
         RequestContext(request)
     )
@@ -805,6 +808,7 @@ def loves(request, username):
             'current_user' : profile_user,
             'form_mess':form_mess,
             'pages' : pages,
+            'loves_view' : True,
         },
         RequestContext(request)
     )

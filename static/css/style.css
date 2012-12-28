@@ -478,7 +478,7 @@ a.dashboard_nav:link, a.dashboard_nav:active, a.dashboard_nav:visited {
 
 }
 
-a.dashboard_nav:hover {
+a.dashboard_nav:hover, .active_dash_head {
 background: #ffffff;
 	color: #333;
 	border-color: #DDD;
