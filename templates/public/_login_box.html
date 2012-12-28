@@ -5,7 +5,7 @@
 	<table border="0" cellspacing="0" cellpadding="0" width="900" height="65">
 	  <tr>
         <td rowspan="2" align="left">
-            {% if request.path != '/' and request.path != '/account/login/' %}
+            {% if request.path != '/' and request.path != '/account/login/' and request.path != '/account/signup/' %}
                 <a href="{% url account.views.login %}">Register</a>
             {% else %}
                 &nbsp;
