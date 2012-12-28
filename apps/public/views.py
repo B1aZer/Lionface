@@ -11,6 +11,7 @@ try:
 except ImportError:
     import simplejson as json
 
+
 def home(request):
     return render_to_response(
         'public/home.html',
@@ -21,6 +22,7 @@ def home(request):
         RequestContext(request)
     )
 
+
 def terms(request):
     return render_to_response(
         'public/terms.html',
@@ -29,8 +31,10 @@ def terms(request):
         RequestContext(request)
     )
 
+
 def privacy(request):
     return HttpResponse('Ok')
+
 
 def about(request):
     return render_to_response(
@@ -40,6 +44,7 @@ def about(request):
         RequestContext(request)
     )
 
+
 def feedback(request):
     return render_to_response(
         'public/feedback.html',
@@ -48,19 +53,21 @@ def feedback(request):
         RequestContext(request)
     )
 
+
 def micro(request):
-    data = {'status':'OK'}
+    data = {'status': 'OK'}
     name = request.GET.get('name')
     try:
         data['html'] = render_to_string('public/micro/%s.html' % name,
-                {
-                    'users_total' : UserProfile.objects.count(),
-                }, context_instance=RequestContext(request))
+                                        {
+                                        'users_total': UserProfile.objects.count(),
+                                        }, context_instance=RequestContext(request))
     except TemplateDoesNotExist:
         data['html'] = "Sorry! Wrong template."
     except:
-        data = {'status':'FAIL'}
+        data = {'status': 'FAIL'}
     return HttpResponse(json.dumps(data), "application/json")
+
 
 def page404(request):
     return render_to_response(
@@ -69,6 +76,7 @@ def page404(request):
         },
         RequestContext(request)
     )
+
 
 def page500(request):
     return render_to_response(
