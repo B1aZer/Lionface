@@ -23,6 +23,8 @@ def format_notification(notification):
         data['events_count'] = Notification.objects.filter(**fdata).count()
     if notification.type == 'FR':
         return render_to_string('notification/_friend_request.html', data)
+    if notification.type == 'RR':
+        return render_to_string('notification/_relation_request.html', data)
     if notification.type == 'FA':
         return render_to_string('notification/_friend_accept.html', data)
     if notification.type == 'CS':

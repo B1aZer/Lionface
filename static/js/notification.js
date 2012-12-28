@@ -12,6 +12,7 @@ LionFace.Notification.prototype = {
         this.bind_mark_notification();
         this.bind_nav();
         this.reset_notificaton_count();
+        this.bind_other();
     },
 
     reset_notificaton_count: function() {
@@ -172,6 +173,22 @@ LionFace.Notification.prototype = {
                 }
             });
             return false;
+        });
+    },
+
+    bind_other : function () {
+        $(document).on('click', '.relation_request_a', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        self.parents('.relation_request').fadeOut();
+                    }
+                }
+            });
         });
     }
 };

@@ -89,8 +89,14 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
     </select>
     <a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>
     <input id="inter_relation_input" type="text" style="display:none"/>
-    {% if profile_user.get_relation_type %} 
+    {% if profile_user.get_relation_type == 'single' %} 
         <span>{{ profile_user.get_relation_type }} </span>
+    {% endif %}
+    {% if profile_user.get_relation_type == 'married' or profile_user.get_relation_type == 'engaged' %} 
+        <span>{{ profile_user.get_relation_type }} to {{ profile_user.get_related_person.get_full_name }} </span>
+    {% endif %}
+    {% if profile_user.get_relation_type == 'dating' %} 
+        <span>{{ profile_user.get_relation_type }} {{ profile_user.get_related_person.get_full_name }}</span>
     {% endif %}
 <br /><br /> 
 Bio<br /><br />

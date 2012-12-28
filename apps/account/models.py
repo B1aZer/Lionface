@@ -31,12 +31,38 @@ RELATIONSHIP_STATUSES = (
 )
 
 IN_RELATIONSHIP = (
-        ('S', 'Single'),
-        ('D', 'Dating'),
-        ('E', 'Engaged'),
-        ('M', 'Married'),
+        ('S', 'single'),
+        ('D', 'dating'),
+        ('E', 'engaged'),
+        ('M', 'married'),
 )
 
+
+class RelationRequest(models.Model):
+    from_user = models.ForeignKey('UserProfile', related_name='relation_from')
+    to_user = models.ForeignKey('UserProfile', related_name='relation_to')
+    date = models.DateTimeField(auto_now_add=True)
+    type = models.TextField(max_length='1', choices=IN_RELATIONSHIP)
+
+    def accept(self):
+        self.from_user.relationtype = self.type
+        self.from_user.in_relationship = self.to_user
+        self.from_user.save()
+        self.to_user.relationtype = self.type
+        self.to_user.in_relationship = self.from_user
+        self.to_user.save()
+        self.delete()
+
+    def decline(self):
+        self.delete()
+
+    def get_relation_type(self):
+        relation = self.type
+        if relation:
+            for rlt in IN_RELATIONSHIP:
+                if rlt[0] == relation:
+                    return rlt[1]
+        return relation
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey('UserProfile', related_name='from_user')
@@ -92,7 +118,7 @@ class UserProfile(User):
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
     timezone = models.CharField(max_length='200', blank=True)
-    in_relationship = models.ManyToManyField('self', related_name='in_relationship')
+    in_relationship = models.OneToOneField('self', null=True, blank=True)
     relationtype = models.CharField(max_length='1', choices=IN_RELATIONSHIP, blank=True)
 
     def get_thumb(self):
@@ -198,6 +224,9 @@ class UserProfile(User):
                 if rlt[0] == relation:
                     return rlt[1]
         return relation
+
+    def get_related_person(self):
+        return self.in_relationship
 
     def has_friend_request(self, user):
         return FriendRequest.objects.filter(Q(from_user=self, to_user=user) | Q(to_user=self, from_user=user)).count() > 0

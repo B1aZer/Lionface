@@ -1,0 +1,9 @@
+<li class="relation_request notification">
+  <div style="padding: 15px 15px 12px 15px; background: #F7F7F7; cursor: default;" class="link-output">
+    <div class="right" style="position: relative; top: 0px;">
+        <span class="blue_btn" style="padding: 0px; margin: 0px; border: 0px;"><a class="relation_request_a" href="{% url account.views.relation_accept relation_id=notification.content_object.id %}">We are!</a></span>
+      <span class=""><a class="relation_request_a" style="margin-left: 5px;" href="{% url account.views.relation_decline relation_id=notification.content_object.id %}">Um, no.</a></span>
+    </div>
+    <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a> said you are {{ notification.content_object.get_relation_type }}!
+  </div>
+</li>

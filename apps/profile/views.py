@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from account.models import UserProfile
+from account.models import *
 from images.models import Image, ImageComments
 from messaging.models import Messaging
 from pages.models import Pages
@@ -861,11 +861,15 @@ def add_relation(request, username):
             related = UserProfile.objects.get(username = related_user)
         except:
             raise Http404
-    profile_user.relationtype = relationtype
     if related_user:
-        profile_user.in_relationship.add(related)
-        related.relationtype = relationtype
+        #profile_user.in_relationship.add(related)
+        #related.relationtype = relationtype
+        rel_req = RelationRequest(from_user=profile_user, to_user=related, type=relationtype)
+        rel_req.save()
+        Notification(user=related, type='RR', other_user=profile_user, content_object=rel_req).save()
         #related.save()
-    profile_user.save()
+    else:
+        profile_user.relationtype = relationtype
+        profile_user.save()
     return HttpResponse(json.dumps(data), "application/json")
 

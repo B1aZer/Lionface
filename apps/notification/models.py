@@ -16,6 +16,7 @@ from images.models import Image, ImageComments
 
 NOTIFICATION_TYPES = (
     ('FR', 'Friend Request'),
+    ('RR', 'Relation Request'),
     ('FA', 'Friend Accepted'),
     ('CS', 'Comment Submitted'),
     ('CI', 'Comment Image'),
@@ -42,8 +43,8 @@ class Notification(models.Model):
     read = models.BooleanField(default=False)
     #people_counter = models.IntegerField(default=0)
     hidden = models.BooleanField(default=False)
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    object_id = models.PositiveIntegerField(blank=True, null=True)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     # Friend request type

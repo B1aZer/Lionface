@@ -4,12 +4,14 @@ from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
 from django.shortcuts import redirect
+from django.contrib.contenttypes.models import ContentType
 from forms import *
 import public.views
 import profile.views
 from decorators import *
 from django.contrib.auth.decorators import login_required
 from models import *
+from notification.models import Notification
 import json
 
 
@@ -240,4 +242,36 @@ def filter_remove(request):
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def relation_accept(request, relation_id):
+    data = {'status': 'OK'}
+    try:
+        relation = RelationRequest.objects.get(id=relation_id)
+    except:
+        raise Http404
+    # delete notifications
+    post_type = ContentType.objects.get_for_model(relation)
+    notf = Notification.objects.filter(content_type__pk=post_type.id, object_id=relation.id)
+    notf.delete()
+
+    relation.accept()
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def relation_decline(request, relation_id):
+    data = {'status': 'OK'}
+    try:
+        relation = RelationRequest.objects.get(id=relation_id)
+    except:
+        raise Http404
+    # delete notifications
+    post_type = ContentType.objects.get_for_model(relation)
+    notf = Notification.objects.filter(content_type__pk=post_type.id, object_id=relation.id)
+    notf.delete()
+
+    relation.decline()
     return HttpResponse(json.dumps(data), "application/json")

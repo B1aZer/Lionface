@@ -12,6 +12,9 @@ urlpatterns = patterns('',
     url(r'friend/accept/(?P<request_id>\d+)/$', views.friend_accept),
     url(r'friend/decline/(?P<request_id>\d+)/$', views.friend_decline),
 
+    url(r'relation/accept/(?P<relation_id>\d+)/$', views.relation_accept),
+    url(r'relation/decline/(?P<relation_id>\d+)/$', views.relation_decline),
+
     url(r'unfollow/$', views.unfollow),
     url(r'follow/$', views.follow),
 
