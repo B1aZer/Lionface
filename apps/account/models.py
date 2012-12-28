@@ -128,6 +128,7 @@ class UserProfile(User):
     in_relationship = models.OneToOneField('self', null=True, blank=True)
     relationtype = models.CharField(max_length='1', choices=IN_RELATIONSHIP, blank=True)
     bio_text = models.TextField(blank=True)
+    birth_date = models.DateField(null=True, blank=True)
 
     def get_thumb(self):
         return "/%s" % self.photo.thumb_name
@@ -235,6 +236,9 @@ class UserProfile(User):
 
     def get_bio_info(self):
         return self.bio_text
+
+    def get_birth_date(self):
+        return self.birth_date
 
     def get_related_person(self):
         return self.in_relationship

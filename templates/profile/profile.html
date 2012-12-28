@@ -123,8 +123,25 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
     </div>
     {% endif %}
     <br /><br />
-Birthday<br />
-DD MM YYYY<br /><br />
+    {% if profile_user|check_profile_bio:request.user %}
+    {% if profile_user == request.user %}
+    <a id="show_birth_select" href="#">Birthday</a>
+    {% else %}
+    <span>Birthday</span>
+    {% endif %}
+    <div>
+    <select class="birth_select birth_day_select" style="display:none"></select>
+    <select class="birth_select birth_month_select" style="display:none"></select>
+    <select class="birth_select birth_year_select" style="display:none"></select>
+    <a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none">Save</a>
+    </div>
+    <span>
+        <span id="birth_day_id">{{ profile_user.get_birth_date|date:"d" }}</span>
+        <span id="birth_month_id">{{ profile_user.get_birth_date|date:"m" }}</span>
+        <span id="birth_year_id">{{ profile_user.get_birth_date|date:"Y" }}</span>
+    </span>
+    {% endif %}
+    <br /><br />
 Website<br /><br />
 </div>
 {% endblock %}

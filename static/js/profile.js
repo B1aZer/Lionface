@@ -729,6 +729,49 @@ LionFace.Profile.prototype = {
                 self.data('toggled',true);
             }
         });
+
+        $(document).on('click', '#show_birth_select', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            if (self.data('toggled')) {
+                $('.birth_select').hide();
+                self.data('toggled',false);
+            }
+            else {
+                LionFace.Site.daydatedropdown('birth_day_select','birth_month_select','birth_year_select');
+                $('.birth_select').show();
+                self.data('toggled',true);
+            }
+        });
+
+        $(document).on('click', '#save_birth_date', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            var day = $('.birth_day_select').val();
+            var month = $('.birth_month_select').val();
+            var year = $('.birth_year_select').val();
+            var url = self.attr('href');
+            if (day && month && year) {
+                var data = {'datetext' : day + '/' + month + '/' + year} 
+            }
+            else {
+                return;
+            }
+            make_request({
+                url:url,
+                data:data,
+                callback: function (data) {
+                    if (data.status == 'OK') {
+                        $('.birth_select').hide();
+                        $('#show_birth_select').data('toggled',false);
+                        $('#birth_day_id').html(data.day);
+                        $('#birth_month_id').html(data.month);
+                        $('#birth_year_id').html(data.year);
+                    }
+                }
+            });
+        });
+        
         
     }
 

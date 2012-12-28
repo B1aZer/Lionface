@@ -32,6 +32,8 @@ from django.contrib.auth.hashers import check_password
 from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
+from datetime import datetime
+
 from PIL import Image as pilImage
 
 try:
@@ -887,5 +889,21 @@ def save_bio_info(request, username):
     profile_user.save()
     data['status'] = 'OK'
     data['text'] = strip_tags(text)
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def save_birth_date(request, username):
+    data = {'status':'FAIL'}
+    profile_user = request.user
+    date_text = request.POST.get('datetext')
+    if not date_text:
+        return HttpResponse(json.dumps(data), "application/json")
+    date = datetime.strptime(date_text, '%d/%b/%Y')
+    profile_user.birth_date = date
+    profile_user.save()
+    data['status'] = 'OK'
+    data['day'] = date.strftime('%d')
+    data['month'] = date.strftime('%m')
+    data['year'] = date.strftime('%Y')
     return HttpResponse(json.dumps(data), "application/json")
 
