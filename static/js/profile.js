@@ -672,14 +672,62 @@ LionFace.Profile.prototype = {
             if (!data.related && data.relationtype != 'S') {
                 return;
             }
+            var single = data.relationtype == 'S';
             make_request({
                 url:url,
                 data:data,
                 callback: function (data) {
                     if (data.status == 'OK') {
+                        $('.inter-relation').hide();
+                        $('#inter_relation_input').hide();
+                        $('#inter_relation_input').val('');
+                        $('#inter_relation_btn').data('toggled',false);
+                        if (single) {
+                            $('#relation_type_id').html('single');
+                        }
                     }
                 }
             });
+        });
+
+        // BIO //
+
+        $(document).on('click', '#save_bio_text', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');  
+            var data = {'text': $('#bio_info_textarea').val()}
+            make_request({
+                url:url,
+                data:data,
+                callback: function (data) {
+                    if (data.status == 'OK') {
+                        $('.bio_info').hide();
+                        $('#bio_info_text').html(data.text);
+                        $('#bio_info_text').show();
+                        $('#show_bio_info').data('toggled',false);
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '#show_bio_info', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            if (self.data('toggled')) {
+                $('.bio_info').hide();
+                $('#bio_info_textarea').val('');
+                $('#bio_info_text').show();
+                self.data('toggled',false);
+            }
+            else {
+                if ($('#bio_info_text').html()) {
+                    $('#bio_info_textarea').val($('#bio_info_text').html());
+                }
+                $('.bio_info').show();
+                $('#bio_info_text').hide();
+                self.data('toggled',true);
+            }
         });
         
     }

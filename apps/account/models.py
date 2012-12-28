@@ -47,10 +47,17 @@ class RelationRequest(models.Model):
     def accept(self):
         self.from_user.relationtype = self.type
         self.from_user.in_relationship = self.to_user
-        self.from_user.save()
         self.to_user.relationtype = self.type
         self.to_user.in_relationship = self.from_user
-        self.to_user.save()
+        # if already have relationships
+        #UserProfile.objects.filter(in_relationship=self.to_user)
+        #UserProfile.objects.filter(in_relationship=self.from_user)
+        try:
+            self.to_user.save()
+            self.from_user.save()
+        except:
+            # somebody is lying here <_<
+            pass
         self.delete()
 
     def decline(self):
@@ -120,6 +127,7 @@ class UserProfile(User):
     timezone = models.CharField(max_length='200', blank=True)
     in_relationship = models.OneToOneField('self', null=True, blank=True)
     relationtype = models.CharField(max_length='1', choices=IN_RELATIONSHIP, blank=True)
+    bio_text = models.TextField(blank=True)
 
     def get_thumb(self):
         return "/%s" % self.photo.thumb_name
@@ -224,6 +232,9 @@ class UserProfile(User):
                 if rlt[0] == relation:
                     return rlt[1]
         return relation
+
+    def get_bio_info(self):
+        return self.bio_text
 
     def get_related_person(self):
         return self.in_relationship

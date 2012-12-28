@@ -20,6 +20,7 @@ PROFILE_IMAGE = [('Public','Public'), ("Friend's Friends","Friend's Friends"), (
 LOVES_DEFAULT = [('Public','Public'), ('Private','Private'),]
 VIA_PROFILE = FRIEND_LIST
 VIA_PAGES = LOVES_DEFAULT
+BIO_PROFILE = PROFILE_IMAGE
 
 
 class UserInfoForm(forms.ModelForm):
@@ -40,6 +41,7 @@ class UserInfoForm(forms.ModelForm):
     option_vie_profile = forms.ChoiceField(required=False, choices=( VIA_PROFILE ))
     option_vie_pages = forms.ChoiceField(required=False, choices=( VIA_PAGES ))
     option_cover_image = forms.ChoiceField(required=False, choices=( PROFILE_IMAGE ))
+    option_bio = forms.ChoiceField(required=False, choices=( BIO_PROFILE ))
 
     class Meta:
         model = UserProfile

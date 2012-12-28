@@ -29,6 +29,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 
+from django.utils.html import strip_tags
 from django.core.exceptions import ObjectDoesNotExist,MultipleObjectsReturned
 
 from PIL import Image as pilImage
@@ -862,14 +863,29 @@ def add_relation(request, username):
         except:
             raise Http404
     if related_user:
-        #profile_user.in_relationship.add(related)
-        #related.relationtype = relationtype
         rel_req = RelationRequest(from_user=profile_user, to_user=related, type=relationtype)
         rel_req.save()
         Notification(user=related, type='RR', other_user=profile_user, content_object=rel_req).save()
-        #related.save()
     else:
         profile_user.relationtype = relationtype
+        if profile_user.in_relationship:
+            related = profile_user.in_relationship
+            related.in_relationship = None
+            related.relationtype = relationtype
+            related.save()
+            profile_user.in_relationship = None
         profile_user.save()
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+def save_bio_info(request, username):
+    data = {'status':'FAIL'}
+    profile_user = request.user
+    text = request.POST.get('text')
+    profile_user.bio_text = strip_tags(text)
+    profile_user.save()
+    data['status'] = 'OK'
+    data['text'] = strip_tags(text)
     return HttpResponse(json.dumps(data), "application/json")
 

@@ -69,6 +69,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 {% endif %}
 
 <div class="bio">
+
     {% if profile_user == request.user %}
     <a id="favorite-pages" href="#">Favorite Pages</a>
     {% else %}
@@ -80,6 +81,9 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
         {% include "profile/profile_favourite_page.html" %}
     </div>
     {% endif %}
+
+    {% if profile_user|check_profile_bio:request.user %}
+    {% if profile_user == request.user %}
     <a id="inter_relation_btn" href="#">Relationship</a><br /><br />
     <select id="inter_relation_select" class="inter-relation" style="display:none">
         <option value='S' selected="">Single</option>
@@ -89,17 +93,36 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
     </select>
     <a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>
     <input id="inter_relation_input" type="text" style="display:none"/>
+    {% else %}
+    <span>Relationship</span>
+    {% endif %}
+    <div>
     {% if profile_user.get_relation_type == 'single' %} 
-        <span>{{ profile_user.get_relation_type }} </span>
+        <span id="relation_type_id" >{{ profile_user.get_relation_type }} </span>
     {% endif %}
     {% if profile_user.get_relation_type == 'married' or profile_user.get_relation_type == 'engaged' %} 
-        <span>{{ profile_user.get_relation_type }} to {{ profile_user.get_related_person.get_full_name }} </span>
+        <span id="relation_type_id" >{{ profile_user.get_relation_type }} to {{ profile_user.get_related_person.get_full_name }} </span>
     {% endif %}
     {% if profile_user.get_relation_type == 'dating' %} 
-        <span>{{ profile_user.get_relation_type }} {{ profile_user.get_related_person.get_full_name }}</span>
+        <span id="relation_type_id" >{{ profile_user.get_relation_type }} {{ profile_user.get_related_person.get_full_name }}</span>
     {% endif %}
-<br /><br /> 
-Bio<br /><br />
+    {% endif %}
+    </div>
+    <br /><br />
+
+    {% if profile_user|check_profile_bio:request.user %}
+    {% if profile_user == request.user %}
+    <a id="show_bio_info" href="#">Bio</a>
+    {% else %}
+    <span>Bio</span>
+    {% endif %}
+    <div>
+        <div id="bio_info_text">{{ profile_user.get_bio_info }}</div>
+        <textarea id="bio_info_textarea" class="bio_info" rows="4" cols="20" maxlength="250" style="display:none"></textarea>
+        <a id="save_bio_text" class="bio_info" href="{% url profile.views.save_bio_info username=profile_user.username %}" style="display:none">Save</a>
+    </div>
+    {% endif %}
+    <br /><br />
 Birthday<br />
 DD MM YYYY<br /><br />
 Website<br /><br />
