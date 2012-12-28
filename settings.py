@@ -352,3 +352,6 @@ CELERYBEAT_SCHEDULE = {
 import djcelery
 djcelery.setup_loader()
 
+IMAGES_DEFAULT_QUOTE = 'Whose woods these are I think I know, his house is ' \
+    'in the village though.'
+IMAGES_DEFAULT_QUOTE_AUTHOR = 'Robert Frost'

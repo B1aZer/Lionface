@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
+from django.conf import settings as django_settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
@@ -23,20 +24,17 @@ from StringIO import StringIO
 
 from django.db.models import F
 
-from .decorators import unblocked_users, default_user
-from django.contrib.auth.decorators import user_passes_test
+from .decorators import unblocked_users
 
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 
 from django.utils.html import strip_tags
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.validators import URLValidator
 
 from datetime import datetime
-
-from PIL import Image as pilImage
 
 try:
     import json
@@ -311,22 +309,31 @@ def images_quote_ajax(request, username):
         if method == 'get':
             data['quote'] = profile_user.images_quote
             data['author'] = profile_user.images_quote_author
-        elif method == 'change':
-            quote = request.REQUEST.get('change[quote]', None)
-            author = request.REQUEST.get('change[author]', None)
-            profile_user.images_quote = quote
-            profile_user.images_quote_author = author
-            profile_user.save()
-        elif method == 'reset':
-            profile_user.images_quote = 'Whose woods these are I think I ' \
-                'know, his house is in the village though.'
-            profile_user.images_quote_author = 'Robert Frost'
-            profile_user.save()
-            data['quote'] = profile_user.images_quote
-            data['author'] = profile_user.images_quote_author
+        elif profile_user == request.user:
+            if method == 'change':
+                quote = request.REQUEST.get('change[quote]', None)
+                author = request.REQUEST.get('change[author]', None)
+                profile_user.images_quote = quote
+                profile_user.images_quote_author = author
+                profile_user.save()
+            elif method == 'reset':
+                profile_user.images_quote = django_settings.IMAGES_DEFAULT_QUOTE
+                profile_user.images_quote_author = \
+                    django_settings.IMAGES_DEFAULT_QUOTE_AUTHOR
+                profile_user.save()
+                data['quote'] = profile_user.images_quote
+                data['author'] = profile_user.images_quote_author
+            else:
+                raise Http404
         else:
             raise Http404
-    except:
+        default_quote = \
+            profile_user.images_quote == django_settings.IMAGES_DEFAULT_QUOTE \
+            and profile_user.images_quote_author \
+                == django_settings.IMAGES_DEFAULT_QUOTE_AUTHOR
+        data['default_quote'] = 'true' if default_quote else 'false'
+    except Exception as e:
+        assert False, e
         data['success'] = 'false'
 
     return HttpResponse(json.dumps(data), 'application/json')

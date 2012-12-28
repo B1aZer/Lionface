@@ -1,17 +1,16 @@
-import os
 from itertools import chain
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
-from django.db.models.signals import pre_save, post_save, pre_delete, post_delete
+from django.db.models.signals import post_save
 from django.db.models.query import Q
 from django.db.models import Count
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned, FieldError
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 import datetime as dateclass
 
-from django.utils import simplejson as json
 from images.fields import ImageWithThumbField
 
 
@@ -31,10 +30,10 @@ RELATIONSHIP_STATUSES = (
 )
 
 IN_RELATIONSHIP = (
-        ('S', 'single'),
-        ('D', 'dating'),
-        ('E', 'engaged'),
-        ('M', 'married'),
+    ('S', 'single'),
+    ('D', 'dating'),
+    ('E', 'engaged'),
+    ('M', 'married'),
 )
 
 
@@ -70,6 +69,7 @@ class RelationRequest(models.Model):
                 if rlt[0] == relation:
                     return rlt[1]
         return relation
+
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey('UserProfile', related_name='from_user')
@@ -121,13 +121,14 @@ class UserProfile(User):
     blocked = models.ManyToManyField('self', symmetrical=False, related_name='blocked_from')
     photo = ImageWithThumbField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='uploads/images/noProfilePhoto.png')
     cover_photo = models.ImageField(upload_to="uploads/images",
-        default='uploads/images/bg_cover.png')
-    images_quote = models.CharField(max_length=70, default='Whose woods '
-        'these are I think I know, his house is in the village though.')
-    images_quote_author = models.CharField(max_length=20, default='Robert '
-        'Frost')
+                                    default='uploads/images/bg_cover.png')
+    images_quote = models.CharField(max_length=70,
+                                    default=settings.IMAGES_DEFAULT_QUOTE)
+    images_quote_author = models.CharField(
+        max_length=20,
+        default=settings.IMAGES_DEFAULT_QUOTE_AUTHOR)
     filters = models.CharField(max_length='10', choices=FILTER_TYPE,
-        default="F")
+                               default="F")
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
     optional_name = models.CharField(max_length='200', default="")
     timezone = models.CharField(max_length='200', blank=True)
@@ -230,7 +231,7 @@ class UserProfile(User):
 
     def get_unrelated_friends(self):
         blocked_ids = [x.id for x in self.get_blocked_self()]
-        friends = self.friends.exclude(id__in=blocked_ids).exclude(relationtype__in=('D','E','M'))
+        friends = self.friends.exclude(id__in=blocked_ids).exclude(relationtype__in=('D', 'E', 'M'))
         return friends
 
     def get_relation_type(self):
@@ -250,7 +251,7 @@ class UserProfile(User):
     def get_website(self):
         url = self.url
         if url:
-            link = '<a class="website_link" title="%s" target="_blank" rel="nofollow" href="%s">%s</a>' % (url,url,url)
+            link = '<a class="website_link" title="%s" target="_blank" rel="nofollow" href="%s">%s</a>' % (url, url, url)
             return link
         return url
 
@@ -412,7 +413,7 @@ class UserProfile(User):
 
     def new_messages(self):
         #messages = self.message_to.filter(viewed=False).count()
-        messages = self.message_to.filter(viewed=False).aggregate(Count('user',distinct='True'))
+        messages = self.message_to.filter(viewed=False).aggregate(Count('user', distinct='True'))
         return messages.get('user__count')
 
     def new_notifcations(self):
@@ -422,8 +423,8 @@ class UserProfile(User):
                 .count()
         """
         notifications_count = self.notification_set.filter(read=False,
-                hidden=False) \
-                .count()
+                                                           hidden=False) \
+            .count()
         return notifications_count
 
     def add_follower(self, person):

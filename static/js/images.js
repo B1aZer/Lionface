@@ -730,14 +730,31 @@ LionFace.Images.prototype = {
     },
 
     load_quote: function () {
-        var url = LionFace.User['images_quote_ajax'];
-        $('#reset-quote').hide();
+        var url = LionFace.User['images_quote_ajax'],
+            $reset_quote = $('#reset-quote');
+
+        $reset_quote.hide();
         $('#image_quote').hover(function () {
-            $('#reset-quote').show();
+            if (!$reset_quote.hasClass('default')) {
+                $reset_quote.show();
+            }
         }, function () {
-            $('#reset-quote').hide();
+            if (!$reset_quote.hasClass('default')) {
+                $reset_quote.hide();
+            }
         });
-        $('#reset-quote').click(function () {
+
+        var set_quote = function(data) {
+            if (data.success == 'true') {
+                $('#quote').text(data.quote);
+                $('#author').text(data.author);
+                if (data.default_quote == 'true') {
+                    $reset_quote.addClass('default');
+                    $reset_quote.hide();
+                }
+            }
+        };
+        $reset_quote.click(function () {
             var data = {
                 method: 'reset'
             };
@@ -745,10 +762,7 @@ LionFace.Images.prototype = {
                 url: url,
                 data: data,
                 callback: function (data) {
-                    if (data.success === 'true') {
-                        $('#quote').text(data.quote);
-                        $('#author').text(data.author);
-                    }
+                    set_quote(data);
                 }
             });
             return false;
@@ -757,12 +771,10 @@ LionFace.Images.prototype = {
             url: url,
             data: {method: 'get'},
             callback: function (data) {
-                if (data.success === 'true') {
-                    $('#quote').text(data.quote);
-                    $('#author').text(data.author);
-                }
+                set_quote(data);
             }
         });
+
         var post_quote_change = function () {
             var quote = $('#quote').text(),
                 author = $('#author').text(),
@@ -776,23 +788,42 @@ LionFace.Images.prototype = {
             make_request({
                 url: url,
                 data: data,
-                callback: function () {
+                callback: function (data) {
+                    if (data.default_quote == 'false') {
+                        $reset_quote.removeClass('default');
+                    }
                 }
             });
         };
+
         var $quote = $('#quote, #author');
         $quote.hover(function () {
-            $(this).prop('contentEditable', true);
-            $(this).addClass('editable');
-            $(this).css('margin', -1);
+            if ($(this).prop('contenteditable') == 'true') {
+                $(this).addClass('editable');
+                $(this).css('margin', -1);
+            }
         }, function () {
-            $(this).prop('contentEditable', false);
-            $(this).removeClass('editable');
-            $(this).css('margin', 0);
+            if ($(this).prop('contenteditable') == 'true') {
+                $(this).removeClass('editable');
+                $(this).css('margin', 0);
+            }
         });
         $quote.keypress(function (e) {
-            if (e.which === 13) {
+            if (e.which == 13) {
                 $(this).blur();
+                return false;
+            }
+        });
+        $('#quote').keypress(function (e) {
+            if ($(this).text().length > 69) {
+                return false;
+            }
+            if (e.which == 9) {
+                $('#author').focus();
+            }
+        });
+        $('#author').keypress(function() {
+            if ($(this).text().length > 19) {
                 return false;
             }
         });
