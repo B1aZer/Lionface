@@ -75,40 +75,13 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
     {% else %}
     <span>Favorite Pages</span>
     {% endif %}
-    <input type="text" class="fav-pages" id="favourite_pages_input" style="display:none"/><a id="add_favourite" class="fav-pages" href="#" style="display:none">Add</a><br /><br />
-    {% if profile_user.get_favourite_pages %}
-    <div id="favorite-pages-container">
+    <input type="text" class="fav-pages" id="favourite_pages_input" style="display:none"/><a id="add_favourite" class="fav-pages" href="#" style="display:none">Add</a><a id="cancel_favourite" class="fav-pages" href="#" style="display:none">Cancel</a><br /><br />
+    <div id="favorite-pages-container" {% if not profile_user.get_favourite_pages %}style="display:none"{% endif %}>
         {% include "profile/profile_favourite_page.html" %}
     </div>
-    {% endif %}
 
     {% if profile_user|check_profile_bio:request.user %}
-
-    {% if profile_user == request.user %}
-    <a id="inter_relation_btn" href="#">Relationship</a><br /><br />
-    <select id="inter_relation_select" class="inter-relation" style="display:none">
-        <option value='S' selected="">Single</option>
-        <option value='D' >Dating</option>
-        <option value='E' >Engaged</option>
-        <option value='M' >Married</option>
-    </select>
-    <a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>
-    <input id="inter_relation_input" type="text" style="display:none"/>
-    {% else %}
-    <span>Relationship</span>
-    {% endif %}
-    <div>
-    {% if profile_user.get_relation_type == 'single' %} 
-        <span id="relation_type_id" >{{ profile_user.get_relation_type }} </span>
-    {% endif %}
-    {% if profile_user.get_relation_type == 'married' or profile_user.get_relation_type == 'engaged' %} 
-        <span id="relation_type_id" >{{ profile_user.get_relation_type }} to {{ profile_user.get_related_person.get_full_name }} </span>
-    {% endif %}
-    {% if profile_user.get_relation_type == 'dating' %} 
-        <span id="relation_type_id" >{{ profile_user.get_relation_type }} {{ profile_user.get_related_person.get_full_name }}</span>
-    {% endif %}
-    </div>
-    <br /><br />
+    {% include "profile/profile_relations.html" %}
 
     {% if profile_user == request.user %}
     <a id="show_bio_info" href="#">Bio</a>
@@ -119,6 +92,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
         <div id="bio_info_text">{{ profile_user.get_bio_info }}</div>
         <textarea id="bio_info_textarea" class="bio_info" rows="4" cols="20" maxlength="250" style="display:none"></textarea>
         <a id="save_bio_text" class="bio_info" href="{% url profile.views.save_bio_info username=profile_user.username %}" style="display:none">Save</a>
+        <a id="cacel_bio_text" class="bio_info" href="#" style="display:none">Cancel</a>
     </div>
     <br /><br />
 
@@ -132,10 +106,11 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
     <select class="birth_select birth_month_select" style="display:none"></select>
     <select class="birth_select birth_year_select" style="display:none"></select>
     <a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none">Save</a>
+    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none">Cancel</a>
     </div>
     <span>
         <span id="birth_day_id">{{ profile_user.get_birth_date|date:"d" }}</span>
-        <span id="birth_month_id">{{ profile_user.get_birth_date|date:"m" }}</span>
+        <span id="birth_month_id" class="{{ profile_user.get_birth_date|date:"m" }}" >{{ profile_user.get_birth_date|date:"M" }}</span>
         <span id="birth_year_id">{{ profile_user.get_birth_date|date:"Y" }}</span>
     </span>
     <br /><br />
@@ -147,7 +122,9 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
     {% endif %}
     <div>
     <input id="url_input" class="bio_website" type="text" style="display:none"></input>
+    <div class="url_errors" style="display:none">Not a valid url</div>
     <a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
+    <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a>
     </div>
     <span id="url_container">{{ profile_user.get_website|safe }}</span>
     <br /><br />

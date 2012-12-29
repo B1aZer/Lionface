@@ -173,6 +173,24 @@ a.filter .tags {
 	border: transparent;
 }
 
+.add_tag {
+    display: block;
+    width: 180px;
+    height: 20px;
+    position: absolute;
+    margin-left: 10px;
+    left: 0;
+    height: 25px;
+    margin-top: 10px;
+    top: 0;
+}
+
+#foma {
+    top: 5px;
+    left: 5px;
+    position: absolute;
+}
+
 a.colored_tag, a.colored_tag:active, a.colored_tag:active {
     color: #A70;
     text-decoration: none;

@@ -1038,24 +1038,38 @@ LionFace.Site.prototype = {
 
     },
     /* day month year selects */
-    daydatedropdown : function(dayfield, monthfield, yearfield){
+    daydatedropdown : function(dayfield, monthfield, yearfield, day, month, year){
         /* usage LionFace.Site.daydatedropdown('birth_day_select','birth_month_select','birth_year_select'); */
         var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
         var today=new Date()
         var dayfield=$('.'+dayfield);
         var monthfield=$('.'+monthfield);
         var yearfield=$('.'+yearfield);
+        if (day) {
+            var day_tm = day - 1 ;
+        }
+        else {
+            var day_tm = today.getDate() - 1 ;
+        }
+        var day_t = day || today.getDate()
+        if (month >= 0 ) {
+            var month_t = month;
+        }
+        else {
+            var month_t = today.getMonth();
+        }
+        var year_t = year || today.getFullYear();
 
         dayfield.each(function() {
             var day = $(this).get(0);
-            for (var i=0; i<31; i++) day.options[i]=new Option(i, i+1)
-            day.options[today.getDate()]=new Option(today.getDate(), today.getDate(), true, true) 
+            for (var i=0; i<31; i++) day.options[i]=new Option(i+1, i+1)
+            day.options[day_tm]=new Option(day_t, day_t, true, true) 
         });
         
         monthfield.each(function() {
             var month = $(this).get(0);
             for (var m=0; m<12; m++) month.options[m]=new Option(monthtext[m], monthtext[m])
-            month.options[today.getMonth()]=new Option(monthtext[today.getMonth()], monthtext[today.getMonth()], true, true)
+            month.options[month_t]=new Option(monthtext[month_t], monthtext[month_t], true, true)
         });
 
         yearfield.each(function() {
@@ -1065,7 +1079,7 @@ LionFace.Site.prototype = {
                 year.options[y]=new Option(thisyear, thisyear)
                 thisyear-=1
             }
-            year.options[0]=new Option(today.getFullYear(), today.getFullYear(), true, true)
+            year.options[0]=new Option(year_t, year_t, true, true)
         })
     },
     /* month year selects */

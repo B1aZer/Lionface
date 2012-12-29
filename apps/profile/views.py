@@ -920,25 +920,30 @@ def add_relation(request, username):
     except:
         raise Http404
     related_user = request.POST.get('related')
-    if related_user or relationtype != 'S':
+    if related_user:
         try:
             related = UserProfile.objects.get(username = related_user)
+            rel_req = RelationRequest(from_user=profile_user, to_user=related, type=relationtype)
+            rel_req.save()
+            Notification(user=related, type='RR', other_user=profile_user, content_object=rel_req).save()
         except:
             raise Http404
-    if related_user:
-        rel_req = RelationRequest(from_user=profile_user, to_user=related, type=relationtype)
-        rel_req.save()
-        Notification(user=related, type='RR', other_user=profile_user, content_object=rel_req).save()
-    else:
-        profile_user.relationtype = relationtype
-        if profile_user.in_relationship:
-            related = profile_user.in_relationship
-            related.in_relationship = None
-            related.relationtype = relationtype
-            related.save()
-            profile_user.in_relationship = None
-        profile_user.save()
+    profile_user.relationtype = relationtype
+    if profile_user.in_relationship:
+        related = profile_user.in_relationship
+        related.in_relationship = None
+        related.relationtype = relationtype
+        related.save()
+        profile_user.in_relationship = None
+    profile_user.save()
     data['status'] = 'OK'
+    data['relation'] = profile_user.get_relation_type()
+    data['html'] = render_to_string(
+                        'profile/profile_relations.html',
+                        {
+                            'profile_user':profile_user,
+                        }, RequestContext(request)
+                        ) 
     return HttpResponse(json.dumps(data), "application/json")
 
 
@@ -964,7 +969,8 @@ def save_birth_date(request, username):
     profile_user.save()
     data['status'] = 'OK'
     data['day'] = date.strftime('%d')
-    data['month'] = date.strftime('%m')
+    data['month'] = date.strftime('%b')
+    data['month_d'] = date.strftime('%m')
     data['year'] = date.strftime('%Y')
     return HttpResponse(json.dumps(data), "application/json")
 
@@ -983,6 +989,6 @@ def save_url_field(request, username):
         data['status'] = 'OK'
         data['link'] = profile_user.get_website()
     except:
-        pass
+        data['error'] = True
     return HttpResponse(json.dumps(data), "application/json")
 
