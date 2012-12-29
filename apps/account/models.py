@@ -234,6 +234,10 @@ class UserProfile(User):
         friends = self.friends.exclude(id__in=blocked_ids).exclude(relationtype__in=('D', 'E', 'M'))
         return friends
 
+    def get_relation(self):
+        relation = self.relationtype
+        return relation
+
     def get_relation_type(self):
         relation = self.relationtype
         if relation:
@@ -241,6 +245,10 @@ class UserProfile(User):
                 if rlt[0] == relation:
                     return rlt[1]
         return relation
+
+    def has_pending_notifications(self):
+        nots = RelationRequest.objects.filter(from_user=self).count()
+        return nots
 
     def get_bio_info(self):
         return self.bio_text

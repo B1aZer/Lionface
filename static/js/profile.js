@@ -544,6 +544,12 @@ LionFace.Profile.prototype = {
             return split( term ).pop();
         }    
         /** Autocomplete for pages */
+        var url_auto_fav = LionFace.User.favourite_pages_url;
+        $( "#favourite_pages_input" ).autocomplete({
+            source: url_auto_fav,
+        });
+
+        /* //multiple pages 
         var url_auto = LionFace.User.favourite_pages_url;
         $("#favourite_pages_input")
             // don't navigate away from the field on tab when selecting an item
@@ -576,6 +582,7 @@ LionFace.Profile.prototype = {
                 }
                 
             }); 
+        */
 
         $(document).on('click','#favorite-pages', function (e) {
             e.preventDefault();
@@ -589,6 +596,16 @@ LionFace.Profile.prototype = {
                 self.data('toggled',true);
             }
         });
+
+        $(document).on('click','#cancel_favourite', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            $('#favourite_pages_input').val('');
+            $('.fav-pages').hide();
+            $('#favorite-pages').data('toggled',false);
+        });
+
+        
 
         $(document).on('click','#add_favourite', function (e) {
             e.preventDefault();
@@ -607,6 +624,10 @@ LionFace.Profile.prototype = {
                     callback: function (data) {
                         if (data.pages) {
                             $('#favorite-pages-container').html(data.pages);
+                            $('#favorite-pages-container').show();
+                            $('#favourite_pages_input').val('');
+                            $('.fav-pages').hide();
+                            $('#favorite-pages').data('toggled',false);
                         }
                     }
                 });
@@ -634,13 +655,13 @@ LionFace.Profile.prototype = {
             var self = $(this);
             if (self.data('toggled')) {
                 $('.inter-relation').hide();
-                $('#inter_relation_input').hide();
+                $('.inter_relation_container').hide();
                 self.data('toggled',false);
             }
             else {
                 $('.inter-relation').show();
                 if ($('#inter_relation_select').val() != 'S') {
-                    $('#inter_relation_input').show();
+                    $('.inter_relation_container').show();
                 }
                 self.data('toggled',true);
             }
@@ -649,20 +670,24 @@ LionFace.Profile.prototype = {
         $(document).on('change','#inter_relation_select', function(e) {
             var self = $(this);
             if (self.val() != 'S') {
-                $('#inter_relation_input').show();
+                $('.inter_relation_container').show();
             }
             else {
-                $('#inter_relation_input').hide();
+                $('.inter_relation_container').hide();
                 $('#inter_relation_input').val('');
             }
         });
 
-
-        var url_auto_rel = LionFace.User.relation_auto_url;
-        $( "#inter_relation_input" ).autocomplete({
-            source: url_auto_rel,
+        $(document).on('click','#cancel_inter_relation', function(e) {
+            var self = $(this);
+            e.preventDefault();
+            $('.inter-relation').hide();
+            $('#inter_relation_btn').data('toggled',false);
+            $('.inter_relation_container').hide();
+            $('#inter_relation_input').val('');
         });
-        
+
+
 
         $(document).on('click', '#save_inter_relation', function(e) {
             e.preventDefault();
@@ -670,9 +695,6 @@ LionFace.Profile.prototype = {
             var data = {'relationtype':$('#inter_relation_select').val()};
             if ($('#inter_relation_input').val()) {
                 data['related'] = $('#inter_relation_input').val();
-            }
-            if (!data.related && data.relationtype != 'S') {
-                return;
             }
             var single = data.relationtype == 'S';
             make_request({
@@ -684,9 +706,11 @@ LionFace.Profile.prototype = {
                         $('#inter_relation_input').hide();
                         $('#inter_relation_input').val('');
                         $('#inter_relation_btn').data('toggled',false);
+                        $('#relation_type_id').html(data.relation);
                         if (single) {
-                            $('#relation_type_id').html('single');
+                            $('#inter_relation_input').show();
                         }
+                        $('#realtions_container').replaceWith(data.html);
                     }
                 }
             });
@@ -732,6 +756,15 @@ LionFace.Profile.prototype = {
             }
         });
 
+        $(document).on('click', '#cacel_bio_text', function (e) {
+            e.preventDefault();
+            $('.bio_info').hide();
+            $('#bio_info_textarea').val('');
+            $('#bio_info_text').show();
+            $('#show_bio_info').data('toggled',false);
+        });
+        
+
         $(document).on('click', '#show_birth_select', function (e) {
             e.preventDefault();
             var self = $(this);
@@ -740,7 +773,11 @@ LionFace.Profile.prototype = {
                 self.data('toggled',false);
             }
             else {
-                LionFace.Site.daydatedropdown('birth_day_select','birth_month_select','birth_year_select');
+                var day = parseInt($('#birth_day_id').html());
+                var month = parseInt($('#birth_month_id').attr('class')) - 1;
+                var year = parseInt($('#birth_year_id').html());
+
+                LionFace.Site.daydatedropdown('birth_day_select','birth_month_select','birth_year_select',day,month,year);
                 $('.birth_select').show();
                 self.data('toggled',true);
             }
@@ -768,10 +805,17 @@ LionFace.Profile.prototype = {
                         $('#show_birth_select').data('toggled',false);
                         $('#birth_day_id').html(data.day);
                         $('#birth_month_id').html(data.month);
+                        $('#birth_month_id').attr('class',data.month_d);
                         $('#birth_year_id').html(data.year);
                     }
                 }
             });
+        });
+        
+        $(document).on('click', '#cancel_birth_date', function (e) {
+            e.preventDefault();
+            $('.birth_select').hide();
+            $('#show_birth_select').data('toggled',false);
         });
         
         $(document).on('click', '#show_url_input', function (e) {
@@ -779,6 +823,8 @@ LionFace.Profile.prototype = {
             var self = $(this);
             if (self.data('toggled')) {
                 $('.bio_website').hide();
+                $('.url_errors').hide();
+                $('#url_input').val('');
                 self.data('toggled',false);
             }
             else {
@@ -805,9 +851,22 @@ LionFace.Profile.prototype = {
                         $('#url_container').html(data.link);
                         $('#url_input').val('');
                     }
+                    if (data.error) {
+                        $('.url_errors').show();
+                    }
+                    else {
+                        $('.url_errors').hide();
+                    }
                 }
             });
         });
+
+        $(document).on('click', '#cancel_url_input', function (e) {
+            e.preventDefault();
+            $('.bio_website').hide();
+            $('#show_url_input').data('toggled',false);
+        });
+        
         
     }
 
