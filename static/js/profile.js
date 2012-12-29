@@ -865,6 +865,8 @@ LionFace.Profile.prototype = {
             e.preventDefault();
             $('.bio_website').hide();
             $('#show_url_input').data('toggled',false);
+            $('.url_errors').hide();
+            $('#url_input').val('');
         });
         
         
