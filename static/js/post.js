@@ -1,5 +1,3 @@
-//@ sourceURL=post.js
-
 LionFace.PostImages = function(options) {
     this.options = $.extend({
         'swap_images_delay': 500,
@@ -62,7 +60,7 @@ LionFace.PostImages.prototype = {
     },
 
     set_photos_count: function(count) {
-        if (count != undefined) {
+        if (count !== undefined) {
             var $elem = $('#photos_count');
             if ($elem.html() != count) {
                 $elem.fadeOut(function() {

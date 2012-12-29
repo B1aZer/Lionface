@@ -638,55 +638,20 @@ LionFace.Images.prototype = {
     popup_comments_delete: function($item) {
         var _this = this,
             $ul = $('.image_popup .comments ul');
-        $('<div id="delete_dialog" title="Delete comment"><p>Really delete this comment?</p></div>')
-         .appendTo($('.image_popup .comments')).dialog({
-            resizable: false,
-            height: 150,
-            width: 400,
-            modal: true,
-            closeOnEscape: false,
-            buttons: {
-                "Delete": function() {
-                    $.ajax({
-                        url: LionFace.User['images_comments_ajax'],
-                        type: 'POST',
-                        data: {
-                            'method': 'delete',
-                            'comment_pk': $item.data('pk'),
-                            'pk': $ul.data('image-pk')
-                        },
-                        success: function(data, textStatus, jqXHR) {
-                            if (data.status == 'ok') {
-                                _this.popup_comments_refresh($(data.comments).filter('li'));
-                            }
-                        }
-                    });
-                    $(this).dialog('close');
-                },
-                "Cancel": function() {
-                    $(this).dialog('close');
+
+        $.ajax({
+            url: LionFace.User['images_comments_ajax'],
+            type: 'POST',
+            data: {
+                'method': 'delete',
+                'comment_pk': $item.data('pk'),
+                'pk': $ul.data('image-pk')
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 'ok') {
+                    _this.popup_comments_refresh($(data.comments).filter('li'));
                 }
-            },
-            open: function(event, ui) {
-                _this.popup_disableKeyboard();
-                var $dialog = $(this).parent();
-                return;
-                /*
-                $dialog.find('.ui-dialog-titlebar').remove();
-                $dialog.find(this).css({'overflow': 'hidden'});
-                $dialog.find('.ui-dialog-buttonpane').css({
-                    'border-width': 0,
-                    'margin': 0,
-                    'padding': 0
-                });
-                $dialog.find('.ui-dialog-buttonpane button:eq(1)').focus();
-                */
-            },
-            close: function(event, ui) {
-                _this.popup_enableKeyboard();
-                $(this).dialog('destroy').remove();
-            },
-            zIndex: 10002
+            }
         });
     },
 
