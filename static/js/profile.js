@@ -642,11 +642,39 @@ LionFace.Profile.prototype = {
                 url:url,
                 callback: function(data) {
                     if (data.status == 'OK') {
-                        self.parents('.micro_page_about').fadeOut();
+                        self.parents('.favorite_page').fadeOut();
                     }
                 }
             });
         });
+
+        // Making sortable
+        var pos_bgn_pages = 0;
+
+        $( ".sortable-pages" ).sortable({
+            start: function(event, ui) {
+                pos_bgn = ui.item.index();
+            },
+            stop: function(event, ui) {
+                /*console.log("New position: " + ui.item.index());*/
+                /*console.log("Old position: " + pos_bgn);*/
+                var item_id = get_int(ui.item[0].id)
+                url = 'favourites_reposition/'
+                if (ui.item.index() != pos_bgn) {
+                    make_request({
+                        url:url,
+                        data: {
+                            page_id:item_id,
+                            position_bgn:pos_bgn,
+                            position_end:ui.item.index()
+                        },
+                        callback: function() {
+                        }
+                    });
+                }
+            }
+        });
+        $( ".sortable-pages" ).disableSelection();
 
         //// Relationships ////
 

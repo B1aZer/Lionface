@@ -72,15 +72,16 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 
     {% if profile_user == request.user %}
     <a id="favorite-pages" href="#" class="bio_title" onClick="ShowContent('left_fav'); return false;">Favorite Pages</a>
-    {% else %}
+    {% elif profile_user.get_favourite_pages %}
     <span style="font-weight: bold; color: #555;">Favorite Pages</span>
+    {% else %}
     {% endif %}
 <div style="position: relative;">
 <div class="profile_edit" id="left_fav">
     <input type="text" class="fav-pages" id="favourite_pages_input" style="display:none; width: 165px;"/><br /><div class="sublink"><a id="add_favourite" class="fav-pages" href="#" style="display:none" onClick="HideContent('left_fav'); return false;">Add</a><a id="cancel_favourite" class="fav-pages" href="#" style="display:none" onClick="HideContent('left_fav'); return false;">Cancel</a></div>
 </div></div>
 
-    <div id="favorite-pages-container" {% if not profile_user.get_favourite_pages %}style="display:none"{% endif %}>
+<div id="favorite-pages-container" {% if request.user == profile_user %}class="sortable-pages"{% endif %} {% if not profile_user.get_favourite_pages %}style="display:none"{% endif %}>
         {% include "profile/profile_favourite_page.html" %}
     </div>
 <br />
@@ -90,8 +91,9 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 
     {% if profile_user == request.user %}
     <a id="show_birth_select" href="#" class="bio_title" onClick="ShowContent('left_birth'); return false;">Birthday</a>
-    {% else %}
+    {% elif profile_user.get_birth_date %}
     <span style="font-weight: bold; color: #555;">Birthday</span>
+    {% else %}
     {% endif %}
 
 <div style="position: relative;">
@@ -120,8 +122,9 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 
     {% if profile_user == request.user %}
     <a id="show_url_input" href="#" class="bio_title" onClick="ShowContent('left_web'); return false;">Website</a>
-    {% else %}
+    {% elif profile_user.get_website %}
     <span style="font-weight: bold; color: #555;">Website</span>
+    {% else %}
     {% endif %}
     <div>
 
@@ -141,8 +144,9 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 
     {% if profile_user == request.user %}
     <a id="show_bio_info" href="#" class="bio_title" onClick="ShowContent('left_bio'); return false;">Biography</a>
-    {% else %}
+    {% elif profile_user.get_bio_info %}
     <span style="font-weight: bold; color: #555;">Biography</span>
+    {% else %}
     {% endif %}
 
 <div style="position: relative;">

@@ -5,7 +5,7 @@ from django.contrib import comments
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import validate_slug, URLValidator
 
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import post_save, post_delete, m2m_changed
 from django.db.models import F
 
 from django.utils import timezone
@@ -100,6 +100,33 @@ class PageLoves(models.Model):
     status = models.CharField(max_length='1', choices=PAGE_LOVE_STATUS, default='A')
 
 
+class PageFavourites(models.Model):
+    page = models.ForeignKey('Pages')
+    user = models.ForeignKey(UserProfile)
+    date = models.DateTimeField(auto_now_add=True)
+    position = models.IntegerField(blank=True, null=True)
+
+def change_page_postion(sender, instance, created, **kwargs):
+    if created:
+        #getting max position
+        max_pos = PageFavourites.objects.filter(
+            user=instance.user).order_by("-position")[0].position
+        if max_pos is not None:
+            instance.position = max_pos + 1
+            instance.save()
+        else:
+            instance.position = 0
+            instance.save()
+post_save.connect(change_page_postion, sender=PageFavourites)
+
+def change_page_postion_ondelete(sender, instance, **kwargs):
+    pages = PageFavourites.objects.filter(
+        position__gt=instance.position, user=instance.user)
+    if pages.count() > 0:
+        pages.update(position=F('position') - 1)
+post_delete.connect(change_page_postion_ondelete, sender=PageFavourites)
+
+
 class Pages(models.Model):
     name = models.CharField(max_length='200')
     friends = models.ManyToManyField('self', related_name='friends')
@@ -110,7 +137,7 @@ class Pages(models.Model):
     content = models.TextField(null=True, blank=True)
     user = models.ForeignKey(UserProfile, related_name='pages')
     users_loved = models.ManyToManyField(UserProfile, through='PageLoves', related_name='pages_loved', null=True, blank=True)
-    users_favourites = models.ManyToManyField(UserProfile, related_name='pages_favourites', null=True, blank=True)
+    users_favourites = models.ManyToManyField(UserProfile, through='PageFavourites', related_name='pages_favourites', null=True, blank=True)
     admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
     type = models.CharField(max_length='2', choices=PAGE_TYPE)
     category = models.CharField(max_length=100, default='Undefined')

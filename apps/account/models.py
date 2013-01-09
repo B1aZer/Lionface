@@ -536,7 +536,7 @@ class UserProfile(User):
         return self.pages.all()
 
     def get_favourite_pages(self):
-        pages = self.pages_favourites.all()
+        pages = self.pages_favourites.order_by('pagefavourites__position')
         return pages
 
     def get_admin_pages(self):

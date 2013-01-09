@@ -30,8 +30,9 @@
     {% else %}
     <span  class="inter-relation" style="display:none"> Relationship Request Pending </span>
     {% endif %}
-    {% else %}
+    {% elif profile_user.get_relation_type %}
     <span style="font-weight: bold; color: #555;">Relationship</span>
+    {% else %}
     {% endif %}
     <div>
     {% if profile_user.get_related_person %} 

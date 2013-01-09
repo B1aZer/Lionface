@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from account.models import *
 from images.models import Image, ImageComments
 from messaging.models import Messaging
-from pages.models import Pages
+from pages.models import *
 from post.models import Albums
 from notification.models import Notification
 
@@ -338,9 +338,8 @@ def images_quote_ajax(request, username):
 
     return HttpResponse(json.dumps(data), 'application/json')
 
+
 #@login_required
-
-
 @unblocked_users
 #@default_user
 def profile(request, username):
@@ -886,7 +885,8 @@ def add_favourite_pages(request, username):
             try:
                 pageobj = Pages.objects.get(username = page)
                 if profile_user.get_favourite_pages().count() < 7:
-                    profile_user.pages_favourites.add(pageobj)
+                    #profile_user.pages_favourites.add(pageobj)
+                    PageFavourites.objects.create(user=profile_user,page=pageobj)
                     data['status'] = 'OK'
                     pages_names.append(pageobj.name)
             except Pages.DoesNotExist:
@@ -905,7 +905,8 @@ def remove_favourite_page(request, username, page_id):
     profile_user = request.user
     try:
         pageobj = Pages.objects.get(id = page_id)
-        profile_user.pages_favourites.remove(pageobj)
+        #profile_user.pages_favourites.remove(pageobj)
+        PageFavourites.objects.filter(user=profile_user,page=pageobj).delete()
         data['status'] = 'OK'
     except Pages.DoesNotExist:
         pass
@@ -992,3 +993,34 @@ def save_url_field(request, username):
         data['error'] = True
     return HttpResponse(json.dumps(data), "application/json")
 
+
+def favourites_reposition(request, username):
+    data = {'status':'OK'}
+    try:
+        profile_user = UserProfile.objects.get(username=username)
+    except UserProfile.DoesNotExist:
+        raise Http404()
+    if request.method == 'POST' and 'page_id' in request.POST:
+        page_id = request.POST.get('page_id', None)
+        pos_bgn = request.POST.get('position_bgn', None)
+        pos_end = request.POST.get('position_end', None)
+        try:
+            page = Pages.objects.get(id=page_id)
+            try:
+                current = PageFavourites.objects.get(page=page,user=profile_user)
+            except:
+                raise Http404()
+            current.position = int(pos_end)
+            if request.user == profile_user:
+                current.save()
+                if pos_bgn < pos_end:
+                    albums = PageFavourites.objects.filter(position__gte=pos_bgn, position__lte=pos_end, user=profile_user).exclude(id=current.id)
+                    albums.update(position=F('position') - 1)
+                elif pos_bgn > pos_end:
+                    albums = PageFavourites.objects.filter(position__gte=pos_end, position__lte=pos_bgn, user=profile_user).exclude(id=current.id)
+                    albums.update(position=F('position') + 1)
+                else:
+                    pass
+        except:
+            pass
+    return HttpResponse(json.dumps(data), "application/json")

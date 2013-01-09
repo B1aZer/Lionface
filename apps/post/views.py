@@ -423,7 +423,7 @@ def share(request, post_id=None):
                     data['status'] = 'FAIL'
                     return HttpResponse(json.dumps(data), "application/json")
 
-        if post_model in ('post_post', 'post_pagepost', 'post_feedbackpost'):
+        if post_model not in ('post_newsitem'):
             try:
                 post = Post.objects.get(id=post_id)
             except:
@@ -446,30 +446,31 @@ def share(request, post_id=None):
                 post = post_type.content_object
             if post:
                 #if origanl post was not deleted
+                post.shared += 1
+                post.save()
                 if share_to:
                     shared = PageSharePost(user=post.user, user_to=request.user, page=page, content=post_type.content, id_news=post_id, content_object=post)
                 else:
                     shared = SharePost(user=post.user, user_to=request.user, content=post_type.content, id_news=post_id, content_object=post)
-                post.shared += 1
-                post.save()
                 shared.save()
             else:
-                #if was
+                post_type.shared += 1
+                post_type.save()
                 if share_to:
                     shared = PageSharePost(user=post_type.user, user_to=request.user, page=page, content=post_type.content, id_news=post_id, content_object=post_type)
                 else:
                     shared = SharePost(user=post_type.user, user_to=request.user, content=post_type.content, id_news=post_id, content_object=post_type)
-                post_type.shared += 1
-                post_type.save()
                 shared.save()
         else:
             #normal post
+            """ There is issue with original post content
+            changing after post.save()"""
+            post_type.shared += 1
+            post_type.save()
             if share_to:
                 post = PageSharePost(user=post_type.user, user_to=request.user, page=page, content=post.render(), id_news=post.id, content_object=post_type)
             else:
                 post = SharePost(user=post_type.user, user_to=request.user, content=post.render(), id_news=post.id, content_object=post_type)
-            post_type.shared += 1
-            post_type.save()
             post.save()
     return HttpResponse(json.dumps(data), "application/json")
 

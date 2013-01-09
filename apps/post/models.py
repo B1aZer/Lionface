@@ -184,6 +184,16 @@ class Post(models.Model):
         if self.newsitem_set.all():
             return
         else:
+            # delete all comments for current post
+            """
+            comment_list = comments.get_model().objects.filter(
+                                    content_type=ContentType.objects.get_for_model(self),
+                                    object_pk=self.pk,
+                                    site__pk=settings.SITE_ID,
+                                    is_removed=False,
+                                    ).order_by('-submit_date')
+            comment_list.update(is_removed=True)
+            """
             super(Post, self).delete(*args, **kwargs)
 
     def get_comment_counter(self, user=None):
@@ -442,7 +452,6 @@ class PageSharePost(PagePost):
                                           })
         post_template = post_template.strip()
         return post_template
-
 
 class ContentPost(Post):
     content = models.CharField(max_length=5000)
@@ -778,7 +787,6 @@ post_save.connect(add_post_to_followings, sender=ContentPost)
 post_save.connect(add_post_to_followings, sender=PagePost)
 post_save.connect(add_post_to_followings, sender=FeedbackPost)
 
-
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
         UpdateNewsFeeds.delay(instance.get_inherited())
@@ -786,7 +794,6 @@ post_save.connect(update_news_feeds, sender=FriendPost)
 post_save.connect(update_news_feeds, sender=ContentPost)
 post_save.connect(update_news_feeds, sender=SharePost)
 post_save.connect(update_news_feeds, sender=PagePost)
-
 
 def delete_news_feeds(sender, instance, **kwargs):
     """Deletes original post"""
@@ -796,7 +803,6 @@ def delete_news_feeds(sender, instance, **kwargs):
     except ObjectDoesNotExist:
         pass
 post_delete.connect(delete_news_feeds, sender=NewsItem)
-
 
 def change_default_settings(sender, instance, created, **kwargs):
     if created:
@@ -835,14 +841,12 @@ def change_album_postion(sender, instance, created, **kwargs):
             instance.save()
 post_save.connect(change_album_postion, sender=Albums)
 
-
 def change_album_postion_ondelete(sender, instance, **kwargs):
     albums = Albums.objects.filter(
         position__gt=instance.position, user=instance.user)
     if albums.count() > 0:
         albums.update(position=F('position') - 1)
 post_delete.connect(change_album_postion_ondelete, sender=Albums)
-
 
 def remove_all_comments(sender, instance, **kwargs):
     """ remove comments
@@ -854,7 +858,6 @@ def remove_all_comments(sender, instance, **kwargs):
         site__pk=settings.SITE_ID)
     comms.delete()
 post_delete.connect(remove_all_comments, sender=Post)
-
 
 def remove_all_images(sender, instance, **kwargs):
     """ remove images
