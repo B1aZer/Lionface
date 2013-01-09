@@ -230,11 +230,32 @@ a.colored_tag:hover {
 
 /* Profile */
 
+
+.favorite_page {
+	display: inline-block;
+	width: 180px;
+	padding: 5px 10px 2px 5px;
+	text-align: left;
+	margin: 0px 0px;
+	position: relative; left: 0px; top: 0px;
+	border-bottom: 1px solid #E0E3E5;
+	margin-bottom: 4px;
+	background: #F5F7F9;
+}
+
+.favorite_page img {
+	margin-right: 15px;	
+	border: 1px solid #CCC;
+}
+
+.rem-favourite-page {
+	position: absolute;
+	top: 2px; left: -12px;
+}
+
 .subtitle_username {
 	color: #AAA; font-size: 8pt; padding: 3px 0;
 }
-
-
 
 .profile_micro_header {
 	font-size: 17pt; padding: 8px; position: relative; top: 3px;
@@ -496,13 +517,27 @@ a.dashboard_nav:link, a.dashboard_nav:active, a.dashboard_nav:visited {
 
 }
 
-a.dashboard_nav:hover, .active_dash_head {
-background: #ffffff;
+a.dashboard_nav:hover {
+	background: #ffffff;
 	color: #333;
 	border-color: #DDD;
 	-moz-box-shadow: inset 0 0 20px 0 #DDD;
 	box-shadow: inset 0 0 20px 0 #DDD;
 }
+
+a.active_dash_head:link, a.active_dash_head:visited, a.active_dash_head:active, a.active_dash_head:hover {
+	display: inline-block;
+	padding: 11px 17px 7px 7px;
+	text-decoration: none;
+	color: #333;
+	background: #FFF;
+	border: 1px solid #DDD;
+	position: relative; top: 2px;
+	text-shadow: 0px -2px 2px #FFF;
+	-moz-box-shadow: inset 0 0 20px 0 #DDD;
+	box-shadow: inset 0 0 20px 0 #DDD;
+}
+
 
 a.profile_btn, a.profile_btn:active, a.profile_btn:visited {
 	display: inline-block;
@@ -1502,8 +1537,24 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 
 .bio {
 	font-size: 9pt;
-	color: #AAA;
+	color: #888;
 	padding: 10px;
+	position: relative; left: -10px;
+}
+
+.bio input[type=text], .bio textarea {
+	border: 1px solid #CCC;
+	padding: 4px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+a.bio_title:link, a.bio_title:active, a.bio_title:visited {
+	color: #333;
+}
+
+a.bio_title:hover {
+	color: #F58;
 }
 
 .add_filter {
@@ -1671,7 +1722,7 @@ a.send_message:hover {
 	position: relative; top: 26px;
 }
 
-.blue_btn, .blue_btn a, .blue_btn a:active, .blue_btn a:visited {
+.blue_btn, .blue_btn a, .blue_btn a:active, .blue_btn a:visited, .bio .sublink a:link, .bio .sublink a:visited, .bio .sublink a:active {
 	padding: 5px 12px 5px 12px;
 	color: #FFF;
 	font-size: 9pt;
@@ -1682,7 +1733,7 @@ a.send_message:hover {
 	cursor: pointer;
 }
 
-.blue_btn:hover, .blue_btn a:hover, .active_privacy {
+.blue_btn:hover, .blue_btn a:hover, .active_privacy, .bio .sublink a:hover {
 	text-decoration: none;
 	background: #2ab4ea;
 	background: -moz-linear-gradient(top, #7bc9e5 0%, #2ab4ea 50%, #19afe5 51%, #2ab4ea 100%); /* FF3.6+ */
@@ -1693,6 +1744,26 @@ a.send_message:hover {
 	background: linear-gradient(to bottom, #7bc9e5 0%,#2ab4ea 50%,#19afe5 51%,#2ab4ea 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7bc9e5', endColorstr='#2ab4ea',GradientType=0 ); /* IE6-9 */
 	cursor: pointer;
+}
+
+.sublink {
+	position: relative; top: 8px;
+	height: 30px;
+}
+
+.profile_edit {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 175px;
+	background: transparent;
+	z-index: 99999;
+	padding: 4px 4px 0 4px;
+	border: 1px solid #CCC;
+	background: #FAFAFA;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	display: none;
 }
 
 /* Errors */

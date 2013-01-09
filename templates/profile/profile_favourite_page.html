@@ -1,5 +1,5 @@
         {% for page in profile_user.get_favourite_pages %}
-        <div class="micro_page_about">
+        <div class="favorite_page">
             <table>
                 <tbody>
                 <tr>
@@ -11,7 +11,7 @@
                     </td>
                     {% if profile_user == request.user %}
                     <td>
-                        <a class="rem-favourite-page" href="{% url profile.views.remove_favourite_page username=request.user.username page_id=page.id %}">x</a>
+                        <a class="rem-favourite-page" href="{% url profile.views.remove_favourite_page username=request.user.username page_id=page.id %}" style="color: #CCC;">x</a>
                     </td>
                     {% endif %}
                 </tr>

@@ -71,63 +71,88 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 <div class="bio">
 
     {% if profile_user == request.user %}
-    <a id="favorite-pages" href="#">Favorite Pages</a>
+    <a id="favorite-pages" href="#" class="bio_title" onClick="ShowContent('left_fav'); return false;">Favorite Pages</a>
     {% else %}
-    <span>Favorite Pages</span>
+    <span style="font-weight: bold; color: #555;">Favorite Pages</span>
     {% endif %}
-    <input type="text" class="fav-pages" id="favourite_pages_input" style="display:none"/><a id="add_favourite" class="fav-pages" href="#" style="display:none">Add</a><a id="cancel_favourite" class="fav-pages" href="#" style="display:none">Cancel</a><br /><br />
+<div style="position: relative;">
+<div class="profile_edit" id="left_fav">
+    <input type="text" class="fav-pages" id="favourite_pages_input" style="display:none; width: 165px;"/><br /><div class="sublink"><a id="add_favourite" class="fav-pages" href="#" style="display:none" onClick="HideContent('left_fav'); return false;">Add</a><a id="cancel_favourite" class="fav-pages" href="#" style="display:none" onClick="HideContent('left_fav'); return false;">Cancel</a></div>
+</div></div>
+
     <div id="favorite-pages-container" {% if not profile_user.get_favourite_pages %}style="display:none"{% endif %}>
         {% include "profile/profile_favourite_page.html" %}
     </div>
+<br />
 
     {% if profile_user|check_profile_bio:request.user %}
     {% include "profile/profile_relations.html" %}
 
     {% if profile_user == request.user %}
-    <a id="show_bio_info" href="#">Bio</a>
+    <a id="show_birth_select" href="#" class="bio_title" onClick="ShowContent('left_birth'); return false;">Birthday</a>
     {% else %}
-    <span>Bio</span>
+    <span style="font-weight: bold; color: #555;">Birthday</span>
     {% endif %}
-    <div>
-        <div id="bio_info_text">{{ profile_user.get_bio_info }}</div>
-        <textarea id="bio_info_textarea" class="bio_info" rows="4" cols="20" maxlength="250" style="display:none"></textarea>
-        <a id="save_bio_text" class="bio_info" href="{% url profile.views.save_bio_info username=profile_user.username %}" style="display:none">Save</a>
-        <a id="cacel_bio_text" class="bio_info" href="#" style="display:none">Cancel</a>
-    </div>
-    <br /><br />
 
-    {% if profile_user == request.user %}
-    <a id="show_birth_select" href="#">Birthday</a>
-    {% else %}
-    <span>Birthday</span>
-    {% endif %}
+<div style="position: relative;">
+<div class="profile_edit" id="left_birth">
     <div>
+<table><tr><td>
     <select class="birth_select birth_day_select" style="display:none"></select>
+</td><td>
     <select class="birth_select birth_month_select" style="display:none"></select>
+</td><td>
     <select class="birth_select birth_year_select" style="display:none"></select>
-    <a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none">Save</a>
-    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none">Cancel</a>
+</td></tr></table>
+    <div class="sublink"><a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none" onClick="HideContent('left_birth'); return false;">Save</a>
+    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none" onClick="HideContent('left_birth'); return false;">Cancel</a></div>
     </div>
+</div>
+</div>
+
     <span>
         <span id="birth_day_id">{{ profile_user.get_birth_date|date:"d" }}</span>
         <span id="birth_month_id" class="{{ profile_user.get_birth_date|date:"m" }}" >{{ profile_user.get_birth_date|date:"M" }}</span>
         <span id="birth_year_id">{{ profile_user.get_birth_date|date:"Y" }}</span>
     </span>
-    <br /><br />
+
+<br /><br />
 
     {% if profile_user == request.user %}
-    <a id="show_url_input" href="#">Website</a>
+    <a id="show_url_input" href="#" class="bio_title" onClick="ShowContent('left_web'); return false;">Website</a>
     {% else %}
-    <span>Website</span>
+    <span style="font-weight: bold; color: #555;">Website</span>
     {% endif %}
     <div>
-    <input id="url_input" class="bio_website" type="text" style="display:none"></input>
-    <div class="url_errors" style="display:none">Not a valid url</div>
-    <a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
-    <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a>
+
+<div style="position: relative;">
+<div class="profile_edit" id="left_web">
+    <input id="url_input" class="bio_website" type="text" style="display:none; width: 165px;"></input>
+    <div class="url_errors" style="display:none">Not a valid url</div><br />
+    <div class="sublink"><a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none" onClick="HideContent('left_web'); return false;">Save</a>
+    <a id="cancel_url_input" class="bio_website" href="#" style="display:none" onClick="HideContent('left_web'); return false;">Cancel</a></div>
     </div>
+</div>
+</div>
+
     <span id="url_container">{{ profile_user.get_website|safe }}</span>
-    <br /><br />
+
+<br /><br />
+
+    {% if profile_user == request.user %}
+    <a id="show_bio_info" href="#" class="bio_title" onClick="ShowContent('left_bio'); return false;">Biography</a>
+    {% else %}
+    <span style="font-weight: bold; color: #555;">Biography</span>
+    {% endif %}
+
+<div style="position: relative;">
+<div class="profile_edit" style="top: 0px; left: 0px;" id="left_bio">
+        <textarea id="bio_info_textarea" class="bio_info" rows="6" maxlength="250" style="display:none; width: 165px;"></textarea><br /><div class="sublink">
+        <a id="save_bio_text" class="bio_info" href="{% url profile.views.save_bio_info username=profile_user.username %}" style="display:none" onClick="HideContent('left_bio'); return false;">Save</a>
+        <a id="cacel_bio_text" class="bio_info" href="#" style="display:none" onClick="HideContent('left_bio'); return false;">Cancel</a></div>
+</div></div>
+	
+        <div id="bio_info_text">{{ profile_user.get_bio_info }}</div>
 
     {% endif %}
 </div>

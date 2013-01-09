@@ -8,24 +8,30 @@
 
 <span id="realtions_container">
     {% if profile_user == request.user %}
-    <a id="inter_relation_btn" href="#">Relationship</a><br /><br />
+    <a id="inter_relation_btn" href="#" class="bio_title" onClick="ShowContent('left_rel'); return false;">Relationship</a>
     {% if not profile_user.has_pending_notifications %}
+
+<div style="position: relative;">
+<div class="profile_edit" id="left_rel">
     <select id="inter_relation_select" class="inter-relation" style="display:none">
         <option value='S' {% if profile_user.get_relation == 'S' %}selected=""{% endif %}>Single</option>
         <option value='D' {% if profile_user.get_relation == 'D' %}selected=""{% endif %}>Dating</option>
         <option value='E' {% if profile_user.get_relation == 'E' %}selected=""{% endif %}>Engaged</option>
         <option value='M' {% if profile_user.get_relation == 'M' %}selected=""{% endif %}>Married</option>
-    </select>
-    <a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>
-    <a id="cancel_inter_relation" class="inter-relation" href="#" style="display:none">Cancel</a>
+    </select><br />
+
+    <div class="sublink"><a id="save_inter_relation" class="inter-relation" href="#" style="display:none" onClick="HideContent('left_rel'); return false;">Save</a>
+    <a id="cancel_inter_relation" class="inter-relation" href="#" style="display:none" onClick="HideContent('left_rel'); return false;">Cancel</a></div>
     <span class="inter_relation_container" style="display:none">
         <input id="inter_relation_input" type="text" {% if profile_user.get_relation != 'S' %}style="display:none"{% endif %}/>
     </span>
+</div>
+</div>
     {% else %}
     <span  class="inter-relation" style="display:none"> Relationship Request Pending </span>
     {% endif %}
     {% else %}
-    <span>Relationship</span>
+    <span style="font-weight: bold; color: #555;">Relationship</span>
     {% endif %}
     <div>
     {% if profile_user.get_related_person %} 
@@ -39,5 +45,5 @@
         <span id="relation_type_id" >{{ profile_user.get_relation_type }} </span>
     {% endif %}
     </div>
-    <br /><br />
+    <br />
 </span>
