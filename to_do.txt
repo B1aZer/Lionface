@@ -1,3 +1,5 @@
+#pages#
+left column = admin + owned > 12
 ##next###
 commit f943cbf0ed09680316caa7fb7addd89ace399d11
 Author: Dmitry on Server <dmitry.branitskiy@gmail.com>
@@ -5,15 +7,11 @@ Date:   Thu Dec 27 12:51:36 2012 +0400
 
     server changes
 
-### DoS ###
-loop problem
 
-deleting sharing origin wont delete children
-wrong privacy on deleted
 ###later###
-#notifiaction flashing is wrong on page load
-mass maubmit on ajax
-the album page (and in the future the loves page) direct back to the profile
+deleting sharing origin wont delete children
+wrong privacy on deleted (newsfeed)
+notifiaction flashing is wrong on page load
 ###
 users case insensative ?
 prevent new posts (not right ly)
@@ -22,10 +20,6 @@ notf nullify (wrong on messages)
 friends did not see own posts after unfrending.
 ###temp
 visiblity for mess(?) is wrong for user = self
-###notf
-remove dated notif's
-###!!!###
-removing Post from signals
 
 
 ###USEFUL###

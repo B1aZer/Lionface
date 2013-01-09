@@ -706,9 +706,9 @@ def settings(request, slug=None):
     pickle_str = cPickle.dumps(bids[:3])
     old_three = cPickle.loads(pickle_str)
     if bids.count() > 2:
-        min_bid = bids[2].amount + 10
+        min_bid = bids[2].amount + 50
     else:
-        min_bid = 10
+        min_bid = 50
 
     try:
         page = Pages.objects.get(username=slug)

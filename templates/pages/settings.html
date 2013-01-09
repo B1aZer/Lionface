@@ -496,16 +496,16 @@ $(document).ready(function() {
         }
     });
 
-    var value = parseInt("{{ min_bid }}") || 10;
-    var min_val = value - 3500 + 10;
+    var value = parseInt("{{ min_bid }}") || 50;
+    var min_val = value - 3500 + 50;
     if (min_val < 0)
         min_val = 0;
     $( "#bid-slider" ).slider({
             value:value,
             range: "min",
             min: min_val,
-            max: value + 3500 - 10,
-            step: 10,
+            max: value + 3500 - 50,
+            step: 50,
             slide: function( event, ui ) {
                 $( "#bid-value" ).val( '$' + ui.value );
                 // lower limit
