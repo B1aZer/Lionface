@@ -21,6 +21,12 @@ from django.conf import settings
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+
 register = template.Library()
 
 
@@ -526,3 +532,16 @@ def render_comment_list_for(context, item):
                         {'comment_list':comment_list},
                         context)
     return comment_render
+
+
+@register.filter
+def get_leaderboard_cats(user):
+    cats = user.find_options('leaderboard')
+    cats = json.dumps(["category_%s" % c.name.replace('option_leaderboard__','') for c in cats])
+    return cats
+
+@register.filter
+def get_nonprofit_cats(user):
+    cats = user.find_options('nonprofit')
+    cats = json.dumps(["category_%s" % c.name.replace('option_nonprofit__','') for c in cats])
+    return cats

@@ -366,6 +366,25 @@ def leaderboard(request):
     )
 
 
+def save_browsing_categories(request, cat_id):
+    data = {'status': 'OK'}
+    collapsed = request.POST.get('collapsed')
+    if collapsed:
+        request.user.remove_option('leaderboard__%s' % cat_id)
+    else:
+        request.user.set_option('leaderboard__%s' % cat_id, True)
+    return HttpResponse(json.dumps(data), "application/json")
+
+def save_browsing_categories_nonp(request, cat_id):
+    data = {'status': 'OK'}
+    collapsed = request.POST.get('collapsed')
+    if collapsed:
+        request.user.remove_option('nonprofit__%s' % cat_id)
+    else:
+        request.user.set_option('nonprofit__%s' % cat_id, True)
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 def nonprofit(request):
 
     form_busn = BusinessForm()
@@ -1984,3 +2003,5 @@ def topics_paging(request, slug):
     data['page_num'] = page_num
     data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
+
+

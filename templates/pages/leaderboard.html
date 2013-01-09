@@ -1,6 +1,12 @@
 {% extends "pages/base.html" %}
 {% load format_results %}
 
+{% block js %}
+<script>
+    LionFace.User.leaderboard_cats = {{ request.user|get_leaderboard_cats|safe }};
+</script>
+{% endblock %}  
+
 {% block content %}
 
 <div class="content_area">
@@ -56,17 +62,17 @@
 <div class="content_pages" style="width: 650px;">
     <table width="650" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
         {% for cat, rows in pages|sort_dict %}
-        <tr class="category_{{ forloop.counter }}" >
+        <tr class="category_{{ cat|getcatnumbusn }}" >
             <td colspan="2" style="text-align: left; font-size: 14pt;">
                 <a href="#" class="categoty_button">{{ cat }}</a>
             </td>
             <td align="right">
-                <a href="#" class="profile_nav browse_rows" style="font-size: 8pt;">Expand</a>
+                <a href="{% url pages.views.save_browsing_categories cat_id=cat|getcatnumbusn %}" class="profile_nav browse_rows" style="font-size: 8pt;">Expand</a>
                 <a href="{% url pages.views.page_browsing page_type='business' %}?filters%5B%5D={{ cat|getcatnumbusn }}" class="profile_nav" style="font-size: 8pt;">Browse</a>
             </td>
         </tr>
             {% for row in rows %}
-            <tr class="category_{{ forloop.parentloop.counter }}{% if forloop.counter > 1 %} hidden_row{% else %} page_row{% endif %}">
+            <tr class="category_{{ cat|getcatnumbusn }}{% if forloop.counter > 1 %} hidden_row{% else %} page_row{% endif %}">
                 {% for page in row %}
                 <td>
                     {% if forloop.parentloop.counter <= 1 %}
@@ -117,7 +123,7 @@
                 </td>
                 {% endfor %}
             </tr>
-            <tr class="category_{{ forloop.parentloop.counter }}{% if forloop.counter > 1 %} hidden_row{% else %} page_row{% endif %}">
+            <tr class="category_{{ cat|getcatnumbusn }}{% if forloop.counter > 1 %} hidden_row{% else %} page_row{% endif %}">
                 {% for page in row %}
                 <td>
                     {{ page.name }}<br />

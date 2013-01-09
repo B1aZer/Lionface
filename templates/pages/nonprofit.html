@@ -1,4 +1,5 @@
 {% extends "pages/base.html" %}
+{% load format_results %}
 
 {% block js %}
 <script>
@@ -10,6 +11,7 @@ $(function() {
             $('#business_create').click();
         }
 }); 
+    LionFace.User.nonprofit_cats = {{ request.user|get_nonprofit_cats|safe }};
 </script>
 {% endblock %}
 

@@ -96,22 +96,56 @@ LionFace.Pages.prototype = {
             }
         });
 
-        //hide hidden rows in pages nonprofits
+        // hide hidden rows in pages nonprofits
         $('.hidden_row').hide();
+        // expand saved categories
+        if (LionFace.User.leaderboard_cats) {
+            $('.hidden_row').each( function(i,e) {
+                var toggled = false;
+                var cls = $(e).attr('class');
+                var name = cls.split(" ")[0];
+                if ($.inArray(name, LionFace.User.leaderboard_cats) >= 0) {
+                    $(e).show();
+                    toggled = true;
+                }
+                if (toggled) {
+                    $('.' + name + ' :first').data('toggled', true);
+                }
+            });
+        }
+        if (LionFace.User.nonprofit_cats) {
+            $('.hidden_row').each( function(i,e) {
+                var toggled = false;
+                var cls = $(e).attr('class');
+                var name = cls.split(" ")[0];
+                if ($.inArray(name, LionFace.User.nonprofit_cats) >= 0) {
+                    $(e).show();
+                    toggled = true;
+                }
+                if (toggled) {
+                    $('.' + name + ' :first').data('toggled', true);
+                }
+            });
+        }
 
         $(document).on('click','.browse_rows',function(e) {
             e.preventDefault();
             var tr = $(this).parents('tr')
             var category = tr.attr('class');
+            var url = $(this).attr('href');
             if (!tr.data('toggled')) {
                 $("." + category + ".hidden_row").show();
                 $("." + category + ".page_row").show();
                 tr.data('toggled',true);
                 tr.data('entangled',false);
+                make_request({url:url});
             }
             else {
                 $("." + category + ".hidden_row").hide();
                 tr.data('toggled',false);
+                make_request({url:url,
+                            data:{'collapsed':true,}
+                });
             }
         });
 
