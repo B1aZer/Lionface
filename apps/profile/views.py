@@ -886,7 +886,7 @@ def add_favourite_pages(request, username):
                 pageobj = Pages.objects.get(username = page)
                 if profile_user.get_favourite_pages().count() < 7:
                     #profile_user.pages_favourites.add(pageobj)
-                    PageFavourites.objects.create(user=profile_user,page=pageobj)
+                    PageFavourites.objects.get_or_create(user=profile_user,page=pageobj)
                     data['status'] = 'OK'
                     pages_names.append(pageobj.name)
             except Pages.DoesNotExist:

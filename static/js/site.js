@@ -1040,7 +1040,7 @@ LionFace.Site.prototype = {
     /* day month year selects */
     daydatedropdown : function(dayfield, monthfield, yearfield, day, month, year){
         /* usage LionFace.Site.daydatedropdown('birth_day_select','birth_month_select','birth_year_select'); */
-        var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+        var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         var today=new Date()
         var dayfield=$('.'+dayfield);
         var monthfield=$('.'+monthfield);
@@ -1084,7 +1084,7 @@ LionFace.Site.prototype = {
     },
     /* month year selects */
     datedropdown : function(monthfield, yearfield){
-        var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+        var monthtext=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         var today=new Date()
         var monthfield=$('.'+monthfield);
         var yearfield=$('.'+yearfield);

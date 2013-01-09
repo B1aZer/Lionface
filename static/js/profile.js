@@ -589,10 +589,12 @@ LionFace.Profile.prototype = {
             var self = $(this);
             if (self.data('toggled')) {
                 $('.fav-pages').hide();
+                $('#left_fav').hide();
                 self.data('toggled',false);
             }
             else {
                 $('.fav-pages').show();
+                $('#left_fav').show();
                 self.data('toggled',true);
             }
         });
@@ -602,6 +604,7 @@ LionFace.Profile.prototype = {
             var self = $(this);
             $('#favourite_pages_input').val('');
             $('.fav-pages').hide();
+            $('#left_fav').hide();
             $('#favorite-pages').data('toggled',false);
         });
 
@@ -627,6 +630,7 @@ LionFace.Profile.prototype = {
                             $('#favorite-pages-container').show();
                             $('#favourite_pages_input').val('');
                             $('.fav-pages').hide();
+                            $('#left_fav').hide();
                             $('#favorite-pages').data('toggled',false);
                         }
                     }
@@ -683,11 +687,13 @@ LionFace.Profile.prototype = {
             var self = $(this);
             if (self.data('toggled')) {
                 $('.inter-relation').hide();
+                $('#left_rel').hide();
                 $('.inter_relation_container').hide();
                 self.data('toggled',false);
             }
             else {
                 $('.inter-relation').show();
+                $('#left_rel').show();
                 if ($('#inter_relation_select').val() != 'S') {
                     $('.inter_relation_container').show();
                 }
@@ -710,6 +716,7 @@ LionFace.Profile.prototype = {
             var self = $(this);
             e.preventDefault();
             $('.inter-relation').hide();
+            $('#left_rel').hide();
             $('#inter_relation_btn').data('toggled',false);
             $('.inter_relation_container').hide();
             $('#inter_relation_input').val('');
@@ -731,6 +738,7 @@ LionFace.Profile.prototype = {
                 callback: function (data) {
                     if (data.status == 'OK') {
                         $('.inter-relation').hide();
+                        $('#left_rel').hide();
                         $('#inter_relation_input').hide();
                         $('#inter_relation_input').val('');
                         $('#inter_relation_btn').data('toggled',false);
@@ -757,6 +765,7 @@ LionFace.Profile.prototype = {
                 callback: function (data) {
                     if (data.status == 'OK') {
                         $('.bio_info').hide();
+                        $('#left_bio').hide();
                         $('#bio_info_text').html(data.text);
                         $('#bio_info_text').show();
                         $('#show_bio_info').data('toggled',false);
@@ -770,6 +779,7 @@ LionFace.Profile.prototype = {
             var self = $(this);
             if (self.data('toggled')) {
                 $('.bio_info').hide();
+                $('#left_bio').hide();
                 $('#bio_info_textarea').val('');
                 $('#bio_info_text').show();
                 self.data('toggled',false);
@@ -779,6 +789,7 @@ LionFace.Profile.prototype = {
                     $('#bio_info_textarea').val($('#bio_info_text').html());
                 }
                 $('.bio_info').show();
+                $('#left_bio').show();
                 $('#bio_info_text').hide();
                 self.data('toggled',true);
             }
@@ -787,6 +798,7 @@ LionFace.Profile.prototype = {
         $(document).on('click', '#cacel_bio_text', function (e) {
             e.preventDefault();
             $('.bio_info').hide();
+            $('#left_bio').hide();
             $('#bio_info_textarea').val('');
             $('#bio_info_text').show();
             $('#show_bio_info').data('toggled',false);
@@ -798,6 +810,7 @@ LionFace.Profile.prototype = {
             var self = $(this);
             if (self.data('toggled')) {
                 $('.birth_select').hide();
+                $('#left_birth').hide();
                 self.data('toggled',false);
             }
             else {
@@ -807,6 +820,7 @@ LionFace.Profile.prototype = {
 
                 LionFace.Site.daydatedropdown('birth_day_select','birth_month_select','birth_year_select',day,month,year);
                 $('.birth_select').show();
+                $('#left_birth').show();
                 self.data('toggled',true);
             }
         });
@@ -830,6 +844,7 @@ LionFace.Profile.prototype = {
                 callback: function (data) {
                     if (data.status == 'OK') {
                         $('.birth_select').hide();
+                        $('#left_birth').hide();
                         $('#show_birth_select').data('toggled',false);
                         $('#birth_day_id').html(data.day);
                         $('#birth_month_id').html(data.month);
@@ -843,6 +858,7 @@ LionFace.Profile.prototype = {
         $(document).on('click', '#cancel_birth_date', function (e) {
             e.preventDefault();
             $('.birth_select').hide();
+            $('#left_birth').hide();
             $('#show_birth_select').data('toggled',false);
         });
         
@@ -852,11 +868,13 @@ LionFace.Profile.prototype = {
             if (self.data('toggled')) {
                 $('.bio_website').hide();
                 $('.url_errors').hide();
+                $('#left_web').hide();
                 $('#url_input').val('');
                 self.data('toggled',false);
             }
             else {
                 $('.bio_website').show();
+                $('#left_web').show();
                 self.data('toggled',true);
             }
         });
@@ -875,6 +893,7 @@ LionFace.Profile.prototype = {
                 callback : function (data) {
                     if (data.status == 'OK') {
                         $('.bio_website').hide();
+                        $('#left_web').hide();
                         $('#show_url_input').data('toggled',false);
                         $('#url_container').html(data.link);
                         $('#url_input').val('');
@@ -892,6 +911,7 @@ LionFace.Profile.prototype = {
         $(document).on('click', '#cancel_url_input', function (e) {
             e.preventDefault();
             $('.bio_website').hide();
+            $('#left_web').hide();
             $('#show_url_input').data('toggled',false);
             $('.url_errors').hide();
             $('#url_input').val('');

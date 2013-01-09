@@ -71,14 +71,14 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 <div class="bio">
 
     {% if profile_user == request.user %}
-    <a id="favorite-pages" href="#" class="bio_title" onClick="ShowContent('left_fav'); return false;">Favorite Pages</a>
+    <a id="favorite-pages" href="#" class="bio_title">Favorite Pages</a>
     {% elif profile_user.get_favourite_pages %}
     <span style="font-weight: bold; color: #555;">Favorite Pages</span>
     {% else %}
     {% endif %}
 <div style="position: relative;">
 <div class="profile_edit" id="left_fav">
-    <input type="text" class="fav-pages" id="favourite_pages_input" style="display:none; width: 165px;"/><br /><div class="sublink"><a id="add_favourite" class="fav-pages" href="#" style="display:none" onClick="HideContent('left_fav'); return false;">Add</a><a id="cancel_favourite" class="fav-pages" href="#" style="display:none" onClick="HideContent('left_fav'); return false;">Cancel</a></div>
+    <input type="text" class="fav-pages" id="favourite_pages_input" style="display:none; width: 165px;"/><br /><div class="sublink"><a id="add_favourite" class="fav-pages" href="#" style="display:none">Add</a><a id="cancel_favourite" class="fav-pages" href="#" style="display:none">Cancel</a></div>
 </div></div>
 
 <div id="favorite-pages-container" {% if request.user == profile_user %}class="sortable-pages"{% endif %} {% if not profile_user.get_favourite_pages %}style="display:none"{% endif %}>
@@ -90,7 +90,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
     {% include "profile/profile_relations.html" %}
 
     {% if profile_user == request.user %}
-    <a id="show_birth_select" href="#" class="bio_title" onClick="ShowContent('left_birth'); return false;">Birthday</a>
+    <a id="show_birth_select" href="#" class="bio_title" >Birthday</a>
     {% elif profile_user.get_birth_date %}
     <span style="font-weight: bold; color: #555;">Birthday</span>
     {% else %}
@@ -106,8 +106,8 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 </td><td>
     <select class="birth_select birth_year_select" style="display:none"></select>
 </td></tr></table>
-    <div class="sublink"><a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none" onClick="HideContent('left_birth'); return false;">Save</a>
-    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none" onClick="HideContent('left_birth'); return false;">Cancel</a></div>
+    <div class="sublink"><a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none" >Save</a>
+    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none" >Cancel</a></div>
     </div>
 </div>
 </div>
@@ -121,7 +121,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 <br /><br />
 
     {% if profile_user == request.user %}
-    <a id="show_url_input" href="#" class="bio_title" onClick="ShowContent('left_web'); return false;">Website</a>
+    <a id="show_url_input" href="#" class="bio_title">Website</a>
     {% elif profile_user.get_website %}
     <span style="font-weight: bold; color: #555;">Website</span>
     {% else %}
@@ -132,8 +132,8 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 <div class="profile_edit" id="left_web">
     <input id="url_input" class="bio_website" type="text" style="display:none; width: 165px;"></input>
     <div class="url_errors" style="display:none">Not a valid url</div><br />
-    <div class="sublink"><a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none" onClick="HideContent('left_web'); return false;">Save</a>
-    <a id="cancel_url_input" class="bio_website" href="#" style="display:none" onClick="HideContent('left_web'); return false;">Cancel</a></div>
+    <div class="sublink"><a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
+    <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a></div>
     </div>
 </div>
 </div>
@@ -143,7 +143,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 <br /><br />
 
     {% if profile_user == request.user %}
-    <a id="show_bio_info" href="#" class="bio_title" onClick="ShowContent('left_bio'); return false;">Biography</a>
+    <a id="show_bio_info" href="#" class="bio_title">Biography</a>
     {% elif profile_user.get_bio_info %}
     <span style="font-weight: bold; color: #555;">Biography</span>
     {% else %}
@@ -152,8 +152,8 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 <div style="position: relative;">
 <div class="profile_edit" style="top: 0px; left: 0px;" id="left_bio">
         <textarea id="bio_info_textarea" class="bio_info" rows="6" maxlength="250" style="display:none; width: 165px;"></textarea><br /><div class="sublink">
-        <a id="save_bio_text" class="bio_info" href="{% url profile.views.save_bio_info username=profile_user.username %}" style="display:none" onClick="HideContent('left_bio'); return false;">Save</a>
-        <a id="cacel_bio_text" class="bio_info" href="#" style="display:none" onClick="HideContent('left_bio'); return false;">Cancel</a></div>
+        <a id="save_bio_text" class="bio_info" href="{% url profile.views.save_bio_info username=profile_user.username %}" style="display:none">Save</a>
+        <a id="cacel_bio_text" class="bio_info" href="#" style="display:none">Cancel</a></div>
 </div></div>
 	
         <div id="bio_info_text">{{ profile_user.get_bio_info }}</div>

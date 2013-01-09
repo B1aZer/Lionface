@@ -8,7 +8,7 @@
 
 <span id="realtions_container">
     {% if profile_user == request.user %}
-    <a id="inter_relation_btn" href="#" class="bio_title" onClick="ShowContent('left_rel'); return false;">Relationship</a>
+    <a id="inter_relation_btn" href="#" class="bio_title">Relationship</a>
     {% if not profile_user.has_pending_notifications %}
 
 <div style="position: relative;">
@@ -20,8 +20,8 @@
         <option value='M' {% if profile_user.get_relation == 'M' %}selected=""{% endif %}>Married</option>
     </select><br />
 
-    <div class="sublink"><a id="save_inter_relation" class="inter-relation" href="#" style="display:none" onClick="HideContent('left_rel'); return false;">Save</a>
-    <a id="cancel_inter_relation" class="inter-relation" href="#" style="display:none" onClick="HideContent('left_rel'); return false;">Cancel</a></div>
+    <div class="sublink"><a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>
+    <a id="cancel_inter_relation" class="inter-relation" href="#" style="display:none" >Cancel</a></div>
     <span class="inter_relation_container" style="display:none">
         <input id="inter_relation_input" type="text" {% if profile_user.get_relation != 'S' %}style="display:none"{% endif %}/>
     </span>
