@@ -41,7 +41,7 @@ class RelationRequest(models.Model):
     from_user = models.ForeignKey('UserProfile', related_name='relation_from')
     to_user = models.ForeignKey('UserProfile', related_name='relation_to')
     date = models.DateTimeField(auto_now_add=True)
-    type = models.TextField(max_length='1', choices=IN_RELATIONSHIP)
+    type = models.TextField(max_length=1, choices=IN_RELATIONSHIP)
 
     def accept(self):
         self.from_user.relationtype = self.type
@@ -127,13 +127,13 @@ class UserProfile(User):
     images_quote_author = models.CharField(
         max_length=20,
         default=settings.IMAGES_DEFAULT_QUOTE_AUTHOR)
-    filters = models.CharField(max_length='10', choices=FILTER_TYPE,
+    filters = models.CharField(max_length=10, choices=FILTER_TYPE,
                                default="F")
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, through="Relationship")
-    optional_name = models.CharField(max_length='200', default="")
-    timezone = models.CharField(max_length='200', blank=True)
+    optional_name = models.CharField(max_length=200, default="")
+    timezone = models.CharField(max_length=200, blank=True)
     in_relationship = models.OneToOneField('self', null=True, blank=True)
-    relationtype = models.CharField(max_length='1', choices=IN_RELATIONSHIP, blank=True)
+    relationtype = models.CharField(max_length=1, choices=IN_RELATIONSHIP, blank=True)
     bio_text = models.TextField(blank=True)
     birth_date = models.DateField(null=True, blank=True)
     url = models.URLField(blank=True)
@@ -692,7 +692,7 @@ class Relationship(models.Model):
     from_user = models.ForeignKey(UserProfile, related_name='from_people')
     to_user = models.ForeignKey(UserProfile, related_name='to_people')
     date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length='1', choices=RELATIONSHIP_STATUSES, default=1)
+    status = models.CharField(max_length=1, choices=RELATIONSHIP_STATUSES, default=1)
 
     def save(self, *args, **kwargs):
         follow = False
@@ -711,6 +711,6 @@ class Relationship(models.Model):
 
 
 class UserOptions(models.Model):
-    name = models.CharField(max_length='100')
-    value = models.CharField(max_length='100')
+    name = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
     user = models.ForeignKey(UserProfile)

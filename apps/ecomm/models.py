@@ -40,7 +40,7 @@ class Bids(models.Model):
     user = models.ForeignKey(UserProfile, related_name='bids')
     page = models.ForeignKey(Pages, related_name='bids')
     amount = models.IntegerField(default=0)
-    status = models.CharField(max_length='1', choices=BIDS_STATUSES, default=1)
+    status = models.CharField(max_length=1, choices=BIDS_STATUSES, default=1)
 
     def get_stripe_id(self):
         return self.page.get_stripe_id_for(self.user)

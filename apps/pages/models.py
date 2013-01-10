@@ -63,7 +63,7 @@ class PageRequest(models.Model):
     from_page = models.ForeignKey('Pages', related_name='from_page')
     to_page = models.ForeignKey('Pages', related_name='to_page')
     event = models.ForeignKey('agenda.Events', related_name='from_event', null=True, blank=True)
-    type = models.CharField(max_length='2', choices=REQUEST_TYPE, default='PR')
+    type = models.CharField(max_length=2, choices=REQUEST_TYPE, default='PR')
     date = models.DateTimeField(auto_now_add=True)
     is_hidden = models.BooleanField(default=False)
     is_accepted = models.BooleanField(default=False)
@@ -97,7 +97,7 @@ class PageLoves(models.Model):
     page = models.ForeignKey('Pages')
     user = models.ForeignKey(UserProfile)
     date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length='1', choices=PAGE_LOVE_STATUS, default='A')
+    status = models.CharField(max_length=1, choices=PAGE_LOVE_STATUS, default='A')
 
 
 class PageFavourites(models.Model):
@@ -128,18 +128,18 @@ post_delete.connect(change_page_postion_ondelete, sender=PageFavourites)
 
 
 class Pages(models.Model):
-    name = models.CharField(max_length='200')
+    name = models.CharField(max_length=200)
     friends = models.ManyToManyField('self', related_name='friends')
     loves = models.IntegerField(default=0)
     loves_limit = models.IntegerField(default=100)
-    username = models.CharField(max_length='200', validators=[validate_slug], unique=True)
-    url = models.URLField(max_length='2000', null=True, blank=True)
+    username = models.CharField(max_length=200, validators=[validate_slug], unique=True)
+    url = models.URLField(max_length=2000, null=True, blank=True)
     content = models.TextField(null=True, blank=True)
     user = models.ForeignKey(UserProfile, related_name='pages')
     users_loved = models.ManyToManyField(UserProfile, through='PageLoves', related_name='pages_loved', null=True, blank=True)
     users_favourites = models.ManyToManyField(UserProfile, through='PageFavourites', related_name='pages_favourites', null=True, blank=True)
     admins = models.ManyToManyField(UserProfile, related_name='pages_admin', null=True, blank=True)
-    type = models.CharField(max_length='2', choices=PAGE_TYPE)
+    type = models.CharField(max_length=2, choices=PAGE_TYPE)
     category = models.CharField(max_length=100, default='Undefined')
     cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/noCoverImage.png')
     photo = ImageWithThumbField(upload_to="uploads/images", default='uploads/images/noProfilePhoto.png')
@@ -644,7 +644,7 @@ m2m_changed.connect(change_friend_position, sender=Pages.friends.through)
 class Membership(models.Model):
     user = models.ForeignKey(UserProfile)
     page = models.ForeignKey(Pages)
-    type = models.CharField(max_length='2', choices=MEMBERSHIP_TYPE)
+    type = models.CharField(max_length=2, choices=MEMBERSHIP_TYPE)
     from_date = models.DateField()
     to_date = models.DateField(null=True,blank=True)
     is_confirmed = models.BooleanField(default=False)
@@ -684,7 +684,7 @@ class Membership(models.Model):
 
 
 class Topics(models.Model):
-    name = models.CharField(max_length='2000')
+    name = models.CharField(max_length=2000)
     user = models.ForeignKey(UserProfile)
     page = models.ForeignKey(Pages)
     privacy = models.CharField(max_length=1, choices=TOPIC_PRIVACY_SET, default='P')

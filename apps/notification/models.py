@@ -39,7 +39,7 @@ NOTIFICATION_TYPES = (
 class Notification(models.Model):
     user = models.ForeignKey(UserProfile)
     date = models.DateTimeField(auto_now_add=True)
-    type = models.CharField(max_length='2', choices=NOTIFICATION_TYPES)
+    type = models.CharField(max_length=2, choices=NOTIFICATION_TYPES)
     read = models.BooleanField(default=False)
     #people_counter = models.IntegerField(default=0)
     hidden = models.BooleanField(default=False)

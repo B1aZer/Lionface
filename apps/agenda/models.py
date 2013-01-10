@@ -13,7 +13,7 @@ PRIVACY_SET = (
 class Events(models.Model):
     page = models.ForeignKey(Pages)
     tagged = models.ManyToManyField(Pages, related_name="tagged_in", null=True, blank=True)
-    name = models.CharField(max_length='200')
+    name = models.CharField(max_length=200)
     date = models.DateTimeField()
     date_end = models.DateTimeField(null=True, blank=True)
     description = models.TextField(blank=True)
@@ -62,6 +62,6 @@ class Events(models.Model):
 
 class Locations(models.Model):
     event = models.ForeignKey(Events)
-    location = models.CharField(max_length='2000', blank=True)
+    location = models.CharField(max_length=2000, blank=True)
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
