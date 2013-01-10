@@ -122,7 +122,7 @@ class UserProfile(User):
     photo = ImageWithThumbField(upload_to="uploads/images", verbose_name="Please Upload a Photo Image", default='uploads/images/noProfilePhoto.png')
     cover_photo = models.ImageField(upload_to="uploads/images",
                                     default='uploads/images/bg_cover.png')
-    images_quote = models.CharField(max_length=70,
+    images_quote = models.CharField(max_length=200,
                                     default=settings.IMAGES_DEFAULT_QUOTE)
     images_quote_author = models.CharField(
         max_length=20,
