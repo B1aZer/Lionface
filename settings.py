@@ -185,7 +185,7 @@ COMMENT_MAX_LENGTH = '1000'
 
 MEDIA_DEV_MODE = False
 DEV_MEDIA_URL = '/devmedia/'
-PRODUCTION_MEDIA_URL = '/lionface/media/'
+PRODUCTION_MEDIA_URL = '/media/'
 GLOBAL_MEDIA_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),)
 # Configure yuicompressor if available
 """
