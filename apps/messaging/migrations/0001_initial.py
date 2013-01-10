@@ -14,8 +14,9 @@ class Migration(SchemaMigration):
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['account.UserProfile'])),
             ('user_to', self.gf('django.db.models.fields.related.ForeignKey')(related_name='message_to', to=orm['account.UserProfile'])),
             ('date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('content', self.gf('django.db.models.fields.TextField')()),
+            ('content', self.gf('django.db.models.fields.CharField')(max_length=5000)),
             ('read', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('viewed', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('messaging', ['Messaging'])
 
@@ -31,14 +32,27 @@ class Migration(SchemaMigration):
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'from_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'from_people'", 'to': "orm['account.UserProfile']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'status': ('django.db.models.fields.CharField', [], {'default': '1', 'max_length': "'1'"}),
             'to_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'to_people'", 'to': "orm['account.UserProfile']"})
         },
         'account.userprofile': {
             'Meta': {'object_name': 'UserProfile', '_ormbases': ['auth.User']},
+            'bio_text': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'birth_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'blocked': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'blocked_from'", 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
+            'cover_photo': ('django.db.models.fields.files.ImageField', [], {'default': "'uploads/images/bg_cover.png'", 'max_length': '100'}),
             'filters': ('django.db.models.fields.CharField', [], {'default': "'F'", 'max_length': "'10'"}),
             'followers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'following'", 'symmetrical': 'False', 'through': "orm['account.Relationship']", 'to': "orm['account.UserProfile']"}),
             'friends': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'friends_rel_+'", 'to': "orm['account.UserProfile']"}),
-            'photo': ('django.db.models.fields.files.ImageField', [], {'default': "'images/noProfilePhoto.png'", 'max_length': '100'}),
+            'hidden': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'hidden_from'", 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
+            'images_quote': ('django.db.models.fields.CharField', [], {'default': "'Whose woods these are I think I know, his house is in the village though.'", 'max_length': '70'}),
+            'images_quote_author': ('django.db.models.fields.CharField', [], {'default': "'Robert Frost'", 'max_length': '20'}),
+            'in_relationship': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['account.UserProfile']", 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'optional_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': "'200'"}),
+            'photo': ('images.fields.ImageWithThumbField', [], {'default': "'uploads/images/noProfilePhoto.png'", 'max_length': '100'}),
+            'relationtype': ('django.db.models.fields.CharField', [], {'max_length': "'1'", 'blank': 'True'}),
+            'timezone': ('django.db.models.fields.CharField', [], {'max_length': "'200'", 'blank': 'True'}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
         },
         'auth.group': {
@@ -79,12 +93,13 @@ class Migration(SchemaMigration):
         },
         'messaging.messaging': {
             'Meta': {'object_name': 'Messaging'},
-            'content': ('django.db.models.fields.TextField', [], {}),
+            'content': ('django.db.models.fields.CharField', [], {'max_length': '5000'}),
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'read': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"}),
-            'user_to': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'message_to'", 'to': "orm['account.UserProfile']"})
+            'user_to': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'message_to'", 'to': "orm['account.UserProfile']"}),
+            'viewed': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         }
     }
 

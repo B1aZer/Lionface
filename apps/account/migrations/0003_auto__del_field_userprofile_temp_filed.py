@@ -8,16 +8,34 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding unique constraint on 'Pages', fields ['username']
-        db.create_unique('pages_pages', ['username'])
+        # Deleting field 'UserProfile.temp_filed'
+        db.delete_column('account_userprofile', 'temp_filed')
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Pages', fields ['username']
-        db.delete_unique('pages_pages', ['username'])
+        # Adding field 'UserProfile.temp_filed'
+        db.add_column('account_userprofile', 'temp_filed',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=1, blank=True),
+                      keep_default=False)
 
 
     models = {
+        'account.friendrequest': {
+            'Meta': {'unique_together': "(('from_user', 'to_user'),)", 'object_name': 'FriendRequest'},
+            'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'from_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'from_user'", 'to': "orm['account.UserProfile']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'message': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'to_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'to_user'", 'to': "orm['account.UserProfile']"})
+        },
+        'account.relationrequest': {
+            'Meta': {'object_name': 'RelationRequest'},
+            'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'from_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'relation_from'", 'to': "orm['account.UserProfile']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'to_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'relation_to'", 'to': "orm['account.UserProfile']"}),
+            'type': ('django.db.models.fields.TextField', [], {'max_length': "'1'"})
+        },
         'account.relationship': {
             'Meta': {'object_name': 'Relationship'},
             'date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
@@ -26,15 +44,31 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.CharField', [], {'default': '1', 'max_length': "'1'"}),
             'to_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'to_people'", 'to': "orm['account.UserProfile']"})
         },
+        'account.useroptions': {
+            'Meta': {'object_name': 'UserOptions'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': "'100'"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"}),
+            'value': ('django.db.models.fields.CharField', [], {'max_length': "'100'"})
+        },
         'account.userprofile': {
             'Meta': {'object_name': 'UserProfile', '_ormbases': ['auth.User']},
+            'bio_text': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'birth_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'blocked': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'blocked_from'", 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
+            'cover_photo': ('django.db.models.fields.files.ImageField', [], {'default': "'uploads/images/bg_cover.png'", 'max_length': '100'}),
             'filters': ('django.db.models.fields.CharField', [], {'default': "'F'", 'max_length': "'10'"}),
             'followers': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'following'", 'symmetrical': 'False', 'through': "orm['account.Relationship']", 'to': "orm['account.UserProfile']"}),
             'friends': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'friends_rel_+'", 'to': "orm['account.UserProfile']"}),
             'hidden': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'hidden_from'", 'symmetrical': 'False', 'to': "orm['account.UserProfile']"}),
+            'images_quote': ('django.db.models.fields.CharField', [], {'default': "'Whose woods these are I think I know, his house is in the village though.'", 'max_length': '70'}),
+            'images_quote_author': ('django.db.models.fields.CharField', [], {'default': "'Robert Frost'", 'max_length': '20'}),
+            'in_relationship': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['account.UserProfile']", 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'optional_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': "'200'"}),
-            'photo': ('django.db.models.fields.files.ImageField', [], {'default': "'images/noProfilePhoto.png'", 'max_length': '100'}),
+            'photo': ('images.fields.ImageWithThumbField', [], {'default': "'uploads/images/noProfilePhoto.png'", 'max_length': '100'}),
+            'relationtype': ('django.db.models.fields.CharField', [], {'max_length': "'1'", 'blank': 'True'}),
+            'timezone': ('django.db.models.fields.CharField', [], {'max_length': "'200'", 'blank': 'True'}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
         },
         'auth.group': {
@@ -72,16 +106,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'pages.pages': {
-            'Meta': {'object_name': 'Pages'},
-            'category': ('django.db.models.fields.CharField', [], {'default': "'undefined'", 'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': "'200'"}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': "'2'"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['account.UserProfile']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': "'200'"})
         }
     }
 
-    complete_apps = ['pages']
+    complete_apps = ['account']
