@@ -42,7 +42,7 @@ LionFace.PostImages.prototype = {
             var src = $('<div></div>').css({
                 'backgroundImage': 'url('+src+')'
             }).css('backgroundImage');
-            console.log( $(selector) );
+            //console.log( $(selector) );
             $(selector).each(function(index, elem) {
                 if ($(this).css('backgroundImage') == src)
                     return;
@@ -212,7 +212,7 @@ LionFace.PostImages.prototype = {
             } else {
                 next = $('.image_container li:first', this.$popup_posts);
             }
-            console.log($(next));
+            //console.log($(next));
             this.popup_change_item($(next));
         }
     },

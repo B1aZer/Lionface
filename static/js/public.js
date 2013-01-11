@@ -31,4 +31,16 @@ $(document).ready(function() {
 
     var random = Math.round(Math.random() * 10);
     $('.public_link').eq(random).click();
+
+    $(document).on('click', '.about_tags', function() {
+        var url = '/tag/?models=tags_tag&q=';
+        var tag = $(this).find('.tag_name').html();
+        url = url + tag;
+        window.location = url;
+    });
+
+    $(document).on('click', '.about_users', function() {
+        var url = $(this).find('.user-link').attr('href');
+        window.location = url;
+    });
 });

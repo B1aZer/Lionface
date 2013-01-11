@@ -9,12 +9,11 @@
 
 <div style="padding: 7px; 0; margin-top: 10px; border: 1px solid #EEE; border-width: 1px 0 1px 0;">
 <div align="left" style="font-size: 8pt; color: #999;">Most Popular Public Tags (within the previous 7 days) . . . </div>
-<div class="micro_page">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div><br />
-<div class="micro_page">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
+{% for tag in popular_tags|slice:":4" %}
+<div class="micro_page about_tags">#<span class="tag_name">{{ tag.name }}</span><br /><span style="font-size: 7pt;">{{ tag.get_posts_count }} Tagged Posts</span></div>
+{% endfor %}
+<br />
+{% for tag in popular_tags|slice:"4:" %}
+<div class="micro_page about_tags">#<span class="tag_name">{{ tag.name }}</span><br /><span style="font-size: 7pt;">{{ tag.get_posts_count }} Tagged Posts</span></div>
+{% endfor %}
 </div>

@@ -22,8 +22,8 @@ LionFace.Profile.prototype = {
     //restrict image size and format before upload
     bind_upload_form : function() {
         $('#id_photo').bind('change', function() {
-                console.log(this.files[0].type);
-                console.log(this.files[0].size);
+                //console.log(this.files[0].type);
+                //console.log(this.files[0].size);
                 if(this.files[0].size > 1048576) {
                     $('#submit_img_btn').hide();
                     if ($('.errorlist').length) {
@@ -140,7 +140,6 @@ LionFace.Profile.prototype = {
                 data: self.serialize(),
                 callback: function(data) {
                     if (data.status == 'OK') {
-                        console.log(' all good' );
                         $('#id_content').val('');
                         self.hide();
                         $("#send_message").data('toggled',false);
@@ -215,7 +214,6 @@ LionFace.Profile.prototype = {
                     if (data.status === 'OK') {
                         $("#news_feed").prepend(data.html);
                         $('.postbox_textarea').val('');
-                        console.log('saving');
                         make_excerpts();
                     } else {
                         if ($('.errorlist').length) {
@@ -337,12 +335,12 @@ LionFace.Profile.prototype = {
     },
 
     attach_dropped_image: function (e) {
-        console.log('1');
+        //console.log('1');
         var $attached_images = $('#attached-images');
         e = e.originalEvent;
         e.preventDefault();
         var image = (e.dataTransfer || e.target).files[0];
-        console.log(image);
+        //console.log(image);
         window.loadImage(
             image,
             function (img) {
@@ -353,7 +351,7 @@ LionFace.Profile.prototype = {
                 // $.post('/posts/save/', data, function (data) {
                 //     alert('hi');
                 // }, 'JSON');
-                console.log(img);
+                //console.log(img);
             },
             {
                 maxWidth: 190

@@ -21,18 +21,19 @@
 <div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>"Random" Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
 <div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>"Random" Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
 
-		<div class="micro_title_small">Most Followed Users</div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>(1st) Full Name<br /><span style="font-size: 7pt;">(count) Followers</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>Full Name<br /><span style="font-size: 7pt;">(count) Followers</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>Full Name<br /><span style="font-size: 7pt;">(count) Followers</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>(4th) Full Name<br /><span style="font-size: 7pt;">(count) Followers</span></td></tr></table></div>
+{% if most_followed %}
+<div class="micro_title_small">Most Followed Users</div>
+{% endif %}
+{% for user in most_followed %}
+<div class="micro_page_about about_users"><table><tr><td><img src="{{ user.get_thumb }}" width="30" height="30" /></td><td>{{ user.get_full_name }}<br /><span style="font-size: 7pt;">{{ user.get_followers_count }} Followers</span></td><td style="display:none"><a class="user-link" href="{{ user.get_absolute_url }}"></a></td></tr></table></div>
+{% endfor %}
 
+{% if popular_tags %}
 <div class="micro_title_small">Most Popular Tags <span style="font-size: 8pt; color: #999;">(previous 7 days)</span> </div>
-<div class="micro_page_about" style="margin: 2px 0;">(1st) #Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page_about" style="margin: 2px 0;">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page_about" style="margin: 2px 0;">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page_about" style="margin: 2px 0;">#Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
-<div class="micro_page_about" style="margin: 2px 0;">(5th) #Tag<br /><span style="font-size: 7pt;">(count) Tagged Posts</span></div>
+{% endif %}
+{% for tag in popular_tags %}
+<div class="micro_page_about about_tags" style="margin: 2px 0;">#<span class="tag_name">{{ tag.name }}</span><br /><span style="font-size: 7pt;">{{ tag.get_posts_count }} Tagged Posts</span></div>
+{% endfor %}
 	</div>
 
 	<div class="micro_center">
@@ -86,4 +87,8 @@
 	</div>
 </div>
 </div>
+{% endblock %}
+
+{% block footer_js %}
+{% include_media 'public.js' %}
 {% endblock %}

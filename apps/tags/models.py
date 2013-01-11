@@ -13,6 +13,9 @@ class Tag(models.Model):
         verbose_name = 'tag'
         verbose_name_plural = 'tags'
 
+    def get_posts_count(self):
+        return self.post_set.count()
+
 class User_Tag(Tag):
     user = models.ForeignKey(UserProfile)
     active = models.BooleanField(default=True)

@@ -16,11 +16,13 @@ class Command(BaseCommand):
                 user.save()
                 user = user.userprofile
                 # adding to love page
+                """
                 from pages.models import Pages, Membership
                 page = Pages.objects.get(id=23)
                 import datetime
                 from_date = datetime.date(2008, 6, 24)
                 Membership.objects.create(user=user,page=page,type='IN',from_date=from_date)
+                """
                 #page.users_loved.add(user)
                 #page.loves += 1
                 #page.save()

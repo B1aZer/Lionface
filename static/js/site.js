@@ -577,7 +577,6 @@ LionFace.Site.prototype = {
                 source: url_auto,
             }).keydown(function(e){
                 if (e.keyCode === 13){
-                    console.log($(this).val());
                     window.location = url_user + $(this).val();
                 }
             }).data( "autocomplete" )._renderItem = function( ul, item ) {
@@ -699,7 +698,6 @@ LionFace.Site.prototype = {
                             this.toggle_privacy(post_id, data_back.privacy);
                         }
                         if (data_back.commenting) {
-                            console.log(post_id);
                             $('#hide_comment_link_'+post_id).hide();
                             $('#hide_follow_link_'+post_id).hide();
                             $('#hide_comment_'+post_id).hide();
