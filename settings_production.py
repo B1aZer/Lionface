@@ -1,5 +1,5 @@
 #CELERY
-BROKER_URL = "django://"
+#BROKER_URL = "django://"
 USE_TZ = True
 #DEBUG = True
 
