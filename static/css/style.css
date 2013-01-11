@@ -1,3 +1,15 @@
+@font-face {
+	font-family: "Kievit-Custom";
+	src: url('fonts/Kievit-Custom.eot');
+    src: local(my_font), url('fonts/Kievit-Custom.ttf') format('opentype');
+}
+@font-face {
+	font-family: "Kievit-Custom";
+	src: url('fonts/Kievit-Bold-Custom.eot');
+    src: local(my_font), url('fonts/Kievit-Bold-Custom.ttf') format('opentype');
+	font-weight: bold;
+}
+
 body {
 	font-family: "Kievit-Custom", Arial, serif;
 	font-size: 10pt;
