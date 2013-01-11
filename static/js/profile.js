@@ -270,8 +270,28 @@ LionFace.Profile.prototype = {
         });
     */
 
-        $('#attached-images').sortable();
+        $('.pending_images').sortable();
         $('.postbox_textarea').autosize();
+
+        $(document).on('mouseenter', '.attached_image_class', function() {
+            $(this).find('.image_settings_class').show();
+        })
+
+        $(document).on('mouseleave', '.attached_image_class', function() {
+            $(this).find('.image_settings_class').hide();
+        })
+
+        $(document).on('click', '.attached_image_full_size', function(e) {
+            e.preventDefault();
+        })
+
+        $(document).on('click', '.attached_image_delete', function(e) {
+            e.preventDefault();
+            var image = $(this).parents('.attached_image_class')
+            image.fadeOut( function() { 
+                $(this).remove();
+            });
+        })
     },
 
     attach_image: function(event) {
@@ -282,7 +302,7 @@ LionFace.Profile.prototype = {
             return;
         }
         var $attached_images = $('#attached-images');
-        $attached_images.find("ul").append("<li><input class='attach-image-file' type='file' name='image' style='display: none;'></li>");
+        $attached_images.find("ul").append("<li class='attached_image_class'><input class='attach-image-file' type='file' name='image' style='display: none;'></li>");
         // document.getElementsByClassName('attach-image-file')[0].addEventListener('change', uploadImage, false);
         $(".attach-image-file").on("change", function(e) {
         // function uploadImage(e) {
@@ -293,27 +313,32 @@ LionFace.Profile.prototype = {
                 console.log('file not select');
                 return;
             }
+            if ($.inArray(image.type,['image/jpeg','image/png']) < 0) {
+                console.log(image.type);
+                return;
+            }
             window.loadImage(
                 image,
                 function (img) {
                     var $li = $attached_images.find('ul li').last();
                     $li.attr('id', 'img-' + _this.attach_image_count);
                     $li = $attached_images.find('#img-' + _this.attach_image_count);
-                    console.log($li);
                     $li.append(" \
-                    <div id='image_settings' class='feed'> \
-                        <a href='#' id='fullsize' style='float: left;' title='Make full-size in the post'>+</a> \
-                        <a href='#' id='delete' style='float: right;' title='Delete Photo'>x</a> \
+                    <div id='image_settings' class='feed image_settings_class'> \
+                        <a href='#' class='attached_image_full_size' id='fullsize' style='float: left;' title='Make full-size in the post'>+</a> \
+                        <a href='#' class='attached_image_delete' id='delete' style='float: right;' title='Delete Photo'>x</a> \
                     </div> \
                     ");
                     $li.append(img);
 
+                    console.log(img);
+                    console.log(image);
+
                     $image_settings = $li.find('#image_settings');
-                    console.log($li);
-                    console.log($image_settings);
                     if ($image_settings.length != 1)
                         return;
                     $image_settings.hide();
+                    /*
                     $li.hover(
                         function() {
                             $image_settings.show();
@@ -322,6 +347,7 @@ LionFace.Profile.prototype = {
                             $image_settings.hide();
                         }
                     );
+                    */
 
                     // $attached_images.sortable();
                 },

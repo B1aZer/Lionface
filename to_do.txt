@@ -1,6 +1,10 @@
+#now
+remove li from attached image on return
 #production
 add hours
 celery aint running on boot
+#posts
+attaching mp3 ?
 #pages#
 left column = admin + owned > 12
 ##next###
