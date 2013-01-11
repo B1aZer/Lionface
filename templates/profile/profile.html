@@ -131,7 +131,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 <div style="position: relative;">
 <div class="profile_edit" id="left_web">
     <input id="url_input" class="bio_website" type="text" style="display:none; width: 165px;"></input>
-    <div class="url_errors" style="display:none">Not a valid url</div><br />
+    <div class="url_errors" style="display:none">URL must contain http://</div><br />
     <div class="sublink"><a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
     <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a></div>
     </div>
