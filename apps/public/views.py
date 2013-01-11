@@ -49,7 +49,7 @@ def about(request):
     week_ago = now - dateclass.timedelta(7)
     popular_tags = Tag.objects.filter(post__date__gte=week_ago).annotate(num_posts=Count('post')).order_by('-num_posts')[:8]
     #users
-    most_followed = UserProfile.objects.annotate(num_followers=Count('followers')).filter(num_followers__gt=0).order_by('-num_followers')[:4]
+    most_followed = UserProfile.objects.annotate(num_followers=Count('followers')).filter(num_followers__gt=0).filter(from_people__status=1).order_by('-num_followers')[:4]
 
     return render_to_response(
         'public/about.html',
