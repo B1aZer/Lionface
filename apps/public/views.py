@@ -76,7 +76,7 @@ def micro(request):
     micro = { 'users_total': UserProfile.objects.count() }
     #import pdb;pdb.set_trace()
     if name == 'followers':
-        micro['most_followed'] = UserProfile.objects.annotate(num_followers=Count('followers')).filter(num_followers__gt=0).order_by('-num_followers')[:8]
+        micro['most_followed'] = UserProfile.objects.annotate(num_followers=Count('followers')).filter(num_followers__gt=0).filter(from_people__status=1).order_by('-num_followers')[:8]
     if name == 'tags':
         now = timezone.now()
         week_ago = now - dateclass.timedelta(7)
