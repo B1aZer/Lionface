@@ -90,6 +90,9 @@ def micro(request):
     if name == 'nonprofits':
         micro['most_loved'] = Pages.objects.filter(type='NP').annotate(num_users=Count('users_loved')).filter(pageloves__status='A').order_by('-num_users')[:4]
         micro['random_pages'] = Pages.objects.filter(type='NP').order_by('?')[:4]
+    if name == 'business':
+        micro['most_loved'] = Pages.objects.filter(type='BS').annotate(num_users=Count('users_loved')).filter(pageloves__status='A').order_by('-num_users')[:4]
+        micro['random_pages'] = Pages.objects.filter(type='BS').order_by('?')[:4]
     try:
         data['html'] = render_to_string('public/micro/%s.html' % name, micro
                                         , context_instance=RequestContext(request))
