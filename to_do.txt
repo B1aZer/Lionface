@@ -1,3 +1,6 @@
+#production
+add hours
+celery aint running on boot
 #pages#
 left column = admin + owned > 12
 ##next###
