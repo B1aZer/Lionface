@@ -43,4 +43,9 @@ $(document).ready(function() {
         var url = $(this).find('.user-link').attr('href');
         window.location = url;
     });
+
+    $(document).on('click', '.about_pages', function() {
+        var url = $(this).find('.page-link').attr('href');
+        window.location = url;
+    });
 });

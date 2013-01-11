@@ -6,6 +6,7 @@ from django.template import TemplateDoesNotExist
 from account.forms import *
 from account.models import UserProfile
 from tags.models import Tag
+from pages.models import Pages
 
 from django.db.models import Count
 from django.utils import timezone
@@ -50,12 +51,17 @@ def about(request):
     popular_tags = Tag.objects.filter(post__date__gte=week_ago).annotate(num_posts=Count('post')).order_by('-num_posts')[:8]
     #users
     most_followed = UserProfile.objects.annotate(num_followers=Count('followers')).filter(num_followers__gt=0).filter(from_people__status=1).order_by('-num_followers')[:4]
+    #pages
+    random_nonprofits = Pages.objects.filter(type='NP').order_by('?')[:4]
+    random_businesses = Pages.objects.filter(type='BS').order_by('?')[:4]
 
     return render_to_response(
         'public/about.html',
         {
             'popular_tags' : popular_tags,
             'most_followed' : most_followed,
+            'random_nonprofits' : random_nonprofits,
+            'random_businesses' : random_businesses,
         },
         RequestContext(request)
     )
@@ -81,6 +87,9 @@ def micro(request):
         now = timezone.now()
         week_ago = now - dateclass.timedelta(7)
         micro['popular_tags'] = Tag.objects.filter(post__date__gte=week_ago).annotate(num_posts=Count('post')).order_by('-num_posts')[:8]
+    if name == 'nonprofits':
+        micro['most_loved'] = Pages.objects.filter(type='NP').annotate(num_users=Count('users_loved')).filter(pageloves__status='A').order_by('-num_users')[:4]
+        micro['random_pages'] = Pages.objects.filter(type='NP').order_by('?')[:4]
     try:
         data['html'] = render_to_string('public/micro/%s.html' % name, micro
                                         , context_instance=RequestContext(request))

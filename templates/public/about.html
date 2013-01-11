@@ -9,17 +9,19 @@
 <div class="micro_container">
 	<div class="float_right">
 
+        {% if random_nonprofits %}
 		<div class="micro_title_small" style="border: 0px solid transparent; padding-top: 38px; color: #909e4a;">Nonprofits</div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>Random Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>Random Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>Random Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>Random Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
+        {% endif %}
+        {% for page in random_nonprofits %}
+        <div class="micro_page_about about_pages"><table><tr><td><img src="{{ page.get_thumb }}" width="30" height="30" /></td><td>{{ page.name }}<br /><span class="love">{{ page.get_lovers_active_count }} Loves</span></td><td style="display:none"><a class="page-link" href="{{ page.get_absolute_url }}"></a></td></tr></table></div>
+        {% endfor %}
 
+        {% if random_businesses %}
 		<div class="micro_title_small">Businesses</div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>"Random" Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>"Random" Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>"Random" Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
-<div class="micro_page_about"><table><tr><td><img src="{% media_url 'images/noThumb.png' %}" width="30" height="30" /></td><td>"Random" Page Name<br /><span class="love">(count) Loves</span></td></tr></table></div>
+        {% endif %}
+        {% for page in random_businesses %}
+<div class="micro_page_about about_pages"><table><tr><td><img src="{{ page.get_thumb }}" width="30" height="30" /></td><td>{{ page.name }}<br /><span class="love">{{ page.get_lovers_active_count }} Loves</span></td><td style="display:none"><a class="page-link" href="{{ page.get_absolute_url }}"></a></td></tr></table></div>
+        {% endfor %}
 
 {% if most_followed %}
 <div class="micro_title_small">Most Followed Users</div>
