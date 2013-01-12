@@ -1,3 +1,6 @@
+#smileys
+#administration
+
 #now
 remove li from attached image on return
 #production
