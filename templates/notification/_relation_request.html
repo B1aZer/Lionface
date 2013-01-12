@@ -4,6 +4,6 @@
         <span class="blue_btn" style="padding: 0px; margin: 0px; border: 0px;"><a class="relation_request_a" href="{% url account.views.relation_accept relation_id=notification.content_object.id %}">We are!</a></span>
       <span class=""><a class="relation_request_a" style="margin-left: 5px;" href="{% url account.views.relation_decline relation_id=notification.content_object.id %}">Um, no.</a></span>
     </div>
-    <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a> said you are {{ notification.content_object.get_relation_type }}!
+    <a href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a> said you are {{ notification.content_object.get_relation_type }}.
   </div>
 </li>

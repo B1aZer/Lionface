@@ -1,6 +1,6 @@
 <li class="friend_accept notification">
   <div style="padding: 15px; background: transparent; cursor: default;" class="link-output">
-      <a {% if notification.new_one %} class="new_notification" {% else %} {% endif %} href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a><br /><span style="color: #896;">accepted your friend request.</span>
+      <a {% if notification.new_one %} class="new_notification" {% else %} {% endif %} href="{{ notification.other_user.get_absolute_url }}">{{ notification.other_user.get_full_name }}</a> <span style="color: #777;">accepted your friend request.</span>
       <a class="hide_notification" href="{% url notification.views.hide_notification username=notification.user.username notf_id=notification.id %}"> hide </a>
   </div>
   <div class="separator"></div>

@@ -2,7 +2,7 @@
   <div style="padding: 15px; background: transparent; cursor: default;" class="link-output">
       <span {% if notification.new_one %} class="new_notification" {% else %} {% endif %}>
               {{ notification.get_people_names|safe }}
-      </span><br /><span style="color: #896;">started following you.</span>
+      </span> <span style="color: #777;">started following you.</span>
       <a class="hide_notification" href="{% url notification.views.hide_notification username=notification.user.username notf_id=notification.id %}"> hide </a>
   </div>
   <div class="separator"></div>
