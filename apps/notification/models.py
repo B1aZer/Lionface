@@ -233,7 +233,7 @@ def create_comment_notifiaction(sender, comment, request, **kwargs):
     if isinstance(news_post, Events):
         #notifiaction for events
         #Notification(user=comment.content_object.get_owner(), type='CS', other_user=comment.user, content_object=comment.content_object).save()
-        pass
+        return
     if isinstance(news_post,NewsItem):
         news_post = news_post.get_post()
     else:

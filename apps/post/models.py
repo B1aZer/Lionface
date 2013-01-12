@@ -804,6 +804,11 @@ def delete_news_feeds(sender, instance, **kwargs):
         pass
 post_delete.connect(delete_news_feeds, sender=NewsItem)
 
+def delete_discussion(sender, instance, **kwargs):
+    if instance.topic.get_posts_count() < 1:
+        instance.topic.delete()
+post_delete.connect(delete_discussion, sender=DiscussPost)
+
 def change_default_settings(sender, instance, created, **kwargs):
     if created:
         instance.allow_commenting = not instance.user.check_option(
