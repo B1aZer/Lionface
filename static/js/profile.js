@@ -311,10 +311,12 @@ LionFace.Profile.prototype = {
             var image = e.target.files[0];
             if (image === undefined) {
                 console.log('file not select');
+                $attached_images.find('ul li').last().remove();
                 return;
             }
             if ($.inArray(image.type,['image/jpeg','image/png']) < 0) {
                 console.log(image.type);
+                $attached_images.find('ul li').last().remove();
                 return;
             }
             window.loadImage(
