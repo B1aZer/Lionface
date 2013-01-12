@@ -16,4 +16,3 @@ logs/
 wsgi.py
 whoosh_index/
 whoosh_local/
-smileys.csv
