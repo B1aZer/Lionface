@@ -1,5 +1,37 @@
 {% load media friends format_results %}
 
+<script>
+/** dashboard icons hover */
+$(document).ready(function() { 
+        $(document).on('mouseenter', '.dashboard_nav', function() {
+            var img = $(this).find('img');
+            var a = $(this);
+            if (img.hasClass('icon_post') && !a.hasClass('active_dash_head')) {
+                img.attr('src',"{% media_url 'images/iconPost.hover.png' %}");
+            }
+            if (img.hasClass('icon_album') && !a.hasClass('active_dash_head')) {
+                img.attr('src',"{% media_url 'images/iconAlbum.hover.png' %}");
+            }
+            if (img.hasClass('icon_loves') && !a.hasClass('active_dash_head')) {
+                img.attr('src',"{% media_url 'images/iconLoves.hover.png' %}");
+            }
+        });
+        $(document).on('mouseleave', '.dashboard_nav', function() {
+            var img = $(this).find('img');
+            var a = $(this);
+            if (img.hasClass('icon_post') && !a.hasClass('active_dash_head')) {
+                img.attr('src',"{% media_url 'images/iconPost.png' %}");
+            }
+            if (img.hasClass('icon_album') && !a.hasClass('active_dash_head')) {
+                img.attr('src',"{% media_url 'images/iconAlbum.png' %}");
+            }
+            if (img.hasClass('icon_loves') && !a.hasClass('active_dash_head')) {
+                img.attr('src',"{% media_url 'images/iconLoves.png' %}");
+            }
+        });
+});
+</script>
+
 <div id="dashboard">
 	<table width="100%" height="100%"><tr>
 		<td align="left" width="186" style="padding: 7px;"> 
@@ -14,13 +46,13 @@
 		<td align="left">
 			<table><tr><td>
         <a href="{{ profile_user.get_absolute_url }}" id="posts_link" class="dashboard_nav {% if profile_view %}active_dash_head{% endif %}">
-		<table><tr><td><div class="db_posts_icon" {% if profile_view %}style="background: url({% media_url 'images/iconPost.hover.png' %});"{% endif %}></div></td><td>Posts</td></tr></table></a>
+            <table><tr><td><img class="db_posts_icon icon_post" {% if profile_view %} src="{% media_url 'images/iconPost.hover.png' %}" {% else %} src="{% media_url 'images/iconPost.png' %}" {% endif %}></img></td><td>Posts</td></tr></table></a>
 			</td><td>
         <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="dashboard_nav {% if album_view %}active_dash_head{% endif %}">
-		<table><tr><td><div class="db_albums_icon" {% if album_view %}style="background: url({% media_url 'images/iconAlbum.hover.png' %});"{% endif %}></div></td><td>Albums</td></tr></table></a>
+            <table><tr><td><img class="db_albums_icon icon_album" {% if album_view %} src="{% media_url 'images/iconAlbum.hover.png' %}" {% else %} src="{% media_url 'images/iconAlbum.png' %}" {% endif %}></img></td><td>Albums</td></tr></table></a>
 			</td><td>
                 <a href="{% url user-loves username=profile_user.username %}" id="loves_link" class="dashboard_nav {% if loves_view %}active_dash_head{% endif %}" >
-		<table><tr><td><div class="db_loves_icon" {% if loves_view %}style="background: url({% media_url 'images/iconLoves.hover.png' %});"{% endif %}></div></td><td>Loves</td></tr></table></a>
+                    <table><tr><td><img class="db_loves_icon icon_loves" {% if loves_view %}src="{% media_url 'images/iconLoves.hover.png' %}" {% else %} src="{% media_url 'images/iconLoves.png' %}" {% endif %}></img></td><td>Loves</td></tr></table></a>
 			</td><td>
 			{% if request.user == profile_user %}
 			{% else %}
