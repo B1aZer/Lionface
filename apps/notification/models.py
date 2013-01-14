@@ -282,21 +282,18 @@ post_save.connect(create_comment_image_notification, sender=ImageComments)
 
 def delete_comment_image_notification(sender, instance, **kwargs):
     if instance.owner != instance.image.owner:
-        try:
-            data = {
-                'user': instance.image.owner,
-                'type': 'CI',
-                'other_user': instance.owner,
-                'content_type': ContentType.objects.get_for_model(Image),
-                'object_id': instance.image.id,
-                'related_type': ContentType.objects.get_for_model(ImageComments),
-                'related_id': instance.id,
-                'read': False,
-            }
-            notif = Notification.objects.get(**data)
-            notif.delete()
-        except Notification.DoesNotExist:
-            pass
+        data = {
+            'user': instance.image.get_owner(),
+            'type': 'CI',
+            'other_user': instance.owner,
+            'content_type': ContentType.objects.get_for_model(Image),
+            'object_id': instance.image.id,
+            'related_type': ContentType.objects.get_for_model(ImageComments),
+            'related_id': instance.id,
+            #'read': True,
+        }
+        notif = Notification.objects.filter(**data)
+        notif.delete()
 post_delete.connect(delete_comment_image_notification, sender=ImageComments)
 
 
@@ -318,6 +315,11 @@ def delete_dated_notifications(sender, instance, using, **kwargs):
     post_type = ContentType.objects.get_for_model(original)
     notf = Notification.objects.filter(content_type__pk=post_type.id, object_id=original.id)
     notf.delete()
+    # remove image notifications
+    images = Image.objects.filter(owner_type__pk=post_type.id, owner_id=original.id)
+    for image in images:
+        ct = ContentType.objects.get_for_model(image)
+        Notification.objects.filter(content_type__pk=ct.id, object_id=image.id).delete()
 pre_delete.connect(delete_dated_notifications, sender=Post)
 pre_delete.connect(delete_dated_notifications, sender=PagePost)
 pre_delete.connect(delete_dated_notifications, sender=FeedbackPost)
