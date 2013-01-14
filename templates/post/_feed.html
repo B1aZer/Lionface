@@ -35,8 +35,11 @@
     {{ item.render|safe }}
             {% spaceless %}
             <span class="subtext">
+                {{ item.get_owner }}
             <span class="timestamp" style="margin: 0 4px;" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
+            {% if item.get_owner == request.user %}
             <a href="javascript:LionFace.Site.del_post({{item.id}});" style="margin: 0 4px; color: #AAA;">Delete</a>
+            {% endif %}
             <a style="text-decoration: none;"><span class="toggle_privacy" title="Privacy Settings: Public" style="margin: 0 4px; color: #CCC; text-decoration: none; cursor: default;">Public</span></a>
             </span>
             {% endspaceless %}
