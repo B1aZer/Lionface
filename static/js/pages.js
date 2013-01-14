@@ -238,6 +238,7 @@ LionFace.Pages.prototype = {
                                 else {
                                     self_class.load_page_feed();
                                 }
+                                LionFace.Site.revert_textbox_height();
                             }
                         }
                     });

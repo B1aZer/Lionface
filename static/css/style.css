@@ -863,7 +863,7 @@ a.profile_btn:hover {
 .image_container_attach ul li {
 	float: left;
 	width: 190px;
-	height: 160px;
+    /*height: 160px;*/
 	overflow: hidden;
 
 	margin-left: 4px;

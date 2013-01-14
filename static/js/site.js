@@ -811,6 +811,11 @@ LionFace.Site.prototype = {
 
     },
 
+    revert_textbox_height : function () {
+        $('.postbox_textarea').height(30);
+        $('#postboxbutton').height(12);
+    },
+
     bind_public : function() {
 
         //Switch search queries
