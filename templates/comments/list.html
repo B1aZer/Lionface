@@ -1,7 +1,7 @@
 {% load format_results %}
 
 {% if comment_list.has_next %}
-    <a href="{% url post.views.comments_pagination post_id=item.get_post.id page=comment_list.next_page_number %}" class="coomments_see_more" >See More Comments</a>
+    <a href="{% url post.views.comments_pagination post_id=item.get_post.id page=comment_list.next_page_number %}" class="coomments_see_more" >See Older Comments</a>
 {% endif %}
 
 <dl id="comments">
