@@ -846,6 +846,9 @@ a.profile_btn:hover {
 
 /* style for attached images */
 
+.attached_image_class {
+    position:relative;
+}
 
 .image_container_attach ul {
 	display: inline-block;

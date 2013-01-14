@@ -398,9 +398,21 @@ class DiscussPost(Post):
         self.content = bleach.linkify(
             self.content, target='_blank', filter_url=add_http)
 
+        # attached images
+        ctype = ContentType.objects.get_for_model(self)
+        images = Image.objects.filter(owner_type=ctype, owner_id=self.id)
+        images_div = ''
+        if len(images) > 0:
+            c = {'images': images}
+            render_images = render_to_string('post/_post_images.html', c)
+            images_div = "<div class='image_container feed'>{0}</div>".format(
+                render_images)
+
+
         post_template = render_to_string('post/_discpost.html',
                                          {'user': self.user,
                                           'content': mark_safe(self.content),
+                                          'images_div': images_div,
                                           })
         # replace last linebreak
         post_template = post_template.strip()

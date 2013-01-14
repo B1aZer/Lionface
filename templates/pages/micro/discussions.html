@@ -2,6 +2,7 @@
 <script>
 $(document).ready(function(){
         $("#topicForm").validate();
+        $('.pending_images').sortable();
 
         /** Autocomplete for pages */
         function split( val ) {
@@ -71,7 +72,7 @@ $(document).ready(function(){
 <div class="page_center">
     <div style="padding: 15px;">
 
-        <form id="topicForm" class="cmxform" method="POST" action="">
+        <form id="topicForm" class="cmxform" method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
         <div id="postbox">
             <div style="padding: 10px;" align="center">
 				<div align="left" style="padding: 5px;">
@@ -116,11 +117,16 @@ $(document).ready(function(){
                             </td>
                                     <td align="right">
 									<span style="color: #CCC; font-size: 8pt; margin: 4px;"><span style="margin: 4px;">#</span> <span style="margin: 4px;">embed</span> <span style="margin: 4px;">href</span></span>
-                                    <div class="attach">Attach</div>
+                                    <div class="attach attaching_class">Attach</div>
                                     <a href="{% url pages.views.start_topic slug=page.username %}" class="post" id="duscussbutton" >Start New Topic</a>
                                     </td>
                 </tr></table>
                 </div>
+                <div id="attached-images" class="image_container_attach">
+                    <ul class="pending_images">
+                    </ul>
+                </div>
+                </form>
             </div>
         </div>
         </form>

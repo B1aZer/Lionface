@@ -1916,8 +1916,21 @@ def start_topic(request, slug):
                 topic.privacy = "P"
             topic.save()
             topic.tagged.add(page)
-            if content:
-                topic.posts.create(user=request.user, content=content)
+            if content or request.FILES.getlist('image'):
+                post = topic.posts.create(user=request.user, content=content)
+
+                # attach uploaded images
+                for image in request.FILES.getlist('image'):
+                    image_form = ImageForm(None, {'image': image})
+                    if image_form.is_valid():
+                        img = image_form.save(post)
+                        # img.make_activity()
+                        img.generate_thumbnail(158, 158)
+                    else:
+                        data['status'] = 'fail'
+                        data['errors'] = image_form.errors
+                        break
+
             if tagged:
                 pages = tagged.split(',')
                 pages = set(pages)
@@ -1956,7 +1969,19 @@ def list_topic(request, slug, topic_id):
         raise Http404
     if request.method == 'POST':
         content = request.POST.get('content')
-        topic.posts.create(user=request.user, content=content)
+        post = topic.posts.create(user=request.user, content=content)
+
+        # attach uploaded images
+        for image in request.FILES.getlist('image'):
+            image_form = ImageForm(None, {'image': image})
+            if image_form.is_valid():
+                img = image_form.save(post)
+                # img.make_activity()
+                img.generate_thumbnail(158, 158)
+            else:
+                data['status'] = 'fail'
+                data['errors'] = image_form.errors
+                break
 
     items = topic.get_feed()
     # viewed once
