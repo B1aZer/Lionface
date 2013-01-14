@@ -1,11 +1,6 @@
 function auto_complete() {
 
  url = '/auto/';
-    if (window.location.pathname.indexOf('/lionface/') >= 0) 
-    { 
-        url = '/lionface' +  url;
-        url_user = '/lionface' +  url_user;
-    }
 
 $( "#id_user_to" ).autocomplete({
         source: url,
@@ -75,10 +70,6 @@ function load_messages(user_id, sort, page, incolumn) {
 
         url = "show/";
 
-        if (window.location.pathname.indexOf('/lionface/') >= 0) 
-        { 
-            url = '/lionface' +  url;
-        }  
         
         //loading
         if (!(incolumn)) {

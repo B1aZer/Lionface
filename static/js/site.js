@@ -402,11 +402,6 @@ LionFace.Site.prototype = {
         }
         url = "/posts/dlcom/" + elem + "/";
 
-        if (window.location.pathname.indexOf('lionface') >= 0)
-        {
-            url = '/lionface' +  url;
-        }
-
         $.ajax(url,
             {
                 success: function(data) {

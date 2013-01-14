@@ -51,11 +51,6 @@ function del_post_single(elem) {
 
     url = "/posts/del/" + elem + "?type="+data.type+"&ajax=true";
 
-  if (window.location.pathname.indexOf('lionface') >= 0)
-  {
-    url = '/lionface' +  url;
-  }
-
     }
     $.ajax(url,
     {
@@ -230,10 +225,6 @@ $(document).ready(function(){
         var send = 'tag_name='+tag_val.textContent;
     if ($(this).hasClass('filterON')) {
             url = '/tags/deact/';
-             if (window.location.pathname.indexOf('lionface') >= 0)
-              {
-                url = '/lionface' +  url;
-              }
 
               $.ajax({
                 type: "POST",
@@ -253,10 +244,6 @@ $(document).ready(function(){
     }
     else {
          url = '/tags/act/';
-             if (window.location.pathname.indexOf('lionface') >= 0)
-              {
-                url = '/lionface' +  url;
-              }
 
               $.ajax({
                 type: "POST",
@@ -294,10 +281,6 @@ $(document).ready(function(){
       form.submit(function(e) {
         e.preventDefault();
         url = '/tags/add/';
-         if (window.location.pathname.indexOf('lionface') >= 0)
-              {
-                url = '/lionface' +  url;
-              }
 
               $.ajax({
                 type: "POST",
@@ -376,10 +359,6 @@ $(document).ready(function(){
         e.stopPropagation();
 
         url = '/tags/rem/';
-        if (window.location.pathname.indexOf('lionface') >= 0)
-          {
-            url = '/lionface' +  url;
-          }
 
        var link = $(this).parent()
        var tag_val = $(this).parent().contents()[0];
