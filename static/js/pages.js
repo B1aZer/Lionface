@@ -220,17 +220,18 @@ LionFace.Pages.prototype = {
                 rating = get_int($('.final_review').attr('id'));
             }
             var content = $('.postbox_textarea').val();
+            var images = $('.pending_images').find('div').length;
             if (rating || !$(this).hasClass('feedback_post')) {
-                if (content) {
-                    make_request({
+                if (content || images) {
+                    var options = {
                         url:url,
                         data: {
                             'page_id': LionFace.User.page_id,
                             'content': content,
                             'rating': rating,
                         },
-                        callback:function(data) {
-                            if (data.status == 'OK') {
+                        success:function(data) {
+                            if (data.status === 'OK') {
                                 $('.postbox_textarea').val('');
                                 if (rating) {
                                     self_class.load_feedback_feed();
@@ -239,9 +240,13 @@ LionFace.Pages.prototype = {
                                     self_class.load_page_feed();
                                 }
                                 LionFace.Site.revert_textbox_height();
+                                $("#attached-images ul").html("");
+                                LionFace.Site.attach_image_count = 0;
                             }
                         }
-                    });
+                    };
+                    $("#postform").ajaxSubmit(options);
+                    return false;
                 }
             }
             else {

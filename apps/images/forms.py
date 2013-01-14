@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from account.models import UserProfile
 from pages.models import Pages
-from post.models import ContentPost
+from post.models import *
 from .models import Image, ImageCounter
 
 
@@ -24,9 +24,9 @@ class ImageForm(forms.Form):
 
     def save(self, owner):
         post = None
-        if isinstance(owner, ContentPost):
+        if isinstance(owner, ContentPost) or isinstance(owner, PagePost):
             post = owner
-            owner = owner.user
+            owner = owner.get_owner()
         ctype = ContentType.objects.get_for_model(owner.__class__)
         try:
             counter = ImageCounter.objects \

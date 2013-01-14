@@ -169,6 +169,8 @@ LionFace.Site.prototype = {
         if (!LionFace.User.is_anonymous) {
             this.bind_private();
         }
+        this.attach_image_count = 0;
+        this.MAX_UPLOAD_IMAGES = 21;
     },
 
     hookLinks: function() {
@@ -811,12 +813,92 @@ LionFace.Site.prototype = {
 
     },
 
+    attach_image: function(event) {
+        var _this = this;
+        event.preventDefault();
+        if (_this.attach_image_count > _this.MAX_UPLOAD_IMAGES) {
+            create_message("Too many images", "error");
+            return;
+        }
+        var $attached_images = $('#attached-images');
+        $attached_images.find("ul").append("<li class='attached_image_class'><input class='attach-image-file' type='file' name='image' style='display: none;'></li>");
+        // document.getElementsByClassName('attach-image-file')[0].addEventListener('change', uploadImage, false);
+        $(".attach-image-file").on("change", function(e) {
+        // function uploadImage(e) {
+            // TODO: check uploaded image size
+            // if(e.target.files[0].size > 3145728) {
+            var image = e.target.files[0];
+            if (image === undefined) {
+                console.log('file not select');
+                $attached_images.find('ul li').last().remove();
+                return;
+            }
+            if ($.inArray(image.type,['image/jpeg','image/png']) < 0) {
+                console.log(image.type);
+                $attached_images.find('ul li').last().remove();
+                return;
+            }
+            window.loadImage(
+                image,
+                function (img) {
+                    var $li = $attached_images.find('ul li').last();
+                    $li.attr('id', 'img-' + _this.attach_image_count);
+                    $li = $attached_images.find('#img-' + _this.attach_image_count);
+                    $li.append(" \
+                    <div id='image_settings' class='feed image_settings_class'> \
+                        <a href='#' class='attached_image_full_size' id='fullsize' style='float: left;' title='Make full-size in the post'>+</a> \
+                        <a href='#' class='attached_image_delete' id='delete' style='float: right;' title='Delete Photo'>x</a> \
+                    </div> \
+                    ");
+                    $li.append(img);
+                    _this.attach_image_count += 1;
+
+                    $image_settings = $li.find('#image_settings');
+                    if ($image_settings.length != 1)
+                        return;
+                    $image_settings.hide();
+                },
+                {
+                    maxWidth: 190
+                }
+            );
+        });
+        $attached_images.find(".attach-image-file:last").click();
+    },
+
+    attach_dropped_image: function (e) {
+        //console.log('1');
+        var $attached_images = $('#attached-images');
+        e = e.originalEvent;
+        e.preventDefault();
+        var image = (e.dataTransfer || e.target).files[0];
+        //console.log(image);
+        window.loadImage(
+            image,
+            function (img) {
+                $attached_images.find('ul').append(img);
+                var data = {
+                    image: image
+                };
+                // $.post('/posts/save/', data, function (data) {
+                //     alert('hi');
+                // }, 'JSON');
+                //console.log(img);
+            },
+            {
+                maxWidth: 190
+            }
+        );
+    },
+
     revert_textbox_height : function () {
         $('.postbox_textarea').height(30);
         $('#postboxbutton').height(12);
     },
 
     bind_public : function() {
+        
+        var _this = this;
 
         //Switch search queries
         $('#quick_search').submit(function() {
@@ -916,6 +998,39 @@ LionFace.Site.prototype = {
                 $(this).find('.mutual_friend_list').show();
                 $(this).data('toggled', true);
             }
+        });
+
+        /** attached images */
+        $('.pending_images').sortable();
+
+        $(document).on('mouseenter', '.attached_image_class', function() {
+            $(this).find('.image_settings_class').show();
+        });
+
+        $(document).on('mouseleave', '.attached_image_class', function() {
+            $(this).find('.image_settings_class').hide();
+        });
+
+        $(document).on('click', '.attached_image_full_size', function(e) {
+            e.preventDefault();
+        });
+
+        $(document).on('click', '.attached_image_delete', function(e) {
+            e.preventDefault();            
+            var image = $(this).parents('.attached_image_class')
+            image.fadeOut( function() { 
+                $(this).remove();
+            });
+        });
+
+        /* remove all blank attachments */
+        $(document).on('click', '.attaching_class', function (e) {
+            $('.attached_image_class').each( function (i,e) {
+                    if (!$(e).attr('id')) {;
+                        $(e).remove();
+                    }
+            });
+            _this.attach_image(e);
         });
         
     },

@@ -36,7 +36,7 @@ function loadNewsFeed(elem, page) {
                 $(document).data('feed_page', data.page);
             }
 
-            LionFace.PostImages.bind_settings();
+            //LionFace.PostImages.bind_settings();
         },
         errorback: function() {
             $elem.html('Unable to retrieve data.');

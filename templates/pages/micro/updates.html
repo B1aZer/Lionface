@@ -11,6 +11,7 @@
 
         <div>
             <div style="padding: 10px;" align="center">
+                <form id="postform" enctype="multipart/form-data">{% csrf_token %}
 
                 <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
 
@@ -21,10 +22,15 @@
                             </td>
                                     <td align="right">
 									<span style="color: #CCC; font-size: 8pt; margin: 4px;"><span style="margin: 4px;">#</span> <span style="margin: 4px;">embed</span> <span style="margin: 4px;">href</span></span>
-									<div class="attach">Attach</div> <a href="#" class="post" id="postboxbutton">Update</a>
+									<div class="attach attaching_class">Attach</div> <a href="#" class="post" id="postboxbutton">Update</a>
                                     </td>
                 </tr></table>
                 </div>
+                <div id="attached-images" class="image_container_attach">
+                    <ul class="pending_images">
+                    </ul>
+                </div>
+                </form>
             </div>
         </div>
 

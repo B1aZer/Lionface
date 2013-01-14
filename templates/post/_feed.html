@@ -2,6 +2,10 @@
 {% load oembed_tags %}
 {# {% include_media "post.js" %} #}
 {# {% include "post/_popup.html" %} #}
+<script>
+    <!--/*attached images*/-->
+    LionFace.PostImages.bind_settings(); 
+</script>
 
 {% for item in items %}
 {% if not notification %}

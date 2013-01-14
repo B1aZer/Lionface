@@ -6,5 +6,5 @@
                 {% endif %}
 <a href='{{ user.get_absolute_url }}' class='admin_name'>{{ user.get_full_name }}</a>
 <br />
-<div class='post_content'> {{ content }}</div>
+<div class='post_content'> {{ content }}</div>{{ images_div|safe }}
 {% endspaceless %}

@@ -1,6 +1,3 @@
-var MAX_UPLOAD_IMAGES = 21;
-
-
 LionFace.Profile = function() {
     this.runner();
 };
@@ -16,7 +13,6 @@ LionFace.Profile.prototype = {
             this.bind_love_list();
             this.bind_profile_functions();
         }
-        this.attach_image_count = 0;
     },
 
     //restrict image size and format before upload
@@ -227,7 +223,7 @@ LionFace.Profile.prototype = {
                     }
                     $("#attached-images ul").html("");
                     LionFace.PostImages.bind_settings($('#news_feed .post_feed:first'));
-                    _this.attach_image_count = 0;
+                    LionFace.Site.attach_image_count = 0;
                 },
                 error: function() {
                     $('#attached-images ul').html('Error.');
@@ -245,7 +241,7 @@ LionFace.Profile.prototype = {
             e = e.originalEvent;
             e.preventDefault();
             e.dataTransfer.dropEffect = 'copy';
-        }).on('drop', this.attach_dropped_image);
+        }).on('drop', LionFace.Site.attach_dropped_image);
 
     /*
     //Submit on enter
@@ -272,128 +268,8 @@ LionFace.Profile.prototype = {
         });
     */
 
-        $('.pending_images').sortable();
         $('.postbox_textarea').autosize();
 
-        $(document).on('mouseenter', '.attached_image_class', function() {
-            $(this).find('.image_settings_class').show();
-        });
-
-        $(document).on('mouseleave', '.attached_image_class', function() {
-            $(this).find('.image_settings_class').hide();
-        });
-
-        $(document).on('click', '.attached_image_full_size', function(e) {
-            e.preventDefault();
-        });
-
-        $(document).on('click', '.attached_image_delete', function(e) {
-            e.preventDefault();            
-            var image = $(this).parents('.attached_image_class')
-            image.fadeOut( function() { 
-                $(this).remove();
-            });
-        });
-
-        /* remove all blank attachments */
-        $(document).on('click', '.attaching_class', function (e) {
-            $('.attached_image_class').each( function (i,e) {
-                    if (!$(e).attr('id')) {;
-                        $(e).remove();
-                    }
-            });
-            _this.attach_image(e);
-        });
-    },
-
-    attach_image: function(event) {
-        var _this = this;
-        event.preventDefault();
-        if (_this.attach_image_count > MAX_UPLOAD_IMAGES) {
-            create_message("Too many images", "error");
-            return;
-        }
-        var $attached_images = $('#attached-images');
-        $attached_images.find("ul").append("<li class='attached_image_class'><input class='attach-image-file' type='file' name='image' style='display: none;'></li>");
-        // document.getElementsByClassName('attach-image-file')[0].addEventListener('change', uploadImage, false);
-        $(".attach-image-file").on("change", function(e) {
-        // function uploadImage(e) {
-            // TODO: check uploaded image size
-            // if(e.target.files[0].size > 3145728) {
-            var image = e.target.files[0];
-            if (image === undefined) {
-                console.log('file not select');
-                $attached_images.find('ul li').last().remove();
-                return;
-            }
-            if ($.inArray(image.type,['image/jpeg','image/png']) < 0) {
-                console.log(image.type);
-                $attached_images.find('ul li').last().remove();
-                return;
-            }
-            window.loadImage(
-                image,
-                function (img) {
-                    var $li = $attached_images.find('ul li').last();
-                    $li.attr('id', 'img-' + _this.attach_image_count);
-                    $li = $attached_images.find('#img-' + _this.attach_image_count);
-                    $li.append(" \
-                    <div id='image_settings' class='feed image_settings_class'> \
-                        <a href='#' class='attached_image_full_size' id='fullsize' style='float: left;' title='Make full-size in the post'>+</a> \
-                        <a href='#' class='attached_image_delete' id='delete' style='float: right;' title='Delete Photo'>x</a> \
-                    </div> \
-                    ");
-                    $li.append(img);
-                    _this.attach_image_count += 1;
-
-                    $image_settings = $li.find('#image_settings');
-                    if ($image_settings.length != 1)
-                        return;
-                    $image_settings.hide();
-                    /*
-                    $li.hover(
-                        function() {
-                            $image_settings.show();
-                        },
-                        function() {
-                            $image_settings.hide();
-                        }
-                    );
-                    */
-
-                    // $attached_images.sortable();
-                },
-                {
-                    maxWidth: 190
-                }
-            );
-        });
-        $attached_images.find(".attach-image-file:last").click();
-    },
-
-    attach_dropped_image: function (e) {
-        //console.log('1');
-        var $attached_images = $('#attached-images');
-        e = e.originalEvent;
-        e.preventDefault();
-        var image = (e.dataTransfer || e.target).files[0];
-        //console.log(image);
-        window.loadImage(
-            image,
-            function (img) {
-                $attached_images.find('ul').append(img);
-                var data = {
-                    image: image
-                };
-                // $.post('/posts/save/', data, function (data) {
-                //     alert('hi');
-                // }, 'JSON');
-                //console.log(img);
-            },
-            {
-                maxWidth: 190
-            }
-        );
     },
 
     bind_albums : function() {
