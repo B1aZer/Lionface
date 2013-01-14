@@ -608,6 +608,18 @@ def feedback(request):
                 post = FeedbackPost(user=request.user, content=content, page=page, rating=rating)
                 post.save()
 
+                # attach uploaded images
+                for image in request.FILES.getlist('image'):
+                    image_form = ImageForm(None, {'image': image})
+                    if image_form.is_valid():
+                        img = image_form.save(post)
+                        # img.make_activity()
+                        img.generate_thumbnail(158, 158)
+                    else:
+                        data['status'] = 'fail'
+                        data['errors'] = image_form.errors
+                        break
+
                 #Tags
                 hashtags = [word[1:] for word in content.split() if word.startswith('#')]
 

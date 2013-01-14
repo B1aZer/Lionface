@@ -24,7 +24,9 @@ class ImageForm(forms.Form):
 
     def save(self, owner):
         post = None
-        if isinstance(owner, ContentPost) or isinstance(owner, PagePost):
+        if isinstance(owner, ContentPost) \
+                or isinstance(owner, PagePost) \
+                or isinstance(owner, FeedbackPost):
             post = owner
             owner = owner.get_owner()
         ctype = ContentType.objects.get_for_model(owner.__class__)

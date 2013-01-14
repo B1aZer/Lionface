@@ -35,6 +35,7 @@
             class="grayed_out"
             {% endif %}>
             <div style="padding: 10px;" align="center">
+                <form id="postform" enctype="multipart/form-data">{% csrf_token %}
 				<div align="left">
 					<span style="color: #999;">Rating:</span> 
                     <div id="rating1" class="review">1</div>
@@ -60,10 +61,15 @@
                             </td>
                                     <td align="right">
 									<span style="color: #CCC; font-size: 8pt; margin: 4px;"><span style="margin: 4px;">#</span> <span style="margin: 4px;">embed</span> <span style="margin: 4px;">href</span></span>
-									<div class="attach">Attach</div> <a href="#" class="post feedback_post" id="postboxbutton">Submit Feedback</a>
+									<div class="attach attaching_class">Attach</div> <a href="#" class="post feedback_post" id="postboxbutton">Submit Feedback</a>
                                     </td>
                 </tr></table>
                 </div>
+                <div id="attached-images" class="image_container_attach">
+                    <ul class="pending_images">
+                    </ul>
+                </div>
+                </form>
             </div>
         </div>
 		<br /><div style="height: 20px;"></div><br />

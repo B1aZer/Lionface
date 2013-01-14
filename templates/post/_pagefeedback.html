@@ -6,6 +6,6 @@
                     <a href="{{ page.get_absolute_url }}" style="color:#909E4A; font-size: 10pt;">{{ page.name }}</a>
                 {% endif %}
 <br />
-<div class='post_content'> {{ content }}</div>
+<div class='post_content'> {{ content }}</div>{{ images_div|safe }}
 {% endspaceless %}
 
