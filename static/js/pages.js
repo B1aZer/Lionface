@@ -281,7 +281,8 @@ LionFace.Pages.prototype = {
                     'image':$('#cover_image').css('backgroundImage').replace(pattern,""),
                 },
                 callback:function(data) {
-                    history.go(0);
+                    //location.reload();
+                    window.location = LionFace.User.page_url;
                 }
             });
         });

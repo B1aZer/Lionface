@@ -162,7 +162,7 @@ LionFace.Profile.prototype = {
             }
         );
 
-        /** reposition page cover image */
+        /** reposition profile cover image */
         $(document).on('click','#save_image_profile',function(e){
             e.preventDefault();
             var post = $('.profile_cover').position();
@@ -175,7 +175,9 @@ LionFace.Profile.prototype = {
                     'image':$('.profile_cover').css('backgroundImage').replace(pattern,""),
                 },
                 callback:function(data) {
-                    history.go(0);
+                    //history.go(0);
+                    //location.reload();
+                    window.location = LionFace.User.home;
                 }
             });
         });

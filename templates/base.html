@@ -17,6 +17,7 @@
          LionFace.User.is_anonymous = true;
     {% else %}
          LionFace.User.is_anonymous = false;
+         LionFace.User.home = "{{ request.user.get_absolute_url }}";
     {% endif %}
 
     LionFace.User.options = {}

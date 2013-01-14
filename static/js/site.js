@@ -776,7 +776,7 @@ LionFace.Site.prototype = {
                         if (data.status == 'OK') {
                             if (vote == 'up') {
                                 if (me.find('.loves_icon').length) {
-                                    me.html('<div class="loves_icon"></div> Loved');
+                                    me.find('span').html('Loved');
                                 }
                                 else {
                                     me.html('Loved');
@@ -792,7 +792,7 @@ LionFace.Site.prototype = {
                             }
                             else {
                                 if (me.find('.loves_icon').length) {
-                                    me.html('<div class="loves_icon"></div> Love');
+                                    me.find('span').html('Love');
                                 }
                                 else {
                                     me.html('Love');

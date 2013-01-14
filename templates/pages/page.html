@@ -5,6 +5,7 @@
 <script>
     LionFace.User.page_id = '{{ page.id }}';
     LionFace.User.page_list = true;
+    LionFace.User.page_url = '{{ page.get_abolute_url }}';
     {% if request.user|check_pages_community:page %}
         LionFace.User.options['pages_community__'+{{ page.id }}] = true;
     {% else %}
@@ -143,9 +144,9 @@ data-url="{% url pages.views.images page.username %}">
 						{% endif %}
 					<span class="love_count">{{ page.get_lovers_active_count }}</span>
                     {% if request.user in page.get_lovers %}
-                        <a href="#" class="love love_button loved"><div class="loves_icon"></div> Loved</a>
+                    <a href="#" class="love love_button loved"><img class="loves_icon" src="{% media_url 'images/Icon_Pages_Love.png' %}"></img> <span>Loved</span></a>
                     {% else %}
-                        <a href="#" class="love love_button"><div class="loves_icon"></div> Love</a>
+                    <a href="#" class="love love_button"><img class="loves_icon" src="{% media_url 'images/Icon_Pages_Love.png' %}"></img> <span>Love</span></a>
                     {% endif %}
                      
 						
