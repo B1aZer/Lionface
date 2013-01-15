@@ -5,8 +5,11 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+        #('Nick Clark', 'webmaster@lionface.org'),
 )
+
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = "webmaster@lionface.org"
 
 MANAGERS = ADMINS
 
@@ -130,6 +133,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'kombu.transport.django',
     'django.contrib.comments',
+    'registration',
 
     'south',
     'mediagenerator',
@@ -297,7 +301,11 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 7
 STRIPE_API_KEY = 'GfdATJpLDgriMZ66PPrK0Kf9XuCsZU9w'
 
 SITE_ID = 1
+
+# caelery django db queue
 #BROKER_URL = "django://"
+
+ACCOUNT_ACTIVATION_DAYS = 7
 
 if os.environ.get('production'):
     try:

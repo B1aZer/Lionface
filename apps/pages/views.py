@@ -1,5 +1,6 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
+from account.decorators import active_required
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.shortcuts import render_to_response, redirect
@@ -47,6 +48,7 @@ except ImportError:
 
 TOPICS_PER_PAGE = 7
 
+@active_required
 def main(request):
 
     form_busn = BusinessForm()
@@ -269,6 +271,7 @@ def page(request, slug=None):
         )
 
 
+@active_required
 def reposition(request, slug=None):
     data = {'status': 'FAIL'}
     if not slug:
@@ -303,6 +306,7 @@ def reposition(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def reset_picture(request, slug=None):
     if not slug:
         raise Http404
@@ -324,6 +328,7 @@ def reset_picture(request, slug=None):
     return redrct
 
 
+@active_required
 @login_required
 def reset_album_activity(request, slug):
     try:
@@ -379,6 +384,7 @@ def leaderboard(request):
     )
 
 
+@active_required
 def save_browsing_categories(request, cat_id):
     data = {'status': 'OK'}
     collapsed = request.POST.get('collapsed')
@@ -388,6 +394,8 @@ def save_browsing_categories(request, cat_id):
         request.user.set_option('leaderboard__%s' % cat_id, True)
     return HttpResponse(json.dumps(data), "application/json")
 
+
+@active_required
 def save_browsing_categories_nonp(request, cat_id):
     data = {'status': 'OK'}
     collapsed = request.POST.get('collapsed')
@@ -398,6 +406,7 @@ def save_browsing_categories_nonp(request, cat_id):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def nonprofit(request):
 
     form_busn = BusinessForm()
@@ -462,6 +471,7 @@ def nonprofit(request):
     )
 
 
+@active_required
 def love_count(request):
     data = {'status': 'FAIL'}
     if request.method == 'POST':
@@ -505,6 +515,7 @@ def love_count(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def page_browsing(request, page_type='business'):
     data = {'status': 'OK'}
 
@@ -563,6 +574,7 @@ def page_browsing(request, page_type='business'):
     )
 
 
+@active_required
 @login_required
 def update(request):
     data = {'status': 'FAIL'}
@@ -608,6 +620,7 @@ def update(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def feedback(request):
     data = {'status': 'FAIL'}
@@ -654,6 +667,7 @@ def feedback(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def list_posts(request, slug=None):
     data = {'status': 'FAIL'}
     if not slug:
@@ -692,6 +706,7 @@ def list_posts(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def list_feedback(request, slug=None):
     data = {'status': 'FAIL'}
     if not slug:
@@ -730,6 +745,7 @@ def list_feedback(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def settings(request, slug=None):
     from django.conf import settings
@@ -936,6 +952,7 @@ def settings(request, slug=None):
             )
 
 
+@active_required
 @login_required
 def settings_admins(request, slug=None):
     data = {'status': 'FAIL'}
@@ -973,6 +990,7 @@ def settings_admins(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def delete_page(request, slug=None):
     try:
@@ -997,6 +1015,7 @@ def delete_page(request, slug=None):
     return redirect('pages.views.main')
 
 
+@active_required
 @login_required
 def prevent_deletion(request, slug=None):
     data = {'status': 'FAIL'}
@@ -1010,6 +1029,7 @@ def prevent_deletion(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def page_content(request, slug=None):
     data = {'status': 'OK'}
@@ -1027,6 +1047,7 @@ def page_content(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def send_friend_request(request, slug=None):
     data = {'status': 'OK'}
@@ -1077,6 +1098,7 @@ def send_friend_request(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def remove_friend_page(request, slug=None):
     data = {'status': 'OK'}
@@ -1108,6 +1130,7 @@ def remove_friend_page(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def accept_friend_request(request, slug=None, request_id=None):
     data = {'status': 'OK'}
@@ -1120,6 +1143,7 @@ def accept_friend_request(request, slug=None, request_id=None):
     return redirect(page_request.to_page.get_absolute_url())
 
 
+@active_required
 @login_required
 def decline_friend_request(request, slug=None, request_id=None):
     data = {'status': 'OK'}
@@ -1132,6 +1156,7 @@ def decline_friend_request(request, slug=None, request_id=None):
     return redirect(page_request.to_page.get_absolute_url())
 
 
+@active_required
 @login_required
 def hide_friend_request(request, slug=None, request_id=None):
     data = {'status': 'OK'}
@@ -1144,6 +1169,7 @@ def hide_friend_request(request, slug=None, request_id=None):
     return redirect(page_request.from_page.get_absolute_url())
 
 
+@active_required
 @login_required
 def accept_community_request(request, slug=None, request_id=None):
     data = {'status': 'OK'}
@@ -1164,6 +1190,7 @@ def accept_community_request(request, slug=None, request_id=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def decline_community_request(request, slug=None, request_id=None):
     data = {'status': 'OK'}
@@ -1176,6 +1203,7 @@ def decline_community_request(request, slug=None, request_id=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def friends_position(request, slug=None):
     data = {'status': 'OK'}
@@ -1216,6 +1244,7 @@ def friends_position(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def community_check(request, slug=None):
     data = {'status': 'FAIL'}
@@ -1244,6 +1273,7 @@ def community_check(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def community_text(request, slug=None):
     data = {'status': 'FAIL'}
@@ -1273,6 +1303,7 @@ def community_text(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def community_date(request, slug=None):
     data = {'status': 'FAIL'}
@@ -1300,6 +1331,7 @@ def community_date(request, slug=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def page_members(request, slug=None, member_id=None):
     data = {'status': 'FAIL'}
@@ -1366,6 +1398,7 @@ def page_members(request, slug=None, member_id=None):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def images(request, slug, rows_show=4):
     try:
         page = Pages.objects.get(username=slug)
@@ -1418,6 +1451,7 @@ def images(request, slug, rows_show=4):
     )
 
 
+@active_required
 def images_ajax(request, slug):
     if not request.is_ajax():
         raise Http404
@@ -1507,6 +1541,7 @@ def images_ajax(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def images_comments_ajax(request, slug):
     if not request.is_ajax():
         raise Http404
@@ -1569,6 +1604,7 @@ def images_comments_ajax(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def count_agrees(request, item_id):
     data = {'status': 'FAIL'}
     try:
@@ -1586,6 +1622,7 @@ def count_agrees(request, item_id):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def count_disagrees(request, item_id):
     data = {'status': 'FAIL'}
     try:
@@ -1603,6 +1640,7 @@ def count_disagrees(request, item_id):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def add_events(request, slug):
     data = {'status': 'FAIL'}
     try:
@@ -1686,6 +1724,7 @@ def add_events(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def get_events(request, slug):
     try:
         page = Pages.objects.get(username=slug)
@@ -1760,6 +1799,7 @@ def get_events(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def change_event(request, slug):
     data = {'status': 'FAIL'}
     try:
@@ -1792,6 +1832,7 @@ def change_event(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def post_update_change(request, slug):
     data = {'status': 'OK'}
     try:
@@ -1808,6 +1849,7 @@ def post_update_change(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def event_comments(request, slug):
     data = {'status': 'OK'}
     try:
@@ -1828,6 +1870,7 @@ def event_comments(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def share_event(request, slug):
     data = {'status': 'OK'}
     try:
@@ -1859,6 +1902,7 @@ def share_event(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def card_form(request, slug):
     if request.method == 'POST' and not request.user.is_customer():
         # set your secret key: remember to change this to your live secret key in production
@@ -1906,6 +1950,7 @@ def card_form(request, slug):
     )
 
 
+@active_required
 def start_topic(request, slug):
     data = {'status': 'OK'}
     try:
@@ -1970,6 +2015,7 @@ def start_topic(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def list_topic(request, slug, topic_id):
     data = {'status': 'OK'}
     try:
@@ -2010,6 +2056,7 @@ def list_topic(request, slug, topic_id):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def topics_paging(request, slug):
     data = {'status': 'FAIL'}
     try:

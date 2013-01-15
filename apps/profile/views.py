@@ -26,6 +26,7 @@ from StringIO import StringIO
 from django.db.models import F
 
 from .decorators import unblocked_users
+from account.decorators import active_required
 
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
@@ -43,6 +44,7 @@ except ImportError:
     import simplejson as json
 
 
+@active_required
 @login_required
 def feed(request, username):
     return render_to_response(
@@ -53,6 +55,7 @@ def feed(request, username):
     )
 
 
+@active_required
 @login_required
 def timeline(request):
     return render_to_response(
@@ -63,6 +66,7 @@ def timeline(request):
     )
 
 
+@active_required
 @login_required
 @unblocked_users
 def images(request, username, rows_show=4):
@@ -119,6 +123,7 @@ def images(request, username, rows_show=4):
     )
 
 
+@active_required
 @login_required
 @unblocked_users
 def images_reset(request, username):
@@ -137,6 +142,7 @@ def images_reset(request, username):
     return redirect('profile.views.images', username=profile_user.username)
 
 
+@active_required
 @login_required
 @unblocked_users
 def images_ajax(request, username):
@@ -229,6 +235,7 @@ def images_ajax(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 @unblocked_users
 def images_comments_ajax(request, username):
@@ -340,6 +347,7 @@ def images_quote_ajax(request, username):
     return HttpResponse(json.dumps(data), 'application/json')
 
 
+@active_required
 #@login_required
 @unblocked_users
 #@default_user
@@ -498,6 +506,7 @@ def profile(request, username):
         )
 
 
+@active_required
 def reposition(request, username):
     data = {'status': 'FAIL'}
     try:
@@ -529,6 +538,7 @@ def reposition(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def reset_picture(request, username):
     try:
         profile_user = UserProfile.objects.get(username=username)
@@ -544,6 +554,7 @@ def reset_picture(request, username):
     return redrct
 
 
+@active_required
 def send_message(request, username):
     data = {'status': 'FAIL'}
     try:
@@ -560,6 +571,7 @@ def send_message(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 @unblocked_users
 def albums(request, username):
@@ -582,6 +594,7 @@ def albums(request, username):
     )
 
 
+@active_required
 @login_required
 @unblocked_users
 def album_posts(request, username, album_id=None):
@@ -616,6 +629,7 @@ def album_posts(request, username, album_id=None):
     )
 
 
+@active_required
 @login_required
 def album_create(request, username):
     data = {'status': 'FAIL'}
@@ -631,6 +645,7 @@ def album_create(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def album_postion(request, username):
     data = {'status': 'OK'}
@@ -656,6 +671,7 @@ def album_postion(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def change_album_name(request, username):
     data = {'status': 'FAIL'}
@@ -673,6 +689,7 @@ def change_album_name(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def delete_album(request, username):
     data = {'status': 'FAIL'}
@@ -688,6 +705,7 @@ def delete_album(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def settings(request, username):
     changed = False
@@ -766,6 +784,7 @@ def settings(request, username):
     )
 
 
+@active_required
 @login_required
 def delete_profile(request, username):
     data = {'status': 'FAIL'}
@@ -783,6 +802,7 @@ def delete_profile(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 @unblocked_users
 def related_users(request, username):
@@ -840,6 +860,7 @@ def related_users(request, username):
     )
 
 
+@active_required
 @login_required
 @unblocked_users
 def loves(request, username):
@@ -881,6 +902,7 @@ def loves(request, username):
     )
 
 
+@active_required
 def add_favourite_pages(request, username):
     data = {'status':'FAIL'}
     profile_user = request.user
@@ -913,6 +935,7 @@ def add_favourite_pages(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def remove_favourite_page(request, username, page_id):
     data = {'status':'FAIL'}
     profile_user = request.user
@@ -926,6 +949,7 @@ def remove_favourite_page(request, username, page_id):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def add_relation(request, username):
     data = {'status':'FAIL'}
     profile_user = request.user
@@ -961,6 +985,7 @@ def add_relation(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def save_bio_info(request, username):
     data = {'status':'FAIL'}
     profile_user = request.user
@@ -972,6 +997,7 @@ def save_bio_info(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def save_birth_date(request, username):
     data = {'status':'FAIL'}
     profile_user = request.user
@@ -989,6 +1015,7 @@ def save_birth_date(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def save_url_field(request, username):
     data = {'status':'FAIL'}
     profile_user = request.user
@@ -1007,6 +1034,7 @@ def save_url_field(request, username):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 def favourites_reposition(request, username):
     data = {'status':'OK'}
     try:

@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
+from django.contrib.sites.models import Site
+from registration.models import RegistrationProfile
 import re
 import datetime
 import pytz
@@ -85,8 +87,12 @@ class SignupForm(forms.Form):
 
     def save(self):
         data = self.cleaned_data
+        site = Site.objects.get_current()
 
-        user = User.objects.create_user(data['username'], data['email'], data['password'])
+        username, email, password = data['username'], data['email'], data['password']
+        #user = User.objects.create_user(data['username'], data['email'], data['password'])
+        user = RegistrationProfile.objects.create_inactive_user(username, email,
+                                                                    password, site)
         user.first_name = data['full_name'].split(' ', 2)[0]
         user.last_name = data['full_name'].split(' ', 2)[1]
         user.save()

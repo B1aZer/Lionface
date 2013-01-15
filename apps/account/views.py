@@ -75,6 +75,7 @@ def login(request, template_name='public/home.html'):
     )
 
 
+@active_required
 def home(request):
     # If the user isn't signed in, forward to the public view.
     if not request.user.is_authenticated():
@@ -87,6 +88,15 @@ def home(request):
     return redirect(profile.views.feed, username=request.user)
 
 
+def pending(request):
+    return render(request,
+        'registration/pending_email_verification.html',
+        {
+        }
+    )
+
+
+@active_required
 @login_required
 def follow(request):
     if 'user' in request.GET:
@@ -98,6 +108,7 @@ def follow(request):
     return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
 
 
+@active_required
 @login_required
 def unfollow(request):
     if 'user' in request.GET:
@@ -109,6 +120,7 @@ def unfollow(request):
     return HttpResponse(json.dumps({'status': 'OK'}), "application/json")
 
 
+@active_required
 @login_required
 def friend_add(request):
     if 'user' in request.GET:
@@ -122,6 +134,7 @@ def friend_add(request):
     raise Http404()
 
 
+@active_required
 @login_required
 def friend_remove(request):
     if 'user' in request.GET:
@@ -138,6 +151,7 @@ def friend_remove(request):
     raise Http404()
 
 
+@active_required
 @login_required
 def friend_accept(request, request_id):
     try:
@@ -149,6 +163,7 @@ def friend_accept(request, request_id):
     raise Http404()
 
 
+@active_required
 @login_required
 def friend_decline(request, request_id):
     try:
@@ -160,6 +175,7 @@ def friend_decline(request, request_id):
     raise Http404()
 
 
+@active_required
 @login_required
 def hide_friend(request):
     data = {'status': 'FAIL'}
@@ -175,6 +191,7 @@ def hide_friend(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def filter_add(request):
     data = {'status': 'OK'}
@@ -212,6 +229,7 @@ def filter_add(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def filter_remove(request):
     data = {'status': 'OK'}
@@ -245,6 +263,7 @@ def filter_remove(request):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def relation_accept(request, relation_id):
     data = {'status': 'OK'}
@@ -261,6 +280,7 @@ def relation_accept(request, relation_id):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+@active_required
 @login_required
 def relation_decline(request, relation_id):
     data = {'status': 'OK'}

@@ -1,11 +1,24 @@
 from django.conf.urls.defaults import patterns, include, url
+from registration.views import activate
+from django.core.urlresolvers import reverse
 import views
 
 urlpatterns = patterns('',
+    url(r'^activate/(?P<activation_key>\w+)/$',
+                           activate,
+                           {
+                               'backend': 'registration.backends.default.DefaultBackend',
+                               'success_url':'/',
+                           },
+                           name='registration_activate'),
+
+    url(r'pending_email_verification/$', views.pending, name='pending'),
+
     url(r'signup/$', views.signup, name='signup'),
     url(r'login/$', views.login),
     url(r'logout/$', 'django.contrib.auth.views.logout_then_login', name='logout'),
     url(r'', include('django.contrib.auth.urls')),
+    #url(r'', include('registration.backends.default.urls')),
 
     url(r'friend/add/$', views.friend_add),
     url(r'friend/remove/$', views.friend_remove),

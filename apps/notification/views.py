@@ -1,5 +1,6 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
+from account.decorators import active_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -13,6 +14,7 @@ except ImportError:
     import simplejson as json
 
 
+@active_required
 @login_required
 def notifications(request, username=None):
     #import pdb;pdb.set_trace()

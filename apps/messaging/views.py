@@ -1,5 +1,6 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
+from account.decorators import active_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -16,6 +17,7 @@ try:
 except ImportError:
     import simplejson as json
 
+@active_required
 @login_required
 def messages(request, username=None):
     form = MessageForm()
@@ -119,6 +121,7 @@ def messages(request, username=None):
         RequestContext(request)
     )
 
+@active_required
 @login_required
 def show(request, username=None):
     data = {'status': 'OK'}
