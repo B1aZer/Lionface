@@ -17,6 +17,7 @@
 
     <a href="javascript:;" id="business" class="feed_type filterON loving"><img class="NF_icon" src="{% media_url 'images/Icon_NF_Business.png' %}" /> Business</a>
     <a href="javascript:;" id="nonprofit" class="feed_type filterON loving"><img class="NF_icon" src="{% media_url 'images/Icon_NF_NPs.png' %}" /> Nonprofit</a>
+    <a href="javascript:;" id="posts" class="feed_type filterON loving"> Posts</a>
 
 	</div>   
 
@@ -26,7 +27,7 @@
 <div id="loved_pages" style="padding: 10px; position: relative; left: 40px;">
 	<div class="profile_micro_header" style="border-bottom: 1px solid #EEE; width: 570px; margin-bottom: 8px;">Loves</div>
     <div id="result_table" style="text-align: center;">
-        {% include "pages/pages_loves.html" %}
+        {% include "profile/loves_items.html" %}
     </div>
 
 </div>

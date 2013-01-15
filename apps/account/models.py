@@ -532,6 +532,9 @@ class UserProfile(User):
     def get_loved(self):
         return self.pages_loved.all()
 
+    def get_loved_posts(self):
+        return self.posts_loved.all()
+
     def get_pages(self):
         return self.pages.all()
 

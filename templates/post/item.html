@@ -1,0 +1,227 @@
+{% load media comments format_results friends %}
+{% load oembed_tags %}
+{% block feed_separator %}
+{% if not notification %}
+    <hr class="feed_separator" style="position: relative; left: 50px; border: 1px solid #E7E7E7; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
+{% endif %}
+{% endblock %}
+{# using metadata to pass user's info in popup window #}
+{% if not post_user %}
+    {% with news_item_user=item.get_original_author %}
+        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', news_item_user: '{{ item.news_item_user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ news_item_user.username }}', user_full_name: '{{ news_item_user.full_name }}', user_photo_thumb: '/{{ news_item_user.photo.thumb_name }}', user_absolute_url: '{{ news_item_user.get_absolute_url }}' } {% if item.get_type == 'friend post' %} friend_post {% endif %}">
+    {% endwith %}
+{% else %}
+    <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ post_user.username }}', user_full_name: '{{ post_user.full_name }}', user_photo_thumb: '/{{ post_user.photo.thumb_name }}', user_absolute_url: '{{ post_user.get_absolute_url }}' } {% if item.get_type == 'friend post' %} friend_post {% endif %}">
+{% endif %}
+<div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
+    {% block thumbnail %}
+    {% if item.get_type == 'page post' %}
+        <a href="{{item.get_page_url}}"><div class="user_thumbnail" style="background: url('{{ item.get_page_thumb }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
+    {% elif item.get_type == 'friend post' %}
+    {% else %}
+        <a href="{{item.get_owner.get_absolute_url}}"><div class="user_thumbnail" style="background: url('/{{ item.get_owner.photo.thumb_name }}') #FFF; background-size: 50px 50px; -moz-background-size: 50px 50px !important;"></div></a>
+    {% endif %}
+
+    {% endblock %}
+    {% if item.get_type != 'friend post' %}
+    {{ item.render|smileys|excerpt|linebreaks|color_tags }}
+    {% else %}
+    {{ item.render|safe }}
+            {% spaceless %}
+            <span class="subtext">
+                {{ item.get_owner }}
+            <span class="timestamp" style="margin: 0 4px;" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
+            {% if item.get_owner == request.user %}
+            <a href="javascript:LionFace.Site.del_post({{item.id}});" style="margin: 0 4px; color: #AAA;">Delete</a>
+            {% endif %}
+            <a style="text-decoration: none;"><span class="toggle_privacy" title="Privacy Settings: Public" style="margin: 0 4px; color: #CCC; text-decoration: none; cursor: default;">Public</span></a>
+            </span>
+            {% endspaceless %}
+    {% endif %}
+    {% if item.get_type != 'friend post' %}
+    <div class="subtext">
+        <div>
+            {% block subtext %}
+            {% if item.get_type != 'feedback post' %}
+            <span id="love_post_{{ item.get_post.id }}" data-love-color="#2AB4EA" data-loved-color="#F58">
+                {% if request.user in item.get_post.get_lovers %}
+                <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});" style="color: #F58;">
+					<img src="{% media_url 'images/Icon_Love.png' %}" width="17" style="position: relative; top: 5px; border: 0px;" border="0" /> Loved</a>
+                {% else %}
+                <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});">Love</a>
+                {% endif %}
+                <span style="color: #555; padding: 2px;" class="post_love_count">{% ifnotequal item.get_post.loves 0 %}{{ item.get_post.loves }}{% endifnotequal %}</span>
+                <span style="color: transparent;"> - | - </span>
+            </span>
+            {% endif %}
+            {% if request.user.is_anonymous and item.get_post|get_comment_counter:request.user == 0 %}
+            {% else %}
+            <span id="hide_comment_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
+                <a class="toggle_comments" href="">Comment</a>
+                {% ifequal item.get_post|get_comment_counter:request.user 0 %} {% else %}
+                    <span style="color: #555; padding: 2px;" class="comment_counter" >{{ item.get_post|get_comment_counter:request.user }}</span>
+                {% endifequal %}
+                <span style="color: transparent;"> - | - </span>
+            </span>
+            {% endif %}
+            {% if not request.user.is_anonymous %}
+            <span id="hide_share_{{ item.get_post.id }}" {% if not item.get_share_settings %} style="display: none;" {% endif %}>
+                <a href="javascript:LionFace.Site.share_post({{ item.id }});">Share</a>
+                {% ifequal item.shared 0 %} {% else %}
+                    <span style="color: #555; padding: 2px;">{{ item.shared }}</span>
+                {% endifequal %}
+                <span style="color: transparent;"> - | - </span>
+            </span>
+            {% endif %}
+            {% if item.get_type == 'feedback post' %}
+                {% if request.user in item.get_agreed_list %}
+                <a href="{% url pages.views.count_agrees item_id=item.id %}" class="feedback_opinion agrees" style="color: #555; padding: 2px;">Agreed</a>
+                {% elif request.user in item.get_disagreed_list %}
+                <a href="{% url pages.views.count_agrees item_id=item.id %}" class="feedback_opinion agrees" style="color: #555; padding: 2px; display:none;">Agree</a>
+                {% else %}
+                <a href="{% url pages.views.count_agrees item_id=item.id %}" class="feedback_opinion agrees" style="color: #555; padding: 2px;">Agree</a>
+                {% endif %}
+                <span class="feedback_agreed_count" {% if not item.get_agreed or request.user in item.get_disagreed_list %} style="display:none;" {% endif %}>{{ item.get_agreed }}</span>
+                <span style="color: transparent; {% if request.user in item.get_disagreed_list %} display:none; {% endif %}"> -- </span>
+                {% if request.user in item.get_disagreed_list %}
+                <a href="{% url pages.views.count_disagrees item_id=item.id %}" class="feedback_opinion disagrees" style="color: #555; padding: 2px;">Disagreed</a>
+                {% elif request.user in item.get_agreed_list %}
+                <a href="{% url pages.views.count_disagrees item_id=item.id %}" class="feedback_opinion disagrees" style="color: #555; padding: 2px; display:none;">Disagree</a>
+                {% else %}
+                <a href="{% url pages.views.count_disagrees item_id=item.id %}" class="feedback_opinion disagrees" style="color: #555; padding: 2px;">Disagree</a>
+                {% endif %}
+                <span class="feedback_disagreed_count" {% if not item.get_disagreed or request.user in item.get_agreed_list %} style="display:none;" {% endif %}>{{ item.get_disagreed }}</span>
+            {% endif %}
+            {% if news_feed and item.user|has_friend:request.user and not request.user|in_hidden:item.user %}
+            <a href="#" class="hide_feed">Hide Feed</a>
+            {% endif %}
+            {% if news_feed and item.user|in_followers:request.user and not item.user|has_friend:request.user %}
+            <a href="#" class="unfollow_feed link-unfollow { user: '{{ item.user.id }}' }">- Unfollow</a>
+            {% endif %}
+            {% endblock %}
+        </div>
+        <div class="share_text" style="display: none;">
+        </div>
+        {% if request.user.get_admin_pages %}
+        <div class="share_to" style="display:none">
+            Share to:
+            <select name="share_to_page" class="share_to_select">
+                    <option value="profile" selected="selected">Profile</option>
+                    {% for page in request.user.get_admin_pages %}
+                    <option value="{{ page.id }}">{{ page.name }}</option>
+                    {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+        {% if item.get_owner == request.user %}
+        <div class="post_settings" style="display:none">
+            {% block post_settings %}
+            <form>
+                <input type="checkbox" name="comment_settings" value="on"
+                    {% if item.get_owner != item.get_wall_user and page_type != 'news_feed' %}
+                        checked="checked" disabled="disabled"
+                    {% else %}
+                        {% if item.get_comment_settings %}
+                            checked="checked"
+                        {% endif %}
+                    {% endif %} >
+                    Comments
+                <span style="color: transparent;"> -- -- -- </span>
+                <input type="checkbox" name="sharing_settings" value="on" {% if item.get_share_settings %}checked="checked"{% endif %}> Share<span style="color: transparent;"> -- </span>
+                <span style="color: transparent;"> -- -- -- - </span>
+                {% if item.get_type == 'content post' %}
+                <select name="privacy_settings">
+                    {% if item.get_owner == item.get_wall_user or page_type == 'news_feed' %}
+                        <option value="Public" {% if item.get_privacy == "P" %} selected="selected" {% endif %}>Public</option>
+                    {% endif %}
+                    <option value="Friends" {% if item.get_privacy == "F" %} selected="selected" {% endif %}>Friends</option>
+                </select>
+                {% endif %}
+                {% if request.user.get_albums %}
+                <span style="color: transparent;"> -- -- -- - </span>Album: <select name="attach_to_album">
+                    <option value=""{% if not item.get_album %} selected="selected"{% endif %}></option>
+                    {% for album in request.user.get_albums %}
+                    <option value="{{ album.id }}" {% if album == item.get_album %} selected="selected" {% endif %}>{{ album.name }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+            </form>
+            {% endblock %}
+        </div>
+        {% endif %}
+        <br />
+        <div id="hide_comment_{{ item.get_post.id }}" {% if not item.get_comment_settings %}  style="display:none" {% endif %} >
+            <div class="comments comment_{{ item.id }}" style="display: none;">
+                <div class="comment_container">
+                {% render_comment_list_for item.get_post %}
+                {% if not request.user.is_anonymous %}
+                {% render_comment_form for item.get_post %}
+                {% endif %}
+                </div>
+            </div>
+        </div>
+
+    <div id="{{item.id}}"  style="display: none;" >
+
+        <div class="post_timestamp">
+            {% if item.get_type != 'friend post' and item.get_type != 'discuss post' %}
+                {% if not request.user.is_anonymous %}
+                <span id="hide_follow_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
+                    {% if item|follows:request.user %}
+                    <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %}
+                        <span style="color: #555; padding: 2px;">{{ item|following }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
+                    {% else %}
+                    <a href="#" class="follow_post">Follow</a> {% ifequal item|following 0 %} {% else %}
+                        <span style="color: #555; padding: 2px;">{{ item|following }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
+                    {% endif %}
+                </span>
+                {% endif %}
+            {% endif %}
+            <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
+        </div>
+        {% block post_bottom %}
+        <div class="post_bottom">
+            {% if not del_false %}
+            <!--This will fire on news feed-->
+                {% if item.get_owner.id == request.user.id  or item.get_post.user_to.id == request.user.id %}
+                    {% if item.get_type != 'friend post' and item.get_type != 'feedback post' and item.get_type != 'discuss post' and item.get_owner == request.user %}
+                    <a href="#" class="toggle_settings" >Settings</a>
+                    {% endif %}
+                    {% if item.get_type == 'friend post' and item.user != request.user %}
+                    {% else %}
+                    <a href="javascript:LionFace.Site.del_post({{item.id}});">Delete</a>
+                    {% endif %}
+                {% endif %}
+                {% if item.get_privacy == "P" %}
+                <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>
+                {% elif item.get_privacy == "F" %}
+                <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Friends Only">Friends</span></a>
+                {% else %}
+                {% endif %}
+            {% else %}
+            <!--This will fire on ajax posting-->
+                {% if item.user.id == request.user.id  or item.user_to.id == request.user.id %}
+                    {% if item.get_type != 'friend post' and item.get_owner == request.user %}
+                    <a href="#" class="toggle_settings" >Settings</a>
+                    {% endif %}
+                <a href="javascript:del_post_single({{item.id}});">Delete</a>
+                {% endif %}
+                {% if item.type == "P" %}
+                <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>
+                {% elif item.type == "F" %}
+                <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Friends Only">Friends</span></a>
+                {% else %}
+                {% endif %}
+            {% endif %}
+            {% url users-albums-posts username=item.get_owner.username album_id=item.get_album.id as the_url %}
+            <a href="{{ the_url }}" class="album_name" style="color: #C92;{% if not the_url %} display:none;{% endif %}">{{ item.get_album.name }}</a>
+        </div>
+        {% endblock %}
+        </div>
+    </div>
+    {% comment %}
+    if not friend post endif
+    {% endcomment %}
+    {% endif %}
+</div>
+</div>

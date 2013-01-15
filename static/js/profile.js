@@ -414,6 +414,7 @@ LionFace.Profile.prototype = {
     bind_love_list : function() {
         // multiple filters for loves
         $(document).on('click', '.loving', function(){
+            $('.filterON').toggleClass('filterON').toggleClass('filter');
             $(this).toggleClass('filterON');
             $(this).toggleClass('filter');
 

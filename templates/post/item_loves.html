@@ -1,0 +1,6 @@
+{% extends "post/item.html" %}
+{% block feed_separator %}
+{% if not notification %}
+    <hr class="feed_separator" style="position: relative; left: 10px; border: 1px solid #E7E7E7; border-width: 1px 0 0 0; height: 1;" width="600" align="left" noshade="noshade" />
+{% endif %}
+{% endblock %}

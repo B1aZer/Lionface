@@ -1586,7 +1586,7 @@ a.bio_title:hover {
 	padding: 5px;
 	-moz-box-shadow: 0 4px 8px -4px #333;
 	box-shadow: 0 4px 8px -4px #333;
-	border: 1px solid #DDD;'
+	border: 1px solid #DDD;
 }
 
 #dashboard {
@@ -1783,6 +1783,11 @@ a.send_message:hover {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	display: none;
+}
+
+#loved_pages .result_post { 
+    left: 68px;
+    text-align: left;
 }
 
 /* Errors */

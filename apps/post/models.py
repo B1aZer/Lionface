@@ -59,12 +59,18 @@ def add_http(url):
     return url
 
 
+class PostLoves(models.Model):
+    post = models.ForeignKey('Post')
+    user = models.ForeignKey(UserProfile)
+    date = models.DateTimeField(auto_now_add=True)
+
+
 class Post(models.Model):
     user = models.ForeignKey(UserProfile, related_name='user')
     user_to = models.ForeignKey(
         UserProfile, related_name='user_to', null=True, blank=True)
     users_loved = models.ManyToManyField(
-        UserProfile, related_name='posts_loved', null=True, blank=True)
+        UserProfile, related_name='posts_loved', through='PostLoves', null=True, blank=True)
     loves = models.PositiveIntegerField(default=0)
     following = models.ManyToManyField(
         UserProfile, related_name='follows', null=True, blank=True)

@@ -11,7 +11,7 @@ from account.models import *
 from images.models import Image, ImageComments
 from messaging.models import Messaging
 from pages.models import *
-from post.models import Albums
+from post.models import Albums,PostLoves
 from notification.models import Notification
 
 from messaging.forms import MessageForm
@@ -37,6 +37,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import URLValidator
 
 from datetime import datetime
+
+from itertools import chain
 
 try:
     import json
@@ -875,19 +877,27 @@ def loves(request, username):
             raise Http404()
 
     pages = profile_user.get_loved()
+    posts = profile_user.get_loved_posts()
 
     if request.method == 'GET' and 'ajax' in request.GET:
         if 'business' in request.GET and not 'nonprofit' in request.GET:
             pages = pages.filter(type='BS')
         if 'nonprofit' in request.GET and not 'business' in request.GET:
             pages = pages.filter(type='NP')
+        if 'posts' in request.GET:
+            pages = posts
+            pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=request.user).date, reverse=True)
 
     if request.method == 'GET' and 'ajax' in request.GET:
-        data['html'] = render_to_string('pages/pages_loves.html',
+        data['html'] = render_to_string('profile/loves_items.html',
                                         {
-                                        'pages': pages,
+                                        'items': pages,
                                         }, context_instance=RequestContext(request))
         return HttpResponse(json.dumps(data), "application/json")
+
+
+    pages = list(chain(pages, posts))
+    pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=request.user).date, reverse=True)
 
     return render_to_response(
         'profile/loves.html',
@@ -895,7 +905,7 @@ def loves(request, username):
             'profile_user': profile_user,
             'current_user': profile_user,
             'form_mess': form_mess,
-            'pages': pages,
+            'items': pages,
             'loves_view' : True,
         },
         RequestContext(request)
@@ -981,7 +991,7 @@ def add_relation(request, username):
                         {
                             'profile_user':profile_user,
                         }, RequestContext(request)
-                        ) 
+                        )
     return HttpResponse(json.dumps(data), "application/json")
 
 

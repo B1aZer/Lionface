@@ -544,3 +544,11 @@ def get_nonprofit_cats(user):
     cats = user.find_options('nonprofit')
     cats = json.dumps(["category_%s" % c.name.replace('option_nonprofit__','') for c in cats])
     return cats
+
+
+@register.simple_tag(takes_context=True)
+def render_item_type(context, item):
+    if isinstance(item, Pages):
+        return render_to_string('pages/pages_loves_one.html', {'page': item}, context)
+    else:
+        return render_to_string('post/item_loves.html', {'item': item}, context)

@@ -188,12 +188,14 @@ def love(request):
         if request.user.posts_loved.filter(pk=post.pk).count():
             post.loves -= 1
             post.save()
-            request.user.posts_loved.remove(post)
+            #request.user.posts_loved.remove(post)
+            PostLoves.objects.filter(post__id=post.id, user=request.user).delete()
             data['type'] = 'down'
         else:
             post.loves += 1
             post.save()
-            request.user.posts_loved.add(post)
+            #request.user.posts_loved.add(post)
+            PostLoves.objects.get_or_create(post=post, user=request.user)
             data['type'] = 'up'
         data['count'] = post.loves
     except Exception:
