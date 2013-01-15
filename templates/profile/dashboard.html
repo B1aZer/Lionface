@@ -55,6 +55,7 @@ $(document).ready(function() {
                     <table><tr><td><img class="db_loves_icon icon_loves" {% if loves_view %}src="{% media_url 'images/iconLoves.hover.png' %}" {% else %} src="{% media_url 'images/iconLoves.png' %}" {% endif %}></img></td><td>Loves</td></tr></table></a>
 			</td><td>
 			{% if request.user == profile_user %}
+			{% elif request.user.is_anonymous %}
 			{% else %}
 				{% if profile_user|check_message_sending:request.user %}
 					<div style="margin: 10px 8px; display: inline-block;" id="send_message"><a href="#" class="send_message">Send Message</a></div>

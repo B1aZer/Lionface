@@ -202,7 +202,11 @@ class Post(models.Model):
             object_pk=self.pk,
             site__pk=settings.SITE_ID,
             is_removed=False,
-        ).exclude(user__in=user.get_blocked()).count()
+        )
+        if user.is_anonymous:
+            value = value.count()
+        else:
+            value = value.exclude(user__in=user.get_blocked()).count()
         return value
 
     def get_lovers(self):
@@ -805,7 +809,11 @@ class NewsItem(models.Model):
             object_pk=self.pk,
             site__pk=settings.SITE_ID,
             is_removed=False,
-        ).exclude(user__in=user.get_blocked()).count()
+        )
+        if user.is_anonymous:
+            value = value.count()
+        else:
+            value = value.exclude(user__in=user.get_blocked()).count()
         return value
 
     @property

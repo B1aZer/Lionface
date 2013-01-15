@@ -59,6 +59,8 @@
                 <span style="color: transparent;"> - | - </span>
             </span>
             {% endif %}
+            {% if request.user.is_anonymous and item.get_post|get_comment_counter:request.user == 0 %}
+            {% else %}
             <span id="hide_comment_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                 <a class="toggle_comments" href="">Comment</a>
                 {% ifequal item.get_post|get_comment_counter:request.user 0 %} {% else %}
@@ -66,6 +68,8 @@
                 {% endifequal %}
                 <span style="color: transparent;"> - | - </span>
             </span>
+            {% endif %}
+            {% if not request.user.is_anonymous %}
             <span id="hide_share_{{ item.get_post.id }}" {% if not item.get_share_settings %} style="display: none;" {% endif %}>
                 <a href="javascript:LionFace.Site.share_post({{ item.id }});">Share</a>
                 {% ifequal item.shared 0 %} {% else %}
@@ -73,6 +77,7 @@
                 {% endifequal %}
                 <span style="color: transparent;"> - | - </span>
             </span>
+            {% endif %}
             {% if item.get_type == 'feedback post' %}
                 {% if request.user in item.get_agreed_list %}
                 <a href="{% url pages.views.count_agrees item_id=item.id %}" class="feedback_opinion agrees" style="color: #555; padding: 2px;">Agreed</a>
@@ -154,7 +159,9 @@
             <div class="comments comment_{{ item.id }}" style="display: none;">
                 <div class="comment_container">
                 {% render_comment_list_for item.get_post %}
+                {% if not request.user.is_anonymous %}
                 {% render_comment_form for item.get_post %}
+                {% endif %}
                 </div>
             </div>
         </div>
@@ -163,6 +170,7 @@
 
         <div class="post_timestamp">
             {% if item.get_type != 'friend post' and item.get_type != 'discuss post' %}
+                {% if not request.user.is_anonymous %}
                 <span id="hide_follow_link_{{ item.get_post.id }}" {% if not item.get_comment_settings %} style="display: none;" {% endif %}>
                     {% if item|follows:request.user %}
                     <a href="#" class="follow_post">Unfollow</a> {% ifequal item|following 0 %} {% else %}
@@ -172,6 +180,7 @@
                         <span style="color: #555; padding: 2px;">{{ item|following }}</span> {% endifequal %} <span style="color: transparent;"> - | - </span>
                     {% endif %}
                 </span>
+                {% endif %}
             {% endif %}
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
