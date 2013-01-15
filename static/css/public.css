@@ -67,8 +67,20 @@ a.reset:hover {
 	display: block; text-align: left; padding: 26px 0px 0px 33px; font-size: 17px; color: #333; background: #FFF;-moz-border-radius: 3px 3px 0 0; border-radius: 3px 3px 0 0; border-bottom: 1px solid #EEE;
 }
 
+.built_for {
+	position: absolute; right: -258px; top: 445px; width: 400px; height: 25px; color: #FFF; padding: 8px; -moz-border-radius: 3px; border-radius: 3px;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 0, 0);
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 0, 0, 0.6);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+}
+
 #center_box { 
-	height: 625px;
+	height: 575px;
 	width: 100%;	
 	-moz-box-shadow: inset 0 -4px 8px -4px #999, inset 0 5px 8px -4px #999;
 	box-shadow: inset 0 -4px 8px -4px #999, inset 0 5px 8px -4px #999; 
