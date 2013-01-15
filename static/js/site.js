@@ -710,6 +710,12 @@ LionFace.Site.prototype = {
                         else {
                             $('#hide_share_'+post_id).show();
                         }
+                        if (data_back.loves) {
+                            $('#love_post_'+post_id).hide();
+                        }
+                        else {
+                            $('#love_post_'+post_id).show();
+                        }
                         if (data_back.album || data_back.album === '') {
                             post.find('.album_name').html(data_back.album);
                             post.find('.album_name').attr('href',data_back.album_url);

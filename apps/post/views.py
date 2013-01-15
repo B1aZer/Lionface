@@ -529,6 +529,13 @@ def change_settings(request):
             post.allow_sharing = False
             post.save()
             data['sharing'] = 'turned off'
+        if 'loves_settings' in request.POST:
+            post.allow_loves = True
+            post.save()
+        else:
+            post.allow_loves = False
+            post.save()
+            data['loves'] = 'turned off'
         if 'attach_to_album' in request.POST:
             album_id = request.POST['attach_to_album']
             post_album = post.album

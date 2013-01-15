@@ -109,13 +109,17 @@ class Image(models.Model):
             # reading and applying orientation
             for orientation in ExifTags.TAGS.keys() :
                 if ExifTags.TAGS[orientation]=='Orientation' : break
-            exif=dict(pil_object._getexif().items())
-            if   exif[orientation] == 3 :
-                pil_object=pil_object.rotate(180, expand=True)
-            elif exif[orientation] == 6 :
-                pil_object=pil_object.rotate(270, expand=True)
-            elif exif[orientation] == 8 :
-                pil_object=pil_object.rotate(90, expand=True)
+            try:
+                exif=dict(pil_object._getexif().items())
+                if   exif[orientation] == 3 :
+                    pil_object=pil_object.rotate(180, expand=True)
+                elif exif[orientation] == 6 :
+                    pil_object=pil_object.rotate(270, expand=True)
+                elif exif[orientation] == 8 :
+                    pil_object=pil_object.rotate(90, expand=True)
+            except:
+                pass
+
             w, h = pil_object.size
             x, y = 0, 0
             if w > h:
@@ -124,7 +128,7 @@ class Image(models.Model):
                 x, y, w, h = 0, int((h - w) / 2), w, w
             new_pil_object = pil_object \
                 .crop((x, y, x + w, y + h)) \
-                .resize((width, height))
+                .resize((width, height), pilImage.ANTIALIAS)
             new_pil_object.save(self.image.thumb_path)
         except:
             if not quiet:

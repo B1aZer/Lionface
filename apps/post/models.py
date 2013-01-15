@@ -79,6 +79,7 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag)
     allow_commenting = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
+    allow_loves = models.BooleanField(default=True)
     album = models.ForeignKey('Albums', related_name="posts", on_delete=models.SET_NULL, null=True, blank=True)
     objects = CustomQuerySet.as_manager()
 
@@ -161,6 +162,10 @@ class Post(models.Model):
     def get_comment_settings(self):
         original = self
         return original.allow_commenting
+
+    def get_love_settings(self):
+        original = self
+        return original.allow_loves
 
     def get_share_settings(self):
         original = self
@@ -789,6 +794,10 @@ class NewsItem(models.Model):
         original = self.post
         return original.allow_commenting
 
+    def get_love_settings(self):
+        original = self.post
+        return original.allow_loves
+
     def get_share_settings(self):
         original = self.post
         return original.allow_sharing
@@ -863,6 +872,8 @@ def change_default_settings(sender, instance, created, **kwargs):
             'comment_default', 'Disabled')
         instance.allow_sharing = not instance.user.check_option(
             'share_default', 'Disabled')
+        instance.allow_loves = not instance.user.check_option(
+            'loves_default', 'Disabled')
         instance.save()
 post_save.connect(change_default_settings, sender=ContentPost)
 post_save.connect(change_default_settings, sender=SharePost)

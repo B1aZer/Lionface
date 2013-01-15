@@ -43,7 +43,7 @@
         <div>
             {% block subtext %}
             {% if item.get_type != 'feedback post' %}
-            <span id="love_post_{{ item.get_post.id }}" data-love-color="#2AB4EA" data-loved-color="#F58">
+            <span id="love_post_{{ item.get_post.id }}" data-love-color="#2AB4EA" data-loved-color="#F58" {% if not item.get_love_settings %} style="display: none;" {% endif %}>
                 {% if request.user in item.get_post.get_lovers %}
                 <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});" style="color: #F58;">
 					<img src="{% media_url 'images/Icon_Love.png' %}" width="17" style="position: relative; top: 5px; border: 0px;" border="0" /> Loved</a>
@@ -128,6 +128,8 @@
                     Comments
                 <span style="color: transparent;"> -- -- -- </span>
                 <input type="checkbox" name="sharing_settings" value="on" {% if item.get_share_settings %}checked="checked"{% endif %}> Share<span style="color: transparent;"> -- </span>
+                <span style="color: transparent;"> -- -- -- - </span>
+                <input type="checkbox" name="loves_settings" value="on" {% if item.get_love_settings %}checked="checked"{% endif %}> Loves<span style="color: transparent;"> -- </span>
                 <span style="color: transparent;"> -- -- -- - </span>
                 {% if item.get_type == 'content post' %}
                 <select name="privacy_settings">

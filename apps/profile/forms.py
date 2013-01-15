@@ -21,6 +21,7 @@ LOVES_DEFAULT = [('Public','Public'), ('Private','Private'),]
 VIA_PROFILE = FRIEND_LIST
 VIA_PAGES = LOVES_DEFAULT
 BIO_PROFILE = PROFILE_IMAGE
+LOVES_DEFAULT = COMMENT_DEFAULT
 
 
 class UserInfoForm(forms.ModelForm):
@@ -31,6 +32,7 @@ class UserInfoForm(forms.ModelForm):
     option_follower_list = forms.ChoiceField(required=False, choices=( FOLLOWER_LIST ))
     option_follow = forms.ChoiceField(required=False, choices=( FOLLOW ))
     option_comment_default = forms.ChoiceField(required=False, choices=( COMMENT_DEFAULT ))
+    option_loves_default = forms.ChoiceField(required=False, choices=( LOVES_DEFAULT ))
     option_add_friend = forms.ChoiceField(required=False, choices=( ADD_FRIEND ))
     option_search = forms.ChoiceField(required=False, choices=( SEARCH ))
     option_send_message = forms.ChoiceField(required=False, choices=( SEND_MESSAGE ))
