@@ -20,6 +20,7 @@ from .forms import *
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as pilImage
+from PIL import ExifTags
 from StringIO import StringIO
 
 from django.db.models import F
@@ -412,6 +413,18 @@ def profile(request, username):
             f = StringIO(image.read())
             # PIL image
             img = pilImage.open(f)
+
+            # reading and applying orientation
+            for orientation in ExifTags.TAGS.keys() :
+                if ExifTags.TAGS[orientation]=='Orientation' : break
+            exif=dict(img._getexif().items())
+            if   exif[orientation] == 3 :
+                img=img.rotate(180, expand=True)
+            elif exif[orientation] == 6 :
+                img=img.rotate(270, expand=True)
+            elif exif[orientation] == 8 :
+                img=img.rotate(90, expand=True)
+
             (width, height) = img.size
             if width < target_width:
                 target_height = int(height * (1.0 * target_width / width))

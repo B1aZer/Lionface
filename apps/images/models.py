@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
 from PIL import Image as pilImage
+from PIL import ExifTags
 
 from account.models import UserProfile
 from post.models import QuerySet as CustomQuerySet
@@ -105,6 +106,16 @@ class Image(models.Model):
     def generate_thumbnail(self, width, height, quiet=True):
         try:
             pil_object = pilImage.open(self.image.path)
+            # reading and applying orientation
+            for orientation in ExifTags.TAGS.keys() :
+                if ExifTags.TAGS[orientation]=='Orientation' : break
+            exif=dict(pil_object._getexif().items())
+            if   exif[orientation] == 3 :
+                pil_object=pil_object.rotate(180, expand=True)
+            elif exif[orientation] == 6 :
+                pil_object=pil_object.rotate(270, expand=True)
+            elif exif[orientation] == 8 :
+                pil_object=pil_object.rotate(90, expand=True)
             w, h = pil_object.size
             x, y = 0, 0
             if w > h:
