@@ -347,6 +347,10 @@ CELERYBEAT_SCHEDULE = {
         "task": "pages.tasks.DeletePage",
         "schedule": timedelta(minutes=1440),
     },
+    "delete_inactive_users": {
+        "task": "account.tasks.DeleteInactiveUsers",
+        "schedule": timedelta(minutes=1440),
+    },
     "process_bids": {
         'task': 'pages.tasks.ProcessBids',
         'schedule': crontab(hour=1, minute=0, day_of_week=6),
