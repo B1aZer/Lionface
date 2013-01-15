@@ -11,6 +11,13 @@ ADMINS = (
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = "webmaster@lionface.org"
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'kwerkee12@gmail.com'
+EMAIL_HOST_PASSWORD = 'qwe123asd'
+
+
 MANAGERS = ADMINS
 
 DATABASES = {
