@@ -528,6 +528,7 @@ LionFace.Site.prototype = {
     },
 
     bind_private : function() {
+        var _this = this;
 
         /******** FRIENDS **********/
 
@@ -692,7 +693,7 @@ LionFace.Site.prototype = {
                 callback:function(data_back) {
                     if (data_back.status == 'OK') {
                         if (data_back.privacy) {
-                            this.toggle_privacy(post_id, data_back.privacy);
+                            _this.toggle_privacy(post_id, data_back.privacy);
                         }
                         if (data_back.commenting) {
                             $('#hide_comment_link_'+post_id).hide();

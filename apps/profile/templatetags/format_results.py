@@ -551,4 +551,4 @@ def render_item_type(context, item):
     if isinstance(item, Pages):
         return render_to_string('pages/pages_loves_one.html', {'page': item}, context)
     else:
-        return render_to_string('post/item_loves.html', {'item': item}, context)
+        return render_to_string('post/item_loves.html', {'item': item , 'page_type':'news_feed'}, context)
