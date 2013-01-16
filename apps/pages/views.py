@@ -837,6 +837,20 @@ def settings(request, slug=None):
                 stripe_error = err.get('message', 'Card was declined')
             except:
                 stripe_error = 'An error occurred while processing your card'
+        elif 'remove_bids' in request.POST:
+            try:
+                if request.user.is_customer_for(page):
+                    stripe_id = page.get_stripe_id_for(request.user)
+                    customer = stripe.Customer.retrieve(stripe_id)
+                    customer.delete()
+                    db_customer = page.get_customer_for(request.user)
+                    db_customer.delete()
+            except stripe.CardError, e:
+                body = e.json_body
+                err = body['error']
+                stripe_error = err.get('message', 'Card was declined')
+            except:
+                stripe_error = 'An error occurred while processing your card'
         elif token or ltoken:
             if ltoken:
                 try:
@@ -894,7 +908,6 @@ def settings(request, slug=None):
         elif amount or lamount:
             # loves
             if lamount and 'increase_loves' in request.POST:
-                import pdb;pdb.set_trace()
                 # if mod 100
                 if lamount%100 == 0:
                     ch_amount = lamount * 100
@@ -920,7 +933,6 @@ def settings(request, slug=None):
                         love_error = 'An error occurred while processing your card'
             # bids
             if amount and 'save_bids' in request.POST:
-                import pdb;pdb.set_trace()
                 ebid = page.get_max_bid()
                 if ebid:
                     bid = ebid

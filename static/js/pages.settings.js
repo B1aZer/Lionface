@@ -214,18 +214,26 @@ LionFace.PagesSettings.prototype = {
             e.preventDefault();
             if ($('#show_love_card_info').data('toggled')) {
                 $('#card_info_loves').hide();
+                $('#submit_loves').hide();
+                $('#remove_loves').hide();
                 $('#show_love_card_info').data('toggled',false);
             }
             if ($('#add_loves_card').data('toggled')) {
                 $('#card_info_loves').hide();
+                $('#submit_loves').hide();
+                $('#remove_loves').hide();
                 $('#add_loves_card').data('toggled',false);
             }
             if (!$(this).data('toggled')) {
                 $('#card_info').show();
+                $('#submit_bids').show();
+                $('#remove_bids').show();
                 $(this).data('toggled',true);
             }
             else {
                 $('#card_info').hide();
+                $('#submit_bids').hide();
+                $('#remove_bids').hide();
                 $(this).data('toggled',false);
             }
         });
@@ -234,20 +242,26 @@ LionFace.PagesSettings.prototype = {
             e.preventDefault();
             if ($('#show_card_info').data('toggled')) {
                 $('#card_info').hide();
+                $('#submit_bids').hide();
+                $('#remove_bids').hide();
                 $('#show_card_info').data('toggled',false);
             }
             if ($('#add_bidding_card').data('toggled')) {
                 $('#card_info').hide();
+                $('#submit_bids').hide();
+                $('#remove_bids').hide();
                 $('#add_bidding_card').data('toggled',false);
             }
             if (!$(this).data('toggled')) {
                 $('#card_info_loves').show();
                 $('#submit_loves').show();
+                $('#remove_loves').show();
                 $(this).data('toggled',true);
             }
             else {
                 $('#card_info_loves').hide();
                 $('#submit_loves').hide();
+                $('#remove_loves').hide();
                 $(this).data('toggled',false);
             }
         });
@@ -256,18 +270,26 @@ LionFace.PagesSettings.prototype = {
             e.preventDefault();
             if ($('#add_loves_card').data('toggled')) {
                 $('#card_info_loves').hide();
+                $('#submit_loves').hide();
+                $('#remove_loves').hide();
                 $('#add_loves_card').data('toggled',false);
             }
             if ($('#add_loves_card').data('toggled')) {
                 $('#card_info_loves').hide();
+                $('#submit_loves').hide();
+                $('#remove_loves').hide();
                 $('#add_loves_card').data('toggled',false);
             }
             if (!$(this).data('toggled')) {
                 $('#card_info').show();
+                $('#submit_bids').show();
+                $('#remove_bids').show();
                 $(this).data('toggled',true);
             }
             else {
                 $('#card_info').hide();
+                $('#submit_bids').hide();
+                $('#remove_bids').hide();
                 $(this).data('toggled',false);
             }
         });
@@ -276,20 +298,26 @@ LionFace.PagesSettings.prototype = {
             e.preventDefault();
             if ($('#show_card_info').data('toggled')) {
                 $('#card_info').hide();
+                $('#submit_bids').hide();
+                $('#remove_bids').hide();
                 $('#show_card_info').data('toggled',false);
             }
             if ($('#add_bidding_card').data('toggled')) {
                 $('#card_info').hide();
+                $('#submit_bids').hide();
+                $('#remove_bids').hide();
                 $('#add_bidding_card').data('toggled',false);
             }
             if (!$(this).data('toggled')) {
                 $('#card_info_loves').show();
                 $('#submit_loves').show();
+                $('#remove_loves').show();
                 $(this).data('toggled',true);
             }
             else {
                 $('#card_info_loves').hide();
                 $('#submit_loves').hide();
+                $('#remove_loves').hide();
                 $(this).data('toggled',false);
             }
         });
