@@ -174,7 +174,7 @@ class Pages(models.Model):
         return "/%s" % self.photo.thumb_name
 
     def get_loves(self):
-        loves = self.loves
+        loves = self.users_loved.filter(pageloves__status='A').count()
         return loves
 
     def get_lovers(self):

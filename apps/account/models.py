@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.db.models.query import Q
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
@@ -717,3 +717,12 @@ class UserOptions(models.Model):
     name = models.CharField(max_length=100)
     value = models.CharField(max_length=100)
     user = models.ForeignKey(UserProfile)
+
+
+def update_user_actions(sender, instance, using, **kwargs):
+    # add loves limit to all loved pages 
+    pages = instance.get_loved()
+    for page in pages:
+        page.loves_limit = page.loves_limit + 1
+        page.save()
+pre_delete.connect(update_user_actions, sender=UserProfile)

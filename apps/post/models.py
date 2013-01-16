@@ -223,6 +223,9 @@ class Post(models.Model):
     def get_lovers(self):
         return self.users_loved.all()
 
+    def get_loves(self):
+        return self.users_loved.count()
+
 
 class FriendPost(Post):
     friend = models.ForeignKey(UserProfile)
@@ -810,6 +813,9 @@ class NewsItem(models.Model):
 
     def get_lovers(self):
         return self.post.users_loved.all()
+
+    def get_loves(self):
+        return self.post.users_loved.count()
 
     def get_page_thumb(self):
         post = self.post.get_inherited()

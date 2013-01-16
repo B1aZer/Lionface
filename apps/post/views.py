@@ -187,20 +187,20 @@ def love(request):
     data = {}
     try:
         if request.user.posts_loved.filter(pk=post.pk).count():
-            post.loves -= 1
+            post.loves = post.get_loves() - 1
             post.save()
             #request.user.posts_loved.remove(post)
             PostLoves.objects.filter(post__id=post.id, user=request.user).delete()
             data['type'] = 'down'
         else:
-            post.loves += 1
+            post.loves = post.get_loves() + 1
             post.save()
             #request.user.posts_loved.add(post)
             PostLoves.objects.get_or_create(post=post, user=request.user)
             if post.get_owner() != request.user:
                 Notification(user=post.get_owner(), type='LP', other_user=request.user, content_object=post).save()
             data['type'] = 'up'
-        data['count'] = post.loves
+        data['count'] = post.get_loves()
     except Exception:
         data['status'] = 'fail'
     else:

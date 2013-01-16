@@ -23,7 +23,7 @@
                     {% else %}
                     <span style="color: #999; padding: 3px;">{{ page.category }}</span>
                     {% endif %}
-                <div style="padding: 5px 0;"><span style="font-size: 8pt; color: #BBB;">Loves:</span> <span class="love_count" style="font-size: 12px; color: #E39; padding: 3px;">{{ page.loves }}</span></div>
+                <div style="padding: 5px 0;"><span style="font-size: 8pt; color: #BBB;">Loves:</span> <span class="love_count" style="font-size: 12px; color: #E39; padding: 3px;">{{ page.get_loves }}</span></div>
                 <div>
                     {% block love_button %}
                     {% if request.user in page.get_lovers %}
