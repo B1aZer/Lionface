@@ -436,6 +436,7 @@ LionFace.Profile.prototype = {
                     callback:function (data) {
                         if (data.html) {
                             $('#result_table').html(data.html);
+                            make_excerpts();
                         }
                     }
                 });
