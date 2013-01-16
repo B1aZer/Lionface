@@ -836,6 +836,9 @@ def settings(request, slug=None):
                 err = body['error']
                 stripe_error = err.get('message', 'Card was declined')
             except:
+                db_customer = page.get_lcustomer_for(request.user)
+                if db_customer:
+                    db_customer.delete()
                 stripe_error = 'An error occurred while processing your card'
         elif 'remove_bids' in request.POST:
             try:
@@ -850,6 +853,9 @@ def settings(request, slug=None):
                 err = body['error']
                 stripe_error = err.get('message', 'Card was declined')
             except:
+                db_customer = page.get_customer_for(request.user)
+                if db_customer:
+                    db_customer.delete()
                 stripe_error = 'An error occurred while processing your card'
         elif token or ltoken:
             if ltoken:
