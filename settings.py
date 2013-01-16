@@ -14,8 +14,8 @@ DEFAULT_FROM_EMAIL = "webmaster@lionface.org"
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'kwerkee12@gmail.com'
-EMAIL_HOST_PASSWORD = 'qwe123asd'
+EMAIL_HOST_USER = 'admin@lionface.org'
+EMAIL_HOST_PASSWORD = '1Lion8fac31'
 
 
 MANAGERS = ADMINS

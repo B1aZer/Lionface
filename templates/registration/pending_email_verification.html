@@ -4,7 +4,9 @@
 {% block body %}
 <div align="center" style="width: 100%; padding-top: 50px;">
 <img src="{% media_url 'images/logo300.png' %}" border="0" width="134" style="position: relative; left: 8px; padding: 50px;" /><br />
+<span style="font-size: 14pt;">Hello, {{ request.user.get_full_name }}. Activation was sent to {{ request.user.email }}</span><br /><br />
 <span style="font-size: 14pt;">You need to verify your email before you can access Lionface.</span><br /><br />
-<a href="/account/logout/">Logout</a></div>
+<a href="/account/logout/">Logout</a>
+<a href="{% url account.views.resend_activation %}">Resend activation email</a></div>
 {% endblock %}
 

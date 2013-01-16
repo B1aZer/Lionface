@@ -13,6 +13,7 @@ urlpatterns = patterns('',
                            name='registration_activate'),
 
     url(r'pending_email_verification/$', views.pending, name='pending'),
+    url(r'resend_activation/$', views.resend_activation),
 
     url(r'signup/$', views.signup, name='signup'),
     url(r'login/$', views.login),

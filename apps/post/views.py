@@ -8,6 +8,7 @@ from account.models import UserProfile
 from tags.models import Tag
 from pages.models import Pages
 from profile.decorators import unblocked_users
+from notification.models import Notification
 
 from images.models import Image, ImageComments
 from images.forms import ImageForm
@@ -196,6 +197,8 @@ def love(request):
             post.save()
             #request.user.posts_loved.add(post)
             PostLoves.objects.get_or_create(post=post, user=request.user)
+            if post.get_owner() != request.user:
+                Notification(user=post.get_owner(), type='LP', other_user=request.user, content_object=post).save()
             data['type'] = 'up'
         data['count'] = post.loves
     except Exception:

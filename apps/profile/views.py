@@ -879,8 +879,7 @@ def loves(request, username):
         except UserProfile.DoesNotExist:
             raise Http404()
 
-    pages = profile_user.get_loved()
-    posts = profile_user.get_loved_posts()
+    pages = profile_user.get_loved().filter(type='BS')
 
     if request.method == 'GET' and 'ajax' in request.GET:
         if 'business' in request.GET and not 'nonprofit' in request.GET:
@@ -888,7 +887,7 @@ def loves(request, username):
         if 'nonprofit' in request.GET and not 'business' in request.GET:
             pages = pages.filter(type='NP')
         if 'posts' in request.GET:
-            pages = posts
+            pages = profile_user.get_loved_posts()
             pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=request.user).date, reverse=True)
 
     if request.method == 'GET' and 'ajax' in request.GET:
@@ -899,8 +898,8 @@ def loves(request, username):
         return HttpResponse(json.dumps(data), "application/json")
 
 
-    pages = list(chain(pages, posts))
-    pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=request.user).date, reverse=True)
+    #pages = list(chain(pages, posts))
+    #pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=request.user).date, reverse=True)
 
     return render_to_response(
         'profile/loves.html',

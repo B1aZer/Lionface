@@ -18,6 +18,6 @@ class active_required(object):
         self.__name__ = 'active_required'
 
     def __call__(self, request, *args, **kwargs):
-        if not request.user.is_active:
+        if not request.user.is_active and not request.user.is_anonymous():
             return redirect('account.views.pending')
         return self.func(request, *args, **kwargs)

@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.contrib.auth import login as auth_login, authenticate
 from django.shortcuts import redirect
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from forms import *
 import public.views
 import profile.views
@@ -295,3 +296,23 @@ def relation_decline(request, relation_id):
 
     relation.decline()
     return HttpResponse(json.dumps(data), "application/json")
+
+
+def resend_activation(request):
+    if not request.user.is_active:
+        redirect('/')
+    site = Site.objects.get_current()
+    not_sent = False
+    try:
+        registration_profile = request.user.registrationprofile_set.get()
+        registration_profile.send_activation_email(site)
+    except:
+        not_sent = True
+
+    return render(request,
+        'registration/activation_sent.html',
+        {
+            'email': request.user.email,
+            'not_sent': not_sent,
+        }
+    )

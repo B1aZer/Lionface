@@ -106,6 +106,7 @@ LionFace.Notification.prototype = {
         var selectors = [
             '.profile_post',
             '.shared_post',
+            '.loves_post',
             '.comment_submitted',
             '.comment_image',
             '.follow_comment',
@@ -113,7 +114,6 @@ LionFace.Notification.prototype = {
         ];
 
         $(document).on('click', selectors.join(','), function(e) {
-            console.log('hi');
             var starter = document.elementFromPoint(e.clientX, e.clientY);
             if ($(starter).is('a')) {
                 return;

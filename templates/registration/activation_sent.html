@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load media %}
+
+{% block body %}
+<div align="center" style="width: 100%; padding-top: 50px;">
+<img src="{% media_url 'images/logo300.png' %}" border="0" width="134" style="position: relative; left: 8px; padding: 50px;" /><br />
+<span style="font-size: 14pt;">Activation was {% if not_sent %}not{% endif %} sent to {{request.user.email}}</span><br /><br />
+<a href="/account/logout/">Logout</a></div>
+{% endblock %}
+

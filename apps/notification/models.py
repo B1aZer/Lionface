@@ -25,6 +25,7 @@ NOTIFICATION_TYPES = (
     ('FF', 'Following Acquired'),
     ('FC', 'Follow Comment'),
     ('FS', 'Follow Shared'),
+    ('LP', 'Loves Post'),
     ('MC', 'Multiple Comment'),
     ('MI', 'Multiple Image Comment'),
     ('MF', 'Multiple Comment Following'),
@@ -33,6 +34,7 @@ NOTIFICATION_TYPES = (
     ('MM', 'Multiple Shared Following'),
     ('FM', 'Multiple Following Acquired'),
     ('MP', 'Multiple Profile Post'),
+    ('ML', 'Multiple Loves Post'),
 )
 
 
@@ -128,6 +130,14 @@ class Notification(models.Model):
                     self.extra_set.create(item_id=origianl_not.content_object.id)
             if original_notfs.count():
                 original_notfs.update(read=True)
+        if self.type == 'ML':
+            original_notfs = Notification.objects.filter(user=self.user,
+                                                         type='LP',
+                                                         read=False)
+            for origianl_not in original_notfs:
+                    self.extra_set.create(item_id=origianl_not.content_object.id)
+            if original_notfs.count():
+                original_notfs.update(read=True)
 
     def get_people_names(self):
         user_ids = [u.user_id for u in self.extra_set.all() if u.user_id]
@@ -183,7 +193,7 @@ class Notification(models.Model):
 
     def get_events_count(self):
         count = "None"
-        if self.type in ('MC','MF','MS','MM','MD','MP'):
+        if self.type in ('MC','MF','MS','MM','MD','MP','ML'):
             comments = [c.item_id for c in self.extra_set.all() if c.item_id]
             count = len(comments)
         return count
@@ -405,11 +415,13 @@ def update_notification_count(sender, instance, **kwargs):
             Notification.objects.filter(**data) \
                 .filter(hidden=False) \
                 .update(hidden=True)
-    if instance.type in ('FF', 'PP'):
+    if instance.type in ('FF', 'PP', 'LP'):
         if instance.type == 'FF':
             notification_type = 'FM'
         if instance.type == 'PP':
             notification_type = 'MP'
+        if instance.type == 'LP':
+            notification_type = 'ML'
         content_object = instance.content_object
         # find all unread
         notfs = Notification.objects.filter(user=instance.user,
