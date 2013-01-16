@@ -1,7 +1,10 @@
 {% extends "base.html" %}
+{% load media %}
 
 {% block body %}
-<div>You need to activate your account to use LionFace.</div>
-<a href="/account/logout/">logout</a>
+<div align="center" style="width: 100%; padding-top: 50px;">
+<img src="{% media_url 'images/logo300.png' %}" border="0" width="134" style="position: relative; left: 8px; padding: 50px;" /><br />
+<span style="font-size: 14pt;">You need to verify your email before you can access Lionface.</span><br /><br />
+<a href="/account/logout/">Logout</a></div>
 {% endblock %}
 

@@ -117,6 +117,8 @@
         <div class="post_settings" style="display:none">
             {% block post_settings %}
             <form>
+				<input type="checkbox" name="loves_settings" value="on" {% if item.get_love_settings %}checked="checked"{% endif %}> Loves<span style="color: transparent;"> -- </span>
+                <span style="color: transparent;"> -- -- -- - </span>
                 <input type="checkbox" name="comment_settings" value="on"
                     {% if item.get_owner != item.get_wall_user and page_type != 'news_feed' %}
                         checked="checked" disabled="disabled"
@@ -128,8 +130,6 @@
                     Comments
                 <span style="color: transparent;"> -- -- -- </span>
                 <input type="checkbox" name="sharing_settings" value="on" {% if item.get_share_settings %}checked="checked"{% endif %}> Share<span style="color: transparent;"> -- </span>
-                <span style="color: transparent;"> -- -- -- - </span>
-                <input type="checkbox" name="loves_settings" value="on" {% if item.get_love_settings %}checked="checked"{% endif %}> Loves<span style="color: transparent;"> -- </span>
                 <span style="color: transparent;"> -- -- -- - </span>
                 {% if item.get_type == 'content post' %}
                 <select name="privacy_settings">

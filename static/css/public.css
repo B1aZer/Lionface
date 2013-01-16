@@ -68,7 +68,7 @@ a.reset:hover {
 }
 
 .built_for {
-	position: absolute; right: -258px; top: 445px; width: 400px; height: 25px; color: #FFF; padding: 8px; -moz-border-radius: 3px; border-radius: 3px;
+	position: absolute; right: -258px; top: 445px; width: 400px; height: auto; color: #FFF; padding: 8px; -moz-border-radius: 3px; border-radius: 3px; font-size: 9pt;
 	/* Fallback for web browsers that doesn't support RGBa */
 	background: rgb(0, 0, 0);
 	/* RGBa with 0.6 opacity */
