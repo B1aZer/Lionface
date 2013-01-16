@@ -242,10 +242,12 @@ LionFace.PagesSettings.prototype = {
             }
             if (!$(this).data('toggled')) {
                 $('#card_info_loves').show();
+                $('#submit_loves').show();
                 $(this).data('toggled',true);
             }
             else {
                 $('#card_info_loves').hide();
+                $('#submit_loves').hide();
                 $(this).data('toggled',false);
             }
         });
@@ -282,10 +284,12 @@ LionFace.PagesSettings.prototype = {
             }
             if (!$(this).data('toggled')) {
                 $('#card_info_loves').show();
+                $('#submit_loves').show();
                 $(this).data('toggled',true);
             }
             else {
                 $('#card_info_loves').hide();
+                $('#submit_loves').hide();
                 $(this).data('toggled',false);
             }
         });
