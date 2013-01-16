@@ -857,7 +857,7 @@ def related_users(request, username):
         'profile/related.html',
         {
             'profile_user': profile_user,
-            'current_user': profile_user,
+            'current_user': request.user,
             'form_mess': form_mess,
             'users': users,
         },
