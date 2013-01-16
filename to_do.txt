@@ -1,5 +1,11 @@
 #smileys
 #administration
+There seems to be a bug with related lists.
+
+Can we apply a 7 comment limit to calendar events too? If there are too many comments, then the event box opens off the top of the screen because all the comments push it up.
+
+Can you also give the 404 and 500 error pages a header (logged in/logged out, same as on footer pages)
+
 
 #now
 remove li from attached image on return

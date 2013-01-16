@@ -808,6 +808,9 @@ class NewsItem(models.Model):
     def get_album(self):
         return self.post.album
 
+    def get_lovers(self):
+        return self.post.users_loved.all()
+
     def get_page_thumb(self):
         post = self.post.get_inherited()
         if hasattr(post, 'page'):
@@ -834,6 +837,7 @@ class NewsItem(models.Model):
     @property
     def timestamp(self):
         return self.post.date
+
 
 
 def add_post_to_followings(sender, instance, created, **kwargs):

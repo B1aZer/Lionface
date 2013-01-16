@@ -1038,6 +1038,18 @@ LionFace.Site.prototype = {
             });
             _this.attach_image(e);
         });
+
+        /** loved user list */
+        $(document).on('click', '.post_love_count', function() {
+            if ($(this).data('toggled')) {
+                $(this).parents('.subtext').find('.loved_users_list').hide();
+                $(this).data('toggled', false);
+            }
+            else {
+                $(this).parents('.subtext').find('.loved_users_list').show();
+                $(this).data('toggled', true);
+            }
+        });
         
     },
     page_members : function () {

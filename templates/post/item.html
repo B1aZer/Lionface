@@ -50,7 +50,9 @@
                 {% else %}
                 <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});">Love</a>
                 {% endif %}
-                <span style="color: #555; padding: 2px;" class="post_love_count">{% ifnotequal item.get_post.loves 0 %}{{ item.get_post.loves }}{% endifnotequal %}</span>
+                {% ifnotequal item.get_post.loves 0 %}
+                <span style="color: #555; padding: 2px; cursor:pointer;" class="post_love_count">{{ item.get_post.loves }}</span>
+                {% endifnotequal %}
                 <span style="color: transparent;"> - | - </span>
             </span>
             {% endif %}
@@ -99,6 +101,13 @@
             <a href="#" class="unfollow_feed link-unfollow { user: '{{ item.user.id }}' }">- Unfollow</a>
             {% endif %}
             {% endblock %}
+        {% ifnotequal item.get_post.loves 0 %}
+        <div class="loved_users_list" style="display:none" >
+                {% for user in item.get_lovers %}
+                <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a>{% if not forloop.last %}, {% endif %} 
+                {% endfor %}
+        </div>
+        {% endifnotequal %}
         </div>
         <div class="share_text" style="display: none;">
         </div>
