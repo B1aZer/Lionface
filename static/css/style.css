@@ -156,6 +156,14 @@ a.hide_feed:hover, a.unfollow_feed:hover {
 	color: #900;
 }
 
+.post_love_count {
+	color: #555; padding: 2px; cursor: pointer; text-decoration: underline;
+}
+
+.post_love_count:hover {
+	color: #F58;
+}
+
 .no_posts, .notif_land {
 	display: block;
 	width: 100%;

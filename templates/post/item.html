@@ -51,7 +51,7 @@
                 <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});">Love</a>
                 {% endif %}
                 {% ifnotequal item.get_post.loves 0 %}
-                <span style="color: #555; padding: 2px; cursor:pointer;" class="post_love_count">{{ item.get_post.loves }}</span>
+                <span class="post_love_count">{{ item.get_post.loves }}</span>
                 {% endifnotequal %}
                 <span style="color: transparent;"> - | - </span>
             </span>
