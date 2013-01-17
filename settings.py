@@ -5,7 +5,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-        #('Nick Clark', 'webmaster@lionface.org'),
+        ('Admin', 'blaze.imba@gmail.com'),
 )
 
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
