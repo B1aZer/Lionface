@@ -1,5 +1,8 @@
 #smileys
 #administration
+share problem
+
+oembed videos
 
 Can we apply a 7 comment limit to calendar events too? If there are too many comments, then the event box opens off the top of the screen because all the comments push it up.
 

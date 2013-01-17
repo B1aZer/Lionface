@@ -9,7 +9,7 @@
 </style>
 <div class="image_container" data-pk='{{ image.pk }}' data-post-pk='{{ image.owner.id }}'>
     <table width="100%"><tr><td valign="top">
-        <div style="background: url('/{{ image.image.thumb_name }}') #FFF; cursor: default;" class="image_album" style="text-align: center;"></div>
+        <div style="background: url('/{{ image.image.thumb_name }}') #FFF; cursor: default;-webkit-background-size: 200px 200px !important; -moz-background-size: 200px 200px !important;background-size: 200px 200px;text-align: center;" class="image_album"></div>
     </td><td valign="top">
         <div class="make_comment">
             <div class="thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF;"></div>
