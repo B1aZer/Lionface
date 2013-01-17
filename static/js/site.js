@@ -835,9 +835,6 @@ LionFace.Site.prototype = {
             // TODO: check uploaded image size
             // if(e.target.files[0].size > 3145728) {
             var image = e.target.files[0];
-            var binaryResponse = new BinaryFile(content);
-            var exif_data = EXIF.readFromBinaryFile(binaryResponse);
-            console.log("exif data", exif_data);
             
             if (image === undefined) {
                 console.log('file not select');
@@ -866,6 +863,11 @@ LionFace.Site.prototype = {
                     $li.append(img);
                     _this.attach_image_count += 1;
                     $li.find('.attach-image-rotation').val('0');
+
+                    console.log($(img).attr('src'));
+                    var binaryResponse = new BinaryFile($(img).attr('src'));
+                    var exif_data = EXIF.readFromBinaryFile(binaryResponse);
+                    console.log("exif data", exif_data);
 
                     $image_settings = $li.find('#image_settings');
                     if ($image_settings.length != 1)
