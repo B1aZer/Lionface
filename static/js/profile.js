@@ -788,6 +788,9 @@ LionFace.Profile.prototype = {
                 self.data('toggled',false);
             }
             else {
+                if ($('#url_container').find('a').html()) {
+                    $('#url_input').val($('#url_container').find('a').html());
+                }
                 $('.bio_website').show();
                 $('#left_web').show();
                 self.data('toggled',true);
