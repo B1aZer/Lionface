@@ -238,12 +238,21 @@ def save(request):
         post.save()
 
         # attach uploaded images
+        rotation = request.POST.getlist('image_rotation');
+        i = 0
         for image in request.FILES.getlist('image'):
             image_form = ImageForm(None, {'image': image})
             if image_form.is_valid():
+                rotate = rotation[i]
+                i += 1
                 img = image_form.save(post)
                 # img.make_activity()
-                img.generate_thumbnail(158, 158)
+                if rotate:
+                    rotate = int(rotate)
+                    rotate = (rotate * 90) % 360
+                    img.generate_thumbnail(200, 200, angle = rotate)
+                else:
+                    img.generate_thumbnail(158, 158)
             else:
                 data['status'] = 'fail'
                 data['errors'] = image_form.errors
