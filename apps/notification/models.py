@@ -150,16 +150,22 @@ class Notification(models.Model):
         preview = ''
         if self.type in ("PP","PS","FS"):
             post = self.content_object
-            if isinstance(post, SharePost):
-                post = post.content_object
-            preview = post.content
+            try:
+                if isinstance(post, SharePost):
+                    post = post.content_object
+                preview = post.content
+            except:
+                preview = ''
         if self.type in ("MP","MS","MM"):
             post_ids = [p.item_id for p in self.extra_set.all() if p.item_id]
             post = Post.objects.filter(id__in=post_ids).order_by('date')[0]
             post = post.get_inherited()
-            if isinstance(post, SharePost):
-                post = post.content_object
-            preview = post.content
+            try:
+                if isinstance(post, SharePost):
+                    post = post.content_object
+                preview = post.content
+            except:
+                preview = ''
         if self.type in ('CS','FC'):
             if self.related_object:
                 preview = self.related_object.comment
