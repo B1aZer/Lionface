@@ -2,7 +2,11 @@
 #administration
 share problem
 
-oembed videos
+Comment links are not opening in a new window, they are opening in the current window. Fix when you can.
+
+Can we change the image upload size limit to 2mb from 1mb, when you can.
+
+I think we also need to add an "Edit Email" feature to the Pending Verification page, if they make a typo or want to try a different email. After the email it editted, it should send a new verification email.
 
 Can we apply a 7 comment limit to calendar events too? If there are too many comments, then the event box opens off the top of the screen because all the comments push it up.
 
