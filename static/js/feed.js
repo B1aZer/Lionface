@@ -397,5 +397,18 @@ $(document).ready(function(){
         loadNewsFeed($("#new_posts"),page);
     })
 
+    $(document).on('click', '.tringing-tags', function(e) {
+        e.preventDefault();
+        var url = $(this).find('.tag_link').attr('href');
+        make_request({
+            url:url,
+            callback: function(data) {
+                if (data.status == 'OK') {
+                    $("#news_feed").html(data.html);
+                }
+            }
+        });
+    });
+
 });
 

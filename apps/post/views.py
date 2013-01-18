@@ -717,3 +717,27 @@ def comments_pagination(request, post_id, page):
 
     return HttpResponse(json.dumps(data), "application/json")
 
+
+def tag_feed(request, tag_id):
+    data = {'status':'OK'}
+
+    try:
+        tag = Tag.objects.get(id=tag_id)
+    except:
+        raise Http404
+
+    items = tag.get_posts()
+
+    data['html'] = loader.render_to_string(
+        'post/_feed.html',
+        {
+            'profile_user': request.user,
+            'items': items,
+            #'has_next': has_next,
+            #'next_page_number': next_count,
+            #'news_feed': news_feed_flag,
+            #'page_type': page_type,
+        },
+        RequestContext(request)
+    )
+    return HttpResponse(json.dumps(data), "application/json")
