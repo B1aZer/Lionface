@@ -20,10 +20,10 @@ LionFace.Profile.prototype = {
         $('#id_photo').bind('change', function() {
                 //console.log(this.files[0].type);
                 //console.log(this.files[0].size);
-                if(this.files[0].size > 1048576) {
+                if(this.files[0].size > 2097152) {
                     $('#submit_img_btn').hide();
                     if ($('.errorlist').length) {
-                        $('.errorlist').html('<li>Image file too large ( &gt; 1mb )</li>');
+                        $('.errorlist').html('<li>Image file too large ( &gt; 2mb )</li>');
                     }
                     else {
                         $('.upload_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 1mb )</li></ul>');

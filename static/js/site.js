@@ -831,9 +831,10 @@ LionFace.Site.prototype = {
         $attached_images.find("ul").append("<li class='attached_image_class'><input class='attach-image-file' type='file' name='image' style='display: none;'/><input class='attach-image-rotation' type='text' name='image_rotation' style='display: none;'/></li>");
         // document.getElementsByClassName('attach-image-file')[0].addEventListener('change', uploadImage, false);
         $(".attach-image-file").on("change", function(e) {
-        // function uploadImage(e) {
-            // TODO: check uploaded image size
-            // if(e.target.files[0].size > 3145728) {
+            // check uploaded image size
+            if(e.target.files[0].size > 2097152) {
+                return; 
+            }
             var orientation = '';
             var image = e.target.files[0];
             var fr   = new FileReader;

@@ -18,8 +18,8 @@ class ImageForm(forms.Form):
             raise forms.ValidationError("Please select file and send it")
         if image.content_type == 'image/gif':
             raise forms.ValidationError("Sorry! Gif is prohibited.")
-        if image._size > 1 * 1024 * 1024:
-            raise forms.ValidationError("Image file too large ( > 1mb )")
+        if image._size > 2 * 1024 * 1024:
+            raise forms.ValidationError("Image file too large ( > 2mb )")
         return image
 
     def save(self, owner):
