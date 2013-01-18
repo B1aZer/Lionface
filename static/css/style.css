@@ -866,19 +866,35 @@ a.profile_btn:hover {
 #image-rotate-left {
     float: left;
     background: url('images/img_rotate_L.png');
-    height: 10px;
+    height: 13px;
     display: block;
-    width: 10px;
-    background-size: 20px;
+    width: 8px;
+    background-size: 26px;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+#image-rotate-left:hover {
+    background: url('images/img_rotate_L_hover.png') #FFF;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 #image-rotate-right {
     float: left;
     background: url('images/img_rotate_R.png');
-    height: 10px;
+    height: 13px;
     display: block;
-    width: 10px;
-    background-size: 20px;
+    width: 8px;
+    background-size: 26px;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+#image-rotate-right:hover {
+    background: url('images/img_rotate_R_hover.png') #FFF;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 .image_container_attach ul {
@@ -1039,14 +1055,14 @@ a.profile_btn:hover {
 }
 
 #image_settings a:link, #image_settings a:active, #image_settings a:visited {
-	padding: 4px 6px 2px 6px;
+	padding: 5px 7px 3px 7px;
 	color: #DDD;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
 	margin: 2px 3px;
 }
 
-#image_settings a:hover {
+#image_settings a.attached_image_delete:hover, #image_settings a#make_primary:hover, a#delete:hover {
 	background: #FFF; /* Old browsers */
 	background: -moz-linear-gradient(top, #FFF 0%, #eeeeee 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */

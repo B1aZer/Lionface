@@ -863,8 +863,8 @@ LionFace.Site.prototype = {
                             //<a href='#' class='attached_image_full_size' id='fullsize' style='float: left;' title='Make full-size in the post'>+</a> \
                             $li.append(" \
                             <div id='image_settings' class='feed image_settings_class'> \
-                                <a href='#' class='attached_image_left' id='image-rotate-left' title='left'></a> \
-                                <a href='#' class='attached_image_right' id='image-rotate-right' title='left'></a> \
+                                <a href='#' class='attached_image_left' id='image-rotate-left' title='Rotate Image Left'></a> \
+                                <a href='#' class='attached_image_right' id='image-rotate-right' title='Rotate Image Right'></a> \
                                 <a href='#' class='attached_image_delete' id='delete' style='float: right;' title='Delete Photo'>x</a> \
                             </div> \
                             ");
