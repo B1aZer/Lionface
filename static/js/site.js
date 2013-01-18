@@ -834,51 +834,60 @@ LionFace.Site.prototype = {
         // function uploadImage(e) {
             // TODO: check uploaded image size
             // if(e.target.files[0].size > 3145728) {
+            var orientation = '';
             var image = e.target.files[0];
-            
-            if (image === undefined) {
-                console.log('file not select');
-                $attached_images.find('ul li').last().remove();
-                return;
-            }
-            if ($.inArray(image.type,['image/jpeg','image/png']) < 0) {
-                console.log(image.type);
-                $attached_images.find('ul li').last().remove();
-                return;
-            }
-            window.loadImage(
-                image,
-                function (img) {
-                    var $li = $attached_images.find('ul li').last();
-                    $li.attr('id', 'img-' + _this.attach_image_count);
-                    $li = $attached_images.find('#img-' + _this.attach_image_count);
-                        //<a href='#' class='attached_image_full_size' id='fullsize' style='float: left;' title='Make full-size in the post'>+</a> \
-                    $li.append(" \
-                    <div id='image_settings' class='feed image_settings_class'> \
-                        <a href='#' class='attached_image_left' id='image-rotate-left' title='left'></a> \
-                        <a href='#' class='attached_image_right' id='image-rotate-right' title='left'></a> \
-                        <a href='#' class='attached_image_delete' id='delete' style='float: right;' title='Delete Photo'>x</a> \
-                    </div> \
-                    ");
-                    $li.append(img);
-                    _this.attach_image_count += 1;
-                    $li.find('.attach-image-rotation').val('0');
+            var fr   = new FileReader;
+            fr.readAsBinaryString(image);
 
-                    console.log($(img).attr('src'));
-                    var binaryResponse = new BinaryFile($(img).attr('src'));
-                    var exif_data = EXIF.readFromBinaryFile(binaryResponse);
-                    console.log("exif data", exif_data);
+            fr.onloadend = function() {
+                    var exif = EXIF.readFromBinaryFile(new BinaryFile(this.result));
+                    orientation = exif.Orientation;
 
-                    $image_settings = $li.find('#image_settings');
-                    if ($image_settings.length != 1)
+                    if (image === undefined) {
+                        console.log('file not select');
+                        $attached_images.find('ul li').last().remove();
                         return;
-                    $image_settings.hide();
-                },
-                {
-                    //canvas: true,
-                    maxWidth: 190
-                }
-            );
+                    }
+                    if ($.inArray(image.type,['image/jpeg','image/png']) < 0) {
+                        console.log(image.type);
+                        $attached_images.find('ul li').last().remove();
+                        return;
+                    }
+                    window.loadImage(
+                        image,
+                        function (img) {
+                            var $li = $attached_images.find('ul li').last();
+                            $li.attr('id', 'img-' + _this.attach_image_count);
+                            $li = $attached_images.find('#img-' + _this.attach_image_count);
+                            //<a href='#' class='attached_image_full_size' id='fullsize' style='float: left;' title='Make full-size in the post'>+</a> \
+                            $li.append(" \
+                            <div id='image_settings' class='feed image_settings_class'> \
+                                <a href='#' class='attached_image_left' id='image-rotate-left' title='left'></a> \
+                                <a href='#' class='attached_image_right' id='image-rotate-right' title='left'></a> \
+                                <a href='#' class='attached_image_delete' id='delete' style='float: right;' title='Delete Photo'>x</a> \
+                            </div> \
+                            ");
+                            $li.append(img);
+                            _this.attach_image_count += 1;
+                            $li.find('.attach-image-rotation').val('0');
+
+                            $image_settings = $li.find('#image_settings');
+                            $image_settings.width(img.width);
+                            if ($image_settings.length != 1)
+                                return;
+                            $image_settings.hide();
+                        },
+                        {
+                            canvas: true,
+                            orientation: orientation,
+                            maxWidth: 190,
+                            /*minWidth: 190,*/
+                        }
+                    );
+            };
+            
+
+            
         });
         $attached_images.find(".attach-image-file:last").click();
     },
@@ -1052,7 +1061,12 @@ LionFace.Site.prototype = {
             angle = angle - 90;
             img.stop().animate({transform: "r" + angle}, 1000, "<>");
             */
-            var image = $(this).parents('.attached_image_class').find('img');
+            if ($(this).parents('.attached_image_class').find('img').length ) {
+                var image = $(this).parents('.attached_image_class').find('img');
+            }
+            else {
+                var image = $(this).parents('.attached_image_class').find('canvas');
+            }
             var input = $(this).parents('.attached_image_class').find('.attach-image-rotation');
             var angle = parseInt(input.val());
             if (!image) return;
@@ -1066,7 +1080,12 @@ LionFace.Site.prototype = {
 
         $(document).on('click', '.attached_image_right', function(e) {
             e.preventDefault();            
-            var image = $(this).parents('.attached_image_class').find('img');
+            if ($(this).parents('.attached_image_class').find('img').length ) {
+                var image = $(this).parents('.attached_image_class').find('img');
+            }
+            else {
+                var image = $(this).parents('.attached_image_class').find('canvas');
+            }
             var input = $(this).parents('.attached_image_class').find('.attach-image-rotation');
             var angle = parseInt(input.val());
             if (!image) return;

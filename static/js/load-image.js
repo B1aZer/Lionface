@@ -49,7 +49,6 @@
             return loadImage.readFile(file, function (e) {
                 var target = e.target;
                 if (target && target.result) {
-                console.log(target.result);
                     img.src = target.result;
                 } else {
                     callback(e);

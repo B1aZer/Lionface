@@ -249,7 +249,7 @@ def save(request):
                 # img.make_activity()
                 if rotate:
                     rotate = int(rotate)
-                    rotate = (rotate * 90) % 360
+                    rotate = (rotate * 90 * -1) % 360
                     img.generate_thumbnail(200, 200, angle = rotate)
                 else:
                     img.generate_thumbnail(158, 158)
