@@ -94,7 +94,7 @@ def format_thumb(image, path=''):
 def strip_comment(comment):
     import bleach
     comment = bleach.clean(comment, attributes={'a': ['href', 'rel', 'name'], })
-    comment = bleach.linkify(comment, target='_top', title=True)
+    comment = bleach.linkify(comment, target='_blank', title=True)
     return comment
 
 

@@ -638,6 +638,7 @@ def images_comments_ajax(request):
 
 @login_required
 def test(request):
+    """ ajax comment posting """
     data = {'status': 'OK'}
     from django.contrib.comments.views.comments import post_comment
     commented = post_comment(request)
