@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
-{% load media %}
+{% load media header %}
 
 {% block body %}
+    {% block header  %}
+        {% header request.user %}
+    {% endblock %}
 <div align="center" style="width: 100%; background: #FFF;">
 	<img src="{% media_url 'images/500.jpg' %}" />  
 </div>

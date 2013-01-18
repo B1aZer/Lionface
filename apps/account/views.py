@@ -13,6 +13,8 @@ from decorators import *
 from django.contrib.auth.decorators import login_required
 from models import *
 from notification.models import Notification
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 import json
 
 
@@ -316,3 +318,28 @@ def resend_activation(request):
             'not_sent': not_sent,
         }
     )
+
+
+def change_email(request):
+    return render(request,
+        'registration/email_change.html',
+        {
+        }
+    )
+
+
+def save_email(request):
+    data = {'status': 'OK'}
+    email = request.POST.get('email')
+    if not email:
+        raise Http404
+    request.user.email = email.strip()
+    try:
+        validate_email( email )
+        request.user.save()
+    except ValidationError:
+        data['status'] = 'FAIL'
+        data['error_email'] = True
+    except:
+        data['status'] = 'FAIL'
+    return HttpResponse(json.dumps(data), "application/json")

@@ -520,10 +520,10 @@ class ContentPost(Post):
         # Clean
         self.content = bleach.clean(self.content)
         # Embed videos
-	try:
-		self.content = replace(self.content, max_width=527, fixed_width=527)
-	except:
-		pass
+        try:
+            self.content = replace(self.content, max_width=527, fixed_width=527)
+        except:
+            pass
         # Linkify
         self.content = bleach.linkify(
             self.content, target='_blank', filter_url=add_http)

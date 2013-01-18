@@ -359,11 +359,14 @@ def update_notification_count(sender, instance, **kwargs):
         if instance.type in ('PS', 'FS'):
             # get all shrepost's ids for parent (contentpost)
             if isinstance(instance.content_object, PageSharePost):
-                object_ids = [x.id for x in PageSharePost.objects.filter(object_id=instance.content_object.get_original_post().id)]
+                object_ids = [x.id for x in PageSharePost.objects.filter(object_id=getattr(instance.content_object.get_original_post(), 'id', []))]
                 notification_type = 'MD'
             else:
-                object_ids = [x.id for x in SharePost.objects.filter(object_id=instance.content_object.get_original_post().id)]
-            object_id = instance.content_object.get_original_post().id
+                if instance.content_object.get_original_post():
+                    object_ids = [x.id for x in SharePost.objects.filter(object_id=getattr(instance.content_object.get_original_post(), 'id', []))]
+                else:
+                    object_ids = []
+            object_id = getattr(instance.content_object.get_original_post(), 'id', None)
             content_object = instance.content_object.get_original_post()
         else:
             object_ids = [instance.content_object.id]
