@@ -13,6 +13,7 @@ from messaging.models import Messaging
 from pages.models import *
 from post.models import Albums,PostLoves
 from notification.models import Notification
+from tags.models import Tag
 
 from messaging.forms import MessageForm
 from images.forms import ImageForm
@@ -37,6 +38,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import URLValidator
 
 from datetime import datetime
+from django.utils import timezone
+import datetime as dateclass
 
 from itertools import chain
 
@@ -49,9 +52,13 @@ except ImportError:
 @active_required
 @login_required
 def feed(request, username):
+    now = timezone.now()
+    week_ago = now - dateclass.timedelta(7)
+    popular_tags = Tag.objects.filter(post__date__gte=week_ago).annotate(num_posts=Count('post')).order_by('-num_posts')[:5]
     return render_to_response(
         'profile/feed.html',
         {
+            'popular_tags':popular_tags,
         },
         RequestContext(request)
     )

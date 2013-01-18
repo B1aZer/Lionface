@@ -865,7 +865,7 @@ LionFace.Site.prototype = {
                             <div id='image_settings' class='feed image_settings_class'> \
                                 <a href='#' class='attached_image_left' id='image-rotate-left' title='Rotate Image Left'></a> \
                                 <a href='#' class='attached_image_right' id='image-rotate-right' title='Rotate Image Right'></a> \
-                                <a href='#' class='attached_image_delete' id='delete' style='float: right;' title='Delete Photo'>x</a> \
+                                <a href='#' class='attached_image_delete' id='delete' style='float: right;' title='Remove Photo'>x</a> \
                             </div> \
                             ");
                             $li.append(img);
