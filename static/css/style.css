@@ -869,12 +869,17 @@ a.profile_btn:hover {
     height: 13px;
     display: block;
     width: 8px;
+	-webkit-background-size: 26px !important;
+	-moz-background-size: 26px !important;
     background-size: 26px;
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 
 #image-rotate-left:hover {
+	-webkit-background-size: 26px !important;
+	-moz-background-size: 26px !important;
+    background-size: 26px;
     background: url('images/img_rotate_L_hover.png') #FFF;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -886,12 +891,17 @@ a.profile_btn:hover {
     height: 13px;
     display: block;
     width: 8px;
+	-webkit-background-size: 26px !important;
+	-moz-background-size: 26px !important;
     background-size: 26px;
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 
 #image-rotate-right:hover {
+	-webkit-background-size: 26px !important;
+	-moz-background-size: 26px !important;
+    background-size: 26px;
     background: url('images/img_rotate_R_hover.png') #FFF;
 	background-repeat: no-repeat;
 	background-position: center center;
