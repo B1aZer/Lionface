@@ -225,7 +225,7 @@ MEDIA_BUNDLES = (
         'js/jquery-ui-1.8.24.min.js',
         'js/binaryajax.js',
         'js/exif.js',
-        'js/load-image.js',
+        'js/load_image_mod.js',
         'js/jquery.form.js',
         'js/site.js',
     ),
