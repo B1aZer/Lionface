@@ -1818,10 +1818,17 @@ def get_events(request, slug):
             object_pk=event.pk,
             site__pk=settings.SITE_ID,
             is_removed=False,
-        )
-        ev['comment_list'] = render_to_string('comments/list.html',
+        ).order_by('-submit_date')
+
+        paginator = Paginator(comment_list, 7)
+        comment_list = paginator.page(1)
+        # reorder comments
+        comment_list.object_list = sorted(comment_list.object_list, key = lambda c: c.submit_date)
+
+        ev['comment_list'] = render_to_string('comments/list_event.html',
                                               {
                                               'comment_list': comment_list,
+                                              'item': event,
                                               }, RequestContext(request))
         ev['comment_form'] = render_to_string('comments/form_event.html',
                                               {
@@ -2153,3 +2160,50 @@ def topics_paging(request, slug):
     return HttpResponse(json.dumps(data), "application/json")
 
 
+def comments_event_pagination(request, event_id, page):
+    data = {'status': 'FAIL'}
+    try:
+        post = Events.objects.get(id=event_id)
+    except Events.DoesNotExist:
+        raise Http404
+    from django.conf import settings
+
+    comment_list = comments.get_model().objects.filter(
+                            content_type=ContentType.objects.get_for_model(post),
+                            object_pk=post.pk,
+                            site__pk=settings.SITE_ID,
+                            is_removed=False,
+                            ).order_by('-submit_date')
+
+    paginator = Paginator(comment_list, 7)
+    comment_list = paginator.page(1)
+
+    if request.method == 'GET':
+        page_num = page
+        if page_num:
+            try:
+                comment_list = paginator.page(page_num)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                comment_list = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                comment_list = paginator.page(paginator.num_pages)
+        else:
+            page_num = 1
+
+    # reorder comments
+    comment_list.object_list = sorted(comment_list.object_list, key = lambda c: c.submit_date)
+
+    data['html'] = render_to_string('comments/list_event.html',
+                        {
+                            'comment_list':comment_list,
+                            'item': post,
+                        },
+                        RequestContext(request))
+
+    if comment_list.has_next():
+        data['next'] = comment_list.next_page_number()
+    data['status'] = 'OK'
+
+    return HttpResponse(json.dumps(data), "application/json")

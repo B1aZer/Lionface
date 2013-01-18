@@ -9,6 +9,7 @@ from tags.models import Tag
 from pages.models import Pages
 from profile.decorators import unblocked_users
 from notification.models import Notification
+from agenda.models import Events
 
 from images.models import Image, ImageComments
 from images.forms import ImageForm
@@ -238,12 +239,21 @@ def save(request):
         post.save()
 
         # attach uploaded images
+        rotation = request.POST.getlist('image_rotation');
+        i = 0
         for image in request.FILES.getlist('image'):
             image_form = ImageForm(None, {'image': image})
             if image_form.is_valid():
+                rotate = rotation[i]
+                i += 1
                 img = image_form.save(post)
                 # img.make_activity()
-                img.generate_thumbnail(158, 158)
+                if rotate:
+                    rotate = int(rotate)
+                    rotate = (rotate * 90 * -1) % 360
+                    img.generate_thumbnail(200, 200, angle = rotate)
+                else:
+                    img.generate_thumbnail(158, 158)
             else:
                 data['status'] = 'fail'
                 data['errors'] = image_form.errors
@@ -706,3 +716,4 @@ def comments_pagination(request, post_id, page):
     data['status'] = 'OK'
 
     return HttpResponse(json.dumps(data), "application/json")
+
