@@ -13,6 +13,9 @@ class Tag(models.Model):
         verbose_name = 'tag'
         verbose_name_plural = 'tags'
 
+    def get_posts(self):
+        return self.post_set.all()
+
     def get_posts_count(self):
         return self.post_set.count()
 
