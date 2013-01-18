@@ -7,7 +7,8 @@
 <span style="font-size: 15pt;">Welcome, {{ request.user.get_full_name }}. An activation email has been sent to <span style="color: #A70;">{{ request.user.email }}</span></span>.<br /><br />
 <span style="font-size: 12pt;">You must verify your email address before you can access Lionface.</span><br /><br />
 <a href="/account/logout/" style="padding: 4px;">Logout</a>
-<a href="{% url account.views.resend_activation %}" style="color: #FFF;" class="blue_btn">Resend Activation Email</a><br /><br /><br />
+<a href="{% url account.views.resend_activation %}" style="color: #FFF;" class="blue_btn">Resend Activation Email</a>
+<a href="{% url account.views.change_email %}" style="color: #FFF;" class="blue_btn">Change Email</a><br /><br /><br />
 <span style="font-size: 9pt; color: #AAA;">If you fail to verify your email address, your account will be deleted 7 days from registration.</span></div>
 {% endblock %}
 

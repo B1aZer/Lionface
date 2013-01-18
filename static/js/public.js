@@ -48,4 +48,54 @@ $(document).ready(function() {
         var url = $(this).find('.page-link').attr('href');
         window.location = url;
     });
+
+    ////// Pending activation page //////
+
+    $(document).on('click', '#change_email', function(e) {
+        e.preventDefault();
+        $('#email_error').hide();
+        $('#email_text').hide();
+        $('#input_email').show();
+        $('#input_email').focus();
+        $('#resend_email').hide();
+        $('.edit_email').show();
+        $(this).hide();
+    });
+
+    $(document).on('click', '#cancel_email', function(e) {
+        e.preventDefault();
+        $('#input_email').val('').hide();
+        $('#email_text').show();
+        $('#resend_email').show();
+        $('.edit_email').hide();
+        $('#change_email').show();
+    });
+
+    $(document).on('click', '#save_email', function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        $.ajax({
+            url:url,
+            type:'POST',
+            data:{'email':$('#input_email').val()},
+            success: function(data) {
+                if (data.status == 'OK') {
+                    $('#email_text').html($('#input_email').val());
+                    $('#input_email').val('').hide();
+                    $('#email_text').show();
+                    $('#resend_email').show();
+                    $('.edit_email').hide();
+                    $('#change_email').show();
+                }
+                else {
+                    if (data.error_email) { $('#email_error').show(); }
+                    $('#input_email').val('').hide();
+                    $('#email_text').show();
+                    $('#resend_email').show();
+                    $('.edit_email').hide();
+                    $('#change_email').show();
+                }
+            }
+        });
+    });
 });

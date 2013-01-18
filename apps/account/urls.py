@@ -14,6 +14,8 @@ urlpatterns = patterns('',
 
     url(r'pending_email_verification/$', views.pending, name='pending'),
     url(r'resend_activation/$', views.resend_activation),
+    url(r'change_email/$', views.change_email),
+    url(r'save_email/$', views.save_email),
 
     url(r'signup/$', views.signup, name='signup'),
     url(r'login/$', views.login),
