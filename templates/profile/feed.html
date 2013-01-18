@@ -46,12 +46,14 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
         {% endfor %}
         <a href="javascript:;" class="filter tags" style="height:12px; border: 0px; background: transparent;"><span class="add_tag">Add +</span></a>
 <p />
+<!--
         {% if popular_tags %}
 		<span class="filter_header" >Trending Tags<br /><span style="color: #BBB; font-size: 8pt;">Previous 7 days</span></span><p />
         {% endif %}
         {% for tag in popular_tags %}
         <div class="micro_page_about tringing-tags" style="margin: 2px 0;">#<span class="tag_name">{{ tag.name }}</span><br /><span style="font-size: 7pt;">{{ tag.get_posts_count }} Tagged Posts</span><a class="tag_link" href="{% url post.views.tag_feed tag_id=tag.id %}" style="display:none"></a></div>
         {% endfor %}
+ -->
 
 {% endblock %}
 
