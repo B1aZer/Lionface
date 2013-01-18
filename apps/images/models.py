@@ -103,7 +103,7 @@ class Image(models.Model):
         self.owner.save()
         return True
 
-    def generate_thumbnail(self, width, height, quiet=True):
+    def generate_thumbnail(self, width, height, quiet=True, angle=None):
         try:
             pil_object = pilImage.open(self.image.path)
             # reading and applying orientation
@@ -119,6 +119,8 @@ class Image(models.Model):
                     pil_object=pil_object.rotate(90, expand=True)
             except:
                 pass
+            if angle:
+                pil_object=pil_object.rotate(angle, expand=True)
 
             w, h = pil_object.size
             x, y = 0, 0
