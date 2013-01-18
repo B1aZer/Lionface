@@ -9,6 +9,7 @@ from tags.models import Tag
 from pages.models import Pages
 from profile.decorators import unblocked_users
 from notification.models import Notification
+from agenda.models import Events
 
 from images.models import Image, ImageComments
 from images.forms import ImageForm
@@ -715,3 +716,4 @@ def comments_pagination(request, post_id, page):
     data['status'] = 'OK'
 
     return HttpResponse(json.dumps(data), "application/json")
+

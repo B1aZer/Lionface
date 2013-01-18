@@ -1,0 +1,15 @@
+{% load format_results %}
+
+{% if comment_list.has_next %}
+<a href="{% url pages.views.comments_event_pagination event_id=item.id page=comment_list.next_page_number %}" class="coomments_see_more" >See Older Comments</a>
+{% endif %}
+
+<dl id="comments">
+    {% for comment in comment_list %}
+
+    {% include "comments/single.html" %}
+
+    {% endfor %}
+</dl>
+
+

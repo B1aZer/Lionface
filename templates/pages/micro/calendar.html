@@ -122,6 +122,7 @@ $(document).ready(function(){
                     if (data.status == 'OK') {
                         if (!change) {
                             $('#calendar_micro').fullCalendar('renderEvent', event );
+                            $('#calendar_micro').fullCalendar( 'refetchEvents' );
                         }
                         if (data.id) {
                             event.id = data.id;
@@ -154,7 +155,7 @@ $(document).ready(function(){
             var allow_sharing = $('#sharing_settings').prop('checked');
         
             if(what == ""){
-                alert("Please enter a short event description into the \"what\" field.");
+                alert("Please enter a short event description into the \"title\" field.");
             }
             else if ($('#privacy_inhouse').prop('checked') && !$('.privacy_opt:checked').length) {
                 alert("Please choose privacy settings.");
