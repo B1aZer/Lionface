@@ -527,7 +527,7 @@ def reposition(request, username):
         raise Http404
 
     if request.method == 'POST' and 'top' in request.POST:
-        top_pos = abs(int(request.POST['top']))
+        top_pos = abs(int(float(request.POST['top'])))
         b64image = request.POST.get('image', None)
         #decoded_image = base64.b64decode(b64image + '=' * (-len(b64image) % 4))
         imgstr = re.search(r'base64,(.*)', b64image).group(1)
