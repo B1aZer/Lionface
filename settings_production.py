@@ -1,6 +1,7 @@
 #CELERY
 #BROKER_URL = "django://"
 USE_TZ = True
+PREPEND_WWW = True
 #DEBUG = True
 
 MEDIA_ROOT = '/var/www/whispering-anchorage-2296/'
