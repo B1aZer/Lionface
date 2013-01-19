@@ -181,7 +181,7 @@ LionFace.Site.prototype = {
             if(data.user !== undefined) {
                 $this.unbind('click');
                 var $ohtml = $this.html();
-                $this.append('<div class="link_loader"></div>');
+                $this.append('<div class="link_loader" style="position: relative; left: -50px;"></div>');
 
                 $.ajax('/account/friend/add/',{
                     type: 'GET',

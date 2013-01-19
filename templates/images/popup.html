@@ -14,13 +14,13 @@
                 <div class="owner">
                   {% if page %}
                     <a href="{{ page.get_absolute_url }}">
-                        <div class="thumb{% if manage_perm %} images_page_thumb{% endif %}" style="background: url('/{{ page.photo.thumb_name }}') #FFF;-webkit-background-size: 50px 50px; -moz-background-size: 50px 50px; background-size: 50px 50px;"></div>
+                        <div class="thumb{% if manage_perm %} images_page_thumb{% endif %}" style="background: url('/{{ page.photo.thumb_name }}') #FFF; -webkit-background-size: 50px 50px; -moz-background-size: 50px 50px; background-size: 50px 50px;"></div>
                         <div class="fullname">{{ page.name }}</div>
                         <div class="username">{{ page.category }}</div>
                     </a>
                   {% else %}
                     <a href="{{ profile_user.get_absolute_url }}">
-                        <div class="thumb{% if manage_perm %} images_profile_thumb{% endif %}" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF;-webkit-background-size: 50px 50px; -moz-background-size: 50px 50px; background-size: 50px 50px;"></div>
+                        <div class="thumb{% if manage_perm %} images_profile_thumb{% endif %}" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 50px 50px; -moz-background-size: 50px 50px; background-size: 50px 50px;"></div>
                         <div class="fullname">{{ profile_user.full_name }}</div>
                         <div class="username">{{ profile_user.username }}</div>
                     </a>
