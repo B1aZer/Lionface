@@ -56,13 +56,13 @@
         </tr>
         <tr>
             <td align="right">Username<br></td>
-            <td class="username">        
-                {{ form.username }}
+            <td class="username" align="left">        
+                <div align="left" style="width: 310px;">{{ form.username }}</div>
             </td>
         </tr>
         <tr>
             <td align="right">&nbsp;</td>
-            <td><div id="hide_pass"><a onClick="javascript:$('#pass_changing').fadeIn(); HideContent('hide_pass'); return false;" style="font-size: 12px; cursor:pointer;">Change Your Password</a></div></td>
+            <td><div id="hide_pass" style="text-align: left; width: 310px;"><a onClick="javascript:$('#pass_changing').fadeIn(); HideContent('hide_pass'); return false;" style="font-size: 12px; cursor:pointer;">Change Your Password</a></div></td>
         </tr>
         <tr id="pass_changing" style="display:none;">
             <td align="right">&nbsp;</td>
@@ -70,17 +70,17 @@
 			<div class="change_password">
                 <fieldset class="module aligned wide">
 
-                    <div class="form-row" style="border: 1px solid #CCC; border-width: 0 0 1px 0;">
+                    <div class="form-row" style="text-align: left; width: 310px;">
                         {{ form_pass.old_password.errors }}
                         <label for="id_old_password" class="required">{% trans 'Old Password' %}:</label>{{ form_pass.old_password }}
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row" style="text-align: left; width: 310px;">
                         {{ form_pass.new_password1.errors }}
                         <label for="id_new_password1" class="required">{% trans 'New Password' %}:</label>{{ form_pass.new_password1 }}
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row" style="text-align: left; width: 310px;">
                         {{ form_pass.new_password2.errors }}
                         <label for="id_new_password2" class="required">{% trans 'Confirm' %}:</label>{{ form_pass.new_password2 }}
                     </div>
@@ -91,7 +91,7 @@
                 <p> Password changed successfully </p>
                 {% endif %}
 
-                <div class="submit-row">
+                <div class="submit-row" style="text-align: left; width: 310px; font-size: 11pt;">
                     <input type="submit" value="Update Password" class="blue_btn" name="change_pass" class="default" style="font-size: 8pt !important;" />
                 </div>   
 			</div>      

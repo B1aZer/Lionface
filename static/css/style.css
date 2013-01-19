@@ -1189,17 +1189,18 @@ a.profile_btn:hover {
 	width: 100%;
 	height: 100%;
 	z-index: 9999;
-	background-color: black;
-	opacity: 0.85;
+	background-color: #F0F3F5;
+	opacity: 0.75;
 }
 .image_zone {
 	position: absolute;
 	z-index: 10000;
-	top: 10%;
-	left: 10%;
-	width: 80%;
-	height: 80%;
-	background-color: black;
+	top: 7%;
+	left: 5%;
+	width: 90%;
+	height: 90%;
+	background-color: #D0D3D5;
+	border: 1px solid #DDD;
 }
 .image_zone_view {
 	position: relative;
@@ -2116,6 +2117,13 @@ a.nav_notifications:hover {
 	margin: 0 5px;
 	color: #BBB;
 	font-size: 8pt;
+	text-align: left;
+}
+
+.username input {
+	padding: 0px;
+	margin: 0px;
+	text-align: left;
 }
 
 .auto_subtext {
@@ -2127,6 +2135,11 @@ a.nav_notifications:hover {
 
 .result_related, .result_post, .result_search {
   width: 525px; min-height: 50px; padding: 8px; position: relative; left: 108px; margin-bottom: 13px; margin-top: 13px;
+}
+
+.mutual_friend_list {
+	padding: 2px 0;
+	width: 400px;
 }
 
 .friend_post {
@@ -2436,12 +2449,13 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 }
 
 .form-row input[type=password] {
-	position: absolute;
-	left: 150px; top: 5px;
+	float: right;
 	padding: 4px;
 	border: 1px solid #CCC;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	position: relative;
+	top: -10px;
 }
 
 #basics .username input {

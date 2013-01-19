@@ -14,7 +14,15 @@
 {% empty %}
 {% block empty %}
     {% if request.user.get_filters or request.user.get_active_tags %}
-    <p class="no_posts">There is nothing to share.</p>
+		{% if profile_user %}
+			{% if profile_user == request.user %}
+			<p class="no_posts">Welcome! Begin by finding friends,<br />or by posting content.</p>
+			{% else %}
+			<p class="no_posts">This person has not posted anything yet,<br /><span style="font-size: 11pt;">or their content is not visible to you.</span></p>
+			{% endif %}
+		{% else %}
+		<p class="no_posts">Welcome! Ready to get started?<br /><span style="font-size: 11pt;">Here are some things you can do: search for friends, find people to follow,<br />get involved with a <a href="{% url pages.views.main %}">business</a> or <a href="{% url pages.views.nonprofit %}">nonprofit organization</a>, or post content to your <a href="{% url profile.views.profile username=request.user.username %}">profile</a>.<br /><span style="font-size: 9pt;">You can also try exploring some of the trending tags to the left.</span></p>
+		{% endif %}
     {% else %}
     <p class="no_posts">No filters have been selected.</p>
     {% endif %}

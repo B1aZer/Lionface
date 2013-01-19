@@ -184,7 +184,7 @@ a.reset:hover {
 .enabled_container .enabled {
 	clear: both;
 	display: inline-block;
-	width: 40px; height: 25px;
+	height: 25px;
 	color: #FFF;
 	background: #cec9be; /* Old browsers */
 	background: -moz-linear-gradient(top, #cec9be 0%, #d0c19c 50%, #ceba8a 51%, #d0c19c 100%); /* FF3.6+ */
@@ -194,8 +194,8 @@ a.reset:hover {
 	background: -ms-linear-gradient(top, #cec9be 0%,#d0c19c 50%,#ceba8a 51%,#d0c19c 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #cec9be 0%,#d0c19c 50%,#ceba8a 51%,#d0c19c 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cec9be', endColorstr='#d0c19c',GradientType=0 ); /* IE6-9 */
-	padding: 15px 3px 0px 3px;
-	font-size: 16pt;
+	padding: 15px 8px 0px 8px;
+	font-size: 11pt;
 	margin: 0 7px;
 	position: relative; top: -5px;
 	-moz-border-radius: 0 0 5px 5px;
