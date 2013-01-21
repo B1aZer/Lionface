@@ -337,9 +337,13 @@ def save_email(request):
     try:
         validate_email( email )
         request.user.save()
-    except ValidationError:
-        data['status'] = 'FAIL'
-        data['error_email'] = True
     except:
         data['status'] = 'FAIL'
-    return HttpResponse(json.dumps(data), "application/json")
+        return render(request,
+            'registration/email_change.html',
+            {
+                'email_error':True
+            }
+        )
+    #return HttpResponse(json.dumps(data), "application/json")
+    return redirect('account.views.pending')
