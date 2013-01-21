@@ -68,9 +68,9 @@ $(document).ready(function() {
 {% if not request.user.is_anonymous %}
     {% if request.user == profile_user %}
     {% elif profile_user|has_friend:request.user %}
-        <a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }">- Remove</a>
+        <a href="#" class="profile_nav link-remove-friend { user: '{{ profile_user.id }}' }" style="position: relative; left: -8px;">- Remove</a>
     {% elif profile_user|has_friend_request:request.user %}
-        <span class="subtitle_username">Friend request pending.</span>
+        <span class="subtitle_username" style="position: relative; left: -8px;">Friend request pending.</span>
     {% elif profile_user|in_followers:request.user %}
         {% if profile_user|check_friend_request:request.user %} 
         <a class="profile_btn link-add-friend { user: '{{ profile_user.id }}' }" style="cursor: pointer;">+ Add</a>

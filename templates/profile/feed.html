@@ -12,7 +12,7 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 	<table width="100%"><tr><td align="left" width="200" style="color: #999;">
 		<a href="{% url profile.views.profile request.user.username %}" class="name_link">{{ user.full_name }}</a> | News Feed
 	</td><td align="left">
-		<a href="{% url schools.views.home %}" class="find_friends" style="display: none;">Find Friends from School ></a>
+		
 	</td><td align="right" width="200">
 
 	</td></tr></table>
@@ -21,8 +21,10 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 
 {% block dashboard %}
 <div style="position: relative; width: 900px; border-top: 1px solid #FFF; background: #F5F7F9">
-<table width="100%"><tr><td>
+<table width="100%"><tr><td width="200">
 <div class="profile_micro_header" style="padding-left: 17px;">Hello, {{ request.user.first_name }}</div>
+</td><td align-"left">
+	<a href="{% url schools.views.home %}" class="find_friends">Find Friends from School ></a>
 </td><td align="right">
 	<span style="color: #CACDCC; padding-right: 17px;">share your heart</span>
 </td></tr></table>
@@ -50,7 +52,7 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 		<span class="filter_header" >Trending Tags<br /><span style="color: #BBB; font-size: 8pt;">Previous 7 days</span></span><p />
         {% endif %}
         {% for tag in popular_tags %}
-        <div class="micro_page_about tringing-tags" style="margin: 2px 0;">#<span class="tag_name">{{ tag.name }}</span><br /><span style="font-size: 7pt;">{{ tag.get_posts_count }} Tagged Posts</span><a class="tag_link" href="{% url post.views.tag_feed tag_id=tag.id %}" style="display:none"></a></div>
+        <div class="micro_page_about tringing-tags" style="margin: 2px 0; width: 175px;">#<span class="tag_name">{{ tag.name }}</span><br /><span style="font-size: 7pt;">{{ tag.get_posts_count }} Tagged Posts</span><a class="tag_link" href="{% url post.views.tag_feed tag_id=tag.id %}" style="display:none"></a></div>
         {% endfor %}
 
 {% endblock %}
