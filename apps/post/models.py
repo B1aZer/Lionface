@@ -788,10 +788,13 @@ class NewsItem(models.Model):
     @property
     def get_privacy(self):
         original = self.post.get_inherited()
+        # special inherition for friend connection's posts
         if original._meta.verbose_name == 'friend post':
             owner = self.user
             if owner.check_option('friend_list', 'Public'):
                 return 'P'
+            elif owner.check_option('friend_list', 'Just Me'):
+                return 'X'
             else:
                 return 'F'
         return original.privacy()
