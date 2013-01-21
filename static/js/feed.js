@@ -1,4 +1,4 @@
-function loadNewsFeed(elem, page) {
+function loadNewsFeed(elem, page, url) {
 
     var $elem = elem;
     var $data = elem.metadata();
@@ -8,9 +8,11 @@ function loadNewsFeed(elem, page) {
         page = 1;
     }
 
-    url = "/posts/feed/?page="+page;
-    if($data.type == "profile")
-        url = "/posts/feed/" + $data.user + "/?page="+page;
+    if (!url) {
+        url = "/posts/feed/?page="+page;
+        if($data.type == "profile")
+            url = "/posts/feed/" + $data.user + "/?page="+page;
+    }
 
     make_request({
         url:url,
@@ -395,6 +397,19 @@ $(document).ready(function(){
         }
         self.remove();
         loadNewsFeed($("#new_posts"),page);
+    })
+
+    $(document).on('click','#see_tags_feed',function(e){
+        e.preventDefault();
+        var self = $(this);
+        var url = self.attr('href');
+        console.log(url);
+        if ($("#news_feed").length) {
+            $("#news_feed").append("<div id='new_posts'></div>");
+            $("#new_posts").addClass($("#news_feed").attr('class'));
+        }
+        self.remove();
+        loadNewsFeed($("#new_posts"),undefined,url);
     })
 
     $(document).on('click', '.tringing-tags', function(e) {

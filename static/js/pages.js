@@ -328,13 +328,13 @@ LionFace.Pages.prototype = {
 
         /** restrict image uploads */
          $(document).on('change','#id_cover_photo',function() {
-                if(this.files[0].size > 3145728) {  
+                if(this.files[0].size > 7340032) {  
                     $('#submit_cover_btn').hide();
                     if ($('.errorlist').length) {
-                        $('.errorlist').html('<li>Image file too large ( &gt; 3mb )</li>');
+                        $('.errorlist').html('<li>Image file too large ( &gt; 7mb )</li>');
                     }
                     else {
-                        $('.upload_cover_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 3mb )</li></ul>');
+                        $('.upload_cover_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 7mb )</li></ul>');
                     } 
                 }
                 else if(this.files[0].type == 'image/gif') {

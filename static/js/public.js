@@ -62,6 +62,7 @@ $(document).ready(function() {
         $(this).hide();
     });
 
+    /*
     $(document).on('click', '#cancel_email', function(e) {
         e.preventDefault();
         $('#input_email').val('').hide();
@@ -70,7 +71,9 @@ $(document).ready(function() {
         $('.edit_email').hide();
         $('#change_email').show();
     });
+    */
 
+    /*
     $(document).on('click', '#save_email', function(e) {
         e.preventDefault();
         var url = $(this).attr('href');
@@ -98,4 +101,5 @@ $(document).ready(function() {
             }
         });
     });
+    */
 });

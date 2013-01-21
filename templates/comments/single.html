@@ -11,7 +11,7 @@
                         <div class="comment_header">
 							<a href='{{ comment.user.get_absolute_url }}'>{{comment.name}}</a>
                         	<div style="display: inline-block; color: #CCC; font-size: 8pt !important; margin-left: 10px;">
-                            	<span title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00">{{ comment.submit_date }}</span>
+                            	<span style="padding-right: 10px; display: none;">Friends</span> <span title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00">{{ comment.submit_date }}</span>
                         	</div>
 						</div>
 					</div>

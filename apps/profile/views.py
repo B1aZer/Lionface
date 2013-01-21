@@ -1009,6 +1009,8 @@ def save_bio_info(request, username):
     data = {'status':'FAIL'}
     profile_user = request.user
     text = request.POST.get('text')
+    if not text:
+        raise Http404
     profile_user.bio_text = strip_tags(text)
     profile_user.save()
     data['status'] = 'OK'

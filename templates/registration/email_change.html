@@ -2,16 +2,23 @@
 {% load media %}
 
 {% block body %}
+<script>
+$(document).ready(function() {
+    $('#input_email').focus();
+});
+</script>
+<form action="{% url account.views.save_email %}" method="post"> {% csrf_token %}
 <div align="center" style="width: 100%; padding-top: 50px;">
 <img src="{% media_url 'images/logo300.png' %}" border="0" width="134" style="position: relative; left: 8px; padding: 50px;" /><br />
-<span style="font-size: 14pt;">Email: <span id="email_text">{{request.user.email}}</span><input id="input_email" type="text" size="35" style="display:none"/></span><br /><br />
-<span id="email_error" style="font-size: 10pt; color: #AAA;display:none;">Please provide a valid email</span>
+<span style="font-size: 14pt;">Email: <input id="input_email" name="email" type="text" size="35" /><br /><br />
+    <span id="email_error" style="font-size: 10pt; color: #AAA; {% if not email_error %}display:none;{% endif %}">Please provide a valid email</span>
 
-<a id="change_email" href="#">Change</a>
-<a id="save_email" href="{% url account.views.save_email %}" class="edit_email" style="display:none">Save</a>
-<a id="cancel_email" href="#" class="edit_email" style="display:none">Cancel</a>
-<a id="resend_email" href="{% url account.views.resend_activation %}" style="color: #FFF;" class="blue_btn">Resend Activation Email</a>
+<!--<a id="change_email" href="#">Change</a>-->
+<input type="submit" id="save_email" class="edit_email blue_btn" value="Save" />
+<a id="cancel_email" href="{% url account.views.pending %}" style="color: #FFF;" class="blue_btn" >Cancel</a>
+<!--<a id="resend_email" href="{% url account.views.resend_activation %}" style="color: #FFF;" class="blue_btn">Resend Activation Email</a>-->
 </div> 
+</form>
 {% endblock %}
 
 {% block footer_js %}

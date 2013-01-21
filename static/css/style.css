@@ -278,7 +278,7 @@ a.colored_tag:hover {
 }
 
 .profile_micro_header {
-	font-size: 17pt; padding: 8px; position: relative; top: 3px;
+	font-size: 16pt; padding: 8px; position: relative; top: 3px;
 }
 
 a.name_link:hover {
@@ -2979,13 +2979,10 @@ a.show_more_friends, a.business_friends_show, a.nonprofits_friends_show {
 /* Schools */
 
 a.find_school:link, a.find_school:visited, a.find_school:active {
-	display: block;
-	color: #777;
+	display: inline-block;
+	color: #999;
 	padding: 7px 7px 4px 7px;
 	text-align: center;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	border-bottom: 1px solid #BBB;
 	margin-bottom: 5px;
 }
 
@@ -2993,7 +2990,6 @@ a.find_school:hover {
 	color: #000;
 	background: #FAFAFA;
 	text-decoration: none;
-	border-color: #DDD;
 }
 
 a.school_nav:link, a.school_nav:active, a.school_nav:visited {
@@ -3007,7 +3003,7 @@ a.school_nav:link, a.school_nav:active, a.school_nav:visited {
 }
 
 a.school_nav:hover, a.school_navON:link, a.school_navON:active, a.school_navON:visited, a.school_navON:hover {
-	background: #FFF;
+	background: #E0E3E5;
 	color: #000;
 	text-decoration: none;
 	display: block;
@@ -3020,16 +3016,21 @@ a.school_nav:hover, a.school_navON:link, a.school_navON:active, a.school_navON:v
 
 a.school_nav:hover {
 	border-color: #333;
+	background: #F0F3F5;
 }
 
 .student {
-	padding: 5px; text-align: center; display: inline-block; border: 1px solid #CCC; margin: 4px; color: #777;
+	padding: 5px; text-align: center; display: inline-block; border: 1px solid #CCC; margin: 4px; color: #777; position: relative;
 }
 
 .student:hover {
 	cursor: pointer;
 	border-color: #3ea8d2;
 	color: #49C;
+}
+
+.add_school_friend {
+	position: absolute; left: 0px; top: 0px; background: #FFF; padding: 4px; width: 90px; 
 }
 
 .student img {
@@ -3072,30 +3073,46 @@ a.school_nav:hover {
     padding: 5px;
 }
 
+a.sub_filter_feed {
+	padding: 4px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	text-decoration: none;
+}
+
+a.sub_filter_feed:hover {
+	background: #F0F3F5;
+}
+
+a.sub_filter_feedON {
+	padding: 4px;
+	background: #F0F3F5;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	text-decoration: none;
+}
+
 /* Chat */
 
 .chat {
-	background: #FFF; /* Old browsers */
-	background: -moz-linear-gradient(top, #FFF 0%, #eeeeee 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #FFF 0%,#eeeeee 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
+	background: #FFF;
 	border: 1px solid #CCC;
 	width: 184px;
-	padding: 6px 8px 7px 8px;
+	padding: 6px 8px 5px 8px;
 	display: inline-block;
 	cursor: pointer;
 	color: #777;
 	-moz-box-shadow: 0 4px 8px -4px #999;
 	box-shadow: 0 4px 8px -4px #999;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=71);
+	-moz-opacity: 0.71;
+	opacity: 0.71;
 }
 
 .chat:hover {
-	border-color: #AAA;
-	color: #333;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+	-moz-opacity: 1;
+	opacity: 1;
 }
 
 .online {
@@ -3105,7 +3122,7 @@ a.school_nav:hover {
 .chat_container {
 	display: block;
 	width: 200px; min-height: 50px;
-	position: fixed; left: 5px; bottom: 30px;
+	position: fixed; left: 5px; bottom: 32px;
 	border: 1px solid #CCC;
 	background: #FFF;
 	-moz-box-shadow: 0 4px 8px -4px #999;
@@ -3125,21 +3142,16 @@ a.school_nav:hover {
 }
 
 .chat_container li:hover {
-	background: #FFF; /* Old browsers */
-	background: -moz-linear-gradient(top, #FFF 0%, #eeeeee 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #FFF 0%,#eeeeee 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #FFF 0%,#eeeeee 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
-	border-color: #CCC;
+	background: #F0F3F5;
+	border-color: #FFF;
 	cursor: pointer;
 	color: #000;
 }
 
 .chat_off {
 	font-size: 8pt; color: #AAA;
+	padding: 8px;
+	position: relative; left: 8px;
 }
 
 .chat_off:hover {
