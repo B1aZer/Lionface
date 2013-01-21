@@ -4,11 +4,7 @@ images rotate
 
 newsfeed count
 
-I'm also getting endless complaints about uploading images that are too large, so we can we just remove the limit on all photos (cover photos, profile photos, post photos).
-[1/18/13 8:15:30 PM] Nick: People especially are having trouble with cover photo size, so that's important in terms of upload limits... we might even want to make it 7mb for cover photos, and 5mb for post/profile images
-
 [1/18/13 8:21:43 PM] Nick: There also seems to be a bug: when you attach image, it posts via ajax, you click on the image to comment (before reloading the page, so you're still on the ajax post) and then close the win, the scroll on my mouse becomes disabled. This happens in safari and firefox at least. I think it's left over from having scroll disabled in popup mode.
-
 
 Once you click to change your email, there are 2 steps to actually change it. There should be 1. You click to change, and then there's a textfield to enter a new one, with a save/cancel button, cancel taking you back to the landing pending page, where you can logout. As it is, once you click change, you cant go back to logout, and you have to click change a second time. It's redundant. 
 

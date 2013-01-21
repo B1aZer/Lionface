@@ -151,7 +151,7 @@ class ImageUploadForm(forms.ModelForm):
             raise forms.ValidationError("Couldn't read uploaded image")
         if image.content_type == 'image/gif':
             raise forms.ValidationError("Sorry! Gif is prohibited.")
-        if image._size > 3*1024*1024:
+        if image._size > 7*1024*1024:
             raise forms.ValidationError("Image file too large ( > 3mb )")
         return image
 

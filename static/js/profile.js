@@ -17,16 +17,16 @@ LionFace.Profile.prototype = {
 
     //restrict image size and format before upload
     bind_upload_form : function() {
-        $('#id_photo').bind('change', function() {
+        $('#id_image').bind('change', function() {
                 //console.log(this.files[0].type);
                 //console.log(this.files[0].size);
-                if(this.files[0].size > 2097152) {
+                if(this.files[0].size > 5242880) {
                     $('#submit_img_btn').hide();
                     if ($('.errorlist').length) {
-                        $('.errorlist').html('<li>Image file too large ( &gt; 2mb )</li>');
+                        $('.errorlist').html('<li>Image file too large ( &gt; 5mb )</li>');
                     }
                     else {
-                        $('.upload_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 1mb )</li></ul>');
+                        $('.upload_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 5mb )</li></ul>');
                     }
                 }
                 else if(this.files[0].type == 'image/gif') {
@@ -79,13 +79,13 @@ LionFace.Profile.prototype = {
 
         /** restrict image cover uploads */
          $(document).on('change','#id_cover_photo',function() {
-                if(this.files[0].size > 3145728) {  
+                if(this.files[0].size > 7340032) {  
                     $('#submit_cover_profile_btn').hide();
                     if ($('.errorlist').length) {
-                        $('.errorlist').html('<li>Image file too large ( &gt; 3mb )</li>');
+                        $('.errorlist').html('<li>Image file too large ( &gt; 7mb )</li>');
                     }
                     else {
-                        $('.upload_pforile_cover_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 3mb )</li></ul>');
+                        $('.upload_pforile_cover_form').prepend('<ul class="errorlist"><li>Image file too large ( &gt; 7mb )</li></ul>');
                     } 
                 }
                 else if(this.files[0].type == 'image/gif') {
@@ -206,6 +206,10 @@ LionFace.Profile.prototype = {
                 type: "POST",
                 dataType: "JSON",
                 beforeSubmit: function() {
+                    var content = $('.postbox_textarea').val();
+                    var images =  $('.pending_images').find('div').length;
+                    if (!content && !images) { return false; }
+                    $('#attached-images').find('.error-list').remove();
                     var loading = $('<div class="large_loader" style="padding-left: 0;"></div>');
                     $('#attached-images ul').html(loading);
                 },
