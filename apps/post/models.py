@@ -214,7 +214,7 @@ class Post(models.Model):
             site__pk=settings.SITE_ID,
             is_removed=False,
         )
-        if user.is_anonymous:
+        if user.is_anonymous():
             value = value.count()
         else:
             value = value.exclude(user__in=user.get_blocked()).count()
@@ -837,7 +837,7 @@ class NewsItem(models.Model):
             site__pk=settings.SITE_ID,
             is_removed=False,
         )
-        if user.is_anonymous:
+        if user.is_anonymous():
             value = value.count()
         else:
             value = value.exclude(user__in=user.get_blocked()).count()

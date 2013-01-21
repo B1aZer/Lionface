@@ -93,7 +93,7 @@ def feed(request, user_id=None):
         # remove page posts
         items = items.remove_page_posts()
         # remove blocked
-        if not request.user.is_anonymous:
+        if not request.user.is_anonymous():
             if request.user.get_blocked():
                 items = items.filter_blocked(user=request.user)
         # privacy

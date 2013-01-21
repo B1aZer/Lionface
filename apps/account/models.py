@@ -580,6 +580,8 @@ class UserProfile(User):
 
     def get_user_roles_for(self, page):
         roles = ['P']
+        if self.is_anonymous():
+            return roles
         if self in page.get_admins():
             roles.append('A')
         if self.membership_set.filter(page=page, type='EM', is_confirmed=True).count():
