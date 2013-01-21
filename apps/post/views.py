@@ -728,11 +728,29 @@ def tag_feed(request, tag_id):
 
     items = tag.get_posts()
 
+    paginator = Paginator(items, 7)
+    items = paginator.page(1)
+
+    if request.method == 'GET':
+        page = request.GET.get('page', None)
+        if page:
+            try:
+                items = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                items = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                items = paginator.page(paginator.num_pages)
+        else:
+            page = 1
+
     data['html'] = loader.render_to_string(
-        'post/_feed.html',
+        'post/_tags_feed.html',
         {
             'profile_user': request.user,
             'items': items,
+            'tag': tag,
             #'has_next': has_next,
             #'next_page_number': next_count,
             #'news_feed': news_feed_flag,

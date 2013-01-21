@@ -1,0 +1,11 @@
+{% extends 'post/_feed.html' %}
+{% load media comments format_results friends %}
+{% load oembed_tags %}
+
+{% block see_more %}
+{% if items.has_next %}
+
+<a id="see_tags_feed" href="{% url post.views.tag_feed tag_id=tag.id %}?page={{ items.next_page_number }}"  style="position: relative; left: 25px; padding-left: 25px; width: 615px;"> See More </a>
+
+{% endif %}
+{% endblock %}
