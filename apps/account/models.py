@@ -393,6 +393,14 @@ class UserProfile(User):
 
         return visible
 
+    def check_messages(self, user):
+        visibility = self.check_visiblity('send_message', user)
+        if not visibility:
+            sent = user.message_to.filter(user=self).count()
+            if sent:
+                return True
+        return visibility
+
     def set_option(self, name, value):
         name = "option_%s" % name
         try:
