@@ -519,7 +519,10 @@ class Pages(models.Model):
 
         priv_topics = []
         topics = self.tagged_in_topics.all()
-        roles = user.get_user_roles_for(self)
+        if user.is_anonymous():
+            roles = ['P']
+        else:
+            roles = user.get_user_roles_for(self)
         for topic in topics:
             for role in roles:
                 if role in topic.members \

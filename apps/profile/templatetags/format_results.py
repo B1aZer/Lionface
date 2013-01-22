@@ -177,7 +177,8 @@ def check_cover_image_visibility(user, current_user):
 
 @register.filter(name='check_message_sending')
 def check_message_sending(user, current):
-    return user.check_visiblity('send_message', current)
+    #return user.check_visiblity('send_message', current)
+    return user.check_messages(current)
 
 @register.filter(name='check_profile_bio')
 def check_profile_bio(user, current):

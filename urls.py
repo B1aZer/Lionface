@@ -61,6 +61,7 @@ urlpatterns = patterns('',
     url(r'^pages/', include('pages.urls')),
     url(r'^images/', include('images.urls')),
     url(r'^schools/', 'schools.views.home'),
+    url(r'^discussions/', 'discussions.views.home'),
     url(r'^(?P<username>\w+)/notifications/', include('notification.urls')),
     url(r'^(?P<username>\w+)/messages/', include('messaging.urls')),
 )

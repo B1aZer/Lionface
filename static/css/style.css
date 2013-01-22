@@ -2186,6 +2186,11 @@ a.nav_notifications:hover {
     background-repeat: no-repeat;
 }
 
+#postbox .large_loader {
+	position: relative;
+	left: -25px;
+}
+
 .DoS {
 	position: absolute;
 	top: 0px; right: 10px;
