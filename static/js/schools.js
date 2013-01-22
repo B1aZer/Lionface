@@ -12,7 +12,7 @@ $(function() {
         },
         success: function(data) {
             if (data.status === 'OK') {
-                $("#school_list").prepend(data.school);
+                // $("#school_list").prepend(data.school);
             } else {
             }
             $("#add_school").hide();
