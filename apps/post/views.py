@@ -651,6 +651,23 @@ def images_comments_ajax(request):
 @login_required
 def rotate_image(request):
     data = {'status':'FAIL'}
+    post_id = request.POST.get('post-pk', None)
+    post = get_object_or_404(Post, id=int(float(post_id)))
+    post = post.get_inherited()
+    if request.user != post.get_owner():
+        raise Http404
+    ctype = ContentType.objects.get_for_model(post)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=post.id)
+    image_pk = request.POST.get('image-pk', None)
+    image = get_object_or_404(qs, pk=int(float(image_pk)))
+    angle = request.POST.get('angle', None)
+    if not angle:
+        raise Http404
+    rotate = int(float(angle))
+    rotate = (rotate * 90 * -1) % 360
+    image.change_orientation(rotate)
+    image.change_thumb_orientation(rotate)
+    data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
 
 
