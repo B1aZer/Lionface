@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'pages',
     'agenda',
     'ecomm',
+    'schools',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -245,6 +246,9 @@ MEDIA_BUNDLES = (
     ),
     ('public.js',
         'js/public.js',
+    ),
+    ('schools.js',
+        'js/schools.js',
     ),
     ('profile.js',
         'js/profile.js',
