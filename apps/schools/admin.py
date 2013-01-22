@@ -3,7 +3,9 @@ from .models import School
 
 
 class SchoolAdmin(admin.ModelAdmin):
+    fields = ['name', 'website', 'city', 'state', 'country', 'approved']
     list_display = ('name', 'user_proposed_school', 'approved')
+    list_filter = ['approved']
 
     def user_proposed_school(self, obj):
         return '<a href="{0}">{1}</a>' \
