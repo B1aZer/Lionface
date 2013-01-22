@@ -223,6 +223,16 @@ class Post(models.Model):
     def get_lovers(self):
         return self.users_loved.all()
 
+    def get_page_thumb(self):
+        post = self.get_inherited()
+        if hasattr(post, 'page'):
+            return post.page.get_thumb()
+
+    def get_page_url(self):
+        post = self.get_inherited()
+        if hasattr(post, 'page'):
+            return post.page.get_absolute_url()
+
     def get_loves(self):
         return self.users_loved.count()
 
