@@ -223,6 +223,16 @@ class Post(models.Model):
     def get_lovers(self):
         return self.users_loved.all()
 
+    def get_page_thumb(self):
+        post = self.get_inherited()
+        if hasattr(post, 'page'):
+            return post.page.get_thumb()
+
+    def get_page_url(self):
+        post = self.get_inherited()
+        if hasattr(post, 'page'):
+            return post.page.get_absolute_url()
+
     def get_loves(self):
         return self.users_loved.count()
 
@@ -788,10 +798,13 @@ class NewsItem(models.Model):
     @property
     def get_privacy(self):
         original = self.post.get_inherited()
+        # special inherition for friend connection's posts
         if original._meta.verbose_name == 'friend post':
             owner = self.user
             if owner.check_option('friend_list', 'Public'):
                 return 'P'
+            elif owner.check_option('friend_list', 'Just Me'):
+                return 'X'
             else:
                 return 'F'
         return original.privacy()

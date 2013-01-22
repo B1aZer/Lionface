@@ -1,0 +1,8 @@
+{% extends 'post/_feed.html' %}
+{% load media comments format_results friends %}
+{% load oembed_tags %}
+
+{% block empty %}
+    <div class="no_posts" style="position: relative; left: 25px;">There are no posts in this album yet.<br />
+		<span style="font-size: 11pt;">If this is your album, you can add posts by clicking<br /> the Settings link at the bottom of any of your posts.</span></div>
+{% endblock %}

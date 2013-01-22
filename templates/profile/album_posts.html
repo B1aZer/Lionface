@@ -9,7 +9,7 @@
 
 {% block left_col %}
 <div  onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;" 
-    class="noPhoto" style="background: url('/{{ profile_user.photo }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat;"></div>
+    class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat;"></div>
 
 {% endblock %}
 
@@ -19,7 +19,7 @@
 	<div class="profile_micro_header">{{ album.name }}</div>
 
     <div style="padding: 10px; position: relative; left: -60px; top: -15px;">
-    {% include 'post/_feed.html' %}
+    {% include 'post/_albums_feed.html' %}
     </div>
     
 

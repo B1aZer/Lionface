@@ -4,6 +4,7 @@ images rotate
 
 [1/18/13 8:21:43 PM] Nick: There also seems to be a bug: when you attach image, it posts via ajax, you click on the image to comment (before reloading the page, so you're still on the ajax post) and then close the win, the scroll on my mouse becomes disabled. This happens in safari and firefox at least. I think it's left over from having scroll disabled in popup mode.
 
+1Lion8face.
 
 #now
 remove li from attached image on return

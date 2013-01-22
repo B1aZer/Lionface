@@ -22,7 +22,8 @@ class Messaging(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
-        send = False
+        send = self.user_to.check_messages(self.user)
+        """
         #checking settings
         if self.user_to.check_option('send_message',"Public"):
             send = True
@@ -39,6 +40,12 @@ class Messaging(models.Model):
         # Blocked Users
         #if self.user in self.user_to.get_blocked():
             #send = False
+        # if user has previous messages from this user
+        sent = Messaging.objects.filter(user=self.user_to, user_to=self.user).count()
+        if not send:
+            if sent:
+                send = True
+        """
         if (send):
             super(Messaging, self).save(*args, **kwargs)
         return send

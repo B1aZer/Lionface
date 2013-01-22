@@ -1008,9 +1008,9 @@ def add_relation(request, username):
 def save_bio_info(request, username):
     data = {'status':'FAIL'}
     profile_user = request.user
-    text = request.POST.get('text')
-    if not text:
+    if not 'text' in request.POST:
         raise Http404
+    text = request.POST.get('text')
     profile_user.bio_text = strip_tags(text)
     profile_user.save()
     data['status'] = 'OK'
