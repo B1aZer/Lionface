@@ -1208,6 +1208,20 @@ a.profile_btn:hover {
 	height: 100%;
 	text-align: center;
 }
+.image_zone_view .rotate-left, .image_zone_view .rotate-right {
+	position: absolute;
+	z-index: 10002;
+	height: 100%;
+}
+.rotate-left {
+    float:left;
+}
+.rotate-right {
+    float:right;
+}
+.image_zone_view .rotate-left img, .image_zone_view .rotate-right img {
+    width:50px;
+}
 .image_zone_view .prev, .image_zone_view .next {
 	position: absolute;
 	z-index: 10001;

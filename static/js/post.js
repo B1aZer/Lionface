@@ -229,12 +229,19 @@ LionFace.PostImages.prototype = {
         }).find('img').css({
             'margin-top': ($popup.find('.image_zone').height()-45)/2
         });
+
+        $popup.find('.image_zone_view .rotate-right').css({
+            'margin-left': $popup.find('.image_zone').width() - 351 - $popup.find('.image_zone_view .rotate-right').find('img').width()
+        });
+
         $popup.find('.image_zone_view .next').css({
             'margin-left': $popup.find('.image_zone').width()*(1 - 0.2) - 351
         });
+
         $popup.find('.image_zone_view .loader').css({
             'line-height': $popup.find('.image_zone').height() + 'px'
         });
+
         $popup.find('.image_zone_info .scroll_area').height(
             $popup.find('.image_zone_info').height() - $popup.find('.image_zone_info .close').height() - $popup.find('.image_zone_info .make_comment').height() - 15
         );
