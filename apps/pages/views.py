@@ -158,6 +158,7 @@ def page(request, slug=None):
             image = album_form.save(page)
             image.make_activity()
             image.generate_thumbnail(200, 200)
+            image.change_orientation()
             # try:
             #     pil_object = pilImage.open(image.image.path)
             #     w, h = pil_object.size
@@ -591,12 +592,23 @@ def update(request):
                 post.save()
 
                 # attach uploaded images
+                rotation = request.POST.getlist('image_rotation');
+                i = 0
                 for image in request.FILES.getlist('image'):
                     image_form = ImageForm(None, {'image': image})
+                    rotate = rotation[i]
+                    i += 1
                     if image_form.is_valid():
                         img = image_form.save(post)
                         # img.make_activity()
-                        img.generate_thumbnail(158, 158)
+                        if rotate:
+                            rotate = int(rotate)
+                            rotate = (rotate * 90 * -1) % 360
+                            img.generate_thumbnail(158, 158, angle = rotate)
+                            img.change_orientation(rotate)
+                        else:
+                            img.generate_thumbnail(158, 158)
+                            img.change_orientation(rotate)
                     else:
                         data['status'] = 'fail'
                         data['errors'] = image_form.errors
@@ -638,12 +650,23 @@ def feedback(request):
                 post.save()
 
                 # attach uploaded images
+                rotation = request.POST.getlist('image_rotation');
+                i = 0
                 for image in request.FILES.getlist('image'):
                     image_form = ImageForm(None, {'image': image})
+                    rotate = rotation[i]
+                    i += 1
                     if image_form.is_valid():
                         img = image_form.save(post)
                         # img.make_activity()
-                        img.generate_thumbnail(158, 158)
+                        if rotate:
+                            rotate = int(rotate)
+                            rotate = (rotate * 90 * -1) % 360
+                            img.generate_thumbnail(158, 158, angle = rotate)
+                            img.change_orientation(rotate)
+                        else:
+                            img.generate_thumbnail(158, 158)
+                            img.change_orientation()
                     else:
                         data['status'] = 'fail'
                         data['errors'] = image_form.errors
@@ -1458,6 +1481,7 @@ def images(request, slug, rows_show=4):
             image = album_form.save(page)
             image.make_activity()
             image.generate_thumbnail(200, 200)
+            image.change_orientation()
             # try:
             #     pil_object = pilImage.open(image.image.path)
             #     w, h = pil_object.size
@@ -2024,12 +2048,23 @@ def start_topic(request, slug):
                 post = topic.posts.create(user=request.user, content=content)
 
                 # attach uploaded images
+                rotation = request.POST.getlist('image_rotation');
+                i = 0
                 for image in request.FILES.getlist('image'):
                     image_form = ImageForm(None, {'image': image})
+                    rotate = rotation[i]
+                    i += 1
                     if image_form.is_valid():
                         img = image_form.save(post)
                         # img.make_activity()
-                        img.generate_thumbnail(158, 158)
+                        if rotate:
+                            rotate = int(rotate)
+                            rotate = (rotate * 90 * -1) % 360
+                            img.generate_thumbnail(158, 158, angle = rotate)
+                            img.change_orientation(rotate)
+                        else:
+                            img.generate_thumbnail(158, 158)
+                            img.change_orientation()
                     else:
                         data['status'] = 'fail'
                         data['errors'] = image_form.errors
@@ -2077,12 +2112,23 @@ def list_topic(request, slug, topic_id):
         post = topic.posts.create(user=request.user, content=content)
 
         # attach uploaded images
+        rotation = request.POST.getlist('image_rotation');
+        i = 0
         for image in request.FILES.getlist('image'):
+            rotate = rotation[i]
+            i += 1
             image_form = ImageForm(None, {'image': image})
             if image_form.is_valid():
                 img = image_form.save(post)
                 # img.make_activity()
-                img.generate_thumbnail(158, 158)
+                if rotate:
+                    rotate = int(rotate)
+                    rotate = (rotate * 90 * -1) % 360
+                    img.generate_thumbnail(158, 158, angle = rotate)
+                    img.change_orientation(rotate)
+                else:
+                    img.generate_thumbnail(158, 158)
+                    img.change_orientation()
             else:
                 data['status'] = 'fail'
                 data['errors'] = image_form.errors

@@ -103,6 +103,46 @@ class Image(models.Model):
         self.owner.save()
         return True
 
+    def change_orientation(self, angle=False):
+        pil_object = pilImage.open(self.image.path)
+        # reading and applying orientation
+        for orientation in ExifTags.TAGS.keys() :
+            if ExifTags.TAGS[orientation]=='Orientation' : break
+        try:
+            exif=dict(pil_object._getexif().items())
+            if   exif[orientation] == 3 :
+                pil_object=pil_object.rotate(180, expand=True)
+            elif exif[orientation] == 6 :
+                pil_object=pil_object.rotate(270, expand=True)
+            elif exif[orientation] == 8 :
+                pil_object=pil_object.rotate(90, expand=True)
+        except:
+            pass
+        if angle:
+            pil_object=pil_object.rotate(angle, expand=True)
+        pil_object.save(self.image.path)
+        return True
+
+    def change_thumb_orientation(self, angle=False):
+        pil_object = pilImage.open(self.image.thumb_path)
+        # reading and applying orientation
+        for orientation in ExifTags.TAGS.keys() :
+            if ExifTags.TAGS[orientation]=='Orientation' : break
+        try:
+            exif=dict(pil_object._getexif().items())
+            if   exif[orientation] == 3 :
+                pil_object=pil_object.rotate(180, expand=True)
+            elif exif[orientation] == 6 :
+                pil_object=pil_object.rotate(270, expand=True)
+            elif exif[orientation] == 8 :
+                pil_object=pil_object.rotate(90, expand=True)
+        except:
+            pass
+        if angle:
+            pil_object=pil_object.rotate(angle, expand=True)
+        pil_object.save(self.image.thumb_path)
+        return True
+
     def generate_thumbnail(self, width, height, quiet=True, angle=None):
         try:
             pil_object = pilImage.open(self.image.path)

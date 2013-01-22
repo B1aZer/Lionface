@@ -243,17 +243,19 @@ def save(request):
         i = 0
         for image in request.FILES.getlist('image'):
             image_form = ImageForm(None, {'image': image})
+            rotate = rotation[i]
+            i += 1
             if image_form.is_valid():
-                rotate = rotation[i]
-                i += 1
                 img = image_form.save(post)
                 # img.make_activity()
                 if rotate:
                     rotate = int(rotate)
                     rotate = (rotate * 90 * -1) % 360
                     img.generate_thumbnail(200, 200, angle = rotate)
+                    img.change_orientation(rotate)
                 else:
-                    img.generate_thumbnail(158, 158)
+                    img.generate_thumbnail(200, 200)
+                    img.change_orientation()
             else:
                 data['status'] = 'fail'
                 data['errors'] = image_form.errors
@@ -643,6 +645,29 @@ def images_comments_ajax(request):
         data['status'] = 'fail'
     else:
         data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def rotate_image(request):
+    data = {'status':'FAIL'}
+    post_id = request.POST.get('post-pk', None)
+    post = get_object_or_404(Post, id=int(float(post_id)))
+    post = post.get_inherited()
+    if request.user != post.get_owner():
+        raise Http404
+    ctype = ContentType.objects.get_for_model(post)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=post.id)
+    image_pk = request.POST.get('image-pk', None)
+    image = get_object_or_404(qs, pk=int(float(image_pk)))
+    angle = request.POST.get('angle', None)
+    if not angle:
+        raise Http404
+    rotate = int(float(angle))
+    rotate = (rotate * 90 * -1) % 360
+    image.change_orientation(rotate)
+    image.change_thumb_orientation(rotate)
+    data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
 
 
