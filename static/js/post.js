@@ -2,7 +2,7 @@ LionFace.PostImages = function(options) {
     this.options = $.extend({
         'swap_images_delay': 500,
         'change_thumb_delay': 500,
-        'popup_fadeDuration': 500
+        'popup_fadeDuration': 500,
     }, options || {});
     this.init();
 };
@@ -229,9 +229,9 @@ LionFace.PostImages.prototype = {
         }).find('img').css({
             'margin-top': ($popup.find('.image_zone').height()-45)/2
         });
-
+        //'margin-left': $popup.find('.image_zone').width() - 351 - $popup.find('.image_zone_view .rotate-right').find('img').width()
         $popup.find('.image_zone_view .rotate-right').css({
-            'margin-left': $popup.find('.image_zone').width() - 351 - $popup.find('.image_zone_view .rotate-right').find('img').width()
+            'margin-left': $popup.find('.image_zone_view .rotate-left').find('img').width()
         });
 
         $popup.find('.image_zone_view .next').css({
@@ -339,6 +339,34 @@ LionFace.PostImages.prototype = {
         this.popup_disableKeyboard();
         $('body').css({'overflow': this.popup_start.overflow});
         this.popup_start.overflow = undefined;
+    },
+
+    rotate_image_left: function () {
+        var _this = this;
+        console.log('rotating');
+        var angle = _this.image_angle || 0;
+        var $popup = $('.post_image_popup');
+        var image = $popup.find('.image_zone_view .image img');
+        var cfangle = angle * 90 - 90;
+        var ieangle = angle - 1;
+        image.attr('style','-webkit-transform: rotate(' + cfangle + 'deg);\
+                            -moz-transform: rotate(' + cfangle + 'deg); \
+                            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=' + ieangle + ');'); 
+        _this.image_angle = ieangle;
+    },
+
+    rotate_image_right: function () {
+        var _this = this;
+        console.log('rotating');
+        var angle = _this.image_angle || 0;
+        var $popup = $('.post_image_popup');
+        var image = $popup.find('.image_zone_view .image img');
+        var cfangle = angle * 90 + 90;
+        var ieangle = angle + 1;
+        image.attr('style','-webkit-transform: rotate(' + cfangle + 'deg);\
+                            -moz-transform: rotate(' + cfangle + 'deg); \
+                            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=' + ieangle + ');'); 
+        _this.image_angle = ieangle;
     },
 
     popup_comments_refresh: function($comments) {
@@ -506,6 +534,12 @@ LionFace.PostImages.prototype = {
         });
         $popup.find('.image_zone_view .next').click(function(event) {
             _this.popup_to_next();
+        });
+        $popup.find('.image_zone_view .rotate-left').click(function(event) {
+            _this.rotate_image_left();
+        });
+        $popup.find('.image_zone_view .rotate-right').click(function(event) {
+            _this.rotate_image_right();
         });
         this.popup_comments_bind_make_comment();
     }

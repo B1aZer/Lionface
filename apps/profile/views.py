@@ -99,6 +99,7 @@ def images(request, username, rows_show=4):
             image = form.save(profile_user)
             image.make_activity()
             image.generate_thumbnail(200, 200)
+            image.change_orientation()
             # try:
             #     pil_object = pilImage.open(image.image.path)
             #     w, h = pil_object.size
@@ -378,6 +379,7 @@ def profile(request, username):
             image = form.save(profile_user)
             image.make_activity()
             image.generate_thumbnail(200, 200)
+            image.change_orientation()
             # try:
             #     pil_object = pilImage.open(image.image.path)
             #     w, h = pil_object.size

@@ -1211,13 +1211,7 @@ a.profile_btn:hover {
 .image_zone_view .rotate-left, .image_zone_view .rotate-right {
 	position: absolute;
 	z-index: 10002;
-	height: 100%;
-}
-.rotate-left {
-    float:left;
-}
-.rotate-right {
-    float:right;
+    bottom:0;
 }
 .image_zone_view .rotate-left img, .image_zone_view .rotate-right img {
     width:50px;

@@ -46,6 +46,7 @@
         // LionFace.User['images_now_rows'] = {{ image_rows|length }};
         // {# LionFace.User['images_ajax'] = "{% url pages.views.images_ajax page.username %}"; #}
         LionFace.User['images_comments_ajax'] = "{% url post_images_ajax_comments %}";
+        LionFace.User['images_rotation'] = "{% url post.views.rotate_image %}";
     });
 </script>
 {% endblock %}
