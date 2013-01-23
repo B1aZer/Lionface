@@ -566,7 +566,7 @@ LionFace.Images.prototype = {
         if (prev_angle_str) {
             var prev_angle = parseInt(prev_angle_str);
         }
-        if (_this.image_angle === undefined || _this.image_angle == prev_angle) { return; }
+        if (_this.image_angle === undefined ) { return; }
         
         var angle = _this.image_angle;
         if (prev_angle) {
@@ -575,10 +575,12 @@ LionFace.Images.prototype = {
         var cfangle = angle * 90;
         var ieangle = angle;
         var image = item.find('.image_album');
+        /*
         console.log(cfangle);
         image.css({'-webkit-transform':'rotate(' + cfangle + 'deg)',
                             '-moz-transform': 'rotate(' + cfangle + 'deg)', 
                             'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=' + ieangle + ')'}); 
+                            */
         // saving to db
         var url = LionFace.User['images_rotation'];
         make_request({ 
@@ -591,9 +593,19 @@ LionFace.Images.prototype = {
                 if (data.status == 'OK') {
                     // set timestamp fo immediate reload
                     var old_url = image.data('original-url');
+                    var n = old_url.indexOf('?');
+                    old_url = old_url.substring(0, n != -1 ? n : old_url.length);
                     var new_url = old_url + '?' + d.getTime();
                     console.log(new_url);
                     image.data('original-url', new_url );
+
+                    var old_src = image.css('backgroundImage');
+                    old_src = old_src.replace('url(','').replace(')','');
+                    n = old_src.indexOf('?');
+                    old_src = old_src.substring(0, n != -1 ? n : old_src.length);
+                    var new_src = old_src + '?' + d.getTime();
+                    console.log(new_src);
+                    image.css('background', 'url(' + new_src + ') #D0D3D5');
                 }
             }
         });
