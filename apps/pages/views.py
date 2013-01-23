@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from account.decorators import active_required
 from django.template import RequestContext, TemplateDoesNotExist
 from django.template.loader import render_to_string
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.urlresolvers import reverse
 from django.db.models import F
@@ -1664,6 +1664,27 @@ def images_comments_ajax(request, slug):
         data['status'] = 'fail'
     else:
         data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@login_required
+def rotate_image(request, slug=None):
+    data = {'status':'FAIL'}
+    page = get_object_or_404(Pages, username = slug)
+    if request.user not in page.get_admins():
+        raise Http404
+    ctype = ContentType.objects.get_for_model(page)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=page.id)
+    image_pk = request.POST.get('image-pk', None)
+    image = get_object_or_404(qs, pk=int(float(image_pk)))
+    angle = request.POST.get('angle', None)
+    if not angle:
+        raise Http404
+    rotate = int(float(angle))
+    rotate = (rotate * 90 * -1) % 360
+    image.change_orientation(rotate)
+    image.change_thumb_orientation(rotate)
+    data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
 
 

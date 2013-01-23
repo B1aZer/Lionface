@@ -2,12 +2,12 @@
 {% for row in rows %}
 <li class="album_shadow" data-position="{{ row.rating }}" data-pk="{{ row.pk }}">
     <div style="background: url('/{{ row.image.thumb_name }}') #FFF;" data-original-url="/{{ row.image.name }}" class="image_album">
+    </div>
         {% if manage_perm %}
-        <div id="image_settings">
+        <div id="image_settings" class="profile_settings">
             <a href="#" data-activity="{% if row.activity %}1{% else %}0{% endif %}" id="make_primary" style="float: left;" title="Make Primary Photo">+</a>
             <a href="#" id="delete" style="float: right;" title="Delete Photo">x</a>
         </div>
         {% endif %}
-    </div>
 </li>
 {% endfor %}

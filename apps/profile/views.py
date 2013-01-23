@@ -568,6 +568,26 @@ def reset_picture(request, username):
     return redrct
 
 
+def rotate_image(request, username):
+    data = {'status': 'FAIL'}
+    profile_user = get_object_or_404(UserProfile, username=username)
+    if request.user != profile_user:
+        raise Http404
+    ctype = ContentType.objects.get_for_model(profile_user)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
+    image_pk = request.POST.get('image-pk', None)
+    image = get_object_or_404(qs, pk=int(float(image_pk)))
+    angle = request.POST.get('angle', None)
+    if not angle:
+        raise Http404
+    rotate = int(float(angle))
+    rotate = (rotate * 90 * -1) % 360
+    image.change_orientation(rotate)
+    image.change_thumb_orientation(rotate)
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
 @active_required
 def send_message(request, username):
     data = {'status': 'FAIL'}

@@ -63,6 +63,7 @@ urlpatterns = patterns('',
     url(r'^page/(?P<slug>\w+)/topic/pageing/$', views.topics_paging),
     url(r'^page/(?P<slug>\w+)/images/$', views.images),
     url(r'^page/(?P<slug>\w+)/images/ajax/$', views.images_ajax),
+    url(r'^page/(?P<slug>\w+)/images/ajax/rotate/$', views.rotate_image),
     url(r'^page/(?P<slug>\w+)/images/ajax/comments/$', views.images_comments_ajax),
     url(r'^update/$', views.update),
 )

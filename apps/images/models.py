@@ -119,7 +119,7 @@ class Image(models.Model):
         except:
             pass
         if angle:
-            pil_object=pil_object.rotate(angle, expand=True)
+            pil_object=pil_object.rotate(angle, expand=False)
         pil_object.save(self.image.path)
         return True
 
@@ -139,7 +139,7 @@ class Image(models.Model):
         except:
             pass
         if angle:
-            pil_object=pil_object.rotate(angle, expand=True)
+            pil_object=pil_object.rotate(angle, expand=False)
         pil_object.save(self.image.thumb_path)
         return True
 
@@ -160,7 +160,7 @@ class Image(models.Model):
             except:
                 pass
             if angle:
-                pil_object=pil_object.rotate(angle, expand=True)
+                pil_object=pil_object.rotate(angle, expand=False)
 
             w, h = pil_object.size
             x, y = 0, 0
