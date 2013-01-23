@@ -56,7 +56,8 @@
         LionFace.User['images_now_rows'] = {{ image_rows|length }};
         LionFace.User['images_ajax'] = "{% url profile.views.images_ajax profile_user.username %}";
         LionFace.User['images_comments_ajax'] = "{% url profile.views.images_comments_ajax profile_user.username %}";
-        LionFace.User['images_quote_ajax'] = '{% url profile-images-quote profile_user.username %}'
+        LionFace.User['images_quote_ajax'] = '{% url profile-images-quote profile_user.username %}';
+        LionFace.User['images_rotation'] = '{% url profile.views.rotate_image profile_user.username %}';
     });
 </script>
 {% endblock %}

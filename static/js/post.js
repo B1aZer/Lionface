@@ -361,9 +361,9 @@ LionFace.PostImages.prototype = {
         var image = $popup.find('.image_zone_view .image img');
         var cfangle = angle * 90 - 90;
         var ieangle = angle - 1;
-        image.attr('style','-webkit-transform: rotate(' + cfangle + 'deg);\
-                            -moz-transform: rotate(' + cfangle + 'deg); \
-                            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=' + ieangle + ');'); 
+        image.css({'-webkit-transform': 'rotate(' + cfangle + 'deg)',
+                            '-moz-transform': 'rotate(' + cfangle + 'deg)',
+                            'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=' + ieangle + ')'}); 
         _this.image_angle = ieangle;
     },
 
@@ -374,9 +374,9 @@ LionFace.PostImages.prototype = {
         var image = $popup.find('.image_zone_view .image img');
         var cfangle = angle * 90 + 90;
         var ieangle = angle + 1;
-        image.attr('style','-webkit-transform: rotate(' + cfangle + 'deg);\
-                            -moz-transform: rotate(' + cfangle + 'deg); \
-                            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=' + ieangle + ');'); 
+        image.css({'-webkit-transform': 'rotate(' + cfangle + 'deg)',
+                            '-moz-transform': 'rotate(' + cfangle + 'deg)',
+                            'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=' + ieangle + ')'}); 
         _this.image_angle = ieangle;
     },
 
