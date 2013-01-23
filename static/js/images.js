@@ -494,7 +494,9 @@ LionFace.Images.prototype = {
             $popup.find('.image_zone_view .image').show();
             $popup.find('.image_zone_view').find('.prev, .next').show();
             // privacy
-            $popup.find('.image_zone_view').find('.rotate-left, .rotate-right').show();
+            if (LionFace.User.profile_user == LionFace.User.username) {
+                $popup.find('.image_zone_view').find('.rotate-left, .rotate-right').show();
+            }
             _this.popup_resize();
         });
         $popup.find('.image_zone_view .image').append( $(image) );
