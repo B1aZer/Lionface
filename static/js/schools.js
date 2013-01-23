@@ -11,9 +11,11 @@ $(function() {
             return false;
         },
         success: function(data) {
+            console.log($("#show_message"));
             if (data.status === 'OK') {
-                $("#school_list").prepend(data.school);
+                $("#show_message").text("Thank you for submitting a school. We will review it as soon as possible.").show().delay(30000).fadeOut();
             } else {
+                $("#show_message").text("An error has occured.").show().delay(30000).fadeOut();
             }
             $("#add_school").hide();
         }

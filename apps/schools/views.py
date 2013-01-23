@@ -11,7 +11,7 @@ from .models import School
 
 
 def home(request):
-    school_list = School.objects.all()
+    school_list = School.objects.filter(approved=True)
     return render(request, 'schools/schools.html',
         {
             'school_list': school_list,
@@ -34,8 +34,8 @@ def add(request):
                         country=country, user_proposed=request.user)
         school.save()
 
-        school_html = render_to_string('schools/_school.html',
-            {'school': school})
-        data['school'] = school_html
+        # school_html = render_to_string('schools/_school.html',
+            # {'school': school})
+        # data['school'] = school_html
         return HttpResponse(json.dumps(data), "application/json")
     raise Http404
