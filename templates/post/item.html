@@ -93,12 +93,7 @@
                 {% endif %}
                 <span class="feedback_disagreed_count" {% if not item.get_disagreed or request.user in item.get_agreed_list %} style="display:none;" {% endif %}>{{ item.get_disagreed }}</span>
             {% endif %}
-            {% if news_feed and item.user|has_friend:request.user and not request.user|in_hidden:item.user %}
-            <a href="#" class="hide_feed">Hide Feed</a>
-            {% endif %}
-            {% if news_feed and item.user|in_followers:request.user and not item.user|has_friend:request.user %}
-            <a href="#" class="unfollow_feed link-unfollow { user: '{{ item.user.id }}' }">- Unfollow</a>
-            {% endif %}
+            
             {% endblock %}
         {% ifnotequal item.get_post.get_loves 0 %}
         <div class="loved_users_list" style="display:none" >
@@ -186,6 +181,12 @@
                     {% endif %}
                 </span>
                 {% endif %}
+            {% endif %}
+			{% if news_feed and item.user|has_friend:request.user and not request.user|in_hidden:item.user %}
+            <a href="#" class="hide_feed" title="Use this to filter out a person's content without removing them as a friend.">Hide Feed</a> <span style="color: transparent;"> - | - </span>
+            {% endif %}
+            {% if news_feed and item.user|in_followers:request.user and not item.user|has_friend:request.user %}
+            <a href="#" class="unfollow_feed link-unfollow { user: '{{ item.user.id }}' }">- Unfollow</a> <span style="color: transparent;"> - | - </span>
             {% endif %}
             <span class="timestamp" title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00" >{{ item.timestamp }}</span>
         </div>
