@@ -18,5 +18,6 @@ urlpatterns = patterns('',
     url(r'toggle_privacy/$', views.toggle_privacy),
     url(r'images/ajax/comments/$', views.images_comments_ajax,
         name='post_images_ajax_comments'),
+    url(r'images/ajax/rotate/$', views.rotate_image),
     url(r'(?P<post_id>\d+)/comments_page/(?P<page>\d+)/$', views.comments_pagination),
 )

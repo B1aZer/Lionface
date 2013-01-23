@@ -9,6 +9,7 @@
     LionFace.User['images_now_rows'] = {{ image_rows|length }};
     LionFace.User['images_ajax'] = "{% url pages.views.images_ajax page.username %}";
     LionFace.User['images_comments_ajax'] = "{% url pages.views.images_comments_ajax page.username %}";
+    LionFace.User['images_rotation'] = "{% url pages.views.rotate_image page.username %}";
 </script>
 {% endblock %}  
 

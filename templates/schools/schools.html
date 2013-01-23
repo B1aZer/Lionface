@@ -3,6 +3,11 @@
 <!--but then you need to populate another block below-->
 {% load media %}
 
+{% block js %}
+    {% include_media 'schools.js' %}
+    {% include_media 'jquery.validate.js' %}
+{% endblock %}
+
 {% block body %}
 {% include '_header.html' %}
 
@@ -15,7 +20,7 @@
 <div style="height: 53px;"></div>
 <div align="center">
 <div class="page_container">
-	
+
 	<div class="float_left">
 	<div style="border-bottom: 1px solid #555;"><span style="font-size: 11pt; font-weight: bold;">Your Schools</span> <a href="#" class="find_school" onClick="ShowContent('find'); HideContent('school'); return false;">Find a School</a></div>
 	<a href="#" class="school_navON" onClick="ShowContent('school'); HideContent('find'); return false;">Sample University <span class="school_count">(count) people</span><br /><span class="location">Town, State, Country</span></a>
@@ -26,15 +31,15 @@
 	<div class="page_center" style="padding: 0px 10px;" id="school">
 	<div style="font-size: 18pt; padding: 10px 40px;">Sample University</div>
 
-  <div style="padding: 0 40px; text-align: left;">Class Years: 
-	<a href="javascript:;" class="sub_filter_feed">2012</a> 
+  <div style="padding: 0 40px; text-align: left;">Class Years:
+	<a href="javascript:;" class="sub_filter_feed">2012</a>
 	<a href="javascript:;" class="sub_filter_feed">2011</a>
 	<a href="javascript:;" class="sub_filter_feed">2010</a>
 	<a href="javascript:;" class="sub_filter_feed">2009</a>
 	<a href="javascript:;" class="sub_filter_feed">2008</a>
 	<a href="javascript:;" class="sub_filter_feed">2007</a>
 	<a href="javascript:;" class="sub_filter_feedON">2006</a>
-	<a href="javascript:;" class="sub_filter_feed">2005</a> 
+	<a href="javascript:;" class="sub_filter_feed">2005</a>
 	<a href="javascript:;" class="sub_filter_feed">2004</a>
 	<a href="javascript:;" class="sub_filter_feed">2003</a>
 	<a href="javascript:;" class="sub_filter_feed">2002</a>
@@ -43,7 +48,7 @@
   </div>
   <div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
 	<table width="100%"><tr><td align="left">
-    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px;" value="Filter by Name" /> <span style="color: #AAA; font-size: 8pt; margin-left: 7px;">(count) Results</span>
+    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px;" placeholder="Filter by Name" /> <span style="color: #AAA; font-size: 8pt; margin-left: 7px;">(count) Results</span>
 	</td><td align="right">
 	<a href="javascript:;" style="color: #DDD; font-size: 8pt; position: relative; top: 3px;">- Leave School</a>
 	</td></tr></table>
@@ -66,33 +71,37 @@
 	<div style="font-size: 18pt; padding: 10px 40px 0px 40px;">Find a School</div>
   <div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
 	<table width="100%"><tr><td align="left">
-    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 200px;" value="Search by Name, Location" />
-	</td><td align="right"><a href="#" class="blue_btn" style="color: #FFF; float: right; margin-left: 10px;" onClick="ShowContent('add_school'); return false;">+ Add School</a> 
+    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 200px;" placeholder="Search by Name, Location" />
+	</td><td align="right"><a href="#" class="blue_btn" style="color: #FFF; float: right; margin-left: 10px;" onClick="ShowContent('add_school'); return false;">+ Add School</a>
 		<span style="font-size: 8pt; color: #999;">Can't find your school?<br />It may not exist in our database yet.</span>
 	</td></tr></table>
   </div>
 
   <div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC; display: none;" align="center" id="add_school">
-	<table width="95%"><tr><td align="left">
-    	<input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" value="School Name" />
-	</td><td align="center">
-    	<input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" value="Official Website" />
-	</td><td></td></tr><tr><td width="33%">
-    	<input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" value="Town/City" />
-	</td><td align="center" width="33%">
-    	<input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" value="State/Province" />
-	</td><td align="right" width="33%">
-    	<input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" value="Country" />
-	</td></tr><tr><td colspan="3" align="left">
-		<a href="javascript:;" class="blue_btn" style="color: #FFF;">Submit for Approval</a> <a href="#" style="font-size: 8pt; color: #999;">Cancel</a>
-	</td></tr></table>
+    <form action="" method="post">
+    	<table width="95%"><tr><td align="left">
+        	<input id="name" name="name" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="School Name" required />
+    	</td><td align="center">
+        	<input name="website" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="Official Website" required />
+    	</td><td></td></tr><tr><td width="33%">
+        	<input name="city" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="Town/City" required />
+    	</td><td align="center" width="33%">
+        	<input name="state" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="State/Province" required />
+    	</td><td align="right" width="33%">
+        	<input name="country" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="Country" required />
+    	</td></tr><tr><td colspan="3" align="left">
+    		<button class="blue_btn" style="color: #FFF;">Submit for Approval</button> <a href="#" style="font-size: 8pt; color: #999;" onClick="HideContent('add_school'); return false;">Cancel</a>
+    	</td></tr></table>
+    </form>
+  </div>
+  <div id="show_message" style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC; display: none;" align="center">
   </div>
 
   <div style="margin: 5px 40px 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
-	<table width="100%"><tr><td align="left">
-    Sample University <span class="school_count">(count) people</span><br /><span class="location">Town, State, Country</span>
-	</td><td align="right">Class Year: <input type="text" style="padding: 4px; border: 1px solid #DDD; width: 40px;" value="YYYY" /> <a href="javascript:;" class="blue_btn" style="color: #FFF; position: relative; top: -2px;">Join</a>
-	</td></tr>
+	<table id="school_list" width="100%">
+        {% for school in school_list %}
+            {% include "schools/_school.html" %}
+        {% endfor %}
 	</table>
   </div>
 
@@ -103,4 +112,14 @@
 
   {% endblock %}
 
-{% endblock %}   
+{% block footer_js %}
+    <script>
+        $(function() {
+            // HideContent('school');
+            // ShowContent('find');
+            // ShowContent('add_school');
+        })
+    </script>
+{% endblock footer_js %}
+
+{% endblock %}

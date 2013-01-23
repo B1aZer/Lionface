@@ -14,8 +14,8 @@ $(document).ready(function() {
     <span id="email_error" style="font-size: 10pt; color: #AAA; {% if not email_error %}display:none;{% endif %}">Please provide a valid email</span>
 
 <!--<a id="change_email" href="#">Change</a>-->
-<input type="submit" id="save_email" class="edit_email blue_btn" value="Save" />
-<a id="cancel_email" href="{% url account.views.pending %}" style="color: #FFF;" class="blue_btn" >Cancel</a>
+<input type="submit" id="save_email" class="edit_email blue_btn" style="margin: 4px;" value="Save" />
+<a id="cancel_email" href="{% url account.views.pending %}" style="color: #999; font-size: 9pt; padding: 4px;" >Cancel</a>
 <!--<a id="resend_email" href="{% url account.views.resend_activation %}" style="color: #FFF;" class="blue_btn">Resend Activation Email</a>-->
 </div> 
 </form>
