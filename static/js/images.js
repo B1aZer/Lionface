@@ -559,6 +559,7 @@ LionFace.Images.prototype = {
 
     save_rotated_image: function () {
         var _this = this;
+        var d = new Date();
         var post = $('.image_container');
         var item = post.find('li[popup=true]');
         var prev_angle_str = item.attr('data-rotated');
@@ -588,7 +589,11 @@ LionFace.Images.prototype = {
             },
             callback: function (data) {
                 if (data.status == 'OK') {
-                //rotate backwards if fails
+                    // set timestamp fo immediate reload
+                    var old_url = image.data('original-url');
+                    var new_url = old_url + '?' + d.getTime();
+                    console.log(new_url);
+                    image.data('original-url', new_url );
                 }
             }
         });
