@@ -11,7 +11,7 @@
 }
 
 body {
-	font-family: "Kievit-Custom", Arial, serif;
+	font-family: Tahoma, "Kievit-Custom", Arial, serif;
 	font-size: 10pt;
 	color: #222;
 	margin: 0px;
@@ -625,6 +625,7 @@ a.profile_btn:hover {
 }
 
 .post_content {
+	font-family: Tahoma, "Kievit-Custom";
 	padding: 4px 0 4px 0px;
 	margin: 3px 0;
 	font-size: 10pt;
@@ -1230,19 +1231,15 @@ a.profile_btn:hover {
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
 	-moz-opacity: 1;
 	opacity: 1;
-}
-.image_zone_view .rotate-left img, .image_zone_view .rotate-right img {
-    width: 40px;
 	cursor: pointer;
-	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=55);
-	-moz-opacity: 0.55;
-	opacity: 0.55;
+}
+.image_zone_view .rotate-right {
+	left: 20px;
 }
 
-.image_zone_view .rotate-left img:hover, .image_zone_view .rotate-right img:hover {
-	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
-	-moz-opacity: 1;
-	opacity: 1;
+.image_zone_view .rotate-left img, .image_zone_view .rotate-right img {
+    width: 35px;
+	padding: 0 4px;
 }
 
 .image_zone_view .prev, .image_zone_view .next {
@@ -1250,6 +1247,7 @@ a.profile_btn:hover {
 	z-index: 10001;
 	height: 100%;
 	display: none;
+	cursor: pointer;
 }
 .image_zone_view .prev img {
 	float: left;
@@ -1500,6 +1498,7 @@ a.profile_btn:hover {
 .text_comment {
     font-size: 10pt;
     line-height: 1;
+	font-family: Tahoma, "Kievit-Custom";
 }
 
 .send_message_form {
