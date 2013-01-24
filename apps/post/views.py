@@ -751,6 +751,11 @@ def tag_feed(request, tag_id):
     except:
         raise Http404
 
+    # disabling all other filters
+    request.user.filters = ''
+    request.user.user_tag_set.update(active=False)
+    request.user.save()
+
     items = tag.get_posts()
 
     paginator = Paginator(items, 7)

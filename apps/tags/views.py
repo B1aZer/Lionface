@@ -70,6 +70,12 @@ def deactivate(request):
 @login_required
 def activate(request):
     data = {'status': 'OK'}
+    single = request.POST.get('single', None)
+    if single:
+        request.user.filters = ''
+        request.user.save()
+        # deactivate all tags
+        request.user.user_tag_set.update(active=False)
     if request.method == 'POST' and 'tag_name' in request.POST:
         tag_name = request.POST['tag_name']
         try:

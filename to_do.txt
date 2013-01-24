@@ -3,14 +3,7 @@
 
 safari attach
 
-[1/18/13 8:21:43 PM] Nick: There also seems to be a bug: when you attach image, it posts via ajax, you click on the image to comment (before reloading the page, so you're still on the ajax post) and then close the win, the scroll on my mouse becomes disabled. This happens in safari and firefox at least. I think it's left over from having scroll disabled in popup mode.
-
-Okay, thanks. And one more thing: when a user clicks on a trending tag, can we disable all the news feed filters? Can we also change the filters so you can only select one at a time with a regular click, and you can select multiple filters with a shift+click (and when you push that, can you cange the subtext below "News Feed Filters" to "Shift+click to select multiple filters." ... this should make the news feed much more user friendly.
-
-If I have a regular filter selected, and a shift+click to a tag filter, it doesn't deselect the regular filter (that has to be fixed when you get to the news feed stuff). Tag filter to regular filter works though. As for the LF post I just made, it shows up under lionface tag without thumbnail, and under friends without thumbnail (it shouldnt even be there), and under business twice, once with and once without thumbnail.
-
-[1/23/13 7:02:09 AM] Nick: With the news feed, can you also make it so at least one filter must be selected at all times, so if friends is selected, and you click it again, it reloads the feed instead of turning the feed off.
-[1/23/13 7:12:40 AM] Nick: Also the feed filter count doesn't go away when I reload the filter feed, and it should I have to reload the whole page it reset the count.
+do not acount tags with less than 2 characters
 
 1Lion8face.
 

@@ -16,6 +16,7 @@ from notification.models import Notification
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import json
+from django.utils import timezone
 
 
 @public_required
@@ -204,26 +205,34 @@ def filter_add(request):
         if single:
             request.user.filters = ''
             request.user.save()
+            # deactivate all tags
+            request.user.user_tag_set.update(active=False)
+
         filters = request.user.filters.split(',')
         if filter_name == 'Friends':
+                # update comet date
+                request.session['feed_date_F'] = timezone.now()
                 if 'F' not in filters:
                     filters.append('F')
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
         if filter_name == 'Following':
+                request.session['feed_date_W'] = timezone.now()
                 if 'W' not in filters:
                     filters.append('W')
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
         if filter_name == 'Businesses':
+                request.session['feed_date_B'] = timezone.now()
                 if 'B' not in filters:
                     filters.append('B')
                     filters = ','.join(filters)
                     request.user.filters = filters
                     request.user.save()
         if filter_name == 'Nonprofits':
+                request.session['feed_date_N'] = timezone.now()
                 if 'N' not in filters:
                     filters.append('N')
                     filters = ','.join(filters)

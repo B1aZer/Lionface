@@ -16,6 +16,7 @@ function loadNewsFeed(elem, page, url) {
 
     make_request({
         url:url,
+        multi:true,
         callback: function(data) {
             if (page > 1) {
                 $elem.replaceWith(data.html);
@@ -122,9 +123,9 @@ function check_for_new_posts(filter, initial) {
 
 $(document).ready(function(){
 
-  loadNewsFeed($("#news_feed"));
+    loadNewsFeed($("#news_feed"));
 
-  hide_add_link();
+    hide_add_link();
 
     check_for_new_posts('', true);
 
@@ -155,31 +156,40 @@ $(document).ready(function(){
         }, 20000);
     }
 
-  var shifted = false;
+    var shifted = false;
 
-  $(document).bind('keyup keydown', function(e){shifted = e.shiftKey} );
+    $(document).bind('keyup keydown', function(e){shifted = e.shiftKey} );
 
-  $('.tagged').hover(function () {
-    $(this).find('.remove_tag').show();
-    },function () {
-    $(this).find('.remove_tag').hide();
+    $('.tagged').hover(function () {
+
+        $(this).find('.remove_tag').show();
+        },function () {
+        $(this).find('.remove_tag').hide();
     });
 
-  $('.feed_type').live('click',function () {
-  self = $(this)
+    $('.feed_type').live('click',function () {
+        var self = $(this);
+        var tag_val = $(this).attr('id');
+        var send = 'filter_name='+tag_val;
 
 
-  var tag_val = $(this).attr('id');
-  var send = 'filter_name='+tag_val;
+        if (shifted) {
+            if (self.hasClass('filterON')) {
+                if ($('.filterON').length == 1) {
+                    self.removeClass('filterON').addClass('filter'); 
+                    send = send + '&single=1';
+                }
+            }
+        }
+        else {
+            $('.filterON').removeClass('filterON').addClass('filter'); 
+            send = send + '&single=1';
+        }
 
-    if (shifted) {
-        $('.filterON').removeClass('filterON').addClass('filter');
-        send = send + '&single=1';
-    }
 
-    if ($(this).hasClass('filterON')) {
-    url = '/account/filter/remove/';
-          make_request({
+        if ($(this).hasClass('filterON')) {
+            url = '/account/filter/remove/';
+            make_request({
                 url: url,
                 data: send,
                 callback: function(html) {
@@ -195,81 +205,108 @@ $(document).ready(function(){
                     alert('Sorry! impossible to deactivate filter');
                 }
 
-        });
+            });
 
-    }
-    else {
-    url = '/account/filter/add/';
-        make_request({
-                url: url,
-                data: send,
-                callback: function(html, textStatus) {
-                    if (html.status == 'OK') {
+        }
+        else {
+            url = '/account/filter/add/';
+            make_request({
+                    url: url,
+                    multu: true,
+                    data: send,
+                    callback: function(html) {
+                        if (html.status == 'OK') {
 
-                        self.removeClass('filter');
-                        self.addClass('filterON');
-                        self.attr('title','Turn filter off.');
-                        loadNewsFeed($("#news_feed"));
+                            self.removeClass('filter');
+                            self.addClass('filterON');
+                            self.attr('title','Turn filter off.');
+                            if (tag_val == 'Friends') {
+                                $('#friends_count').html('');
+                            }
+                            if (tag_val == 'Following') {
+                                $('#following_count').html('');
+                            }
+                            if (tag_val == 'Businesses') {
+                                $('#businesses_count').html('');
+                            }
+                            if (tag_val == 'Nonprofits') {
+                                $('#nonprofits_count').html('');
+                            }
+                            loadNewsFeed($("#news_feed"));
+                        }
+                    },
+                    errorback: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert('Sorry! impossible to deactivate filter');
                     }
-                },
-                errorback: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert('Sorry! impossible to deactivate filter');
-                }
 
-        });
+            });
 
-    }
-  });
+        }
+      });
 
   $('.tagged').live('click',function () {
         var self = $(this)
         var tag_val = $(this).contents()[0];
         var send = 'tag_name='+tag_val.textContent;
-    if ($(this).hasClass('filterON')) {
-            url = '/tags/deact/';
-
-              $.ajax({
-                type: "POST",
-                data: send,
-                url: url,
-                success: function(html, textStatus) {
-                    self.removeClass('filterON');
-                    self.addClass('filter');
-                    self.attr('title','Turn filter on.');
-                    loadNewsFeed($("#news_feed"));
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert('Sorry! impossible to deactivate tag');
+        // single filter
+        if (shifted) {
+            //single filter
+            if (self.hasClass('filterON')) {
+                if ($('.filterON').length == 1) {
+                    self.removeClass('filterON').addClass('filter'); 
+                    send = send + '&single=1';
                 }
+            }
+        }
+        else {
+            $('.filterON').removeClass('filterON').addClass('filter'); 
+            send = send + '&single=1';
+        }
+        if ($(this).hasClass('filterON')) {
+                url = '/tags/deact/';
 
-              });
-    }
-    else {
-         url = '/tags/act/';
+                  make_request({
+                    url: url,
+                    multi: true,
+                    data: send,
+                    callback: function(html) {
+                        self.removeClass('filterON');
+                        self.addClass('filter');
+                        self.attr('title','Turn filter on.');
+                        loadNewsFeed($("#news_feed"));
+                    },
+                    errorback: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log('Sorry! impossible to deactivate tag');
+                    }
 
-              $.ajax({
-                type: "POST",
-                data: send,
-                url: url,
-                success: function(html, textStatus) {
-                    self.removeClass('filter');
-                    self.addClass('filterON');
-                    self.attr('title','Turn filter off.');
-                    loadNewsFeed($("#news_feed"));
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert('Sorry! impossible to activate tag');
-                }
+                  });
+        }
+        else {
+             url = '/tags/act/';
 
-              });
-    }
+                  make_request({
+                    url: url,
+                    multi: true,
+                    data: send,
+                    callback: function(html) {
+                        self.removeClass('filter');
+                        self.addClass('filterON');
+                        self.attr('title','Turn filter off.');
+                        loadNewsFeed($("#news_feed"));
+                    },
+                    errorback: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log('Sorry! impossible to activate tag');
+                    }
+
+                  });
+        }
     });
 
   $('.add_tag').live('click',function (e) {
       e.preventDefault();
       e.stopPropagation();
 
-      var self = $(this)
+      var self = $(this);
 
       var link = $(this).parent();
       var link_add = link.clone();
@@ -284,12 +321,11 @@ $(document).ready(function(){
         e.preventDefault();
         url = '/tags/add/';
 
-              $.ajax({
-                type: "POST",
-                data: $(this).serialize(),
+              make_request({
                 url: url,
-                success: function(html, textStatus) {
-                console.log(html.tags);
+                multi: true,
+                data: $(this).serialize(),
+                callback: function(html) {
                     if (html.tags && html.tags.length < 2)
                     {
                         link.html(html.tags).addClass('tagged');
@@ -303,6 +339,7 @@ $(document).ready(function(){
                         link.removeClass('filter');
                         link.addClass('filterON');
                         link.attr('title','Turn filter off.');
+                        link.attr('style','');
                         link.after(link_add);
                         hide_add_link();
                     }
@@ -322,6 +359,7 @@ $(document).ready(function(){
                             link_tag.removeClass('filter');
                             link_tag.addClass('filterON');
                             link_tag.attr('title','Turn filter off.');
+                            link_tag.attr('style','');
                             last_link.after(link_tag)
                             last_link = link_tag
 
@@ -338,7 +376,7 @@ $(document).ready(function(){
                         loadNewsFeed($("#news_feed"));
                         }
                 },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorback: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert('Sorry! impossible to save tag');
                 }
 
@@ -366,21 +404,21 @@ $(document).ready(function(){
        var tag_val = $(this).parent().contents()[0];
        var send = 'tag_name='+tag_val.textContent;
 
-        $.ajax({
-            type: "POST",
-            data: send,
+        make_request({
             url: url,
-            success: function(html, textStatus) {
-            if (html.status == 'OK' )
-                {
-                link.fadeOut();
-                link.remove();
-                hide_add_link();
-                }
-                loadNewsFeed($("#news_feed"));
-            },
+            multi:true,
+            data: send,
+            callback: function(html) {
+                if (html.status == 'OK' )
+                    {
+                    link.fadeOut();
+                    link.remove();
+                    hide_add_link();
+                    }
+                    loadNewsFeed($("#news_feed"));
+                },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert('Impossible to delete tag');
+                console.log('Impossible to delete tag');
             }
 
         });
@@ -415,15 +453,25 @@ $(document).ready(function(){
     $(document).on('click', '.tringing-tags', function(e) {
         e.preventDefault();
         var url = $(this).find('.tag_link').attr('href');
+        $("#news_feed").html("<div class='large_loader'></div>");
         make_request({
             url:url,
             callback: function(data) {
                 if (data.status == 'OK') {
+                    $('.filterON').toggleClass('filterON').toggleClass('filter');
                     $("#news_feed").html(data.html);
                 }
+            },
+            errorback: function(data) {
+                    $("#news_feed").html('Unable to retrieve data.');
             }
         });
     });
+
+    // select friends if none selected
+    if (!$('.filterON').length) {
+        $('#Friends').removeClass('filter').addClass('filterON');
+    }
 
 });
 

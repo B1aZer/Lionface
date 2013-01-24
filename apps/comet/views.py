@@ -61,23 +61,31 @@ def feed_posts(request):
 
     initial = request.GET.get('initial', None)
     if initial:
-        request.session['feed_date'] = date
+        request.session['feed_date_F'] = date
+        request.session['feed_date_W'] = date
+        request.session['feed_date_N'] = date
+        request.session['feed_date_B'] = date
 
-    date = request.session.get('feed_date', date)
 
     if filter in ('B'):
+        date = request.session.get('feed_date_B', date)
         business_pages = NewsItem.objects.get_business_feed(request.user, date)
         items = list(chain(items, business_pages))
         items = list(set(items))
         items = sorted(items, key=lambda post: post.timestamp, reverse=True)
         data['count'] = len(items)
     elif filter in ('N'):
+        date = request.session.get('feed_date_N', date)
         nonprofit_pages = NewsItem.objects.get_nonprofit_feed(request.user, date)
         items = list(chain(items, nonprofit_pages))
         items = list(set(items))
         items = sorted(items, key=lambda post: post.timestamp, reverse=True)
         data['count'] = len(items)
     elif filter in ('F','W'):
+        if filter in ('F'):
+            date = request.session.get('feed_date_F', date)
+        else:
+            date = request.session.get('feed_date_W', date)
         items = request.user.get_messages(filter) \
             .remove_page_posts() \
             .remove_similar() \
