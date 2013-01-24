@@ -17,6 +17,7 @@ LionFace.PostImages.prototype = {
 
         // !!!: bind settings running in feed.js on loading feed
         // this.bind_settings();
+        // binding now in post/_feed.html
         this.bind_popup();
     },
 
@@ -305,7 +306,6 @@ LionFace.PostImages.prototype = {
         if (n < 0) {
             image_src = image_src + '?' + d.getTime();
         }
-        console.log(n);
         $(image).attr('src', image_src);
         // rotate image
         if ($(item).attr('data-rotated')) {
@@ -347,7 +347,7 @@ LionFace.PostImages.prototype = {
 
         this.popup_enableKeyboard();
         this.popup_change_item(item, false);
-        this.popup_start.overflow = $('body').css('overflow');
+        this.popup_start_overflow = $('body').css('overflow');
         $('body').css({'overflow': 'hidden'});
     },
 
@@ -358,8 +358,8 @@ LionFace.PostImages.prototype = {
         $('.post_image_popup .image_zone, .post_image_popup .image_info').hide();
         $('.post_image_popup').fadeOut(this.options.popup_fadeDuration);
         this.popup_disableKeyboard();
-        $('body').css({'overflow': this.popup_start.overflow});
-        this.popup_start.overflow = undefined;
+        $('body').css({'overflow': this.popup_start_overflow});
+        this.popup_start_overflow = undefined;
     },
 
     rotate_image_left: function () {
@@ -427,7 +427,6 @@ LionFace.PostImages.prototype = {
                     var n = old_url.indexOf('?');
                     old_url = old_url.substring(0, n != -1 ? n : old_url.length);
                     var new_url = old_url + '?' + d.getTime();
-                    console.log(new_url);
                     image.data('original-url', new_url );
 
                     var old_src = image.css('backgroundImage');
@@ -435,7 +434,6 @@ LionFace.PostImages.prototype = {
                     n = old_src.indexOf('?');
                     old_src = old_src.substring(0, n != -1 ? n : old_src.length);
                     var new_src = old_src + '?' + d.getTime();
-                    console.log(new_src);
                     image.css('background', 'url(' + new_src + ') #D0D3D5');
                 }
             }
