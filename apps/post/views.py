@@ -45,6 +45,8 @@ def feed(request, user_id=None):
     if not user_id:
         page_type = 'news_feed'
         news_feed_flag = True
+        if request.user.is_anonymous():
+            raise Http404
         user_id = request.user.id
         filters = request.user.filters.split(',')
         items = request.user.get_messages() \
