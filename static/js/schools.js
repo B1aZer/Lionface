@@ -10,10 +10,15 @@ LionFace.Schools.prototype = {
         this.join_to_school();
     },
 
-    show_school: function(school_id) {
+    show_school: function(school_id, school_year) {
         $(".alum_school").removeClass("school_navON");
         $($("#school_" + school_id)).addClass("school_navON");
         $("#school_name").text($("#school_" + school_id).find(".school_name").text());
+        $("#school_years a").removeClass("sub_filter_feedON");
+        if (!$("#school_years a").hasClass("sub_filter_feed")) {
+            $("#school_years a").addClass("sub_filter_feed");
+        }
+        $("#school_year_" + school_year).removeClass("sub_filter_feed").addClass("sub_filter_feedON");
         this.current_school = school_id;
     },
 
