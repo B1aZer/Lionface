@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 <!--or you can extend base.html here-->
 <!--but then you need to populate another block below-->
-{% load media %}
+{% load media school %}
 
 {% block js %}
+    <script>
+        $(function() {
+            LionFace.Schools.add_school_url = '{% url schools-add %}';
+            LionFace.Schools.join_to_school_url = '{% url schools-join %}'
+        });
+    </script>
     {% include_media 'schools.js' %}
     {% include_media 'jquery.validate.js' %}
 {% endblock %}
@@ -21,53 +27,48 @@
 <div align="center">
 <div class="page_container">
 
-	<div class="float_left">
-	<div style="border-bottom: 1px solid #555;"><span style="font-size: 11pt; font-weight: bold;">Your Schools</span> <a href="#" class="find_school" onClick="ShowContent('find'); HideContent('school'); return false;">Find a School</a></div>
-	<a href="#" class="school_navON" onClick="ShowContent('school'); HideContent('find'); return false;">Sample University <span class="school_count">(count) people</span><br /><span class="location">Town, State, Country</span></a>
-	<a href="javascript:;" class="school_nav">Sample High School <span class="school_count">(count) people</span><br /><span class="location">Town, State, Country</span></a>
-
+	<div id="alum_schools" class="float_left">
+    	<div style="border-bottom: 1px solid #555;">
+            <span style="font-size: 11pt; font-weight: bold;">Your Schools</span>&nbsp;
+            <a href="#" class="find_school" onClick="ShowContent('find'); HideContent('school'); return false;">Find a School</a>
+        </div>
+        {% for school in alum_schools %}
+          {% year_finish_school user school as year %}
+          {% include "schools/_alum_school.html" %}
+        {% endfor %}
 	</div>
+  {% with school=alum_schools.0 %}
+    <div class="page_center" style="padding: 0px 10px;" id="school">
+      {% if school %}
+          <div id="school_name" style="font-size: 18pt; padding: 10px 40px;">{{ school.name }}</div>
+          <div id="school_years" style="padding: 0 40px; text-align: left;">Class Years:
+            {% school_years as years %}
+            {% for year in years %}
+              {% alum_from_school user year school as alum %}
+              <a id="school_year_{{ year }}" href="javascript:;" class="sub_filter_feed{% if alum %}ON{% endif %}">{{ year }}</a>
+            {% endfor %}
+          </div>
+          <div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
+            <table width="100%"><tr><td align="left">
+            <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px;" placeholder="Filter by Name" /> <span style="color: #AAA; font-size: 8pt; margin-left: 7px;">(count) Results</span>
+            </td><td align="right">
+            <a href="" onClick="LionFace.Schools.leave_school('{% url schools-leave %}'); return false;" style="color: #DDD; font-size: 8pt; position: relative; top: 3px;">- Leave School</a>
+            </td></tr></table>
+          </div>
+          <div style="padding: 10px 40px;">
+            {% for alum in alum_list %}
+              <div class="student" onMouseOver="ShowContent('add_friend_{{ alum.id }}'); return false;" onMouseOut="HideContent('add_friend_{{ alum.id }}'); return false;">
+                <img src="{% media_url 'images/noThumb.png' %}" width="85" height="85" /><br />
+                <span style="font-size: 8pt;">{{ alum.user.get_full_name }}</span>
+                <div class="add_school_friend" id="add_friend_{{ alum.id }}" style="display: none;"><a href="#">+ Add Friend</a></div>
+              </div>
+            {% endfor %}
+          </div>
+      {% endif %}
+    </div>
+  {% endwith %}
 
-	<div class="page_center" style="padding: 0px 10px;" id="school">
-	<div style="font-size: 18pt; padding: 10px 40px;">Sample University</div>
-
-  <div style="padding: 0 40px; text-align: left;">Class Years:
-	<a href="javascript:;" class="sub_filter_feed">2012</a>
-	<a href="javascript:;" class="sub_filter_feed">2011</a>
-	<a href="javascript:;" class="sub_filter_feed">2010</a>
-	<a href="javascript:;" class="sub_filter_feed">2009</a>
-	<a href="javascript:;" class="sub_filter_feed">2008</a>
-	<a href="javascript:;" class="sub_filter_feed">2007</a>
-	<a href="javascript:;" class="sub_filter_feedON">2006</a>
-	<a href="javascript:;" class="sub_filter_feed">2005</a>
-	<a href="javascript:;" class="sub_filter_feed">2004</a>
-	<a href="javascript:;" class="sub_filter_feed">2003</a>
-	<a href="javascript:;" class="sub_filter_feed">2002</a>
-	<a href="javascript:;" class="sub_filter_feed">2001</a>
-	<a href="javascript:;" class="sub_filter_feed">2000</a>
-  </div>
-  <div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
-	<table width="100%"><tr><td align="left">
-    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px;" placeholder="Filter by Name" /> <span style="color: #AAA; font-size: 8pt; margin-left: 7px;">(count) Results</span>
-	</td><td align="right">
-	<a href="javascript:;" style="color: #DDD; font-size: 8pt; position: relative; top: 3px;">- Leave School</a>
-	</td></tr></table>
-  </div>
-  <div style="padding: 10px 40px;">
-    <div class="student" onMouseOver="ShowContent('add_friend'); return false;" onMouseOut="HideContent('add_friend'); return false;">
-		<img src="{% media_url 'images/noThumb.png' %}" width="85" height="85" /><br />
-		<span style="font-size: 8pt;">Margaret Loewen</span>
-		<div class="add_school_friend" id="add_friend" style="display: none;"><a href="#">+ Add Friend</a></div>
-	</div>
-    <div class="student">
-		<img src="{% media_url 'images/noThumb.png' %}" width="85" height="85" /><br />
-		<span style="font-size: 8pt;">Nick Clark</span>
-	</div>
-  </div>
-
-	</div>
-
-	<div class="page_center" style="padding: 0px 10px; display: none;" id="find">
+  <div class="page_center" style="padding: 0px 10px; display: none;" id="find">
 	<div style="font-size: 18pt; padding: 10px 40px 0px 40px;">Find a School</div>
   <div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
 	<table width="100%"><tr><td align="left">
@@ -98,11 +99,11 @@
   </div>
 
   <div style="margin: 5px 40px 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
-	<table id="school_list" width="100%">
-        {% for school in school_list %}
-            {% include "schools/_school.html" %}
-        {% endfor %}
-	</table>
+  	<table id="school_list" width="100%">
+      {% for school in school_list %}
+          {% include "schools/_school.html" %}
+      {% endfor %}
+  	</table>
   </div>
 
 	</div>
