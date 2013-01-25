@@ -1,4 +1,7 @@
-<tr><td align="left">
-{{ school.name }} <span class="school_count">(count) people</span><br /><span class="location">{{ school.city }}, {{ school.state }}, {{ school.country }}</span>
-</td><td align="right">Class Year: <input type="text" style="padding: 4px; border: 1px solid #DDD; width: 40px;" placeholder="YYYY" /> <a href="javascript:;" class="blue_btn" style="color: #FFF; position: relative; top: -2px;">Join</a>
-</td></tr>
+<tr id="school_{{ school.id }}" class="alum_school">
+    <td align="left">
+        {{ school.name }} <span class="school_count">({{ school.people_count }}) people{{ school.people_count|pluralize }}</span><br /><span class="location">{{ school.city }}, {{ school.state }}, {{ school.country }}</span>
+    </td>
+    <td align="right">Class Year: <form class="join_to_school" method="post">{% csrf_token %}<input type="hidden" name="school_id" value="{{ school.id }}" /><input id="year" type="text" style="padding: 4px; border: 1px solid #DDD; width: 40px;" placeholder="YYYY" name="year" /> <button class="blue_btn" style="color: #FFF; position: relative; top: -2px;">Join</button></form>
+    </td>
+</tr>
