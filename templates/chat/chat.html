@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+<!--or you can extend base.html here-->
+<!--but then you need to populate another block below-->
+{% load media %}
+
+{% block js %}
+    <script>    
+
+WEB_SOCKET_SWF_LOCATION = "{% media_url 'flashsocket/WebSocketMain.swf' %}";
+WEB_SOCKET_DEBUG = true;
+
+// socket.io specific code
+var socket = io.connect("/chat");
+
+$(window).bind("beforeunload", function() {
+    socket.disconnect();
+});
+
+socket.on('connect', function () {
+    $('#chat_text').html('Online');
+    socket.emit('join', window.room); 
+});
+
+$(function () {
+
+    $('#chat_input').keypress(function(event) {
+        var $this = $(this);
+        if (event.keyCode == 13) {
+            //alert($this.val());
+            socket.emit('user message', $this.val());
+            $this.val('');
+        }
+    });
+
+});
+
+    </script>
+{% endblock %}
+
+{% block body %}
+{% include '_header.html' %}
+
+{% block content_title %}{% endblock %}
+{% block content_middle %}
+{% endblock %}
+{% block content_subtitle %}{% endblock %}
+
+  {% block content %}
+<div style="height: 53px;"></div>
+<div align="center">
+    chat
+</div>
+
+  {% endblock %}
+
+{% block footer_js %}
+{% endblock footer_js %}
+
+{% endblock %}

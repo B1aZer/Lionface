@@ -229,6 +229,7 @@ MEDIA_BUNDLES = (
         'js/exif.js',
         'js/load_image_mod.js',
         'js/jquery.form.js',
+        'js/socket.io.js',
         'js/site.js',
     ),
     ('user.js',
@@ -338,6 +339,12 @@ ABSOLUTE_URL_OVERRIDES = {
 
 CELERY_QUEUES = {"lionface": {"exchange": "lionface", "binding_key": "lionface"}}
 CELERY_DEFAULT_QUEUE = "lionface"
+
+WEBSOCKET_REDIS_BROKER = {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 0
+}
 
 from celery.schedules import crontab
 from datetime import timedelta

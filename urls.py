@@ -10,6 +10,9 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
+import socketio.sdjango
+from chat.views import HomeView
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'lionface.views.home', name='home'),
@@ -62,6 +65,9 @@ urlpatterns = patterns('',
     url(r'^images/', include('images.urls')),
     url(r'^schools/', include('schools.urls')),
     url(r'^discussions/', 'discussions.views.home'),
+    #url(r'^socket\.io', 'chat.views.socketio_service', name='socketio_service'),
+    url("^socket\.io", include(socketio.sdjango.urls)),
+    url("^chat/", HomeView.as_view()),
     url(r'^(?P<username>\w+)/notifications/', include('notification.urls')),
     url(r'^(?P<username>\w+)/messages/', include('messaging.urls')),
 )

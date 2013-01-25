@@ -1,1 +1,1 @@
-./manage.py run_gunicorn -c conf/gunicorn
+gunicorn --worker-class socketio.sgunicorn.GeventSocketIOWorker wsgi:app
