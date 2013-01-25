@@ -65,7 +65,8 @@ def join(request):
         school.alumni.add(alum)
 
         alum_school_html = render_to_string('schools/_alum_school.html',
-            {'school': school}
+            {'school': school,
+            'year': year}
         )
         data['alum_school'] = alum_school_html
         data['school_id'] = school.id
