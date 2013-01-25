@@ -8,7 +8,7 @@ class Messaging(models.Model):
     user = models.ForeignKey(UserProfile)
     user_to = models.ForeignKey(UserProfile, related_name='message_to')
     date = models.DateTimeField(auto_now_add=True)
-    content = models.CharField(max_length=5000)
+    content = models.TextField()
     read = models.BooleanField(default=False)
     viewed = models.BooleanField(default=False)
 

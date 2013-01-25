@@ -228,7 +228,7 @@ LionFace.Profile.prototype = {
                         }
                     }
                     $("#attached-images ul").html("");
-                    LionFace.PostImages.bind_settings($('#news_feed .post_feed:first'));
+                    //LionFace.PostImages.bind_settings($('#news_feed .post_feed:first'));
                     LionFace.Site.attach_image_count = 0;
                 },
                 error: function() {

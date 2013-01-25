@@ -6,7 +6,7 @@
 		<a href="#" id="updates" class="page_btn nonprofit_btn nonprofit_on">Updates</a>
         <a href="#" id="discussions" class="page_btn nonprofit_btn {% if request.user not in page.get_lovers %} grayed_out {% endif %} ">Discussions</a>
         <a href="#" id="reviews" class="page_btn nonprofit_btn">Feedback</a> <a href="#" id="calendar" class="page_btn nonprofit_btn {% if request.user not in page.get_lovers %} grayed_out {% endif %} ">Calendar</a>
-        <a href="#" id="comunnity" class="page_btn nonprofit_btn {% if request.user not in page.get_lovers %} grayed_out {% endif %} ">Comunnity 
+        <a href="#" id="comunnity" class="page_btn nonprofit_btn {% if request.user not in page.get_lovers %} grayed_out {% endif %} ">Community 
             {% if page.get_community_requests_count_new and request.user|check_pages_community:page %}
             <span id="comm_req_count">{{page.get_community_requests_count_new}}</span>
             {% endif %}

@@ -39,7 +39,7 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 {% block left_col %}
 
     <div style="position: relative; left: 0px; z-index: 100;">
-		<span class="filter_header">News Feed Filters<br /><span style="color: #BBB; font-size: 8pt;">Shift+click to select just one filter.</span></span><p />
+		<span class="filter_header">News Feed Filters<br /><span style="color: #BBB; font-size: 8pt;">Shift+click to select multiple filters.</span></span><p />
         <a href="javascript:;" id="Friends" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'F' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Friends.png' %}" /> Friends <span id="friends_count"></span></a>
         <a href="javascript:;" id="Following" class="feed_type {% if 'W' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'W' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Following <span id="following_count"></span></a>
         <a href="javascript:;" id="Businesses" class="feed_type {% if 'B' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'B' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Business.png' %}" /> Businesses <span id="businesses_count"></span></a>

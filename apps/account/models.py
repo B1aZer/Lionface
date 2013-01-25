@@ -302,6 +302,11 @@ class UserProfile(User):
     def get_messages(self, filters=None):
         from post.models import NewsItem
         filters = filters or self.filters.split(',')
+        if not filter(None,filters) and not self.user_tag_set.filter(active=True).count():
+            # default filter
+            filters=['F']
+            self.filters = 'F'
+            self.save()
         # Friends
         if 'F' in filters:
             hidden_list = [x.id for x in self.hidden.all()]

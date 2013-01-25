@@ -178,6 +178,8 @@ def check_cover_image_visibility(user, current_user):
 @register.filter(name='check_message_sending')
 def check_message_sending(user, current):
     #return user.check_visiblity('send_message', current)
+    if current.is_anonymous():
+        return False
     return user.check_messages(current)
 
 @register.filter(name='check_profile_bio')
@@ -536,7 +538,10 @@ def render_comment_list_for(context, item):
 
 @register.filter
 def get_leaderboard_cats(user):
-    cats = user.find_options('leaderboard')
+    if user.is_anonymous():
+        cats = []
+    else:
+        cats = user.find_options('leaderboard')
     cats = json.dumps(["category_%s" % c.name.replace('option_leaderboard__','') for c in cats])
     return cats
 

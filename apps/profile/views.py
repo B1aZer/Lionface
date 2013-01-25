@@ -99,6 +99,7 @@ def images(request, username, rows_show=4):
             image = form.save(profile_user)
             image.make_activity()
             image.generate_thumbnail(200, 200)
+            image.change_orientation()
             # try:
             #     pil_object = pilImage.open(image.image.path)
             #     w, h = pil_object.size
@@ -378,6 +379,7 @@ def profile(request, username):
             image = form.save(profile_user)
             image.make_activity()
             image.generate_thumbnail(200, 200)
+            image.change_orientation()
             # try:
             #     pil_object = pilImage.open(image.image.path)
             #     w, h = pil_object.size
@@ -564,6 +566,26 @@ def reset_picture(request, username):
         profile_user.save()
     redrct = redirect('profile.views.profile', username=request.user.username)
     return redrct
+
+
+def rotate_image(request, username):
+    data = {'status': 'FAIL'}
+    profile_user = get_object_or_404(UserProfile, username=username)
+    if request.user != profile_user:
+        raise Http404
+    ctype = ContentType.objects.get_for_model(profile_user)
+    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
+    image_pk = request.POST.get('image-pk', None)
+    image = get_object_or_404(qs, pk=int(float(image_pk)))
+    angle = request.POST.get('angle', None)
+    if not angle:
+        raise Http404
+    rotate = int(float(angle))
+    rotate = (rotate * 90 * -1) % 360
+    image.change_orientation(rotate)
+    image.change_thumb_orientation(rotate)
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
 
 
 @active_required
@@ -886,7 +908,7 @@ def loves(request, username):
         except UserProfile.DoesNotExist:
             raise Http404()
 
-    pages = profile_user.get_loved().filter(type='BS')
+    pages = profile_user.get_loved()
 
     if request.method == 'GET' and 'ajax' in request.GET:
         if 'business' in request.GET and not 'nonprofit' in request.GET:
@@ -905,6 +927,7 @@ def loves(request, username):
         return HttpResponse(json.dumps(data), "application/json")
 
 
+    pages = pages.filter(type='BS')
     #pages = list(chain(pages, posts))
     #pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=request.user).date, reverse=True)
 
