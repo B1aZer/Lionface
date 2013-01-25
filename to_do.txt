@@ -1,6 +1,8 @@
 #smileys
 #administration
 
+gunicorn --worker-class socketio.sgunico.GeventSocketIOWorker wsgi:app
+
 safari attach
 
 do not acount tags with less than 2 characters
