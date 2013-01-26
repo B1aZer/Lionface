@@ -1,0 +1,1 @@
+./manage.py run_gunicorn -c conf/gunicorn
