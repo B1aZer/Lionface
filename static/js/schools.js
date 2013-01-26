@@ -69,8 +69,8 @@ LionFace.Schools.prototype = {
                 var form = jqForm[0];
                 var year = parseInt(form.year.value, 10);
                 var today = new Date();
-                var yyyy = today.getFullYear();
-                if (year && !isNaN(year) && year >= 2000 && year <= yyyy) {
+                var yyyy = today.getFullYear() + 50;
+                if (year && !isNaN(year) && year >= 1970 && year <= yyyy) {
                     return true;
                 }
                 $(form.year).addClass("error");
