@@ -1,4 +1,5 @@
 from django.http import HttpResponse, Http404
+from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render
 
@@ -16,12 +17,35 @@ def home(request):
     school_list = School.objects.filter(approved=True) \
         .exclude(alumni__user=profile)
     alum_schools = School.objects.filter(approved=True, alumni__user=profile)
-    alum_list = Alum.objects.all().exclude(user=profile)
+    if alum_schools:
+        alum_school = alum_schools[0]
+        alum = Alum.objects.get(user=profile, school=alum_school)
+        alum_list = Alum.objects.filter(year=alum.year, school=alum_school)
+    else:
+        alum_list = []
     return render(request, 'schools/schools.html',
                   {'school_list': school_list,
                   'alum_schools': alum_schools,
                   'alum_list': alum_list}
-    )
+                  )
+
+
+def detail(request):
+    if request.user.is_authenticated() and request.is_ajax() \
+            and request.method == 'POST':
+        school_id = request.POST['school_id']
+        school_year = request.POST['school_year']
+        school = School.objects.get(id=school_id)
+        alum_list = Alum.objects.filter(year=school_year, school=school)
+
+        context = {'user': request.user, 'school': school,
+                   'alum_list': alum_list}
+        detail_html = render_to_string('schools/_school_detail.html', context)
+
+        data = {'status': 'OK', 'school': detail_html}
+
+        return HttpResponse(json.dumps(data), "application/json")
+    raise Http404
 
 
 def add(request):
@@ -39,9 +63,6 @@ def add(request):
                         country=country, user_proposed=request.user)
         school.save()
 
-        # school_html = render_to_string('schools/_school.html',
-            # {'school': school})
-        # data['school'] = school_html
         return HttpResponse(json.dumps(data), "application/json")
     raise Http404
 
@@ -65,9 +86,9 @@ def join(request):
         school.alumni.add(alum)
 
         alum_school_html = render_to_string('schools/_alum_school.html',
-            {'school': school,
-            'year': year}
-        )
+                                            {'school': school,
+                                             'year': year}
+                                            )
         data['alum_school'] = alum_school_html
         data['school_id'] = school.id
 
@@ -89,5 +110,13 @@ def leave(request):
         alum = Alum.objects.get(user=profile, year=school_year, school=school)
         if alum:
             school.alumni.remove(alum)
+
+        school_list = School.objects.filter(approved=True) \
+            .exclude(alumni__user=profile)
+
+        find_school_html = render_to_string('schools/_school_find.html',
+            {'school_list': school_list},
+            context_instance=RequestContext(request))
+        data['find_school'] = find_school_html
 
         return HttpResponse(json.dumps(data), "application/json")

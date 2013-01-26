@@ -8,7 +8,7 @@ register = template.Library()
 
 @register.assignment_tag()
 def school_years(start=2000):
-    return reversed(range(start, datetime.date.today().year))
+    return reversed(range(start, datetime.date.today().year + 1))
 
 
 @register.assignment_tag()
