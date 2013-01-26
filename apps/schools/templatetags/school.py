@@ -8,7 +8,7 @@ register = template.Library()
 
 @register.assignment_tag()
 def school_years(alum_year):
-    return range(alum_year - 6, alum_year) + range(alum_year, alum_year + 7)
+    return list(reversed(range(alum_year, alum_year + 7))) + list(reversed(range(alum_year - 6, alum_year))) 
 
 
 @register.assignment_tag()
