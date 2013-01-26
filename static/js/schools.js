@@ -59,7 +59,7 @@ LionFace.Schools.prototype = {
         $("#add_school form").ajaxForm(options);
     },
 
-    join_to_school: function(join_url) {
+    join_to_school: function(join_url, form) {
         var options = {
             url: join_url,
             type: "POST",
@@ -87,7 +87,7 @@ LionFace.Schools.prototype = {
                 $(".join_to_school #year").attr("title", "");
             }
         };
-        $(".join_to_school").ajaxSubmit(options);
+        $(form).ajaxSubmit(options);
     },
 
     leave_school: function(school_url, school_id) {

@@ -2,6 +2,6 @@
     <td align="left">
         {{ school.name }} <span class="school_count">({{ school.people_count }}) people{{ school.people_count|pluralize }}</span><br /><span class="location">{{ school.city }}, {{ school.state }}, {{ school.country }}</span>
     </td>
-    <td align="right">Class Year: <form class="join_to_school" method="post">{% csrf_token %}<input type="hidden" name="school_id" value="{{ school.id }}" /><input id="year" type="text" style="padding: 4px; border: 1px solid #DDD; width: 40px;" placeholder="YYYY" name="year" /> <button class="blue_btn" onClick="LionFace.Schools.join_to_school('{% url schools-join %}'); return false;" style="color: #FFF; position: relative; top: -2px;">Join</button></form>
+    <td align="right">Class Year: <form class="join_to_school" method="post">{% csrf_token %}<input type="hidden" name="school_id" value="{{ school.id }}" /><input id="year" type="text" style="padding: 4px; border: 1px solid #DDD; width: 40px;" placeholder="YYYY" name="year" /> <button class="blue_btn" onClick="LionFace.Schools.join_to_school('{% url schools-join %}', $(this).parent()); return false;" style="color: #FFF; position: relative; top: -2px;">Join</button></form>
     </td>
 </tr>
