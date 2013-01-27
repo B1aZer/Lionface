@@ -5,15 +5,15 @@
   {% year_finish_school user school as year %}
   {% school_years year as years %}
   {% for year in years %}
-    {% alum_from_school user year school as alum %}
-    <a id="school_year_{{ year }}" href="javascript:;" onClick="LionFace.Schools.detail_school('{% url schools-detail %}', {{ school.id }}, {{ year }}); return false;" class="sub_filter_feed{% if alum %}ON{% endif %}">{{ year }}</a>
+    <a id="school_year_{{ year }}" href="javascript:;" onClick="LionFace.Schools.detail_school('{% url schools-detail %}', {{ school.id }}, {{ year }}); return false;" class="sub_filter_feed{% ifequal alum_year year %}ON{% endifequal %}">{{ year }}</a>
   {% endfor %}
+    {{ cur_alum }}
 </div>
 <div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
   <table width="100%"><tr><td align="left">
-  <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px;" placeholder="Filter by Name" /> <span style="color: #AAA; font-size: 8pt; margin-left: 7px;">({{ school.people_count }}) Results</span>
-  </td><td align="right">
-  <a href="" onClick="LionFace.Schools.leave_school('{% url schools-leave %}', {{ school.id }}); return false;" style="color: #DDD; font-size: 8pt; position: relative; top: 3px;">- Leave School</a>
+    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px;" placeholder="Filter by Name" /> <span id="alum_school_in_year" style="color: #AAA; font-size: 8pt; margin-left: 7px;">({{ alum_school_in_year }}) Results</span>
+    </td><td align="right">
+    <a href="" onClick="LionFace.Schools.leave_school('{% url schools-leave %}', {{ school.id }}); return false;" style="color: #DDD; font-size: 8pt; position: relative; top: 3px;">- Leave School</a>
   </td></tr></table>
 </div>
 <div style="padding: 10px 40px;">

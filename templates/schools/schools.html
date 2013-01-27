@@ -59,6 +59,8 @@
           if ($.trim($("#your_schools").html()) == "") {
             HideContent('school');
             ShowContent('find');
+          } else {
+            $(".alum_school:first").click();
           }
         })
     </script>

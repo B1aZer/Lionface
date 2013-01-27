@@ -14,9 +14,9 @@ LionFace.Schools.prototype = {
         $($("#school_" + school_id)).addClass("school_navON");
 
         var data = {school_id: school_id, school_year: school_year};
-        $.post(detail_url, data, function (data) {
-            if (data.status === "OK") {
-                $("#school").html(data.school);
+        $.post(detail_url, data, function (d) {
+            if (d.status === "OK") {
+                $("#school").html(d.school);
 
                 $("#school_years a.sub_filter_feedON").removeClass("sub_filter_feedON").addClass("sub_filter_feed");
                 $("#school_year_" + school_year).removeClass("sub_filter_feed").addClass("sub_filter_feedON");

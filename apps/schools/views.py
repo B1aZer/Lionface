@@ -17,17 +17,18 @@ def home(request):
     school_list = School.objects.filter(approved=True) \
         .exclude(alumni__user=profile)
     alum_schools = School.objects.filter(approved=True, alumni__user=profile)
+
     if alum_schools:
         alum_school = alum_schools[0]
         alum = Alum.objects.get(user=profile, school=alum_school)
         alum_list = Alum.objects.filter(year=alum.year, school=alum_school)
     else:
         alum_list = []
+
     return render(request, 'schools/schools.html',
                   {'school_list': school_list,
                   'alum_schools': alum_schools,
-                  'alum_list': alum_list}
-                  )
+                  'alum_list': alum_list})
 
 
 def detail(request):
@@ -37,9 +38,13 @@ def detail(request):
         school_year = request.POST['school_year']
         school = School.objects.get(id=school_id)
         alum_list = Alum.objects.filter(year=school_year, school=school)
+        alum_school_in_year = alum_list.count()
 
-        context = {'user': request.user, 'school': school,
-                   'alum_list': alum_list}
+        context = {'user': request.user,
+                   'school': school,
+                   'alum_year': school_year,
+                   'alum_list': alum_list,
+                   'alum_school_in_year': alum_school_in_year}
         detail_html = render_to_string('schools/_school_detail.html', context)
 
         data = {'status': 'OK', 'school': detail_html}
@@ -118,5 +123,24 @@ def leave(request):
             {'school_list': school_list},
             context_instance=RequestContext(request))
         data['find_school'] = find_school_html
+
+        return HttpResponse(json.dumps(data), "application/json")
+
+
+def alum_in_year(request):
+    if request.user.is_authenticated() and request.is_ajax() \
+            and request.method == 'GET':
+        data = {'status': 'OK'}
+
+        year = request.GET['school_year']
+        school_id = request.GET['school_id']
+        school = School.objects.get(id=school_id)
+
+        alumni = Alum.objects.filter(year=year, school=school)
+        alum_school_in_year = alumni.count()
+
+        results_html = render_to_string('schools/_alum_school_in_year.html',
+            {'alum_school_in_year': alum_school_in_year})
+        data['results'] = results_html
 
         return HttpResponse(json.dumps(data), "application/json")
