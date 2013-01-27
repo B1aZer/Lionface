@@ -20,7 +20,7 @@
   {% for alum in alum_list %}
     <div class="student" onMouseOver="{% ifnotequal user alum.user %}ShowContent('add_friend_{{ alum.id }}');{% endifnotequal %} return false;" onMouseOut="{% ifnotequal user alum.user %}HideContent('add_friend_{{ alum.id }}');{% endifnotequal %} return false;">
       <img src="/{{ alum.user.photo.thumb_name }}" width="85" height="85" /><br />
-      <span style="font-size: 8pt;">{{ alum.user.get_full_name }}</span>
+      <a href="{{ alum.user.get_absolute_url }}" target="_blank" style="font-size: 8pt;">{{ alum.user.get_full_name }}</a>
       <div class="add_school_friend" id="add_friend_{{ alum.id }}" style="display: none;">
         {% with alum.user as alum_profile %}
           {% if user == alum_profile %}
