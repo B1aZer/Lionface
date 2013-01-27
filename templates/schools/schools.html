@@ -27,14 +27,16 @@
 <div class="page_container">
 
 	<div id="alum_schools" class="float_left">
-    	<div style="border-bottom: 1px solid #555;">
-            <span style="font-size: 11pt; font-weight: bold;">Your Schools</span>&nbsp;
-            <a href="#" class="find_school" onClick="ShowContent('find'); HideContent('school'); return false;">Find a School</a>
-        </div>
-        {% for school in alum_schools %}
-          {% year_finish_school user school as year %}
-          {% include "schools/_alum_school.html" %}
-        {% endfor %}
+  	<div style="border-bottom: 1px solid #555;">
+      <span style="font-size: 11pt; font-weight: bold;">Your Schools</span>&nbsp;
+      <a href="#" class="find_school" onClick="ShowContent('find'); HideContent('school'); $('.alum_school').removeClass('school_navON'); return false;">Find a School</a>
+    </div>
+    <div id="your_schools">
+      {% for school in alum_schools %}
+        {% year_finish_school user school as year %}
+        {% include "schools/_alum_school.html" %}
+      {% endfor %}
+    </div>
 	</div>
   <div class="page_center" style="padding: 0px 10px;" id="school">
     {% with school=alum_schools.0 %}{% if school %}
@@ -54,9 +56,10 @@
 {% block footer_js %}
     <script>
         $(function() {
-            // HideContent('school');
-            // ShowContent('find');
-            // ShowContent('add_school');
+          if ($.trim($("#your_schools").html()) == "") {
+            HideContent('school');
+            ShowContent('find');
+          }
         })
     </script>
 {% endblock footer_js %}
