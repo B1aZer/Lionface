@@ -9,13 +9,13 @@ import redis
 import json
 
 class ProcessMessage(Task):
-    def run(self, **kwargs):
+    def run(self, user, message, **kwargs):
         # this task will save chat message
         logger = ProcessMessage.get_logger()
-        logger.info('task complete')
+        logger.info('task complete for %s, %s' % (user, message))
         #emit_to_channel()
         r = redis.StrictRedis(host='localhost', port=6379, db=0)
-        r.publish('socketio', json.dumps({'name': 'some name', 'args': 'args'}))
+        r.publish('socketio', json.dumps({'name': user, 'message': message}))
         return True
 tasks.register(ProcessMessage)
 

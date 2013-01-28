@@ -35,8 +35,10 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 
         while True:
             for i in red.listen():
-                self.log("Sending message")
-                self.send({'message': i}, json=True)
+                if i['type'] == 'message':
+                    self.log(i.get('data',''))
+                    #self.send({'message': i}, json=True)
+                    self.emit('chat', json.loads(i.get('data','')))
 
     def on_join(self, room):
         self.room = room
@@ -66,7 +68,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_user_message(self, msg):
         self.log('User message: {0}'.format(msg))
         # run celery task
-        ProcessMessage.delay()
+        ProcessMessage.delay('user', msg)
         #self.log('ready %s' % result.get(timeout=20))
         #self.emit_to_room(self.room, 'msg_to_room',
         #    self.socket.session['nickname'], msg)

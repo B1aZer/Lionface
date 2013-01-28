@@ -230,6 +230,7 @@ MEDIA_BUNDLES = (
         'js/load_image_mod.js',
         'js/jquery.form.js',
         'js/socket.io.js',
+        'js/chat.js',
         'js/site.js',
     ),
     ('user.js',
