@@ -1,6 +1,8 @@
+{% load format_results %}
+{% get_online_users 'as' 'online_user_list' %}
 <div style="position: fixed; left: 5px; bottom: 2px; z-index: 99999;">
 <div id="chat_id" class="chat" >
-    <table width="100%"><tr><td><div class="online"></div> <span id="chat_text">Offline</span> <span style="font-size: 9pt; color: #999;">(3)</span></td>
+    <table width="100%"><tr><td><div class="online"></div> <span id="chat_text">Offline</span> <span style="font-size: 9pt; color: #999;">{{ online_user_list|length }}</span></td>
 		<td align="right"><span class="chat_off">Turn Off</span>
 	</td></tr></table>
 </div>
@@ -13,9 +15,9 @@
 
 <div class="chat_container" id="online_list" style="display: none;">
 	<ul>
-		<li><div class="online"></div> User Full Name</li>
-		<li><div class="online"></div> User Full Name</li>
-		<li><div class="online"></div> User Full Name</li>
+        {% for user in online_user_list %}
+        <li><div class="online"></div> {{ user.username }}</li>
+        {% endfor %}
 	</ul>
 </div>
 
@@ -25,4 +27,5 @@
             content content content content content content content content </span> 
 	</div>
 	<input id="chat_input" type="text" class="chat_enter" />
+	<input type="hidden" class="chat_username" value="admin" />
 </div>

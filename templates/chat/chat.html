@@ -6,40 +6,6 @@
 {% block js %}
     <script>    
 
-WEB_SOCKET_SWF_LOCATION = "{% media_url 'flashsocket/WebSocketMain.swf' %}";
-WEB_SOCKET_DEBUG = true;
-
-// socket.io specific code
-var socket = io.connect("/chat");
-
-/*
-$(window).bind("beforeunload", function() {
-    socket.disconnect();
-});
-*/
-
-socket.on('connect', function () {
-    $('#chat_text').html('Online');
-    socket.emit('join', window.room); 
-});
-
-socket.on('chat', function (data) {
-        $('.user_content').append(data.message + "<br/>");
-});
-
-$(function () {
-
-    $('#chat_input').keypress(function(event) {
-        var $this = $(this);
-        if (event.keyCode == 13) {
-            //alert($this.val());
-            socket.emit('user message', $this.val());
-            $this.val('');
-        }
-    });
-
-});
-
     </script>
 {% endblock %}
 

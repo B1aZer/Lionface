@@ -11,6 +11,31 @@ LionFace.Chat.prototype = {
     init : function() {
         var me = this;
         me.bind_functions();
+        me.bind_chat();
+    },
+
+    bind_chat : function() {
+
+        var socket = io.connect("/chat");
+
+        socket.on('connect', function () {
+            $('#chat_text').html('Online');
+            socket.emit('join', LionFace.User.username); 
+        });
+
+        socket.on('chat', function (data) {
+                $('.user_content').append(data.message + "<br/>");
+        });
+
+        $('#chat_input').keypress(function(event) {
+            var $this = $(this);
+            var username = $this.parents('.user_conatiner').find('.chat_username').val();
+            if (event.keyCode == 13) {
+                //alert($this.val());
+                socket.emit('user message', username, $this.val());
+                $this.val('');
+            }
+        });
     },
 
     // Binding

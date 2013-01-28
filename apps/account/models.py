@@ -3,6 +3,7 @@ from itertools import chain
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+import logging
 
 from django.db.models.signals import post_save, pre_delete
 from django.db.models.query import Q
@@ -11,7 +12,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 import datetime as dateclass
 
+from django.core.cache import cache
+from post.utils import QuerySetManager
+
 from images.fields import ImageWithThumbField
+from chat import redis_connection as redis
 
 
 FILTER_TYPE = (
@@ -112,6 +117,21 @@ class FriendRequest(models.Model):
             super(FriendRequest, self).save(*args, **kwargs)
         return send
 
+class QuerySet(models.query.QuerySet):
+    """Base QuerySet class for adding custom methods that are made
+    available on both the manager and subsequent cloned QuerySets"""
+
+    @classmethod
+    def as_manager(cls, ManagerClass=QuerySetManager):
+        return ManagerClass(cls)
+
+
+class UserQuerySet(QuerySet):
+    def get_online_users(self):
+        def filter_users(user):
+            return user.online()
+        return filter(filter_users, self)
+
 
 class UserProfile(User):
     # Logic is if a friend is in the 'friends' collection then they are verified.
@@ -137,6 +157,24 @@ class UserProfile(User):
     bio_text = models.TextField(blank=True)
     birth_date = models.DateField(null=True, blank=True)
     url = models.URLField(blank=True)
+
+    objects = UserQuerySet.as_manager()
+
+    def last_seen(self):
+        log = logging.getLogger("account")
+        log.debug(cache.get('seen_%s' % self.username))
+        return redis.get_last_seen(self)
+
+    def online(self):
+        if self.last_seen():
+            now = dateclass.datetime.now()
+            if now > self.last_seen() + dateclass.timedelta(
+                         seconds=settings.USER_ONLINE_TIMEOUT):
+                return False
+            else:
+                return True
+        else:
+            return False
 
     def get_thumb(self):
         return "/%s" % self.photo.thumb_name
