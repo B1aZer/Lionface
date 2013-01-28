@@ -1,0 +1,38 @@
+<div style="font-size: 18pt; padding: 10px 40px 0px 40px;">Find a School</div>
+<div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
+  <table width="100%"><tr><td align="left">
+    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 200px;" placeholder="Search by Name, Location" />
+      </td><td align="right"><a href="#" class="blue_btn" style="color: #FFF; float: right; margin-left: 10px;" onClick="ShowContent('add_school'); return false;">+ Add School</a>
+      <span style="font-size: 8pt; color: #999;">Can't find your school?<br />It may not exist in our database yet.</span>
+  </td></tr></table>
+</div>
+
+<div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC; display: none;" align="center" id="add_school">
+  <form action="" method="post">
+    <table width="95%"><tr><td align="left">
+        <input id="name" name="name" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="School Name" required />
+    </td><td align="center">
+        <input name="website" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="Official Website" required />
+    </td><td></td></tr><tr><td width="33%">
+        <input name="city" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="Town/City" required />
+    </td><td align="center" width="33%">
+        <input name="state" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="State/Province" required />
+    </td><td align="right" width="33%">
+        <input name="country" type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 150px;" placeholder="Country" required />
+    </td></tr><tr><td colspan="3" align="left">
+        <button class="blue_btn" style="color: #FFF;">Submit for Approval</button> <a href="#" style="font-size: 8pt; color: #999;" onClick="HideContent('add_school'); return false;">Cancel</a>
+    </td></tr></table>
+  </form>
+</div>
+<div id="show_message" style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC; display: none;" align="center">
+</div>
+
+<div style="margin: 5px 40px 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
+    <table id="school_list" width="100%">
+    {% for school in school_list %}
+        {% include "schools/_school.html" %}
+    {% empty %}
+        <p>No schools found.</p>
+    {% endfor %}
+    </table>
+</div>
