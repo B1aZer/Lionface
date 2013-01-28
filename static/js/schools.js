@@ -7,28 +7,20 @@ LionFace.Schools = function(options) {
 LionFace.Schools.prototype = {
     init: function() {
         this.add_school();
-        this.join_to_school();
     },
 
-    show_school: function(school_id, school_year) {
+    detail_school: function(detail_url, school_id, school_year) {
         $(".alum_school").removeClass("school_navON");
         $($("#school_" + school_id)).addClass("school_navON");
-        $("#school_name").text($("#school_" + school_id).find(".school_name").text());
-        $("#school_years a").removeClass("sub_filter_feedON");
-        if (!$("#school_years a").hasClass("sub_filter_feed")) {
-            $("#school_years a").addClass("sub_filter_feed");
-        }
-        $("#school_year_" + school_year).removeClass("sub_filter_feed").addClass("sub_filter_feedON");
-        this.current_school = school_id;
-    },
 
-    leave_school: function(school_url) {
-        var school_year = $(".sub_filter_feedON").text();
-        var current_school = this.current_school;
-        var data = {school_id: current_school,
-            school_year: school_year};
-        $.post(school_url, data, function(data) {
-            $("#school_" + current_school).remove();
+        var data = {school_id: school_id, school_year: school_year};
+        $.post(detail_url, data, function (d) {
+            if (d.status === "OK") {
+                $("#school").html(d.school);
+
+                $("#school_years a.sub_filter_feedON").removeClass("sub_filter_feedON").addClass("sub_filter_feed");
+                $("#school_year_" + school_year).removeClass("sub_filter_feed").addClass("sub_filter_feedON");
+            }
         }, "JSON");
     },
 
@@ -67,34 +59,49 @@ LionFace.Schools.prototype = {
         $("#add_school form").ajaxForm(options);
     },
 
-    join_to_school: function() {
+    join_to_school: function(join_url, form) {
         var options = {
-            url: LionFace.Schools.join_to_school_url,
+            url: join_url,
             type: "POST",
             dataType: "JSON",
             clearForm: true,
             beforeSubmit: function(formData, jqForm, options) {
                 var form = jqForm[0];
                 var year = parseInt(form.year.value, 10);
-                if (year && !isNaN(year)) {
+                var today = new Date();
+                var yyyy = today.getFullYear() + 50;
+                if (year && !isNaN(year) && year >= 1970 && year <= yyyy) {
                     return true;
                 }
                 $(form.year).addClass("error");
+                $(form.year).attr("title", "Field empty or Not number or Not in allowed range.");
                 return false;
             },
             success: function(data) {
                 if (data.status === "OK") {
                     $("#alum_schools").append(data.alum_school);
                     $("#school_list #school_" + data.school_id).remove();
-                    // $("#school_list #school_" + data.school_id)
-                    //     .find(".school_count").text($(data.alum_school)
-                    //     .find(".school_count").text());
                 } else {
                 }
                 $(".join_to_school #year").removeClass("error");
+                $(".join_to_school #year").attr("title", "");
             }
         };
-        $(".join_to_school").ajaxForm(options);
+        $(form).ajaxSubmit(options);
+    },
+
+    leave_school: function(school_url, school_id) {
+        var _this = this;
+        var school_year = $(".sub_filter_feedON").text();
+        var data = {school_id: school_id,
+            school_year: school_year};
+        $.post(school_url, data, function (data) {
+            if (data.status === 'OK') {
+                $("#school_" + school_id).remove();
+                $("#school").html("<p>You left School.</p>");
+                $("#find").html(data.find_school);
+            }
+        }, "JSON");
     }
 };
 

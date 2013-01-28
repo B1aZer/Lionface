@@ -1,0 +1,45 @@
+{% load media school friends format_results %}
+
+<div id="school_name" style="font-size: 18pt; padding: 10px 40px;">{{ school.name }}</div>
+<div id="school_years" style="padding: 0 40px; text-align: left;">Class Years:
+  {% year_finish_school user school as year %}
+  {% school_years year as years %}
+  {% for year in years %}
+    <a id="school_year_{{ year }}" href="javascript:;" onClick="LionFace.Schools.detail_school('{% url schools-detail %}', {{ school.id }}, {{ year }}); return false;" class="sub_filter_feed{% ifequal alum_year year %}ON{% endifequal %}">{{ year }}</a>
+  {% endfor %}
+    {{ cur_alum }}
+</div>
+<div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
+  <table width="100%"><tr><td align="left">
+    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px;" placeholder="Filter by Name" /> <span id="alum_school_in_year" style="color: #AAA; font-size: 8pt; margin-left: 7px;">({{ alum_school_in_year }}) Results</span>
+    </td><td align="right">
+    <a href="" onClick="LionFace.Schools.leave_school('{% url schools-leave %}', {{ school.id }}); return false;" style="color: #DDD; font-size: 8pt; position: relative; top: 3px;">- Leave School</a>
+  </td></tr></table>
+</div>
+<div style="padding: 10px 40px;">
+  {% for alum in alum_list %}
+    <div class="student" onMouseOver="{% ifnotequal user alum.user %}ShowContent('add_friend_{{ alum.id }}');{% endifnotequal %} return false;" onMouseOut="{% ifnotequal user alum.user %}HideContent('add_friend_{{ alum.id }}');{% endifnotequal %} return false;">
+      <img src="/{{ alum.user.photo.thumb_name }}" width="85" height="85" /><br />
+      <a href="{{ alum.user.get_absolute_url }}" target="_blank" style="font-size: 8pt;">{{ alum.user.get_full_name }}</a>
+      <div class="add_school_friend" id="add_friend_{{ alum.id }}" style="display: none;">
+        {% with alum.user as alum_profile %}
+          {% if user == alum_profile %}
+          {% elif alum_profile|has_friend:user %}
+            <span class="subtitle_username" style="position: relative;">Your friend</span>
+          {% elif alum_profile|has_friend_request:user %}
+            <span class="subtitle_username" style="position: relative;">Friend request pending.</span>
+          {% elif alum_profile|in_followers:user %}
+            {% if alum_profile|check_friend_request:user %}
+            <a class="link-add-friend { user: '{{ alum_profile.id }}' }" style="cursor: pointer;">+ Add Friend</a>
+            {% endif %}
+          {% else %}
+            {% if alum_profile|check_friend_request:user %}
+            <a class="link-add-friend { user: '{{ alum_profile.id }}' }" style="cursor: pointer;">+ Add Friend</a>
+            {% endif %}
+          {% endif %}
+        {% endwith %}
+      </div>
+
+    </div>
+  {% endfor %}
+</div>
