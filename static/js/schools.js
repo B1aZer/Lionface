@@ -7,6 +7,7 @@ LionFace.Schools = function(options) {
 LionFace.Schools.prototype = {
     init: function() {
         this.add_school();
+        this.search_school();
     },
 
     detail_school: function(detail_url, school_id, school_year) {
@@ -102,6 +103,22 @@ LionFace.Schools.prototype = {
                 $("#find").html(data.find_school);
             }
         }, "JSON");
+    },
+
+    search_school: function() {
+        var options = {
+            url: LionFace.Schools.search_school_url,
+            type: "GET",
+            dataType: "JSON",
+            clearForm: true,
+            success: function(data) {
+                if (data.status === "OK") {
+                    $("#school_list").html(data.school_list);
+                } else {
+                }
+            }
+        };
+        $("#search_school").ajaxForm(options);
     }
 };
 

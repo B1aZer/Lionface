@@ -7,6 +7,7 @@
     <script>
         $(function() {
             LionFace.Schools.add_school_url = '{% url schools-add %}';
+            LionFace.Schools.search_school_url = '{% url schools-search %}'
         });
     </script>
     {% include_media 'schools.js' %}
@@ -56,12 +57,12 @@
 {% block footer_js %}
     <script>
         $(function() {
-          if ($.trim($("#your_schools").html()) == "") {
+          // if ($.trim($("#your_schools").html()) == "") {
             HideContent('school');
             ShowContent('find');
-          } else {
-            $(".alum_school:first").click();
-          }
+          // } else {
+            // $(".alum_school:first").click();
+          // }
         })
     </script>
 {% endblock footer_js %}

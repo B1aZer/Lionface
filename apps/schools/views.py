@@ -1,7 +1,9 @@
 from django.http import HttpResponse, Http404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render
+from django.db.models import Q
 
 try:
     import json
@@ -25,8 +27,25 @@ def home(request):
     else:
         alum_list = []
 
+    bit = request.session.get('school_search') or ''
+    school_list = School.objects.filter(Q(name__icontains=bit)
+                                        | Q(city__icontains=bit)
+                                        | Q(state__icontains=bit)
+                                        | Q(country__icontains=bit))
+
+    paginator = Paginator(school_list, 1)
+
+    page = request.GET.get('page')
+
+    try:
+        schools = paginator.page(page)
+    except PageNotAnInteger:
+        schools = paginator.page(1)
+    except EmptyPage:
+        schools = paginator.page(paginator.num_pages)
+
     return render(request, 'schools/schools.html',
-                  {'school_list': school_list,
+                  {'school_list': schools,
                   'alum_schools': alum_schools,
                   'alum_list': alum_list})
 
@@ -120,9 +139,40 @@ def leave(request):
             .exclude(alumni__user=profile)
 
         find_school_html = render_to_string('schools/_school_find.html',
-            {'school_list': school_list},
-            context_instance=RequestContext(request))
+                                            {'school_list': school_list},
+                                            context_instance=RequestContext(request))
         data['find_school'] = find_school_html
+
+        return HttpResponse(json.dumps(data), "application/json")
+
+
+def search(request):
+    if request.user.is_authenticated() and request.is_ajax() \
+            and request.method == 'GET':
+        data = {'status': 'OK'}
+
+        bit = request.GET['search']
+        request.session['school_search'] = bit
+
+        school_list = School.objects.filter(Q(name__icontains=bit)
+                                            | Q(city__icontains=bit)
+                                            | Q(state__icontains=bit)
+                                            | Q(country__icontains=bit))
+        paginator = Paginator(school_list, 1)
+
+        page = request.GET.get('page')
+
+        try:
+            schools = paginator.page(page)
+        except PageNotAnInteger:
+            schools = paginator.page(1)
+        except EmptyPage:
+            schools = paginator.page(paginator.num_pages)
+
+        context = {'school_list': schools}
+        schools_html = render_to_string('schools/_school_list.html', context)
+
+        data['school_list'] = schools_html
 
         return HttpResponse(json.dumps(data), "application/json")
 
@@ -140,7 +190,7 @@ def alum_in_year(request):
         alum_school_in_year = alumni.count()
 
         results_html = render_to_string('schools/_alum_school_in_year.html',
-            {'alum_school_in_year': alum_school_in_year})
+                                        {'alum_school_in_year': alum_school_in_year})
         data['results'] = results_html
 
         return HttpResponse(json.dumps(data), "application/json")
