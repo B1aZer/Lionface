@@ -398,6 +398,8 @@ def getcatnumbusn(cat):
 
 @register.filter(name="posted_review_for")
 def posted_review_for(user, page):
+    if user.is_anonymous():
+        return True
     return user.posted_review_for(page)
 
 
@@ -513,6 +515,8 @@ def get_topics_for(page, user):
 
 @register.filter
 def have_shared_topic_with(user, page):
+    if user.is_anonymous():
+        return False
     return user.have_shared_topic_with(page)
 
 

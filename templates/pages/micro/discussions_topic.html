@@ -12,9 +12,10 @@ $(document).ready(function () {
             <div style="padding: 10px;" align="center">
                 <form id="postform" enctype="multipart/form-data">{% csrf_token %}
 
-                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>
+                <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;" {% if request.user.is_anonymous %} disabled="disabled" {% endif %}></textarea>
 
                 <br />
+                {% if not request.user.is_anonymous %}
                 <div class="postoptions_container" >
                     <table width="100%"><tr>
                             <td align="left" style="color: #999; font-size: 8pt;" width="50%">          
@@ -25,6 +26,7 @@ $(document).ready(function () {
                                     </td>
                 </tr></table>
                 </div>
+                {% endif %}
                 <div id="attached-images" class="image_container_attach">
                     <ul class="pending_images">
                     </ul>

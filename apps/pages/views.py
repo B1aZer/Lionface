@@ -1816,7 +1816,10 @@ def get_events(request, slug):
         raise Http404
     events = page.tagged_in.all()
     data = []
-    roles = request.user.get_user_roles_for(page)
+    if request.user.is_anonymous():
+        roles = ['P']
+    else:
+        roles = request.user.get_user_roles_for(page)
     for event in events:
         classes = ''
         append = False
@@ -2157,7 +2160,8 @@ def list_topic(request, slug, topic_id):
 
     items = topic.get_feed()
     # viewed once
-    topic.viewed.add(request.user)
+    if not request.user.is_anonymous():
+        topic.viewed.add(request.user)
 
     data['html'] = render_to_string('pages/micro/discussions_topic.html',
                                     {
