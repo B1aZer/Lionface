@@ -1,8 +1,10 @@
 {% load format_results %}
 {% get_online_users 'as' 'online_user_list' %}
+<div id="main_chat_div">
+    
 <div style="position: fixed; left: 5px; bottom: 2px; z-index: 99999;">
 <div id="chat_id" class="chat" >
-    <table width="100%"><tr><td><div class="online"></div> <span id="chat_text">Offline</span> <span style="font-size: 9pt; color: #999;">{{ online_user_list|length }}</span></td>
+    <table width="100%"><tr><td><div class="offline"></div> <span id="chat_text" class="offline_text">Offline</span> <span style="font-size: 9pt; color: #999;">{{ online_user_list|length }}</span></td>
 		<td align="right"><span class="chat_off">Turn Off</span>
 	</td></tr></table>
 </div>
@@ -12,6 +14,15 @@
 	</td></tr></table>
 </div>
 </div>
+
+<script id="chat_item_template" type="text/x-handlebars-template">
+<span>{{ chat_line }}</span>
+</script>
+
+<script id="chat_template" type="text/x-handlebars-template">
+</script>
+
+
 
 <div class="chat_container" id="online_list" style="display: none;">
 	<ul>
@@ -28,4 +39,6 @@
 	</div>
 	<input id="chat_input" type="text" class="chat_enter" />
 	<input type="hidden" class="chat_username" value="admin" />
+</div>
+
 </div>

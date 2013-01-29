@@ -35,6 +35,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         while True:
             for i in red.listen():
                 if i['type'] == 'message':
+                    self.log('sending')
                     self.log(i.get('data',''))
                     #self.send({'message': i}, json=True)
                     self.emit('chat', json.loads(i.get('data','')))

@@ -16,7 +16,8 @@ class ActiveUserMiddleware:
         current_user = request.user
         if request.user.is_authenticated():
             #now = timezone.now()
-            redis.seen_user(current_user)
+            if request.user.is_visible:
+                redis.seen_user(current_user)
             #cache.set('seen_%s' % (current_user.username), now,
                            #settings.USER_LASTSEEN_TIMEOUT)
 

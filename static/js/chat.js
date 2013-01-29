@@ -20,6 +20,8 @@ LionFace.Chat.prototype = {
 
         socket.on('connect', function () {
             $('#chat_text').html('Online');
+            $('#chat_text').removeClass('offline_text').addClass('online_text');
+            $('#chat_text').parents('#chat_id').find('.offline').removeClass('offline').addClass('online');
             socket.emit('join', LionFace.User.username); 
         });
 
@@ -65,6 +67,22 @@ LionFace.Chat.prototype = {
             else {
                 $('.user_conatiner').hide();
                 $this.data('toggled',false);
+            }
+        });
+
+        $(document).on('click', '.chat_off', function(e) {
+            e.stopPropagation();
+            var $this = $(this);
+            var text = $('#chat_text');
+            if (text.hasClass('offline_text')) {
+                text.html('Online');
+                text.parents('#chat_id').find('.offline').removeClass('offline').addClass('online');
+                text.removeClass('offline_text').addClass('online_text');
+            }
+            else {
+                text.html('Offline');
+                text.parents('#chat_id').find('.online').removeClass('online').addClass('offline');
+                text.removeClass('online_text').addClass('offline_text');
             }
         });
 

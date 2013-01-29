@@ -157,6 +157,7 @@ class UserProfile(User):
     bio_text = models.TextField(blank=True)
     birth_date = models.DateField(null=True, blank=True)
     url = models.URLField(blank=True)
+    is_visible = models.BooleanField(default=True)
 
     objects = UserQuerySet.as_manager()
 
@@ -166,6 +167,8 @@ class UserProfile(User):
         return redis.get_last_seen(self)
 
     def online(self):
+        if not self.is_visible:
+            return False
         if self.last_seen():
             now = dateclass.datetime.now()
             if now > self.last_seen() + dateclass.timedelta(
