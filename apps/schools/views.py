@@ -14,6 +14,7 @@ except ImportError:
 from account.models import UserProfile
 from .models import Alum, School
 
+SCHOOLS_PER_PAGE = 25
 
 @login_required
 def home(request):
@@ -31,12 +32,12 @@ def home(request):
         .exclude(alumni__user=profile)
 
     bit = request.session.get('school_search') or ''
-    school_list_search = school_list.filter(Q(name__icontains=bit)
+    school_list = school_list.filter(Q(name__icontains=bit)
                                      | Q(city__icontains=bit)
                                      | Q(state__icontains=bit)
                                      | Q(country__icontains=bit))
 
-    paginator = Paginator(school_list_search, 1)
+    paginator = Paginator(school_list, SCHOOLS_PER_PAGE)
 
     page = request.GET.get('page')
     try:
@@ -166,7 +167,7 @@ def search(request):
                                             | Q(city__icontains=bit)
                                             | Q(state__icontains=bit)
                                             | Q(country__icontains=bit))
-        paginator = Paginator(school_list, 1)
+        paginator = Paginator(school_list, SCHOOLS_PER_PAGE)
 
         page = request.GET.get('page')
 
