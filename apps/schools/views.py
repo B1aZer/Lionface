@@ -13,6 +13,7 @@ except ImportError:
 from account.models import UserProfile
 from .models import Alum, School
 
+SCHOOLS_PER_PAGE = 25
 
 def home(request):
     profile = UserProfile.objects.get(id=request.user.id)
@@ -33,7 +34,7 @@ def home(request):
                                         | Q(state__icontains=bit)
                                         | Q(country__icontains=bit))
 
-    paginator = Paginator(school_list, 1)
+    paginator = Paginator(school_list, SCHOOLS_PER_PAGE)
 
     page = request.GET.get('page')
 
@@ -158,7 +159,7 @@ def search(request):
                                             | Q(city__icontains=bit)
                                             | Q(state__icontains=bit)
                                             | Q(country__icontains=bit))
-        paginator = Paginator(school_list, 1)
+        paginator = Paginator(school_list, SCHOOLS_PER_PAGE)
 
         page = request.GET.get('page')
 
