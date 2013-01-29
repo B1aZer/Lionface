@@ -1,44 +1,23 @@
 {% load format_results %}
 {% get_online_users 'as' 'online_user_list' %}
-<div id="main_chat_div">
-    
-<div style="position: fixed; left: 5px; bottom: 2px; z-index: 99999;">
+<div id="main_chat_container">
+<div style="position: fixed; left: 5px; bottom: 2px; z-index: 99999;" id="names_chat_container">
 <div id="chat_id" class="chat" >
     <table width="100%"><tr><td><div class="offline"></div> <span id="chat_text" class="offline_text">Offline</span> <span style="font-size: 9pt; color: #999;">{{ online_user_list|length }}</span></td>
-		<td align="right"><span class="chat_off">Turn Off</span>
-	</td></tr></table>
-</div>
-<div class="chat chat_div">
-	<table width="100%"><tr><td><div class="online"></div> User Full Name</td>
-		<td align="right"><span class="chat_off">Close</span>
+		<td align="right"><span class="chat_off turn_off">Turn Off</span>
 	</td></tr></table>
 </div>
 </div>
-
-<script id="chat_item_template" type="text/x-handlebars-template">
-<span>{{ chat_line }}</span>
-</script>
-
-<script id="chat_template" type="text/x-handlebars-template">
-</script>
-
-
 
 <div class="chat_container" id="online_list" style="display: none;">
 	<ul>
         {% for user in online_user_list %}
-        <li><div class="online"></div> {{ user.username }}</li>
+        {% if user != request.user %}
+        <li id="{{ user.username }}"><div class="online"></div> {{ user.get_full_name }}</li>
+        {% endif %}
         {% endfor %}
 	</ul>
 </div>
 
-<div class="chat_container user_conatiner" style="left: 210px; max-height: 275px; display: none;">
-	<div style="padding: 8px; border-bottom: 1px solid #CCC;">
-        <a href="#">User Full Name</a>: <span class="user_content">content content content content content content content content content content content content <br />
-            content content content content content content content content </span> 
-	</div>
-	<input id="chat_input" type="text" class="chat_enter" />
-	<input type="hidden" class="chat_username" value="admin" />
-</div>
 
 </div>

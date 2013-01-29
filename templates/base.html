@@ -19,6 +19,11 @@
          LionFace.User.is_anonymous = false;
          LionFace.User.home = "{{ request.user.get_absolute_url }}";
     {% endif %}
+    {% if request.user.is_visible %}
+         LionFace.User.is_visible = true;
+    {% else %}
+         LionFace.User.is_visible = false;
+    {% endif %}
 
     LionFace.User.options = {}
     // user permissions
@@ -26,6 +31,9 @@
 
     WEB_SOCKET_SWF_LOCATION = "{% media_url 'flashsocket/WebSocketMain.swf' %}";
     WEB_SOCKET_DEBUG = true;
+
+    //chat urls
+    LionFace.User.chat_status_url = "{% url chat.views.change_status %}";
     
     </script>
 
