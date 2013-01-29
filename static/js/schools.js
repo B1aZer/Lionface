@@ -71,7 +71,7 @@ LionFace.Schools.prototype = {
                 var year = parseInt(form.year.value, 10);
                 var today = new Date();
                 var yyyy = today.getFullYear() + 50;
-                if (year && !isNaN(year) && year >= 1970 && year <= yyyy) {
+                if (year && !isNaN(year) && year >= 1920 && year <= yyyy) {
                     return true;
                 }
                 $(form.year).addClass("error");

@@ -10,6 +10,7 @@
     <tr><td>No schools found.</td></tr>
 {% endfor %}
 
+{% if paginator %}
 <tr><td>
     <div class="pagination">
         <span class="step-links">
@@ -27,3 +28,4 @@
         </span>
     </div>
 </td></tr>
+{% endif %}

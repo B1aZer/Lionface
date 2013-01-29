@@ -1,4 +1,5 @@
 from django.http import HttpResponse, Http404
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -14,10 +15,9 @@ from account.models import UserProfile
 from .models import Alum, School
 
 
+@login_required
 def home(request):
     profile = UserProfile.objects.get(id=request.user.id)
-    school_list = School.objects.filter(approved=True) \
-        .exclude(alumni__user=profile)
     alum_schools = School.objects.filter(approved=True, alumni__user=profile)
 
     if alum_schools:
@@ -27,16 +27,18 @@ def home(request):
     else:
         alum_list = []
 
-    bit = request.session.get('school_search') or ''
-    school_list = School.objects.filter(Q(name__icontains=bit)
-                                        | Q(city__icontains=bit)
-                                        | Q(state__icontains=bit)
-                                        | Q(country__icontains=bit))
+    school_list = School.objects.filter(approved=True) \
+        .exclude(alumni__user=profile)
 
-    paginator = Paginator(school_list, 1)
+    bit = request.session.get('school_search') or ''
+    school_list_search = school_list.filter(Q(name__icontains=bit)
+                                     | Q(city__icontains=bit)
+                                     | Q(state__icontains=bit)
+                                     | Q(country__icontains=bit))
+
+    paginator = Paginator(school_list_search, 1)
 
     page = request.GET.get('page')
-
     try:
         schools = paginator.page(page)
     except PageNotAnInteger:
@@ -134,6 +136,7 @@ def leave(request):
         alum = Alum.objects.get(user=profile, year=school_year, school=school)
         if alum:
             school.alumni.remove(alum)
+            alum.delete()
 
         school_list = School.objects.filter(approved=True) \
             .exclude(alumni__user=profile)
@@ -154,7 +157,12 @@ def search(request):
         bit = request.GET['search']
         request.session['school_search'] = bit
 
-        school_list = School.objects.filter(Q(name__icontains=bit)
+        profile = UserProfile.objects.get(id=request.user.id)
+
+        school_list = School.objects.filter(approved=True) \
+            .exclude(alumni__user=profile)
+
+        school_list = school_list.filter(Q(name__icontains=bit)
                                             | Q(city__icontains=bit)
                                             | Q(state__icontains=bit)
                                             | Q(country__icontains=bit))
