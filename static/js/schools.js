@@ -106,29 +106,23 @@ LionFace.Schools.prototype = {
     },
 
     search_school: function() {
-        var action;
+        var searching;
 
         var options = {
             url: LionFace.Schools.search_school_url,
             type: "GET",
             dataType: "JSON",
             clearForm: true,
-            beforeSubmit: function() {
-                action = $("#search_school button").text();
-                console.log(action);
-                if (action === "Clear") {
-                    $("#search_school input[type='text']").val("");
-                }
-
-            },
             success: function(data) {
                 if (data.status === "OK") {
-                    if (action === "Clear") {
-                        $("#search_school button").text("Search");
-                    } else if (action === "Search") {
-                        $("#search_school button").text("Clear");
-                    }
+                    var placeholder = data.school_search_placeholder;
                     $("#school_list").html(data.school_list);
+                    $("#search_school input[type='text']").attr("placeholder", placeholder);
+                    if ((/^Searching...\s.+/).test(placeholder)) {
+                        $("#search_school button").text("Clear");
+                    } else {
+                        $("#search_school button").text("Search");
+                    }
                 }
             }
         };

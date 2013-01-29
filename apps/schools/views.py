@@ -182,6 +182,8 @@ def search(request):
         schools_html = render_to_string('schools/_school_list.html', context)
 
         data['school_list'] = schools_html
+        data['school_search_placeholder'] = 'Searching... {0}'.format(bit) if \
+            bit else 'Search by Name or Location'
 
         return HttpResponse(json.dumps(data), "application/json")
 
