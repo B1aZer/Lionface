@@ -127,6 +127,7 @@ LionFace.Chat.prototype = {
 
         // start new conversation
         $(document).on('click', '.chat_container li', function(e) {
+            //TODO: check if connected
             var username = $(this).attr('id');
             if ($('#name_'+username).length) {
             }
@@ -141,6 +142,11 @@ LionFace.Chat.prototype = {
             var username = $(this).attr('id');
             div.fadeOut( function() { $(this).remove(); }); 
             $('#message_' + username).remove();
+            $('.user_conatiner').css( 'left', function(index, style) {
+                var value = parseInt(get_int(style));
+                console.log(value);
+                return value - 205;
+            });             
             socket.emit('close chat', username, LionFace.User.username);
         });
 
