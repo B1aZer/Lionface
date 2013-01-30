@@ -5,7 +5,7 @@ from socketio.mixins import RoomsMixin, BroadcastMixin
 from socketio.sdjango import namespace
 
 
-from .tasks import ProcessMessage
+from tasks import ProcessMessage
 #from .utils import redis_connection
 from django.conf import settings
 
