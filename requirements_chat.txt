@@ -6,5 +6,6 @@ gevent-websocket==0.3.6
 redis==2.7.2
 # redis server wget http://redis.googlecode.com/files/redis-2.6.9.tar.gz
 # libevent for gevent http://monkey.org/~provos/libevent-1.4.13-stable.tar.gz
+# copy sdjango from ./lib to socketio package (.virtualenvs/lionface/lib/python2.6/site-packages/socketio )
 
 
