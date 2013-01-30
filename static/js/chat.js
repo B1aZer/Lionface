@@ -24,9 +24,24 @@ LionFace.Chat.prototype = {
                 $('#chat_text').removeClass('offline_text').addClass('online_text');
                 $('#chat_text').parents('#chat_id').find('.offline').removeClass('offline').addClass('online');
                 $('.turn_off').html('Turn Off');
-                socket.emit('join', LionFace.User.username); 
+                socket.emit('join', LionFace.User.username, LionFace.User.name); 
                 connected = true;
             }
+        });
+
+        socket.on('add', function (username, name) {
+            var user = '<li id="'+username+'"><div class="online"></div> '+name+'</li>';
+            if (!$('#online_list').find('#'+username).length) {
+                $('#online_list').find('ul').append($(user).hide().fadeIn());
+                var count  = parseInt($('#online_count').html()) + 1;
+                $('#online_count').html(count);
+            }
+        });
+
+        socket.on('remove', function (username) {
+            $('#online_list').find('#'+username).fadeOut( function() { $(this).remove() });
+            var count  = parseInt($('#online_count').html()) - 1;
+            $('#online_count').html(count);
         });
 
         socket.on('chat', function (data) {
@@ -94,7 +109,6 @@ LionFace.Chat.prototype = {
 
         // chat window
         $(document).on('click', '#chat_id', function(e) {
-            if (!connected) { return; }
             var $this = $(this);
             var count = parseInt($this.find('#online_count').html());
             if (count <= 0) { return; }
@@ -144,7 +158,7 @@ LionFace.Chat.prototype = {
                             text.parents('#chat_id').find('.offline').removeClass('offline').addClass('online');
                             text.removeClass('offline_text').addClass('online_text');
                             $('.turn_off').html('Turn Off');
-                            socket.emit('join', LionFace.User.username); 
+                            socket.emit('join', LionFace.User.username, LionFace.User.name); 
                         }
                         else {
                             text.html('Offline');

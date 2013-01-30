@@ -39,12 +39,13 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         while True:
             for i in red.listen():
                 if i['type'] == 'message':
-                    self.log(i.get('data',''))
+                    #self.log(i.get('data',''))
                     #self.send({'message': i}, json=True)
                     self.emit('chat', json.loads(i.get('data','')))
 
-    def on_join(self, username):
+    def on_join(self, username, name):
         self.log("Join/spawn")
+        self.broadcast_event_not_me('add', username, name)
         self.spawn(self.listener, username)
         #self.join(room)
         return True
@@ -54,6 +55,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         red = redis
         red = red.pubsub()
         red.unsubscribe(username)
+        self.broadcast_event_not_me('remove', username)
         self.disconnect()
         return True
 
@@ -64,7 +66,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         else:
             # no more chat for you
             pass
-        self.log(self.nicknames)
         return True
 
     def on_user_message(self, username, from_user, msg):
@@ -77,6 +78,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         return True
 
     def on_user_reply(self, username, from_user, msg):
+        self.log('{0} message: {1}'.format(username, msg))
         ProcessMessage.delay(username, from_user, len(self.nicknames), msg, 'reply')
         return True
 

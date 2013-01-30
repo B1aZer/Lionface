@@ -475,7 +475,7 @@ class UserProfile(User):
 
     def new_messages(self):
         #messages = self.message_to.filter(viewed=False).count()
-        messages = self.message_to.filter(viewed=False).aggregate(Count('user', distinct='True'))
+        messages = self.message_to.filter(viewed=False, in_chat=False).aggregate(Count('user', distinct='True'))
         return messages.get('user__count')
 
     def new_notifcations(self):
