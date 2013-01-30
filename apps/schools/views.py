@@ -16,6 +16,7 @@ from .models import Alum, School
 
 SCHOOLS_PER_PAGE = 25
 
+
 @login_required
 def home(request):
     profile = UserProfile.objects.get(id=request.user.id)
