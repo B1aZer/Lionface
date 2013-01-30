@@ -1063,8 +1063,9 @@ a.profile_btn:hover {
 	opacity: 0.55;
 }
 #image_settings.profile_settings {
-    top: 10px;
+    top: 4px;
     left: 6px;
+    z-index:1000;
 }
 
 #image_settings:hover {
