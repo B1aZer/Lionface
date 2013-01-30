@@ -566,10 +566,15 @@ def render_item_type(context, item):
 
 @register.simple_tag(takes_context=True)
 def get_online_users(context, as_tag, as_name):
-    from account.models import UserProfile
+    #from account.models import UserProfile
     from chat import redis_connection as redis
-    #user = context.get('user')
+    user = context.get('user')
     #users = UserProfile.objects.get_online_users()
     users = list(redis.get_active_users())
-    context[as_name] = users
+    online_friends = []
+    friends = user.get_friends()
+    for friend in friends:
+        if friend in users:
+            online_friends.append(friend)
+    context[as_name] = online_friends
     return ''

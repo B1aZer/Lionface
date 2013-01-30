@@ -44,11 +44,10 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
                     self.emit('chat', json.loads(i.get('data','')))
 
     def on_join(self, username, name):
-        self.log("Join/spawn")
+        self.log("Join/spawn %s" % username)
         self.broadcast_event_not_me('add', username, name)
         self.spawn(self.listener, username)
         #self.join(room)
-        return True
 
     def on_unjoin(self, username):
         self.log("disconnected from %s" % username)
@@ -57,7 +56,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         red.unsubscribe(username)
         self.broadcast_event_not_me('remove', username)
         self.disconnect()
-        return True
 
     def on_start_chat(self, username, from_user):
         if username not in self.nicknames:
@@ -66,7 +64,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         else:
             # no more chat for you
             pass
-        return True
 
     def on_user_message(self, username, from_user, msg):
         self.log('{0} message: {1}'.format(username, msg))
@@ -75,14 +72,11 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         #self.log('ready %s' % result.get(timeout=20))
         #self.emit_to_room(self.room, 'msg_to_room',
         #    self.socket.session['nickname'], msg)
-        return True
 
     def on_user_reply(self, username, from_user, msg):
         self.log('{0} message: {1}'.format(username, msg))
         ProcessMessage.delay(username, from_user, len(self.nicknames), msg, 'reply')
-        return True
 
     def on_close_chat(self, username, from_user):
         if username in self.nicknames:
             self.nicknames.remove(username)
-        return True

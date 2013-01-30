@@ -200,6 +200,6 @@ LionFace.Chat.prototype = {
     },
 };
 
-$(function() {         
+$(document).ready(function() {        
     LionFace.Chat = new LionFace.Chat();
 });
