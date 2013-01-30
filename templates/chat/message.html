@@ -1,0 +1,3 @@
+{% if message %}
+<a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a>: <span class="user_content message_from_{{ user.username }}">{{ message }}</span> 
+{% endif %}

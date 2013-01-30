@@ -1,6 +1,6 @@
 <div id="message_{{ user.username }}" class="chat_container user_conatiner" style="left: 210px; max-height: 275px; display: none;">
-	<div style="padding: 8px; border-bottom: 1px solid #CCC;">
-        <a href="#">{{ user.get_absolute_url }}</a>: <span class="user_content">{{ message }}</span> 
+    <div class="message_content" style="padding: 8px; border-bottom: 1px solid #CCC;{% if not message %}display:none;{% endif %}">
+        {% include 'chat/message.html' %}
 	</div>
     <input id="chat_input" type="text" class="chat_enter kind_{{ kind }}" />
 	<input type="hidden" class="chat_username" value="{{ user.username }}" />

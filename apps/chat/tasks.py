@@ -25,8 +25,9 @@ class ProcessMessage(Task):
         # processing new window
         template1 = render_to_string('chat/names.html', {'user':user_obj})
         template2 = render_to_string('chat/messages.html', {'user':user_obj, 'message':message, 'kind':kind })
+        template3 = render_to_string('chat/message.html', {'user':user_obj, 'message':message })
         #data = serializers.serialize("json", user_obj)
-        r.publish(user, json.dumps({'names':template1, 'message':message, 'messages':template2, 'kind':kind , 'username': from_user}))
+        r.publish(user, json.dumps({'names':template1, 'message':template3, 'messages':template2, 'kind':kind , 'username': from_user}))
         return True
 tasks.register(ProcessMessage)
 

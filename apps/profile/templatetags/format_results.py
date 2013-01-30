@@ -568,6 +568,7 @@ def render_item_type(context, item):
 def get_online_users(context, as_tag, as_name):
     from account.models import UserProfile
     from chat import redis_connection as redis
+    #user = context.get('user')
     #users = UserProfile.objects.get_online_users()
     users = list(redis.get_active_users())
     context[as_name] = users

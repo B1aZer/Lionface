@@ -12,6 +12,8 @@
     var LionFace = {};
     LionFace.User = {
             username: "{{ request.user.username }}",
+            url: "{{ request.user.get_absolute_url }}",
+            name: "{{ request.user.get_full_name }}",
     }
     {% if request.user.is_anonymous %}
          LionFace.User.is_anonymous = true;
