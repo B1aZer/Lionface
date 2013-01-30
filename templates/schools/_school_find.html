@@ -1,9 +1,12 @@
-<div style="font-size: 18pt; padding: 10px 40px 0px 40px;">Find a School</div>
+<div style="font-size: 18pt; padding: 20px 40px 0px 40px;">Find a School</div>
 <div style="margin: 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
   <table width="100%"><tr><td align="left">
-    <input type="text" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 200px;" placeholder="Search by Name, Location" />
-      </td><td align="right"><a href="#" class="blue_btn" style="color: #FFF; float: right; margin-left: 10px;" onClick="ShowContent('add_school'); return false;">+ Add School</a>
-      <span style="font-size: 8pt; color: #999;">Can't find your school?<br />It may not exist in our database yet.</span>
+    <form id="search_school" action="" method="get" accept-charset="utf-8">
+        <input type="text" name="search" style="padding: 4px; border: 1px solid #CCC; -moz-border-radius: 3px; border-radius: 3px; width: 175px;" placeholder="{% if request.session.school_search %}Searching... {{ request.session.school_search }}{% else %}Search by Name or Location{% endif %}" />
+        <button class="blue_btn">{% if request.session.school_search %}Clear{% else %}Search{% endif %}</button>
+    </form>
+        </td><td align="right"><a href="#" class="blue_btn" style="color: #FFF; float: right; margin-left: 10px; font-size: 9pt; padding: 6px 8px 4px 8px;" onClick="ShowContent('add_school'); return false;">+ Add School</a>
+        <span style="font-size: 7pt; color: #999;">Can't find your school?<br />It may not be in our database yet.</span>
   </td></tr></table>
 </div>
 
@@ -29,10 +32,6 @@
 
 <div style="margin: 5px 40px 0px 40px; padding: 10px 0; border-bottom: 1px solid #CCC;">
     <table id="school_list" width="100%">
-    {% for school in school_list %}
-        {% include "schools/_school.html" %}
-    {% empty %}
-        <p>No schools found.</p>
-    {% endfor %}
+        {% include "schools/_school_list.html" %}
     </table>
 </div>
