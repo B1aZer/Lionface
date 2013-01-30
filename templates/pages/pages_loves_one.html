@@ -1,8 +1,8 @@
 {% load format_results %}
 
                 {% block position %}
-                <div id="page_{{ page.id }}" class="page_results_micro">
-				<table width="100%"><tr><td width="85" align="right"><div style="position: relative; top: -10px; left: -5px;">
+                <div id="page_{{ page.id }}" class="page_results_micro" onMouseOver="ShowContent('comm_{{ page.id }}'); return false;" onMouseOut="HideContent('comm_{{ page.id }}'); return false;">
+				<table width="100%"><tr><td width="85" align="right"><div style="position: relative; top: 0px; left: -5px;">
                 {% endblock %}
                 {% if page.type == 'BS' %}
                 <a href="{% url business-page slug=page.username %}">
@@ -23,24 +23,25 @@
                     {% else %}
                     <span style="color: #999; padding: 3px;">{{ page.category }}</span>
                     {% endif %}
-                <div style="padding: 5px 0;"><span style="font-size: 8pt; color: #BBB;">Loves:</span> <span class="love_count" style="font-size: 12px; color: #E39; padding: 3px;">{{ page.get_loves }}</span></div>
                 <div>
                     {% block love_button %}
                     {% if request.user in page.get_lovers %}
-                        <a href="#" class="love love_button loved" style="font-size: 8pt; border: 3px solid #F7F7F7;">Loved</a>
+                        <span class="love_count" style="font-size: 12px; color: #E39;">{{ page.get_loves }}</span> <a href="#" class="love love_button loved" style="font-size: 8pt; border: 3px solid #F7F7F7;">Loved</a>
                     {% else %}
-                        <a href="#" class="love love_button" style="font-size: 8pt; border: 3px solid #F7F7F7;">Love</a>
+                        <span class="love_count" style="font-size: 12px; color: #E39;">{{ page.get_loves }}</span> <a href="#" class="love love_button" style="font-size: 8pt; border: 3px solid #F7F7F7; color: #FFF;">Love</a>
                     {% endif %} 
                     {% endblock %}
                 </div>
-				</td><td align="right">
+				</td><td align="right" style="position: relative;">
                     {% block community_button %}
+					<div id="comm_{{ page.id }}" style="display: none; position: absolute; right: 0px; top: 12px; padding: 10px 0px 10px 40px; background: #FFF;">
                     <a href="#" 
                         {% if page.check_employees or page.check_interns or page.check_volunteers %}
                         {% else %}
                         style="display:none;" 
                         {% endif %}
-                        class="profile_btn" onClick="ShowContent('select_community_{{page.id}}'); return false;">+ Community</a><br />
+                        class="profile_btn" onClick="ShowContent('select_community_{{page.id}}'); return false;" style="width: 75px;">+ Community</a><br />
+					</div>
                     {% endblock %}
                     {% for member in page|show_connections:profile_user %}
                     {% if profile_user|check_profile_eiv:request.user %} 

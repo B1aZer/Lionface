@@ -1,0 +1,30 @@
+{% for school in school_list %}
+    <tr id="school_{{ school.id }}" class="alum_school" style="border: 1px solid #EEE; border-width: 1px 0 1px 0;" onMouseOver="ShowContent('join_{{ school.id }}'); return false;" onMouseOut="HideContent('join_{{ school.id }}'); return false;">
+        <td align="left" style=" padding: 8px 0;">
+            {{ school.name }} <span class="school_count">{{ school.people_count }} person{{ school.people_count|pluralize }}</span><br /><span class="location">{{ school.city }}, {{ school.state }}, {{ school.country }}</span>
+        </td>
+        <td align="right">
+		<div id="join_{{ school.id }}" style="display: none;"><span style="color: #777; margin: 4px;">Class Year:</span> <form class="join_to_school" method="post" style="display: inline-block;">{% csrf_token %}<input type="hidden" name="school_id" value="{{ school.id }}" /><input id="year" type="text" style="padding: 4px; border: 1px solid #DDD; width: 40px;" placeholder="YYYY" name="year" /> <button class="blue_btn" onClick="LionFace.Schools.join_to_school('{% url schools-join %}', $(this).parent()); return false;" style="color: #FFF;">Join</button></form></div>
+        </td>
+    </tr>
+{% empty %}
+    <tr><td>No schools found.</td></tr>
+{% endfor %}
+
+<tr><td width="650" colspan="2">
+    <div class="pagination" style="text-align: center; padding-top: 17px; color: #AAA;">
+        <span class="step-links">
+            {% if school_list.has_previous %}
+                <a href="?page={{ school_list.previous_page_number }}" class="blue_btn" style="color: #FFF; font-size: 8pt; margin: 8px;">previous</a>
+            {% endif %}
+
+            <span class="current" style="font-size: 8pt;">
+                Page {{ school_list.number }} of {{ school_list.paginator.num_pages }}
+            </span>
+
+            {% if school_list.has_next %}
+                <a href="?page={{ school_list.next_page_number }}" class="blue_btn" style="color: #FFF; font-size: 8pt; margin: 8px;">next</a>
+            {% endif %}
+        </span>
+    </div>
+</td></tr>

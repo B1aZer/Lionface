@@ -8,7 +8,7 @@
         <a href="#" id="reviews" class="page_btn nonprofit_btn">Feedback</a> <a href="#" id="calendar" class="page_btn nonprofit_btn">Calendar</a>
         <a href="#" id="comunnity" class="page_btn nonprofit_btn">Community 
             {% if page.get_community_requests_count_new and request.user|check_pages_community:page %}
-            <span id="comm_req_count">{{page.get_community_requests_count_new}}</span>
+            <div id="comm_req_count">{{page.get_community_requests_count_new}}</div>
             {% endif %}
         </a>
 	</div>

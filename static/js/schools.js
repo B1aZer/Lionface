@@ -7,6 +7,7 @@ LionFace.Schools = function(options) {
 LionFace.Schools.prototype = {
     init: function() {
         this.add_school();
+        this.search_school();
     },
 
     detail_school: function(detail_url, school_id, school_year) {
@@ -70,7 +71,7 @@ LionFace.Schools.prototype = {
                 var year = parseInt(form.year.value, 10);
                 var today = new Date();
                 var yyyy = today.getFullYear() + 50;
-                if (year && !isNaN(year) && year >= 1970 && year <= yyyy) {
+                if (year && !isNaN(year) && year >= 1920 && year <= yyyy) {
                     return true;
                 }
                 $(form.year).addClass("error");
@@ -102,6 +103,30 @@ LionFace.Schools.prototype = {
                 $("#find").html(data.find_school);
             }
         }, "JSON");
+    },
+
+    search_school: function() {
+        var searching;
+
+        var options = {
+            url: LionFace.Schools.search_school_url,
+            type: "GET",
+            dataType: "JSON",
+            clearForm: true,
+            success: function(data) {
+                if (data.status === "OK") {
+                    var placeholder = data.school_search_placeholder;
+                    $("#school_list").html(data.school_list);
+                    $("#search_school input[type='text']").attr("placeholder", placeholder);
+                    if ((/^Searching...\s.+/).test(placeholder)) {
+                        $("#search_school button").text("Clear");
+                    } else {
+                        $("#search_school button").text("Search");
+                    }
+                }
+            }
+        };
+        $("#search_school").ajaxForm(options);
     }
 };
 

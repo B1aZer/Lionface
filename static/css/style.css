@@ -2515,6 +2515,10 @@ a.remove_admins:link, a.remove_admins:active, a.remove_admins:visited, a.remove_
 
 /* Pages */
 
+#comm_req_count {
+	background: #900; -moz-border-radius: 3px; border-radius: 3px; color: #FFF; padding: 3px; display: inline-block; margin-left: 4px;
+}
+
 .page_results_micro {
 	display: block; width: 600px; position: relative; left: -20px;
 }
