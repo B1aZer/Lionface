@@ -25,7 +25,7 @@ class School(models.Model):
 
     alumni = models.ManyToManyField(Alum, blank=True, null=True)
 
-    user_proposed = models.ForeignKey(UserProfile)
+    user_proposed = models.ForeignKey(UserProfile, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
