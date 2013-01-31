@@ -21,7 +21,7 @@
 			<p class="no_posts">This person has not posted anything yet,<br /><span style="font-size: 11pt;">or their content is not visible to you.</span></p>
 			{% endif %}
 		{% else %}
-		<p class="no_posts">Welcome! Ready to get started?<br /><span style="font-size: 11pt;">Here are some things you can do: search for friends, find people to follow,<br />get involved with a <a href="{% url pages.views.main %}">business</a> or <a href="{% url pages.views.nonprofit %}">nonprofit organization</a>, or post content to your <a href="{% url profile.views.profile username=request.user.username %}">profile</a>.<br /><span style="font-size: 9pt;">You can also try exploring some of the trending tags to the left.</span></p>
+		<p class="no_posts">Welcome! Ready to get started?<br /><span style="font-size: 11pt;">Here are some things you can do: search for friends (try joining a <a href="{% url schools.views.home %}">school network</a>), find people to follow,<br />get involved with a <a href="{% url pages.views.main %}">business</a> or <a href="{% url pages.views.nonprofit %}">nonprofit organization</a>, or post content to your <a href="{% url profile.views.profile username=request.user.username %}">profile</a>.<br /><span style="font-size: 9pt;">You can also try exploring some of the trending tags to the left.</span></p>
 		{% endif %}
     {% else %}
     <p class="no_posts">No filters have been selected.</p>

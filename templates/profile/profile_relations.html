@@ -11,30 +11,14 @@
     <a id="inter_relation_btn" href="#" class="bio_title">Relationship</a>
     {% if not profile_user.has_pending_notifications %}
 
-<div style="position: relative;">
-<div class="profile_edit" id="left_rel">
-    <select id="inter_relation_select" class="inter-relation" style="display:none">
-        <option value='S' {% if profile_user.get_relation == 'S' %}selected=""{% endif %}>Single</option>
-        <option value='D' {% if profile_user.get_relation == 'D' %}selected=""{% endif %}>Dating</option>
-        <option value='E' {% if profile_user.get_relation == 'E' %}selected=""{% endif %}>Engaged</option>
-        <option value='M' {% if profile_user.get_relation == 'M' %}selected=""{% endif %}>Married</option>
-    </select><br />
-
-    <div class="sublink"><a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>
-    <a id="cancel_inter_relation" class="inter-relation" href="#" style="display:none" >Cancel</a></div>
-    <span class="inter_relation_container" style="display:none">
-        <input id="inter_relation_input" type="text" {% if profile_user.get_relation != 'S' %}style="display:none"{% endif %}/>
-    </span>
-</div>
-</div>
     {% else %}
-    <span  class="inter-relation" style="display:none"> Relationship Request Pending </span>
+    <span  class="inter-relation" style="display:none; color: #f88;"> Request Pending </span>
     {% endif %}
     {% elif profile_user.get_relation_type %}
-    <span style="font-weight: bold; color: #555;">Relationship</span>
+    <span style="font-weight: bold; padding: 4px;">Relationship</span>
     {% else %}
     {% endif %}
-    <div>
+
     {% if profile_user.get_related_person %} 
         {% if profile_user.get_relation_type == 'married' or profile_user.get_relation_type == 'engaged' %} 
         <span id="relation_type_id" >{{ profile_user.get_relation_type }} to <a href="{{ profile_user.get_related_person.get_absolute_url }}">{{ profile_user.get_related_person.get_full_name }}</a></span>
@@ -45,6 +29,21 @@
     {% else %}
         <span id="relation_type_id" >{{ profile_user.get_relation_type }} </span>
     {% endif %}
-    </div>
-    <br />
 </span>
+
+<div class="profile_edit" id="left_rel" style="width: 40%; left: 30%; top: 100px; height: 80px;">
+<table width="100%" height="100%"><tr><td align="center">
+    <select id="inter_relation_select" class="inter-relation" style="display:none; padding: 3px; margin: 3px;">
+        <option value='S' {% if profile_user.get_relation == 'S' %}selected=""{% endif %}>Single</option>
+        <option value='D' {% if profile_user.get_relation == 'D' %}selected=""{% endif %}>Dating</option>
+        <option value='E' {% if profile_user.get_relation == 'E' %}selected=""{% endif %}>Engaged</option>
+        <option value='M' {% if profile_user.get_relation == 'M' %}selected=""{% endif %}>Married</option>
+    </select>
+    <span class="inter_relation_container" style="display:none">
+        <input id="inter_relation_input" type="text" {% if profile_user.get_relation != 'S' %}style="display:none"{% endif %}/>
+    </span><br />
+
+    <div class="sublink"><a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>
+    <a id="cancel_inter_relation" class="inter-relation" href="#" style="display:none" >Cancel</a></div>
+</td></tr></table>
+</div>

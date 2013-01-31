@@ -950,7 +950,7 @@ a.profile_btn:hover {
 	-moz-border-radius: 0 0 0 3px;
 	border-radius: 0 0 0 3px;
 	position: relative;
-	cursor: pointer;
+	cursor: default;
 }
 .noPhoto_shadow {
 	position: relative;
@@ -975,6 +975,18 @@ a.profile_btn:hover {
     -moz-box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
     z-index: -1;
+}
+
+.view_album {
+	position: absolute; left: 0px; top: 0px; width: 100%; height: 25px; color: #FFF; z-index: 100000; cursor: pointer; display: none;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 0, 0);
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 0, 0, 0.6);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 }
 
 .photos_count {
@@ -1172,7 +1184,7 @@ a.profile_btn:hover {
 	width: 178px;
 	padding: 0 10px;
 	position: absolute;
-	top: -10px; left: 0px;
+	top: 0px; left: 0px;
 	background: #FAFAFA;
 	-moz-box-shadow: 0px 4px 10px -6px #333;
 	box-shadow: 0px 4px 10px -6px #333;
@@ -1647,6 +1659,10 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 	margin-right: 10px;
 }
 
+.url_errors { 
+	color: #900;
+}
+
 .bio {
 	font-size: 9pt;
 	color: #888;
@@ -1654,7 +1670,7 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 	position: relative; left: -10px;
 }
 
-.bio input[type=text], .bio textarea {
+.bio input[type=text], .bio textarea, .user_info input[type=text], .user_info textarea {
 	border: 1px solid #CCC;
 	padding: 4px;
 	-moz-border-radius: 3px;
@@ -1667,6 +1683,21 @@ a.bio_title:link, a.bio_title:active, a.bio_title:visited {
 
 a.bio_title:hover {
 	color: #F58;
+}
+
+.user_info { position: absolute; left: 0px; top: 0px; height: 40px; width: 900px; display: block; z-index: 100000; color: #FFF !important;
+	/* Fallback for web browsers that doesn't support RGBa */
+	background: rgb(0, 0, 0);
+	/* RGBa with 0.6 opacity */
+	background: rgba(0, 0, 0, 0.6);
+	/* For IE 5.5 - 7*/
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+	/* For IE 8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+}
+
+.user_info a.bio_title:link, .user_info a.bio_title:active, .user_info a.bio_title:visited {
+	color: #FFF; padding: 4px; display: inline-block;
 }
 
 .add_filter {
@@ -1708,7 +1739,7 @@ a.bio_title:hover {
 }
 
 a.db_related {
-	color: #888; font-size: 8pt;
+	color: #555; font-size: 8pt;
 }
 
 a.db_related:hover {
@@ -1726,7 +1757,7 @@ a.db_related:hover {
 a.send_message:link, a.send_message:active, a.send_message:visited {
 	font-size: 8pt;
 	color: #777;
-	padding: 8px 7px 7px 8px;
+	padding: 15px 7px 14px 8px;
 	-mox-border-radius: 3px;
 	border-radius: 3px;
 	position: relative; top: 2px;
@@ -1833,7 +1864,9 @@ a.send_message:hover {
 	position: relative; top: 26px;
 }
 
-.blue_btn, .blue_btn a, .blue_btn a:active, .blue_btn a:visited, .bio .sublink a:link, .bio .sublink a:visited, .bio .sublink a:active {
+.blue_btn, .blue_btn a, .blue_btn a:active, .blue_btn a:visited, 
+.bio .sublink a:link, .bio .sublink a:visited, .bio .sublink a:active,
+.user_info .sublink a:link, .user_info .sublink a:visited, .user_info .sublink a:active {
 	padding: 5px 12px 5px 12px;
 	color: #FFF;
 	font-size: 9pt;
@@ -1844,7 +1877,7 @@ a.send_message:hover {
 	cursor: pointer;
 }
 
-.blue_btn:hover, .blue_btn a:hover, .active_privacy, .bio .sublink a:hover {
+.blue_btn:hover, .blue_btn a:hover, .active_privacy, .bio .sublink a:hover, .user_info .sublink a:hover {
 	text-decoration: none;
 	background: #2ab4ea;
 	background: -moz-linear-gradient(top, #7bc9e5 0%, #2ab4ea 50%, #19afe5 51%, #2ab4ea 100%); /* FF3.6+ */
@@ -1874,6 +1907,8 @@ a.send_message:hover {
 	background: #FAFAFA;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	-moz-box-shadow: 0 2px 8px -4px #333;
+	box-shadow: 0 2px 8px -4px #333;
 	display: none;
 }
 
@@ -2789,8 +2824,6 @@ a.nonprofit_btn:hover, .create_nonprofit a.nonprofit_btn:hover, #pages_nav_page 
 	background: linear-gradient(to bottom, #ffffff 0%,#f7f7f7 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
 	display: none;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
 	-moz-box-shadow: 0 4px 8px -4px #555;
 	box-shadow: 0 4px 8px -4px #555;
 }
@@ -3169,13 +3202,14 @@ a.sub_filter_feedON {
 
 .chat_container {
 	display: block;
-	width: 200px; min-height: 50px;
-	position: fixed; left: 5px; bottom: 32px;
+	width: 250px; height: 300px;
+	position: fixed; left: 5px; bottom: 35px;
 	border: 1px solid #CCC;
 	background: #FFF;
 	-moz-box-shadow: 0 4px 8px -4px #999;
 	box-shadow: 0 4px 8px -4px #999;
 	z-index: 99999;
+	line-height: 13pt;
 }
 
 .chat_container li {
@@ -3207,9 +3241,8 @@ a.sub_filter_feedON {
 }
 
 .chat_enter {
-	padding: 6px 4px; border: 1px solid #CCC; margin: 4px 0px 0px 0px; width: 192px; position: relative; left: -1px;
+	padding: 6px 4px; border: 0px solid transparent; border-top: 1px solid #CCC; margin: 4px 0px 0px 0px; width: 242px; position: absolute; left: 0px; bottom: 0px;
 }
-
 
 #comments_event .submit_comment {
 	position: relative; top: 4px;

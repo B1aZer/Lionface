@@ -1,3 +1,5 @@
 {% if message %}
-<a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a>: <span class="user_content message_from_{{ user.username }}">{{ message }}</span> 
+<div style="background: #FAFCFE; padding: 4px 0; margin: 4px 0;">
+<a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a><br /> <span class="user_content message_from_{{ user.username }}">{{ message }}</span> 
+</div>
 {% endif %}

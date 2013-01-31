@@ -1,5 +1,5 @@
 <div id="message_{{ user.username }}" class="chat_container user_conatiner" style="left: 210px; max-height: 275px; display: none;">
-    <div class="message_content" style="padding: 8px; border-bottom: 1px solid #CCC;{% if not message %}display:none;{% endif %}">
+    <div class="message_content" style="padding: 8px; border-bottom: 1px solid #CCC; max-height: 250px;{% if not message %}display:none;{% endif %}">
         {% include 'chat/message.html' %}
 	</div>
     <input id="chat_input" type="text" class="chat_enter kind_{{ kind }}" />

@@ -129,7 +129,7 @@ $(document).ready(function() {
 </form> 
 </div>
 
-<div class="profile_cover_container" style="overflow:hidden;">
+<div class="profile_cover_container" style="overflow:hidden;" onMouseOver="ShowContent('user_info'); return false;" onMouseOut="HideContent('user_info'); return false;">
 <div style="background: #DDD; 
             {% if data_uri %}
             height: {{ data_uri.height }}px; 
@@ -155,5 +155,73 @@ $(document).ready(function() {
                         {% endif %}
                         {% endblock %}
                         
+                        {% if show_cover_form %}
+
+    {% if profile_user|check_profile_bio:request.user %}
+
+<div class="user_info" id="user_info" style="display: none;">
+
+<table width="900" height="100%"><tr><td width="33%" style="padding-left: 8px;">
+
+    {% if profile_user == request.user %}
+    <a id="show_birth_select" href="#" class="bio_title" style="padding-right: 4px;">Birthday</a>
+    {% elif profile_user.get_birth_date %}
+    <span style="font-weight: bold; padding-right: 4px;">Birthday</span>
+    {% else %}
+    {% endif %}
+
+    <span>
+        <span id="birth_month_id" class="{{ profile_user.get_birth_date|date:"m" }}" >{{ profile_user.get_birth_date|date:"M" }}</span>
+        <span id="birth_day_id" style="padding-right: 3px;">{{ profile_user.get_birth_date|date:"d" }}</span>
+        <span id="birth_year_id">{{ profile_user.get_birth_date|date:"Y" }}</span>
+    </span>
+
+<div class="profile_edit" id="left_birth" style="width: 40%; left: 30%; top: 100px; height: 80px;">
+<table width="100%" height="100%"><tr><td align="center">
+    <div>
+<table><tr><td>
+	<select class="birth_select birth_month_select" style="display:none"></select>
+</td><td>
+    <select class="birth_select birth_day_select" style="display:none;"></select>
+</td><td>
+    <select class="birth_select birth_year_select" style="display:none"></select>
+</td></tr></table>
+    <div class="sublink"><a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none" >Save</a>
+    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none" >Cancel</a></div>
+    </div>
+</td></tr></table>
+</div>
+
+</td><td width="33%" align="center">
+
+    {% include "profile/profile_relations.html" %}
+
+
+</td><td width="33" align="right" style="padding-right: 16px;">
+
+    {% if profile_user == request.user %}
+    <a id="show_url_input" href="#" class="bio_title" style="padding-right: 4px;">Website</a>
+    {% elif profile_user.get_website %}
+    <span style="font-weight: bold; padding-right: 4px;">Website</span>
+    {% else %}
+    {% endif %}
+    
+
+<div class="profile_edit" id="left_web" style="width: 40%; left: 30%; top: 100px; height: 80px;">
+<table width="100%" height="100%"><tr><td align="center">
+    <input id="url_input" class="bio_website" type="text" style="display:none; width: 165px;"></input>
+    <div class="url_errors" style="display:none">URL must contain http://</div><br />
+    <div class="sublink"><a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
+    <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a></div>
+</td></tr></table>
+</div>
+
+    <span id="url_container">{{ profile_user.get_website|safe }}</span>
+
+</td></tr></table>
+
+</div>
+{% endif %}
+{% endif %}
 </div>
 </div>
