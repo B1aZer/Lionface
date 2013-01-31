@@ -30,18 +30,27 @@ LionFace.Chat.prototype = {
         });
 
         socket.on('add', function (username, name) {
+            // socketio bug (not me broadcast)
+            if (username == LionFace.User.username) { return; }
             var user = '<li id="'+username+'"><div class="online"></div> '+name+'</li>';
             if (!$('#online_list').find('#'+username).length) {
                 $('#online_list').find('ul').append($(user).hide().fadeIn());
                 var count  = parseInt($('#online_count').html()) + 1;
                 $('#online_count').html(count);
             }
+            $('#name_'+username).find('.offline').removeClass('offline').addClass('online');
         });
 
         socket.on('remove', function (username) {
             $('#online_list').find('#'+username).fadeOut( function() { $(this).remove() });
             var count  = parseInt($('#online_count').html()) - 1;
             $('#online_count').html(count);
+            if (count == 0 && $('#chat_id').data('toggled')) {
+                $('#chat_id').data('toggled',false);
+                $('#online_list').hide();
+            }
+            // remove marker
+            $('#name_'+username).find('.online').removeClass('online').addClass('offline');
         });
 
         socket.on('chat', function (data) {
@@ -51,24 +60,38 @@ LionFace.Chat.prototype = {
                 //$('.user_content').append(data.message + "<br/>");
                 console.log(data);
                 if (!$('#message_'+data.username).length) {
-                    var count = $('.user_conatiner').length + 1;
-                    var left = 205 * count + 5;
+                    var count = $('.user_conatiner').length;
+                    var left = 255 * count + 210;
                     $('#names_chat_container').append(data.names);
                     $('#main_chat_container').append(data.messages);
                     $('#message_'+data.username).css('left',left);
+                    //blink
+                    if (!$('#name_'+data.username).hasClass('new_chat_message') &&
+                        !$('#message_'+data.username).find('.kind_start').length) {
+                        $('#name_'+data.username).addClass('new_chat_message');
+                    }
                 }
                 else {
-                    var usernamecl = $('#message_'+data.username).find('.user_content:last').attr('class').split(' ')[1];
-                    var message = $($(data.message)[2]) 
-                    var usernamefr = message.attr('class').split(' ')[1];
+                    if ($('#message_'+data.username).find('.user_content:last').length) {
+                        var usernamecl = $('#message_'+data.username).find('.user_content:last').attr('class').split(' ')[1];
+                    }
+                    else {
+                        var usernamecl = '';
+                    }
+                    var message = $($(data.message)[0]) 
+                    var usernamefr = message.find('span').attr('class').split(' ')[1];
                     // if previous message from the same user
                     if (usernamecl == usernamefr) {
-                        $('#message_'+data.username).find('.message_content').append('<br/>' + message.html());
+                        console.log('same');
+                        $('#message_'+data.username).find('.message_content').append('<div>' + message.find('.user_content').html() + '</div>');
                         $('#message_'+data.username).find('.message_content').show();
                     }
                     else {
-                        $('#message_'+data.username).find('.message_content').append('<br/>' + data.message);
+                        $('#message_'+data.username).find('.message_content').append('<div>' + data.message + '</div>');
                         $('#message_'+data.username).find('.message_content').show();
+                    }
+                    if (!$('#name_'+data.username).hasClass('new_chat_message') && !$('#name_'+data.username).data('toggled')) {
+                        $('#name_'+data.username).addClass('new_chat_message');
                     }
                 }
         });
@@ -80,15 +103,15 @@ LionFace.Chat.prototype = {
             var from = LionFace.User.username;
             var usernamecl = '';
             if (event.keyCode == 13) {
-                var message = '<a href="'+LionFace.User.url+'">'+LionFace.User.name+'</a>: <span class="user_content message_from_'+LionFace.User.username+'">'+$this.val()+'</span>' 
+                var message = '<div style="background: #FAFCFE; padding: 4px 0; margin: 4px 0;"> <a href="'+LionFace.User.url+'">'+LionFace.User.name+'</a>: <span class="user_content message_from_'+LionFace.User.username+'">'+$this.val()+'</span></div>' 
                 // if not first message
                 if ($this.parents('.user_conatiner').find('.user_content').length) {
-                    message = '<br/>' + message;
+                    //message = '<br/>' + message;
                     usernamecl = $('#message_'+username).find('.user_content:last').attr('class').split(' ')[1];
                 }
                 // if previous from same user
                 if (usernamecl == 'message_from_'+LionFace.User.username) {
-                    var halfmessage = '<br/>' + '<span class="user_content message_from_'+LionFace.User.username+'">'+$this.val()+'</span>';
+                    var halfmessage = '<div>' + '<span class="user_content message_from_'+LionFace.User.username+'">'+$this.val()+'</span>' +'</div>';
                     $this.parents('.user_conatiner').find('.message_content').append(halfmessage);
                 }
                 else {
@@ -130,6 +153,7 @@ LionFace.Chat.prototype = {
             if (!toggled) {
                 $('#message_' + username).show();
                 $this.data('toggled',true);
+                $this.removeClass('new_chat_message');
             }
             else {
                 $('#message_' + username).hide();
@@ -192,7 +216,7 @@ LionFace.Chat.prototype = {
             $('#message_' + username).remove();
             $('.user_conatiner').css( 'left', function(index, style) {
                 var value = parseInt(get_int(style));
-                return value - 205;
+                return value - 255;
             });             
             socket.emit('close chat', username, LionFace.User.username);
         });

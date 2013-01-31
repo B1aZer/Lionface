@@ -3190,6 +3190,15 @@ a.sub_filter_feedON {
 	opacity: 0.71;
 }
 
+/* scrollable */
+.message_content {
+    overflow: auto;
+}
+
+.new_chat_message {
+    background: #222;
+}
+
 .chat:hover {
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
 	-moz-opacity: 1;
@@ -3241,7 +3250,10 @@ a.sub_filter_feedON {
 }
 
 .chat_enter {
-	padding: 6px 4px; border: 0px solid transparent; border-top: 1px solid #CCC; margin: 4px 0px 0px 0px; width: 242px; position: absolute; left: 0px; bottom: 0px;
+	padding: 6px 4px; 
+    border: 0px solid transparent; 
+    border-top: 1px solid #CCC; margin: 4px 0px 0px 0px; width: 242px; position: absolute; left: 0px; bottom: 0px;
+    height: 60px;
 }
 
 #comments_event .submit_comment {

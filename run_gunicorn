@@ -1,1 +1,1 @@
-gunicorn --worker-class socketio.sgunicorn.GeventSocketIOWorker wsgi:app
+gunicorn --worker-class socketio.sgunicorn.GeventSocketIOWorker wsgi:app --workers 3
