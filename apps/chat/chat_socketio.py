@@ -5,7 +5,7 @@ from socketio.mixins import RoomsMixin, BroadcastMixin
 from socketio.sdjango import namespace
 
 
-from tasks import ProcessMessage
+from tasks import ProcessMessage, SaveMessageHistory
 #from .utils import redis_connection
 from django.conf import settings
 
@@ -22,7 +22,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.logger = logging.getLogger("socketio.chat")
         self.log("Socketio session started")
         self.nicknames = []
-        self.messages = []
+        self.me = []
 
     def log(self, message):
         self.logger.info("[{0}] {1}".format(self.socket.sessid, message))
@@ -44,10 +44,12 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
                     self.emit('chat', json.loads(i.get('data','')))
 
     def on_join(self, username, name):
-        self.log("Join/spawn %s" % username)
-        self.broadcast_event_not_me('add', username, name)
-        self.spawn(self.listener, username)
-        #self.join(room)
+        if not username in self.me:
+            self.me.append(username)
+            self.log("Join/spawn %s" % username)
+            self.broadcast_event_not_me('add', username, name)
+            self.spawn(self.listener, username)
+            #self.join(room)
 
     def on_unjoin(self, username):
         self.log("disconnected from %s" % username)
@@ -55,6 +57,8 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         red = red.pubsub()
         red.unsubscribe(username)
         self.broadcast_event_not_me('remove', username)
+        if username in self.me:
+            self.me.remove(username)
         self.disconnect()
 
     def on_start_chat(self, username, from_user):
@@ -80,3 +84,14 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_close_chat(self, username, from_user):
         if username in self.nicknames:
             self.nicknames.remove(username)
+
+    def on_load_history(self, username):
+        if username not in self.nicknames:
+            self.nicknames.append(username)
+
+    def on_save_history(self, username, usernames):
+        self.log('saving')
+        self.log(username)
+        usernames = json.loads(usernames)
+        SaveMessageHistory.delay(username, usernames)
+        self.log(usernames)

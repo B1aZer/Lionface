@@ -18,6 +18,43 @@ LionFace.Chat.prototype = {
         var socket = io.connect("/chat");
         var connected = false;
 
+        function save_history(username, tabs) {
+            var username = username || LionFace.User.username;
+            var tabs = tabs || $('.chat_div');
+            var usernames = [];
+            tabs.each( function (i,e) {
+                usernames.push( $(e).attr('id').replace('name_','') );
+            });
+            console.log(username);
+            console.log(usernames);
+            if (usernames) {
+                socket.emit('save history', username, JSON.stringify(usernames)); 
+            }
+        }
+        function load_history() {
+            var url = LionFace.User.chat_loadhistory_url;
+            make_request({ 
+                url:url,
+                multi:true,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        console.log(data);
+                        for (name in data) {
+                            if (!$('#name_'+name).length) {
+                                var count = $('.user_conatiner').length;
+                                var left = 255 * count + 210;
+                                $('#names_chat_container').append(data[name].names);
+                                $('#main_chat_container').append(data[name].messages);
+                                $('#message_'+name).css('left',left);
+                                socket.emit('load history', name); 
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
         socket.on('connect', function () {
             if (LionFace.User.is_visible) {
                 $('#chat_text').html('Online');
@@ -26,6 +63,7 @@ LionFace.Chat.prototype = {
                 $('.turn_off').html('Turn Off');
                 socket.emit('join', LionFace.User.username, LionFace.User.name); 
                 connected = true;
+                load_history();
             }
         });
 
@@ -70,6 +108,7 @@ LionFace.Chat.prototype = {
                         !$('#message_'+data.username).find('.kind_start').length) {
                         $('#name_'+data.username).addClass('new_chat_message');
                     }
+                    save_history();
                 }
                 else {
                     if ($('#message_'+data.username).find('.user_content:last').length) {
@@ -212,7 +251,7 @@ LionFace.Chat.prototype = {
             if (!connected) { return; }
             var div = $(this).parents('.chat_div');
             var username = $(this).attr('id');
-            div.fadeOut( function() { $(this).remove(); }); 
+            div.fadeOut( function() { $(this).remove(); save_history(); }); 
             $('#message_' + username).remove();
             $('.user_conatiner').css( 'left', function(index, style) {
                 var value = parseInt(get_int(style));
