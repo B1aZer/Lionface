@@ -11,6 +11,11 @@ import json
 
 from account.models import UserProfile
 from messaging.models import Messaging
+from chat.models import *
+from django.db.models.query import Q
+from django.core import serializers
+
+import datetime
 
 class ProcessMessage(Task):
     def run(self, user, from_user, num_messages, message='', kind='chat', **kwargs):
@@ -41,3 +46,43 @@ class ProcessMessage(Task):
 tasks.register(ProcessMessage)
 
 
+class SaveMessageHistory(Task):
+    def run(self, username, usernames, **kwargs):
+        try:
+            user = UserProfile.objects.get(username=username)
+        except:
+            return False
+        user_chat, created = Chat.objects.get_or_create(user=user)
+        user_chat.tabs_to = usernames
+        user_chat.save()
+        return True
+tasks.register(SaveMessageHistory)
+
+
+class LoadMessageHistory(Task):
+    def run(self, username, minutes_ago=5, **kwargs):
+        try:
+            user = UserProfile.objects.get(username=username)
+        except:
+            return False
+        try:
+            user_chat = Chat.objects.get(user=user)
+        except:
+            return False
+        freinds = user_chat.tabs_to.split(',')
+        logger = ProcessMessage.get_logger()
+        logger.info('freinds %s' % (freinds))
+        since = user_chat.date - datetime.timedelta(minutes=minutes_ago)
+        logger.info('since %s' % (since))
+        for friend in freinds:
+            try:
+                friend_obj = UserProfile.objects.get(username=friend)
+            except:
+                continue
+            messages = Messaging.objects.filter(Q(user=user_chat.user, user_to=friend_obj) | Q(user=friend_obj, user_to=user_chat.user)) \
+            .filer(date__gte=since) \
+            .order_by('date')
+            logger.info('messages %s' % (messages.count()))
+            r.publish(user, serializers.serialize("json", messages))
+        return True
+tasks.register(LoadMessageHistory)
