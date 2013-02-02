@@ -50,8 +50,8 @@
                         <img src="{{ page.get_thumb }}" alt="{{ page.name }}" width="{{ size }}" height="{{ size }}"  />
                     </a>
                 </td>
-                <td align="left"><a href="{{ page.get_absolute_url }}" style="text-decoration: none;"> {{ page.name }}<br />
-                    <span style="font-size: 11px; color: #E39;">{{ page.get_loves }}</span></a>
+                <td align="left" style="position: relative;"><a href="{{ page.get_absolute_url }}" style="text-decoration: none;"> {{ page.name }}<br />
+                    <div class="page_setting_love" style="position: absolute; right: 10px; bottom: 5px;">{{ page.get_loves }} Loves</div></a>
                 </td>
             </tr>
         </table>
@@ -74,7 +74,7 @@
             {% for row in rows %}
             <tr class="category_{{ cat|getcatnumbusn }}{% if forloop.counter > 1 %} hidden_row{% else %} page_row{% endif %}">
                 {% for page in row %}
-                <td>
+                <td style="position: relative;">
                     {% if forloop.parentloop.counter <= 1 %}
                         {% if forloop.counter == 1 %}
                             {% if page.type == 'BS' %}
@@ -120,14 +120,20 @@
                             </a>
                         {% endif %}
                     {% endif %}
+					<div class="page_setting_love" style="position: absolute; right: 10px; bottom: 5px;">{{ page.get_loves }} Loves</div>
                 </td>
                 {% endfor %}
             </tr>
             <tr class="category_{{ cat|getcatnumbusn }}{% if forloop.counter > 1 %} hidden_row{% else %} page_row{% endif %}">
                 {% for page in row %}
-                <td>
-                    {{ page.name }}<br />
-                    <span style="font-size: 11px; color: #E39;">{{ page.get_loves }}</span>
+                <td align="center">
+				<div style="position: relative; top: -5px; padding-bottom: 17px; border-bottom: 1px solid #CCC; display: block; width: 200px; margin-bottom: 17px;">
+                {% if page.type == 'BS' %}
+                    <a href="{% url business-page slug=page.username %}" style="color:#3ea8d2; font-size: 12pt;">{{ page.name }}</a>
+                {% else %}   
+                    <a href="{% url nonprofit-page slug=page.username %}" style="color:#3ea8d2; font-size: 12pt;">{{ page.name }}</span>
+				{% endif %}
+				</div>
                 </td>
                 {% endfor %}
             </tr>
