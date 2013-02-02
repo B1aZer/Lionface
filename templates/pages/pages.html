@@ -1,28 +1,28 @@
     {% for row in pages %}
         <tr>
         {% for page in row %}
-            <td align="left">
+            <td align="left" style="position: relative;">
                 {% if page.type == 'BS' %}
                 <a href="{% url business-page slug=page.username %}"> <img src="/{{ page.photo.thumb_name }}" alt="{{page.id}}" width="200" height="200"  /></a>
                 {% else %}   
                 <a href="{% url nonprofit-page slug=page.username %}"> <img src="/{{ page.photo.thumb_name }}" alt="{{page.id}}" width="200" height="200"  /></a>
                 {% endif %}
+				<div class="page_setting_love" style="position: absolute; right: 10px; bottom: 5px;">{{ page.get_loves }} Loves</div>
             </td>
         {% endfor %}
         </tr> 
         <tr>
         {% for page in row %}
             <td align="left">
-				<div style="background: #FAFAFA; position: relative; top: 0px; padding: 6px 8px 2px 8px; -moz-border-riadu: 5px; border-radius: 5px; border: 1px solid #EEE; display: block; width: 182px; margin-bottom: 17px;">
+				<div style="position: relative; top: -5px; padding-bottom: 17px; border-bottom: 1px solid #CCC; display: block; width: 200px; margin-bottom: 17px;">
                 {% if page.type == 'BS' %}
-                    <span style="color:#3ea8d2; font-size: 11pt;">{{ page.name }}</span><br />
+                    <a href="{% url business-page slug=page.username %}" style="color:#3ea8d2; font-size: 14pt;">{{ page.name }}</a>
                 {% else %}   
-                    <span style="color:#909E4A; font-size: 11pt;">{{ page.name }}</span><br />
+                    <a href="{% url nonprofit-page slug=page.username %}" style="color:#3ea8d2; font-size: 14pt;">{{ page.name }}</span>
                 {% endif %}
                 {% if page.featured %}
                 <span style="color: #EC2;">Featured</span>
                 {% endif %}
-                <span style="font-size: 11px; color: #E39;">{{ page.get_loves }}</span>
 				</div>
             </td>
         {% endfor %}
