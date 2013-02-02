@@ -112,6 +112,15 @@ var timezone = jstz.determine();
 </SCRIPT>
 		<span style="color: transparent;">--</span> <a href="{% url public.views.about %}" target="_top" style="color: #777;">About</a>
 		<span style="color: transparent;">--</span> <a href="{% url public.views.terms %}" target="_top" style="color: #777;">Terms</a>
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="display: inline-block; margin-left: 8px; position: relative; top: 6px;">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="AZ93VBK4F46AL">
+<input type="image" src="http://www.joriedesigns.com/images/donate.png" border="0" height="20" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+
 		<span style="color: transparent;">--</span> <a href="{% url public.views.feedback %}" target="_top" style="display: none;">Feedback</a>
 	</div>
       </div>

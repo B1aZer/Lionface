@@ -44,24 +44,32 @@ $(document).ready(function() {
 			</td></tr></table></a>
 		</td>
 		<td align="left">
+<div style="position: relative; top: 2px;">
+
 			<table><tr><td>
         <a href="{{ profile_user.get_absolute_url }}" id="posts_link" class="dashboard_nav {% if profile_view %}active_dash_head{% endif %}">
-            <table><tr><td><img class="db_posts_icon icon_post" {% if profile_view %} src="{% media_url 'images/iconPost.hover.png' %}" {% else %} src="{% media_url 'images/iconPost.png' %}" {% endif %}></img></td><td>Posts</td></tr></table></a>
+            <table width="100%" height="100%"><tr><td align="right" width="40%"><img class="db_posts_icon icon_post" {% if profile_view %} src="{% media_url 'images/iconPost.hover.png' %}" {% else %} src="{% media_url 'images/iconPost.png' %}" {% endif %}></img></td><td align="left" valign="top" style="padding-top: 15px; padding-left: 2px;">Posts</td></tr></table></a>
+
 			</td><td>
+
         <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="dashboard_nav {% if album_view %}active_dash_head{% endif %}">
-            <table><tr><td><img class="db_albums_icon icon_album" {% if album_view %} src="{% media_url 'images/iconAlbum.hover.png' %}" {% else %} src="{% media_url 'images/iconAlbum.png' %}" {% endif %}></img></td><td>Albums</td></tr></table></a>
+            <table width="100%" height="100%"><tr><td align="right" width="35%"><img class="db_albums_icon icon_album" {% if album_view %} src="{% media_url 'images/iconAlbum.hover.png' %}" {% else %} src="{% media_url 'images/iconAlbum.png' %}" {% endif %}></img></td><td align="left" valign="top" style="padding-top: 15px; padding-left: 2px;">Albums</td></tr></table></a>
+
 			</td><td>
+
                 <a href="{% url user-loves username=profile_user.username %}" id="loves_link" class="dashboard_nav {% if loves_view %}active_dash_head{% endif %}" >
-                    <table><tr><td><img class="db_loves_icon icon_loves" {% if loves_view %}src="{% media_url 'images/iconLoves.hover.png' %}" {% else %} src="{% media_url 'images/iconLoves.png' %}" {% endif %}></img></td><td>Loves</td></tr></table></a>
+                    <table width="100%" height="100%"><tr><td align="right" width="40%"><img class="db_loves_icon icon_loves" {% if loves_view %}src="{% media_url 'images/iconLoves.hover.png' %}" {% else %} src="{% media_url 'images/iconLoves.png' %}" {% endif %}></img></td><td align="left" valign="top" style="padding-top: 15px; padding-left: 2px;">Loves</td></tr></table></a>
 			</td><td>
 			{% if request.user == profile_user %}
 			{% elif request.user.is_anonymous %}
 			{% else %}
 				{% if profile_user|check_message_sending:request.user %}
-					<div style="margin: 10px 8px; display: inline-block;" id="send_message"><a href="#" class="send_message">Send Message</a></div>
+					<div style="margin: 8px 8px; display: inline-block;" id="send_message"><a href="#" class="send_message">Send Message</a></div>
 				{% endif %}
 			{% endif %}
 			</td></tr></table>
+</div>
+
 		</td>
 		<td class="db_addfriend" align="right">
 
@@ -90,20 +98,22 @@ $(document).ready(function() {
 		</td>
 		<td width="120" class="dashboard_related_td">
 <div class="dashboard_related">
-<table width="100%" height="100%"><tr><td>
+<table width="100%" height="100%"><tr><td colspan="2" height="25" align="center">
 {% if profile_user|check_friends_visibility:request.user %}
 <a href="{% url profile.views.related_users username=profile_user.username %}?Friends" class="db_related">{{ profile_user|show_friend_count }}</a>
 {% endif %}
-<br />
+</td><tr><tr><td height="25"  width="60" align="center">
 {% if profile_user|check_follower_visibility:request.user %}
-<a href="{% url profile.views.related_users username=profile_user.username %}?Followers" class="db_related">{{ profile_user|show_followers_count }} Follower{{ profile_user.get_followers_count|pluralize }}</a>
+<a href="{% url profile.views.related_users username=profile_user.username %}?Followers" class="db_related_sub" style="border-right: 1px solid #CCC;border-top: 1px solid #CCC;" onMouseOver="ShowContent('follower_title'); return false;" onMouseOut="HideContent('follower_title'); return false;">{{ profile_user|show_followers_count }} </a>
 {% endif %}
-<br />
+</td><td height="25" width="60" align="center">
 {% if profile_user|check_following_visibility:request.user %}
-<a href="{% url profile.views.related_users username=profile_user.username %}?Following" class="db_related">{{ profile_user|show_following_count }} Following</a>
+<a href="{% url profile.views.related_users username=profile_user.username %}?Following" class="db_related_sub" style="border-left: 1px solid #CCC;border-top: 1px solid #CCC" onMouseOver="ShowContent('following_title'); return false;" onMouseOut="HideContent('following_title'); return false;">{{ profile_user|show_following_count }} </a>
 {% endif %}
 </td></tr></table>
 </div>
+<div class="db_related_sub_title" style="display: none;" id="follower_title">Follower{{ profile_user.get_followers_count|pluralize }}</div>
+<div class="db_related_sub_title" style="display: none;" id="following_title">Following</div>
 		</td>
 	</tr></table>
 </div>
@@ -148,7 +158,7 @@ $(document).ready(function() {
             class="profile_cover" >
                         {% block inpicture %}
                         {% if request.user == profile_user and show_cover_form %}
-                        <div style="position: relative; top: 270px; left: -8px; display: block; width: 200px;" align="center">
+                        <div style="position: relative; top: 270px; left: -2px; display: block; width: 200px;" align="center">
                             <a id="upload_cover_profile" class="upload_cover" style="display:none; cursor: pointer;">Upload</a>
                             <a href="{% url profile.views.reset_picture username=request.user.username %}" id="reset_profile_picture" class="upload_cover" style="display:none; color:#555;">Clear</a>
                         </div>                                

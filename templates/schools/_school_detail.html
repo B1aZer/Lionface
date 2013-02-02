@@ -1,6 +1,6 @@
 {% load media school friends format_results %}
 
-<div id="school_name" style="font-size: 18pt; padding: 10px 40px;">{{ school.name }}</div>
+<div id="school_name" class="school_name_big">{{ school.name }}</div>
 <div id="school_years" style="padding: 0 40px; text-align: left;">Class Years:
   {% year_finish_school user school as year %}
   {% school_years year as years %}

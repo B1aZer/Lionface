@@ -29,21 +29,12 @@
 {% block left_col %}
 <!--onclick="window.open('/{{ profile_user.photo }}');return false;"-->
 <div class="noPhoto_shadow" onMouseOver="ShowContent('view_album'); return false;" onMouseOut="HideContent('view_album'); return false;">
-{% if profile_user|check_profile_image_visibility:request.user %}
-<div class="view_album" id="view_album"
-	onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;">
-	<table width="100%" height="100%"><tr><td align="center">
-Click to view Profile Pictures
-	</td></tr></table>
-</div>
-{% endif %}
-
 <div {% if profile_user|check_profile_image_visibility:request.user %}
 onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;"
 {% endif %}
 	class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat; {% if profile_user|check_profile_image_visibility:request.user %}cursor: pointer;{% endif %}">
 		{% if request.user == profile_user %}
-		<div style="position: relative; top: 165px; display: block; width: 200px;" align="center">
+		<div style="position: relative; top: 165px; left: -1px; display: block; width: 200px;" align="center">
 			<a id="upload_picture" class="upload" style="display:none;">Upload</a>
 			<a href="{% url profile.views.images_reset username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
 		</div>
@@ -175,12 +166,13 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 									<span class="post_feature_container">
 										<span onMouseOver="ShowContent('tags'); return false;" onMouseOut="HideContent('tags'); return false;">#</span>
 										<span onMouseOver="ShowContent('embed'); return false;" onMouseOut="HideContent('embed'); return false;">embed</span>
-										<span  onMouseOver="ShowContent('href'); return false;" onMouseOut="HideContent('href'); return false;">href</span></span>
-										<div class="attach attaching_class">Attach</div>
+										<span onMouseOver="ShowContent('href'); return false;" onMouseOut="HideContent('href'); return false;">href</span></span>
+										<div class="attach attaching_class" onMouseOver="ShowContent('attach'); return false;" onMouseOut="HideContent('attach'); return false;">Attach</div>
 										<div style="position: relative; display: inline-block;">
-											<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol (#) to create tags.</div>
-											<div class="post_feature" style="display: none;" id="embed">Copy and paste links from sites like Youtube and Vimeo and videos will embed once you submit your post. We also support TED.com videos.</div>
+											<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol <span class="post_feature_sub"><span style="font-size: 11pt; position: relative; left: 0px; top: 1px;">#</span></span> to create tags.</div>
+											<div class="post_feature" style="display: none;" id="embed">Copy and paste links from sites like Youtube and Vimeo and videos will automatically embed once you submit your post. We also support TED.com videos.</div>
 											<div class="post_feature" style="display: none;" id="href">Use standard HTML a href code to create links within your post.</div>
+											<div class="post_feature" style="display: none;" id="attach">You can attach up to <span class="post_feature_sub">21</span> images per post.</div>
 										</div>
 								<a href="#" class="post" id="postboxbutton">Post</a>
 							</td>
