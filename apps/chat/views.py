@@ -60,9 +60,11 @@ def load_history(request):
             friend_obj = UserProfile.objects.get(username=friend.strip())
         except:
             continue
+        #.filter(date__gte=since) \
         messages = Messaging.objects.filter(Q(user=user_chat.user, user_to=friend_obj) | Q(user=friend_obj, user_to=user_chat.user)) \
-        .filter(in_chat=True).filter(date__gte=since) \
-        .order_by('date')
+        .filter(in_chat=True) \
+        .order_by('-date')[:10]
+        messages = sorted(messages, key= lambda s: s.date)
         #data[friend.strip()] = serializers.serialize("json", messages)
         names_templ = render_to_string('chat/names.html', {'user':friend_obj})
         mess_templ = render_to_string('chat/history_messages.html', {'user':friend_obj, 'messages':messages})

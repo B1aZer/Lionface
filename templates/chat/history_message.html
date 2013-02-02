@@ -1,7 +1,7 @@
 {% if message %}
 {% ifchanged message.user %}
 <div style="background: #FAFCFE; padding: 4px 0; margin: 4px 0;">
-<a href="{{ message.user.get_absolute_url }}">{{ message.user.get_full_name }}</a>{% endifchanged %}<br /> <span class="user_content message_from_{{ message.user.username }}">{{ message.content }}</span> 
+<a href="{{ message.user.get_absolute_url }}">{{ message.user.get_full_name }}</a>{% endifchanged %} <span class="user_content message_from_{{ message.user.username }}">{{ message.content }}</span> 
 {% ifchanged message.user %}
 </div>
 {% endifchanged %}

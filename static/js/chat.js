@@ -170,7 +170,7 @@ LionFace.Chat.prototype = {
             var username = $this.parents('.user_conatiner').find('.chat_username').val();
             var from = LionFace.User.username;
             var usernamecl = '';
-            if (event.keyCode == 13) {
+            if (event.keyCode == 13 && $this.val()) {
                 var context = {user_link : LionFace.User.url, user_name: LionFace.User.name, user_username: LionFace.User.username, message: $this.val()}
                 var message = template(context); 
                 // if not first message
@@ -197,6 +197,7 @@ LionFace.Chat.prototype = {
                     $this.removeClass('kind_start').addClass('kind_reply');
                 }
                 $this.val('');
+                return false;
             }
         });
 
