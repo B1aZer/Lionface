@@ -50,6 +50,12 @@ LionFace.Chat.prototype = {
                     var username = $(e).attr('id').replace('name_','');
                     $('#message_' + username).show();
                     $(e).data('toggled',true);
+                    // scroll
+                    var last_el = $('#message_' + username).find('.user_content:last')
+                    if (last_el.length) {
+                        last_el = last_el.get(0);
+                        last_el.scrollIntoViewIfNeeded(true);
+                    }
                 }
             });
         }
