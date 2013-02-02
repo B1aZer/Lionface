@@ -48,13 +48,25 @@ tasks.register(ProcessMessage)
 
 class SaveMessageHistory(Task):
     def run(self, username, usernames, **kwargs):
+        logger = ProcessMessage.get_logger()
         try:
             user = UserProfile.objects.get(username=username)
         except:
             return False
         user_chat, created = Chat.objects.get_or_create(user=user)
-        user_chat.tabs_to = usernames
-        user_chat.save()
+        user_chat.tabs_to.clear()
+        logger.info(usernames)
+        for user_obj in usernames:
+            try:
+                friend = UserProfile.objects.get(username=user_obj.get('username'))
+            except:
+                continue
+            chat_history, created = ChatHistory.objects.get_or_create(tab_from=user_chat, from_user=friend)
+            chat_history.active = user_obj.get('active')
+            chat_history.opened = user_obj.get('opened')
+            chat_history.save()
+        #user_chat.tabs_to = usernames
+        #user_chat.save()
         return True
 tasks.register(SaveMessageHistory)
 

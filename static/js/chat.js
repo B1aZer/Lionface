@@ -43,17 +43,42 @@ LionFace.Chat.prototype = {
             });
         }
 
+        function toggle_tabs() {
+            var tabs = tabs || $('.chat_div');
+            tabs.each( function (i,e) {
+                if ($(e).hasClass('tab_opened')) {
+                    var username = $(e).attr('id').replace('name_','');
+                    $('#message_' + username).show();
+                    $(e).data('toggled',true);
+                }
+            });
+        }
+
         function save_history(username, tabs) {
             var username = username || LionFace.User.username;
             var tabs = tabs || $('.chat_div');
-            var usernames = [];
+            var users = [];
+            var user = {};
             tabs.each( function (i,e) {
-                usernames.push( $(e).attr('id').replace('name_','') );
+                //usernames.push( $(e).attr('id').replace('name_','') );
+                var username = $(e).attr('id').replace('name_','');
+                user['username']=username;
+                if ($(e).hasClass('new_chat_message')) {
+                    user['active']=true;
+                }
+                else {
+                    user['active']=false;
+                }
+                if ($(e).hasClass('tab_opened')) {
+                    user['opened']=true;
+                }
+                else {
+                    user['opened']=false;
+                }
+                users.push(user);
             });
-            console.log(username);
-            console.log(usernames);
-            if (usernames) {
-                socket.emit('save history', username, JSON.stringify(usernames)); 
+            if (users) {
+                socket.emit('save history', username, JSON.stringify(users)); 
             }
         }
         function load_history() {
@@ -63,7 +88,6 @@ LionFace.Chat.prototype = {
                 multi:true,
                 callback: function(data) {
                     if (data.status == 'OK') {
-                        console.log(data);
                         for (name in data) {
                             if (!$('#name_'+name).length) {
                                 var count = $('.user_conatiner').length;
@@ -73,6 +97,7 @@ LionFace.Chat.prototype = {
                                 $('#message_'+name).css('left',left);
                                 socket.emit('load history', name); 
                                 auto_size();
+                                toggle_tabs();
                             }
                         }
                     }
@@ -134,7 +159,6 @@ LionFace.Chat.prototype = {
                         !$('#message_'+data.username).find('.kind_start').length) {
                         $('#name_'+data.username).addClass('new_chat_message');
                     }
-                    save_history();
                 }
                 else {
                     if ($('#message_'+data.username).find('.user_content:last').length) {
@@ -147,7 +171,6 @@ LionFace.Chat.prototype = {
                     var usernamefr = message.find('span').attr('class').split(' ')[1];
                     // if previous message from the same user
                     if (usernamecl == usernamefr) {
-                        console.log('same');
                         $('#message_'+data.username).find('.message_content').append('<div>' + message.find('.user_content').html() + '</div>');
                         $('#message_'+data.username).find('.message_content').show();
                     }
@@ -159,6 +182,7 @@ LionFace.Chat.prototype = {
                         $('#name_'+data.username).addClass('new_chat_message');
                     }
                 }
+                save_history();
         });
 
         $(document).on('keypress','#chat_input', function(event) {
@@ -222,6 +246,7 @@ LionFace.Chat.prototype = {
             var toggled = $this.data('toggled');
             if (!toggled) {
                 $('#message_' + username).show();
+                $this.addClass('tab_opened');
                 $this.data('toggled',true);
                 $this.removeClass('new_chat_message');
                 // scroll
@@ -233,8 +258,10 @@ LionFace.Chat.prototype = {
             }
             else {
                 $('#message_' + username).hide();
+                $this.removeClass('tab_opened');
                 $this.data('toggled',false);
             }
+            save_history();
         });
 
         $(document).on('click', '.turn_off', function(e) {

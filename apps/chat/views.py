@@ -43,33 +43,33 @@ def change_status(request):
 def load_history(request):
     data = {'status':'FAIL'}
     user = request.user
-    minutes_ago = 5
+    #minutes_ago = 5
     try:
         user_chat = Chat.objects.get(user=user)
     except:
         return False
+    """
     friends = user_chat.tabs_to.replace('[','') \
                                 .replace(']','') \
                                 .replace('u\'','') \
                                 .replace('\'','') \
                                 .replace('"','') \
                                 .split(',')
-    since = datetime.datetime.now() - datetime.timedelta(minutes=minutes_ago)
+    """
+    #friends = user_chat.tabs_to.all()
+    friends = ChatHistory.objects.filter(tab_from=user_chat)
+    #since = datetime.datetime.now() - datetime.timedelta(minutes=minutes_ago)
     for friend in friends:
-        try:
-            friend_obj = UserProfile.objects.get(username=friend.strip())
-        except:
-            continue
-        if not friend_obj.online():
+        if not friend.from_user.online():
             continue
         #.filter(date__gte=since) \
-        messages = Messaging.objects.filter(Q(user=user_chat.user, user_to=friend_obj) | Q(user=friend_obj, user_to=user_chat.user)) \
+        messages = Messaging.objects.filter(Q(user=user_chat.user, user_to=friend.from_user) | Q(user=friend.from_user, user_to=user_chat.user)) \
         .filter(in_chat=True) \
         .order_by('-date')[:10]
         messages = sorted(messages, key= lambda s: s.date)
         #data[friend.strip()] = serializers.serialize("json", messages)
-        names_templ = render_to_string('chat/names.html', {'user':friend_obj})
-        mess_templ = render_to_string('chat/history_messages.html', {'user':friend_obj, 'messages':messages})
-        data[friend.strip()] = {'names': names_templ, 'messages' : mess_templ}
+        names_templ = render_to_string('chat/names.html', {'user':friend.from_user, 'active':friend.active, 'opened':friend.opened})
+        mess_templ = render_to_string('chat/history_messages.html', {'user':friend.from_user, 'messages':messages, 'current_user': request.user})
+        data[friend.from_user.username] = {'names': names_templ, 'messages' : mess_templ}
         data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")

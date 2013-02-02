@@ -93,5 +93,5 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.log('saving')
         self.log(username)
         usernames = json.loads(usernames)
-        SaveMessageHistory.delay(username, usernames)
         self.log(usernames)
+        SaveMessageHistory.delay(username, usernames)
