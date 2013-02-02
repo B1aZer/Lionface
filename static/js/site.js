@@ -105,12 +105,20 @@ function get_int(id) {
 
 function HideContent(d) {
     if(d.length < 1) { return; }
-    document.getElementById(d).style.display = "none";
+    if (document.getElementById(d)) {
+        document.getElementById(d).style.display = "none";
+    }
+    else {
+    }
 }
 
 function ShowContent(d) {
     if(d.length < 1) { return; }
-    document.getElementById(d).style.display = "block";
+    if (document.getElementById(d)) {
+        document.getElementById(d).style.display = "block";
+    }
+    else {
+    }
 }
 
 /** Make excerpts for news feed */

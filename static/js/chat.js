@@ -18,6 +18,22 @@ LionFace.Chat.prototype = {
         var socket = io.connect("/chat");
         var connected = false;
 
+        function auto_size() {
+            $('.chat_enter').autosize({ 
+                callback: function(ta, height) {
+                    console.log(ta);
+                    if (ta > 60) {
+                        console.log('stop');
+                        $(this).css({'overflow-y':'auto'});
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            });
+        }
+
         function save_history(username, tabs) {
             var username = username || LionFace.User.username;
             var tabs = tabs || $('.chat_div');
@@ -47,6 +63,7 @@ LionFace.Chat.prototype = {
                                 $('#main_chat_container').append(data[name].messages);
                                 $('#message_'+name).css('left',left);
                                 socket.emit('load history', name); 
+                                auto_size();
                             }
                         }
                     }
