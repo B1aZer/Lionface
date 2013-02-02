@@ -36,9 +36,6 @@ LionFace.Chat.prototype = {
                         //var parent_mh = parseInt($(this).siblings('.message_content').css('max-height'));
                         var parent_mh = 230;
                         parent_mh = parent_mh - ta + 16;
-                        console.log(parent_mh);
-                        console.log(ta);
-                        // if not init
                         $(this).siblings('.message_content').css('max-height',parent_mh+'px');
                         return true;
                     }
@@ -217,14 +214,22 @@ LionFace.Chat.prototype = {
             }
         });
 
+        // collapse conversations
         $(document).on('click', '.chat_div', function(e) {
             var $this = $(this);
+            var _this = this;
             var username = $(this).attr('id').split('_')[1];
             var toggled = $this.data('toggled');
             if (!toggled) {
                 $('#message_' + username).show();
                 $this.data('toggled',true);
                 $this.removeClass('new_chat_message');
+                // scroll
+                var last_el = $('#message_' + username).find('.user_content:last')
+                if (last_el.length) {
+                    last_el = last_el.get(0);
+                    last_el.scrollIntoViewIfNeeded(true);
+                }
             }
             else {
                 $('#message_' + username).hide();
