@@ -325,6 +325,8 @@ SITE_ID = 1
 #BROKER_URL = "django://"
 
 ACCOUNT_ACTIVATION_DAYS = 7
+# Number of seconds of inactivity before a user is marked offline
+USER_ONLINE_TIMEOUT = 300
 
 if os.environ.get('production'):
     try:

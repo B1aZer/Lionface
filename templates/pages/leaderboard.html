@@ -32,26 +32,26 @@
 
 <div style="position: relative;">
 <div class="content_pages" id="leader" style="position: absolute; right: 0px; top: -10px; width: 200px; padding: 12px 10px 0px 10px; text-align: center;" id="leader">
-	<div class="leader_title" style="background: #FFF; cursor: default;">Most Loved on Lionface</div>
-	<div>
+	<div class="leader_title" style="background: #FFF; cursor: default; padding: 8px 0;">Most Loved on Lionface</div>
+	<div style="position: relative; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #CCC;">
         <a href="{{ most_loved.get_absolute_url }}"> 
-            <img src="{{ most_loved.get_thumb }}" alt="{{ most_loved.name }}" width="180" height="180"  />
+            <img src="{{ most_loved.get_thumb }}" alt="{{ most_loved.name }}" width="180" height="180" style="margin-bottom: 8px;"  />
         </a>
-        <a href="{{ most_loved.get_absolute_url }}" style="text-decoration: none;"><br />{{ most_loved.name }}<br />
-        <span style="font-size: 11px; color: #E39;">{{ most_loved.get_loves }}</span></a>
+        <a href="{{ most_loved.get_absolute_url }}" style="text-decoration: none; font-size: 14pt;"><br />{{ most_loved.name }}<br />
+        <div class="page_setting_love" style="position: absolute; left: -5px; top: 165px;">{{ most_loved.get_loves }}</div></a>
     </div>
     {% for page in rest %}
     {% cycle '60' '60' '60' '60' '45' '45' '45' '45' '45' as size silent %}
 	<div>
-        <table>
+        <table style="position: relative;" width="100%">
             <tr>
-                <td>
+                <td align="left">
                     <a href="{{ page.get_absolute_url }}"> 
                         <img src="{{ page.get_thumb }}" alt="{{ page.name }}" width="{{ size }}" height="{{ size }}"  />
                     </a>
                 </td>
-                <td align="left" style="position: relative;"><a href="{{ page.get_absolute_url }}" style="text-decoration: none;"> {{ page.name }}<br />
-                    <div class="page_setting_love" style="position: absolute; right: 10px; bottom: 5px;">{{ page.get_loves }} Loves</div></a>
+                <td align="right"><a href="{{ page.get_absolute_url }}" style="text-decoration: none; font-size: 14pt;"> {{ page.name }}<br />
+                    <div class="page_setting_love" style="position: absolute; left: -5px; bottom: 3px;">{{ page.get_loves }}</div></a>
                 </td>
             </tr>
         </table>
@@ -62,9 +62,9 @@
 <div class="content_pages" style="width: 650px;">
     <table width="650" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align: center;">
         {% for cat, rows in pages|sort_dict %}
-        <tr class="category_{{ cat|getcatnumbusn }}" >
+        <tr class="category_{{ cat|getcatnumbusn }}" style="border: 1px solid #EEE; border-width: 1px 0 1px 0; background: #FAFAFA;">
             <td colspan="2" style="text-align: left; font-size: 14pt;">
-                <a href="#" class="categoty_button">{{ cat }}</a>
+                <a href="#" class="categoty_button" title="Collapse">{{ cat }}</a>
             </td>
             <td align="right">
                 <a href="{% url pages.views.save_browsing_categories cat_id=cat|getcatnumbusn %}" class="profile_nav browse_rows" style="font-size: 8pt;">Expand</a>
