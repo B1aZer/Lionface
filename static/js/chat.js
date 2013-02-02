@@ -51,7 +51,7 @@ LionFace.Chat.prototype = {
                     $('#message_' + username).show();
                     $(e).data('toggled',true);
                     // scroll
-                    var last_el = $('#message_' + username).find('.user_content:last')
+                    var last_el = $('#message_' + username).find('div:last')
                     if (last_el.length) {
                         last_el = last_el.get(0);
                         last_el.scrollIntoViewIfNeeded(true);
@@ -189,6 +189,15 @@ LionFace.Chat.prototype = {
                     }
                 }
                 save_history();
+                // if opened
+                if ($('#name_'+data.username).data('toggled')) {
+                    // scroll
+                    var last_el = $('#message_' + data.username).find('div:last')
+                    if (last_el.length) {
+                        last_el = last_el.get(0);
+                        last_el.scrollIntoViewIfNeeded(true);
+                    }
+                }
         });
 
         $(document).on('keypress','#chat_input', function(event) {
@@ -223,6 +232,12 @@ LionFace.Chat.prototype = {
                     socket.emit('user message', username, from, $this.val());
                     $this.removeClass('kind_start').addClass('kind_reply');
                 }
+                // scroll
+                var last_el = $('#message_' + username).find('div:last')
+                if (last_el.length) {
+                    last_el = last_el.get(0);
+                    last_el.scrollIntoViewIfNeeded(true);
+                }
                 $this.val('');
                 return false;
             }
@@ -256,7 +271,7 @@ LionFace.Chat.prototype = {
                 $this.data('toggled',true);
                 $this.removeClass('new_chat_message');
                 // scroll
-                var last_el = $('#message_' + username).find('.user_content:last')
+                var last_el = $('#message_' + username).find('div:last')
                 if (last_el.length) {
                     last_el = last_el.get(0);
                     last_el.scrollIntoViewIfNeeded(true);
