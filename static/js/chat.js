@@ -17,17 +17,29 @@ LionFace.Chat.prototype = {
 
         var socket = io.connect("/chat");
         var connected = false;
+        auto_size();
+
+        var source   = $("#message-template").html();
+        var template = Handlebars.compile(source);
+        
+        source   = $("#message-template-noreply").html();
+        var template2 = Handlebars.compile(source);
 
         function auto_size() {
             $('.chat_enter').autosize({ 
                 callback: function(ta, height) {
-                    console.log(ta);
                     if (ta > 60) {
-                        console.log('stop');
                         $(this).css({'overflow-y':'auto'});
                         return false;
                     }
                     else {
+                        //var parent_mh = parseInt($(this).siblings('.message_content').css('max-height'));
+                        var parent_mh = 230;
+                        parent_mh = parent_mh - ta + 16;
+                        console.log(parent_mh);
+                        console.log(ta);
+                        // if not init
+                        $(this).siblings('.message_content').css('max-height',parent_mh+'px');
                         return true;
                     }
                 }
@@ -159,7 +171,8 @@ LionFace.Chat.prototype = {
             var from = LionFace.User.username;
             var usernamecl = '';
             if (event.keyCode == 13) {
-                var message = '<div style="background: #FAFCFE; padding: 4px 0; margin: 4px 0;"> <a href="'+LionFace.User.url+'">'+LionFace.User.name+'</a>: <span class="user_content message_from_'+LionFace.User.username+'">'+$this.val()+'</span></div>' 
+                var context = {user_link : LionFace.User.url, user_name: LionFace.User.name, user_username: LionFace.User.username, message: $this.val()}
+                var message = template(context); 
                 // if not first message
                 if ($this.parents('.user_conatiner').find('.user_content').length) {
                     //message = '<br/>' + message;
@@ -167,7 +180,8 @@ LionFace.Chat.prototype = {
                 }
                 // if previous from same user
                 if (usernamecl == 'message_from_'+LionFace.User.username) {
-                    var halfmessage = '<div>' + '<span class="user_content message_from_'+LionFace.User.username+'">'+$this.val()+'</span>' +'</div>';
+                    var context2 = {user_username: LionFace.User.username, message: $this.val()}
+                    var halfmessage = template2(context2);
                     $this.parents('.user_conatiner').find('.message_content').append(halfmessage);
                 }
                 else {

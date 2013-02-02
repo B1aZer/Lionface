@@ -1,6 +1,6 @@
 <div id="message_{{ user.username }}" class="chat_container user_conatiner" style="left: 210px; max-height: 275px; display: none;">
     {% block messages %}
-    <div class="message_content" style="padding: 8px; border-bottom: 1px solid #CCC; max-height: 186px;{% if not message %}display:none;{% endif %}">
+    <div class="message_content" style="padding: 8px; border-bottom: 1px solid #CCC; max-height: 230px;{% if not message %}display:none;{% endif %}">
         {% include 'chat/message.html' %}
 	</div>
     {% endblock %}

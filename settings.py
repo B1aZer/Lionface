@@ -227,6 +227,7 @@ MEDIA_BUNDLES = (
         'js/jquery.autosize-1.15.4.js',
         #'js/jquery-ui-1.9.1.min.js',
         'js/jquery-ui-1.8.24.min.js',
+        'js/handlebars-1.0.rc.1.min.js',
         'js/binaryajax.js',
         'js/exif.js',
         'js/load_image_mod.js',

@@ -1,5 +1,7 @@
 {% load format_results %}
 {% get_online_users 'as' 'online_user_list' %}
+{% include 'chat/message_yours_first.html' %}
+{% include 'chat/message_yours_noreply.html' %}
 <div id="main_chat_container">
 <div style="position: fixed; left: 5px; bottom: 2px; z-index: 99999;" id="names_chat_container">
 <div id="chat_id" class="chat">
