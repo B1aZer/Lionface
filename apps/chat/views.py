@@ -60,6 +60,8 @@ def load_history(request):
             friend_obj = UserProfile.objects.get(username=friend.strip())
         except:
             continue
+        if not friend_obj.online():
+            continue
         #.filter(date__gte=since) \
         messages = Messaging.objects.filter(Q(user=user_chat.user, user_to=friend_obj) | Q(user=friend_obj, user_to=user_chat.user)) \
         .filter(in_chat=True) \
