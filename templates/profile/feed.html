@@ -20,8 +20,8 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 {% block content_subtitle %}{% endblock %}
 
 {% block dashboard %}
-<div style="position: relative; width: 900px; border-top: 1px solid #FFF; background: #F5F7F9">
-<table width="100%"><tr><td width="200">
+<div style="position: relative; width: 900px; min-height: 70px; -moz-border-radius: 4px; border-radius: 4px; background: #FFF">
+<table width="100%" height="70"><tr><td width="200">
 <div class="profile_micro_header" style="padding-left: 17px;">Hello, {{ request.user.first_name }}</div>
 </td>
 <td align-"left">
@@ -32,31 +32,31 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 	<a href="{% url discussions.views.home %}" class="">Discussions ></a>
 </td>
 -->
-<td align="right">
-	<span style="color: #CACDCC; padding-right: 17px;">share your heart</span>
+<td align="right" width="150">
+	<span style="color: #AAADAC; padding-right: 17px;">share your heart</span>
 </td></tr></table>
 </div>
 {% endblock %}
 
 {% block left_col %}
 
-    <div style="position: relative; left: 0px; z-index: 100;">
-		<span class="filter_header">News Feed Filters<br /><span style="color: #BBB; font-size: 8pt;">Shift+click to select multiple filters.</span></span><p />
+   
+		<div class="filter_header" style="margin-bottom: 8px;">News Feed Filters<br /><span style="color: #BBB; font-size: 8pt;">Shift+click to select multiple filters.</span></div>
         <a href="javascript:;" id="Friends" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'F' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Friends.png' %}" /> Friends <span id="friends_count"></span></a>
         <a href="javascript:;" id="Following" class="feed_type {% if 'W' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'W' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Following <span id="following_count"></span></a>
         <a href="javascript:;" id="Businesses" class="feed_type {% if 'B' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'B' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Business.png' %}" /> Businesses <span id="businesses_count"></span></a>
         <a href="javascript:;" id="Nonprofits" class="feed_type {% if 'N' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'N' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_NPs.png' %}" /> Nonprofits <span id="nonprofits_count"></span></a>
-	</div><p />
 
-		<span class="filter_header">Follow <span style="color: #A70;">#Tags</span></span><p />
+
+		<div class="filter_header" style="margin: 8px 0;">Follow <span style="color: #000;">Tags</span></div>
         {% for tag in request.user.user_tag_set.all %}
         <a href="javascript:;" onClick="return false;" class="tagged {% if tag.active %} filterON {%else%} filter {% endif %}" {% if tag.active %} title=" Turn filter off. " {%else%} title=" Turn filter on. " {% endif %}>{{ tag.name }}<span class="remove_tag" style="float:right; display:none;" title="Remove Tag">x</span></a>
         {% empty %}
         {% endfor %}
         <a href="javascript:;" class="filter tags" style="height:12px; border: 0px; background: transparent;"><span class="add_tag">Add +</span></a>
-<p />
+
         {% if popular_tags %}
-		<span class="filter_header" >Trending Tags<br /><span style="color: #BBB; font-size: 8pt;">Previous 7 days</span></span><p />
+		<div class="filter_header" style="margin: 8px 0;">Trending Tags<br /><span style="color: #BBB; font-size: 8pt;">Previous 7 days</span></div>
         {% endif %}
         {% for tag in popular_tags %}
         <div class="micro_page_about tringing-tags" style="margin: 2px 0; width: 175px;">#<span class="tag_name">{{ tag.name }}</span><br /><span style="font-size: 7pt;">{{ tag.get_posts_count }} Tagged Posts</span><a class="tag_link" href="{% url post.views.tag_feed tag_id=tag.id %}" style="display:none"></a></div>
@@ -65,6 +65,8 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 {% endblock %}
 
 {% block right_col %}
+
+<div class="introduction" style="font-size: 12pt; text-align: left; margin-bottom: 20px; -moz-box-shadow: 0 2px 8px -4px #333; box-shadow: 0 2px 8px -4px #333;"><span style="font-weight: bold;">Lionface is a brand new community.</span> And we want to know, what about the world inspires you?<br /><span style="font-size: 10pt; color: #EEE;"><span style="font-weight: bold; color:#8aD4Fa; letter-spacing: 150%;">Challenge:</span> Make a post with the tag <span style="color: #FC7; font-size: 12pt; letting-spacing: 150%;">#inspired</span>, and tell us your passion in life!</div>
 
   <div id="news_feed" class="{type: 'personal'}" style="position: relative; top: -7px;"></div>
 

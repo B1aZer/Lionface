@@ -33,13 +33,14 @@
                 </table>
 				</div>
        			{% if page.type == 'BS' %}
-                <span style="color:#3ea8d2; font-size: 16pt;">Loves</span><span style="color: #999; font-size: 9pt;"> Total: {{ page.get_lovers_count }} Public: {{ page.get_lovers_public_count }} Private: {{ page.get_lovers_private_count }}</span><br />
+                <span style="color:#F58; font-size: 16pt;">Loves</span><span style="color: #999; font-size: 9pt; margin: 4px;"> Total: {{ page.get_lovers_count }} 
+<span style="color: #CCC; margin: 8px;">Public: {{ page.get_lovers_public_count }} <span style="margin: 4px;">Private: {{ page.get_lovers_private_count }}</span></span></span><br />
                 {% else %}   
-                    <span style="color:#909E4A; font-size: 16pt;">Loves</span><span style="color: #999; font-size: 9pt;"> Total: {{ page.get_lovers_count }} Public: {{ page.get_lovers_public_count }} Private: {{ page.get_lovers_private_count }}</span><br />
+                    <span style="color:#F58; font-size: 16pt;">Loves</span><span style="color: #999; font-size: 9pt; margin: 4px;"> Total: {{ page.get_lovers_count }} 
+<span style="color: #CCC; margin: 8px;">Public: {{ page.get_lovers_public_count }} <span style="margin: 4px;">Private: {{ page.get_lovers_private_count }}</span></span></span><br />
                 {% endif %}
                 {% if page.get_lovers %}
-				<div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-					<div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Public Loves: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
+				<div style="text-align: left; margin: 4px 0;">
                     {% for lover in page.get_lovers_ordered %}
                     <div class="friend_icon
                         {% if forloop.counter > 10 %} 
@@ -68,7 +69,7 @@
                         {% else %}   
                             <span style="color:#909E4A; font-size: 16pt;">Employees</span>
                         {% endif %}
-                    <span style="color: #999; font-size: 9pt;"> Confirmed Current Employees: {{ page.get_emloyees_ordered_count }}</span><br />
+                    <span style="color: #999; font-size: 9pt; margin: 4px;"> Total: {{ page.get_emloyees_ordered_count }}</span><br />
                     {% endif %}
                 <div id="employees_div" {% if not page.check_employees %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
@@ -80,8 +81,8 @@
                         {% endif %} 
                     </div>
                     {% if page.get_emloyees_ordered %}
-                    <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-                        <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confrimed Public Employees: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
+                    <div style="text-align: left; margin: 4px 0;">
+                        
                         {% for employee in page.get_emloyees_ordered %}
                         <div class="friend_icon
                             {% if forloop.counter > 10 %} 
@@ -89,7 +90,7 @@
                             {% endif %}
                             ">
                             <a href="{{ employee.get_absolute_url }}">
-                                <img src="{{ employee.get_thumb }}" width="36" height="36" />
+                                <img src="{{ employee.get_thumb }}" width="72" height="72" />
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ employee.get_full_name }}</div>
                         </div>
@@ -128,7 +129,7 @@
                         {% else %}   
                             <span style="color:#909E4A; font-size: 16pt;">Interns</span>
                         {% endif %}
-                        <span style="color: #999; font-size: 9pt;"> Confirmed Current Interns: {{ page.get_interns_ordered_count }}</span><br />
+                        <span style="color: #999; font-size: 9pt; margin: 4px;"> Total: {{ page.get_interns_ordered_count }}</span><br />
                     {% endif %}
                 <div id="interns_div" {% if not page.check_interns %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
@@ -140,8 +141,8 @@
                         {% endif %} 
                     </div>
                     {% if page.get_interns_ordered %}
-                    <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-                        <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confirmed Public Interns: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
+                    <div style="text-align: left; margin: 4px 0;">
+                        
                         {% for intern in page.get_interns_ordered %}
                         <div class="friend_icon
                             {% if forloop.counter > 10 %} 
@@ -149,7 +150,7 @@
                             {% endif %}
                             ">
                             <a href="{{ intern.get_absolute_url }}">
-                                <img src="{{ intern.get_thumb }}" width="36" height="36" />
+                                <img src="{{ intern.get_thumb }}" width="54" height="54" />
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ intern.get_full_name }}</div>
                         </div>
@@ -186,7 +187,7 @@
                     {% endif %}
                     {% if page.check_volunteers or request.user|check_pages_community:page %}
                     <span style="color:#909E4A; font-size: 16pt;">Volunteers</span>
-                    <span style="color: #999; font-size: 9pt;"> Confirmed Current Volunteers: {{ page.get_volunteers_ordered_count }}</span><br />
+                    <span style="color: #999; font-size: 9pt; margin: 4px;"> Total: {{ page.get_volunteers_ordered_count }}</span><br />
                     {% endif %}
                     <div id="volunteers_div" {% if not page.check_volunteers %} style="display:none;" {% endif %}>
                     <div class="add_community_info">
@@ -199,8 +200,8 @@
                         {% endif %} 
                     </div>
                     {% if page.get_volunteers_ordered %}
-                    <div style="padding: 7px 2px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
-                        <div style="padding: 4px 0px 7px 18px; font-size: 9pt; color: #999; text-align: left;">Current Confirmed Public Volunteers: <span style="color: #BBB;">ordered by -Most Followers-</span></div>
+                    <div style="text-align: left; margin: 4px 0;">
+                        
                         {% for volunteer in page.get_volunteers_ordered %}
                         <div class="friend_icon
                             {% if forloop.counter > 10 %} 
@@ -208,7 +209,7 @@
                             {% endif %}
                             ">
                             <a href="{{ volunteer.get_absolute_url }}">
-                                <img src="{{ volunteer.get_thumb }}" width="36" height="36" />
+                                <img src="{{ volunteer.get_thumb }}" width="54" height="54" />
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ volunteer.get_full_name }}</div>                      
                         </div>

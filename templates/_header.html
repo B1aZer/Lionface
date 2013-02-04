@@ -45,23 +45,26 @@
                 <a href="{% url nonprofit-page slug=one_page.username %}" class="nav_page{% if page == one_page %} images_page_thumb{% endif %}" style="background: url('/{{ one_page.photo.thumb_name }}') #FFF;"></a>
             {% endif %}
 			<div class="page_settings" style="display: none;" id="8_{{ one_page.id }}">
-			<div class="page">
+			<div class="page" {% if one_page.type == 'BS' %}style="border-left-color: #7bc9e5"{% endif %}>
+				<div style="position: absolute; left: 3px; top: -20px;">
+					<div class="page_setting_love">{{ one_page.get_lovers_active_count }} Loves</div> 
+					<div class="page_setting_love" style="background: #555; color: #FFF; font-size: 7pt; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=71); -moz-opacity: 0.71; opacity: 0.71;">{{ one_page.get_friends_count }} Page Friends</div>
+				</div>
 				<div class="one_page_name">{{ one_page.name }}</div>
-				<div style="display: inline-block; background: #F58; color: #FFF; padding: 4px 7px 2px 7px; margin: 4px; -moz-border-radius: 3px; border-radius: 3px;">{{ one_page.get_lovers_active_count }}</div> <span style="color: #F58">Loves</span>
-                {% if one_page.type == 'BS' %}
-                    <div class="one_page_love_limit">Loves left: {{ one_page.loves_limit }}</div>
+   				{% if request.user|check_pages_basics:one_page or request.user|check_pages_admins:one_page %}
+                <a href="{% url pages.views.settings slug=one_page.username %}">Settings<br />
+				{% if one_page.type == 'BS' %}
+                    <div class="one_page_love_limit">{{ one_page.loves_limit }} Loves Remaining</div>
+                {% endif %}</a> 
                 {% endif %}
-                <table width="100%" style="background: #F7F7F7; height: 17px;"><tr><td width="50%"><div >Friends: {{ one_page.get_friends_count }}</div></td><td width="50%">
-                <div >Pending: {{ one_page.get_community_requests_count }}</div></td></tr></table>
-				{% if request.user|check_pages_basics:one_page or request.user|check_pages_admins:one_page %}
-                <a href="{% url pages.views.settings slug=one_page.username %}">Settings</a> 
-                {% endif %}
+				<table width="100%" style="background: #F7F7F7; height: 17px; color: #888;"><tr><td>
+                	<div style="padding: 4px;">Pending Requests: {{ one_page.get_community_requests_count }} </div></td></tr></table>
+
             </div></div>
 		</div>
 	</div>
 
 {% endfor %}
-
 
 	<div style="position: absolute; right: -45px; top: 92px; width: 35px; z-index: 100; text-align: left;">
         
@@ -81,6 +84,6 @@
 
 </div>
 
-{% comment %} {% include "_chat.html" %} {% endcomment %}
+{% include "_chat.html" %}
 
 

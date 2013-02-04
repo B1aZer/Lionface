@@ -10,36 +10,31 @@
   {% endblock %}
   
 <div align="center">
+
+<table width="900" height="325">
+<tr><td width="450" height="325" align="left" valign="top" class="left_logo">
+				<div class="center_container" style="z-index: 999; position: relative;">
+					<table width="450" height="300"><tr><td align="center">
+      					<a href="{% url account.views.login %}" class="home_link">
+							<img src="{% media_url 'images/logo300.png' %}" border="0" width="112" style="position: relative; left: 8px;" />
+							<br />Lionface</a><br />
+							<span style="font-size: 7pt; color: #FFF; font-family; Tahoma;">v 1.1</span>
+					</td></tr></table>
+						<div class="next"><div style="position: relative; top: 3px;">The Next Generation in Social Networking</div><span style="font-size: 8pt; color: #CCC; position: relative; top: -3px;">Built in Python Django</span></div>
+						</div>	
+				</div>
+	</td><td width="450" height="325" align="right" valign="top" class="left_logo" style="background: #FFF;">
+          {% include "account/signup.html" %}
+	</td></tr>
+</table>
+
   <div id="center_box">
     <div class="content_area">
 
 <a href="http://www.lionface.org/hannah/"><div class="credit">Photography: Hannah Young</div></a>
-<table width="900" height="700"><tr><td width="500" align="left" valign="top" style="padding-top: 35px;">
-	
-			
-				<div class="center_container" style="z-index: 999;">
-					<table width="100%" height="300" style="position: relative;"><tr><td align="center">
-      					<a href="{% url account.views.login %}" class="home_link">
-							<img src="{% media_url 'images/logo300.png' %}" border="0" width="134" style="position: relative; left: 8px;" />
-							<br />Lionface</a><br /> <br />
-							<span style="color: #FFF; font-size: 17pt; letter-spacing: 1.25pt;">The Next Generation<br />in Social Networking</span>
-							<div class="built_for" >
-							Lionface is a back-to-basics social place to make new friends..</div>
-					</td></tr></table>
-				</div>
-			
-	</div>
-</td><td width="400" align="right" valign="top" style="padding-top: 35px;">
-			<div class="create_header">Create an Account</div>
-          {% include "account/signup.html" %}
-			<span style="font-size: 8pt; display: block; color: #FFF; text-align: left; padding: 17px 0 0 33px;">Built in Python Django</span>
-</td></tr></table>
+<table width="900" height="525">
 
-    </div>
-  </div>
-
-
-
+<tr><td valign="bottom" colspan="2" align="center" height="525">
 	<div class="enabled_table">
 		<div id="lionface" class="enabled_container public_link"><div class="enabled">Lionface</div></div>
 		<div id="nonprofits" class="enabled_container public_link"><div class="enabled">Nonprofits</div></div>
@@ -48,8 +43,15 @@
 		<div id="followers" class="enabled_container public_link"><div class="enabled">+ Followers</div></div>
 		<div id="dos" class="enabled_container public_link" ><div class="enabled">Degree of Separation</div></div>
 		<div id="albums" class="enabled_container public_link"><div class="enabled">Albums</div></div>
-
 	</div>
+</td></tr></table>
+
+    </div>
+  </div>
+
+
+
+
 	<div class="enabled_results" style="display: none; padding: 30px 10px;">
 	</div>	
 </div>

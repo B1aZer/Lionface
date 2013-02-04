@@ -1,0 +1,10 @@
+{% extends 'chat/messages.html' %}
+        {% block messages %}
+        <div class="message_content" style="padding: 8px; border-bottom: 1px solid #CCC; max-height: 230px;">
+			<div style="filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50); -moz-opacity: 0.50; opacity: 0.50;">
+        {% for message in messages %}
+        {% include 'chat/history_message.html' %}
+        {% endfor %}
+			</div>
+        </div>
+        {% endblock %}

@@ -562,3 +562,19 @@ def render_item_type(context, item):
         return render_to_string('pages/pages_loves_one.html', {'page': item}, context)
     else:
         return render_to_string('post/item_loves.html', {'item': item , 'page_type':'news_feed'}, context)
+
+
+@register.simple_tag(takes_context=True)
+def get_online_users(context, as_tag, as_name):
+    #from account.models import UserProfile
+    from chat import redis_connection as redis
+    user = context.get('user')
+    #users = UserProfile.objects.get_online_users()
+    users = list(redis.get_active_users())
+    online_friends = []
+    friends = user.get_friends()
+    for friend in friends:
+        if friend in users:
+            online_friends.append(friend)
+    context[as_name] = online_friends
+    return ''

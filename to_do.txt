@@ -1,5 +1,8 @@
 #smileys
 #administration
+#
+redis takes too much memory
+memcache ?
 
 gunicorn --worker-class socketio.sgunico.GeventSocketIOWorker wsgi:app
 

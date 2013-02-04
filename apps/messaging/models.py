@@ -11,6 +11,7 @@ class Messaging(models.Model):
     content = models.TextField()
     read = models.BooleanField(default=False)
     viewed = models.BooleanField(default=False)
+    in_chat = models.BooleanField(default=False)
 
     def mark_read(self):
         self.read = True

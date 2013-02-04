@@ -1,28 +1,25 @@
-<div style="position: fixed; left: 5px; bottom: 2px; z-index: 99999;">
-<div class="chat" onClick="ShowContent('online_list'); return false;">
-	<table width="100%"><tr><td><div class="online"></div> Online <span style="font-size: 9pt; color: #999;">(3)</span></td>
-		<td align="right"><span class="chat_off">Turn Off</span>
-	</td></tr></table>
-</div>
-<div class="chat" onClick="ShowContent('user_chat'); return false;">
-	<table width="100%"><tr><td><div class="online"></div> User Full Name</td>
-		<td align="right"><span class="chat_off">Close</span>
+{% load format_results %}
+{% get_online_users 'as' 'online_user_list' %}
+{% include 'chat/message_yours_first.html' %}
+{% include 'chat/message_yours_noreply.html' %}
+<div id="main_chat_container">
+<div style="position: fixed; left: 5px; bottom: 2px; z-index: 99999;" id="names_chat_container">
+<div id="chat_id" class="chat">
+    <table width="100%"><tr><td><div class="offline"></div> <span id="chat_text" class="offline_text">Offline</span> <span id="online_count" style="font-size: 9pt; color: #999;">{% if request.user in online_user_list %} {{ online_user_list|length|add:-1 }} {% else %} {{ online_user_list|length }} {% endif %}</span></td>
+		<td align="right"><span class="chat_off turn_off">Turn On</span>
 	</td></tr></table>
 </div>
 </div>
 
-<div class="chat_container" id="online_list" style="display: none;">
+<div class="chat_container" id="online_list" style="display: none; width: 200px; height: auto; max-height: 85%;">
 	<ul>
-		<li><div class="online"></div> User Full Name</li>
-		<li><div class="online"></div> User Full Name</li>
-		<li><div class="online"></div> User Full Name</li>
+        {% for user in online_user_list %}
+        {% if user != request.user %}
+        <li id="{{ user.username }}"><div class="online"></div> {{ user.get_full_name }}</li>
+        {% endif %}
+        {% endfor %}
 	</ul>
 </div>
 
-<div class="chat_container" style="left: 210px; max-height: 275px; display: none;" id="user_chat">
-	<div style="padding: 8px; border-bottom: 1px solid #CCC;">
-	<a href="#">User Full Name</a>: content content content content content content content content content content content content <br />
-		 content content content content content content content content 
-	</div>
-	<input type="text" class="chat_enter" />
+
 </div>
