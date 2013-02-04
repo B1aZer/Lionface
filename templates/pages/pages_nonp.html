@@ -14,12 +14,14 @@
         <tr class="category_{{ cat|getcatnumnonp }}{% if forloop.counter > 1 %} hidden_row{% else %} page_row{% endif %}">
         {% for page in row %}
             <td align="left" style="position: relative;" width="200">
+				<div style="display: block; width: 100%; height: 100%; position: relative;">
                 {% if page.type == 'BS' %}
                 <a href="{% url business-page slug=page.username %}"> <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="200" height="200"  /></a>
                 {% else %}   
                 <a href="{% url nonprofit-page slug=page.username %}"> <img src="{{ page.get_thumb }}" alt="{{page.id}}" width="200" height="200"  /></a>
                 {% endif %}
-				<div class="page_setting_love" style="position: absolute; right: 10px; bottom: 5px;">{{ page.get_loves }} Loves</div>
+				<div class="page_setting_love" style="position: absolute; right: 10px; bottom: 0px;">{{ page.get_loves }} Loves</div>
+				</div>
             </td>
         {% endfor %}
         </tr> 

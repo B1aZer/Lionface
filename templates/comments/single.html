@@ -1,7 +1,7 @@
 {% load format_results %}
 {% if comment.user.id not in request.user.get_blocked_ids or request.user.is_anonymous %}
 <div class="comment_list" id="comment_{{ comment.id }}">
-        <div  onMouseOver="ShowContent('z{{ comment.id }}');ShowContent('p{{ comment.id }}'); return false;" onMouseOut="HideContent('z{{ comment.id }}');HideContent('p{{ comment.id }}'); return false;">
+        <div  onMouseOver="ShowContent('z{{ comment.id }}');" onMouseOut="HideContent('z{{ comment.id }}');">
             <dt id="c{{ comment.id }}">
             <table width="100%">
                 <tr>

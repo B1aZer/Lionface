@@ -179,6 +179,11 @@ a.hide_feed:hover, a.unfollow_feed:hover {
 	color: #F58;
 }
 
+.loved_users_list {
+	padding: 6px 0 4px 0;
+	font-size: 10pt;
+}
+
 .no_posts, .notif_land {
 	display: block;
 	width: 100%;
@@ -377,8 +382,6 @@ a.coomments_see_more:link {
 	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
 	margin: 10px 0 5px 0;
-	-moz-box-shadow: 0 4px 8px -4px #777;
-	box-shadow: 0 4px 8px -4px #777;
 }
 
 .post_feature_container {
@@ -422,7 +425,7 @@ a.coomments_see_more:link {
 }
 
 .post_feature_sub {
-	background: #FFF; color: #333; padding: 4px 4px 2px 4px; -moz-border-radius: 3px; border-radius: 3px; margin: 2px;"
+	background: #FFF; color: #333; padding: 4px 4px 2px 4px; -moz-border-radius: 3px; border-radius: 3px; margin: 2px;
 }
 
 a.post:link, a.post:active, a.post:visited, .submit_comment, .send {
@@ -647,7 +650,7 @@ a.profile_btn:hover {
 	font-family: Tahoma, "Kievit-Custom";
 	padding: 4px 0 4px 0px;
 	margin: 3px 0;
-	font-size: 10pt;
+	font-size: 13px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	line-height: 125%;
@@ -678,7 +681,14 @@ a.profile_btn:hover {
 }
 
 .post_option:hover {
-	background: #FFF;
+	background: #fafafa; /* Old browsers */
+	background: -moz-linear-gradient(top, #fafafa 0%, #eeeeee 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	cursor: pointer;
@@ -703,9 +713,6 @@ a.profile_btn:hover {
 	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
 	-moz-border-radius: 5px; border-radius: 5px;
-	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
-	-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
-	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
 	z-index: 2 !important;
 }
 
@@ -714,36 +721,6 @@ a.profile_btn:hover {
 	width: 600px;
 	height: 100px;
 	z-index: 999;
-}
-
-#postbox_shadow:before, #postbox_shadow:after
-{
-    position: absolute;
-    width: 285px;
-    height: 10px;
-    content: ' ';
-    right: 15px;
-    bottom: 22px;
-    background: transparent;
-    -webkit-transform: skew(-2deg) rotate(-2deg);
-    -moz-transform: skew(-2deg) rotate(-2deg);
-    -ms-transform: skew(-2deg) rotate(-2deg);
-    -o-transform: skew(-2deg) rotate(-2deg);
-    transform: skew(-2deg) rotate(-2deg);
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-    z-index: -1;
-}
-#postbox_shadow:after
-{
-    right: auto;
-    left: 15px;
-    -webkit-transform: skew(2deg) rotate(2deg);
-    -moz-transform: skew(2deg) rotate(2deg);
-    -ms-transform: skew(2deg) rotate(2deg);
-    -o-transform: skew(2deg) rotate(2deg);
-    transform: skew(2deg) rotate(2deg);
 }
 
 /* css for images from feed's post */
@@ -755,16 +732,23 @@ a.profile_btn:hover {
 	position: absolute; top: 1px; left: 66px; display: block; width: 130px; height: 65px; background: #FFF; z-index: 999; display: none;
 }
 .image_album.feed {
-	-webkit-background-size: 158px 158px !important;
-	-moz-background-size: 158px 158px !important;
-	background-size: 158px 158px;
- 	width: 158px;
- 	height: 158px;
+	-webkit-background-size: 175px 175px !important;
+	-moz-background-size: 175px 175px !important;
+	background-size: 175px 175px;
+ 	width: 175px;
+ 	height: 175px;
  	border: 1px solid #E7E7E7;
 	position: relative;
-	top: -5px;
+	top: -8px;
 	z-index: 0;
-	margin: 5px;
+	margin: 0;
+	padding: 0;
+}
+
+.album_shadow.feed {
+	padding: 0px;
+	margin: 0px;
+	background: #FFF;
 }
 
 .image_container.feed ul {
@@ -777,8 +761,10 @@ a.profile_btn:hover {
 
 .image_container.feed ul li {
 	/*float: left;*/
-	width: 170px;
-	height: 160px;
+	width: 175px;
+	height: 175px;
+	margin-right: 3px;
+	margin-top: 2px;
 }
 
 #image_settings.feed {
@@ -1009,7 +995,7 @@ a.profile_btn:hover {
 
 .album_shadow {
 	position: relative;
-	margin: 0 4px 8px 4px;
+	margin: 4px 4px 8px 4px;
 	padding: 4px 0px;
 	borde: 1px solid #DDD;
 	background: #EEE;
@@ -1480,11 +1466,8 @@ a.profile_btn:hover {
 	padding: 15px 20px 10px 20px;
 	margin: 0 0 20px 0;
 	background-color: #F7F7F7;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	-moz-box-shadow: 0px 4px 10px -6px #AAA;
-	box-shadow: 0px 4px 10px -6px #AAA;
 	position: relative;
+	-moz-border-radius: 2px; border-radius: 2px;
 }
 
 .comment {
@@ -1505,11 +1488,10 @@ a.profile_btn:hover {
 
 
 .comment_thumbnail {
-	position: absolute; left: -76px; top: 0px;
+	position: absolute; left: -76px; top: -4px;
 	width: 40px;
 	height: 40px;
 	background: #F7F7F7;
-	display: none;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	border: 1px solid #EEE;
@@ -1813,7 +1795,7 @@ a.send_message:link, a.send_message:active, a.send_message:visited {
 	padding: 15px 7px 14px 8px;
 	-mox-border-radius: 3px;
 	border-radius: 3px;
-	position: relative; top: 0px;
+	position: relative; top: -1px;
 	text-decoration: none;
 }
 
@@ -1860,7 +1842,7 @@ a.send_message:hover {
 
 .left { float: left; color: #999; display: block; }
 .right { float: right; position: relative; }
-.center { text-align: center; position: relative; left: 0px; top: 0px; width: 900px; }
+.center { text-align: center; position: relative; left: 0px; top: -4px; width: 900px; }
 
 .left_col {
   float: left;

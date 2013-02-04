@@ -75,6 +75,7 @@
             <tr class="category_{{ cat|getcatnumbusn }}{% if forloop.counter > 1 %} hidden_row{% else %} page_row{% endif %}">
                 {% for page in row %}
                 <td style="position: relative;">
+				<div style="display: block; width: 100%; height: 100%; position: relative;">
                     {% if forloop.parentloop.counter <= 1 %}
                         {% if forloop.counter == 1 %}
                             {% if page.type == 'BS' %}
@@ -120,7 +121,8 @@
                             </a>
                         {% endif %}
                     {% endif %}
-					<div class="page_setting_love" style="position: absolute; right: 10px; bottom: 5px;">{{ page.get_loves }} Loves</div>
+					<div class="page_setting_love" style="position: absolute; right: 10px; bottom: 0px;">{{ page.get_loves }} Loves</div>
+					</div>
                 </td>
                 {% endfor %}
             </tr>
