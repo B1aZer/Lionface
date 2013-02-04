@@ -28,13 +28,13 @@
 
 {% block left_col %}
 <!--onclick="window.open('/{{ profile_user.photo }}');return false;"-->
-<div class="noPhoto_shadow">
+<div class="noPhoto_shadow" onMouseOver="ShowContent('view_album'); return false;" onMouseOut="HideContent('view_album'); return false;">
 <div {% if profile_user|check_profile_image_visibility:request.user %}
 onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;"
 {% endif %}
-	class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat;">
+	class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat; {% if profile_user|check_profile_image_visibility:request.user %}cursor: pointer;{% endif %}">
 		{% if request.user == profile_user %}
-		<div style="position: relative; top: 165px; display: block; width: 200px;" align="center">
+		<div style="position: relative; top: 165px; left: -1px; display: block; width: 200px;" align="center">
 			<a id="upload_picture" class="upload" style="display:none;">Upload</a>
 			<a href="{% url profile.views.images_reset username=request.user.username %}" id="reset_picture" class="upload" style="display:none; color:#555;">Clear</a>
 		</div>
@@ -87,60 +87,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 <br />
 
     {% if profile_user|check_profile_bio:request.user %}
-    {% include "profile/profile_relations.html" %}
 
-    {% if profile_user == request.user %}
-    <a id="show_birth_select" href="#" class="bio_title" >Birthday</a>
-    {% elif profile_user.get_birth_date %}
-    <span style="font-weight: bold; color: #555;">Birthday</span>
-    {% else %}
-    {% endif %}
-
-<div style="position: relative;">
-<div class="profile_edit" id="left_birth">
-    <div>
-<table><tr><td>
-    <select class="birth_select birth_day_select" style="display:none"></select>
-</td><td>
-    <select class="birth_select birth_month_select" style="display:none"></select>
-</td><td>
-    <select class="birth_select birth_year_select" style="display:none"></select>
-</td></tr></table>
-    <div class="sublink"><a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none" >Save</a>
-    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none" >Cancel</a></div>
-    </div>
-</div>
-</div>
-
-    <span>
-        <span id="birth_day_id">{{ profile_user.get_birth_date|date:"d" }}</span>
-        <span id="birth_month_id" class="{{ profile_user.get_birth_date|date:"m" }}" >{{ profile_user.get_birth_date|date:"M" }}</span>
-        <span id="birth_year_id">{{ profile_user.get_birth_date|date:"Y" }}</span>
-    </span>
-
-<br /><br />
-
-    {% if profile_user == request.user %}
-    <a id="show_url_input" href="#" class="bio_title">Website</a>
-    {% elif profile_user.get_website %}
-    <span style="font-weight: bold; color: #555;">Website</span>
-    {% else %}
-    {% endif %}
-    <div>
-
-<div style="position: relative;">
-<div class="profile_edit" id="left_web">
-    <input id="url_input" class="bio_website" type="text" style="display:none; width: 165px;"></input>
-    <div class="url_errors" style="display:none">URL must contain http://</div><br />
-    <div class="sublink"><a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
-    <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a></div>
-    </div>
-</div>
-</div>
-
-    <span id="url_container">{{ profile_user.get_website|safe }}</span>
-
-<br /><br />
 
     {% if profile_user == request.user %}
     <a id="show_bio_info" href="#" class="bio_title">Biography</a>
@@ -219,12 +166,13 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 									<span class="post_feature_container">
 										<span onMouseOver="ShowContent('tags'); return false;" onMouseOut="HideContent('tags'); return false;">#</span>
 										<span onMouseOver="ShowContent('embed'); return false;" onMouseOut="HideContent('embed'); return false;">embed</span>
-										<span  onMouseOver="ShowContent('href'); return false;" onMouseOut="HideContent('href'); return false;">href</span></span>
-										<div class="attach attaching_class">Attach</div>
+										<span onMouseOver="ShowContent('href'); return false;" onMouseOut="HideContent('href'); return false;">href</span></span>
+										<div class="attach attaching_class" onMouseOver="ShowContent('attach'); return false;" onMouseOut="HideContent('attach'); return false;">Attach</div>
 										<div style="position: relative; display: inline-block;">
-											<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol (#) to create tags.</div>
-											<div class="post_feature" style="display: none;" id="embed">Copy and paste links from sites like Youtube and Vimeo and videos will embed once you submit your post. We also support TED.com videos.</div>
+											<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol <span class="post_feature_sub"><span style="font-size: 11pt; position: relative; left: 0px; top: 1px;">#</span></span> to create tags.</div>
+											<div class="post_feature" style="display: none;" id="embed">Copy and paste links from sites like Youtube and Vimeo and videos will automatically embed once you submit your post. We also support TED.com videos.</div>
 											<div class="post_feature" style="display: none;" id="href">Use standard HTML a href code to create links within your post.</div>
+											<div class="post_feature" style="display: none;" id="attach">You can attach up to <span class="post_feature_sub">21</span> images per post.</div>
 										</div>
 								<a href="#" class="post" id="postboxbutton">Post</a>
 							</td>

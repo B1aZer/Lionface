@@ -101,7 +101,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'current_user.middleware.CurrentUserMiddleware',
-    'account.middleware.TimezoneMiddleware'
+    'account.middleware.TimezoneMiddleware',
+    'account.middleware.ActiveUserMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -164,6 +165,7 @@ INSTALLED_APPS = (
     'agenda',
     'ecomm',
     'schools',
+    'chat',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -222,13 +224,16 @@ MEDIA_BUNDLES = (
         'js/jquery-1.8.0.min.js',
         'js/jquery.metadata.js',
         #'js/jquery.autosize-1.13.min.js',
-        'js/jquery.autosize-1.15.min.js',
+        'js/jquery.autosize-1.15.4.js',
         #'js/jquery-ui-1.9.1.min.js',
         'js/jquery-ui-1.8.24.min.js',
+        'js/handlebars-1.0.rc.1.min.js',
         'js/binaryajax.js',
         'js/exif.js',
         'js/load_image_mod.js',
         'js/jquery.form.js',
+        'js/socket.io.js',
+        'js/chat.js',
         'js/site.js',
     ),
     ('user.js',
@@ -320,6 +325,8 @@ SITE_ID = 1
 #BROKER_URL = "django://"
 
 ACCOUNT_ACTIVATION_DAYS = 7
+# Number of seconds of inactivity before a user is marked offline
+USER_ONLINE_TIMEOUT = 300
 
 if os.environ.get('production'):
     try:
@@ -338,6 +345,12 @@ ABSOLUTE_URL_OVERRIDES = {
 
 CELERY_QUEUES = {"lionface": {"exchange": "lionface", "binding_key": "lionface"}}
 CELERY_DEFAULT_QUEUE = "lionface"
+
+WEBSOCKET_REDIS_BROKER = {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 0
+}
 
 from celery.schedules import crontab
 from datetime import timedelta

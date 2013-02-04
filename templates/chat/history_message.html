@@ -1,0 +1,8 @@
+{% if message %}
+{% ifchanged message.user %}
+<div style="padding-top: 8px; margin-top: 4px; border-top: 1px solid #DDD;">
+    <a href="{{ message.user.get_absolute_url }}" {% if message.user == current_user %} {% else %} style="color: #888;" {% endif %}>{{ message.user.get_full_name }} </a>{% endifchanged %}<div> <span class="user_content message_from_{{ message.user.username }}">{{ message.content }}</span> </div>
+{% ifchanged message.user %}
+</div>
+{% endifchanged %}
+{% endif %}
