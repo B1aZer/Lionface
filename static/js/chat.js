@@ -54,7 +54,8 @@ LionFace.Chat.prototype = {
                     var last_el = $('#message_' + username).find('div:last')
                     if (last_el.length) {
                         last_el = last_el.get(0);
-                        last_el.scrollIntoViewIfNeeded(true);
+                        //last_el.scrollIntoView(true);
+                        last_el.parentNode.scrollTop = last_el.offsetTop;
                     }
                 }
             });
@@ -195,7 +196,8 @@ LionFace.Chat.prototype = {
                     var last_el = $('#message_' + data.username).find('div:last')
                     if (last_el.length) {
                         last_el = last_el.get(0);
-                        last_el.scrollIntoViewIfNeeded(true);
+                        //last_el.scrollIntoView(true);
+                        last_el.parentNode.scrollTop = last_el.offsetTop;
                     }
                 }
         });
@@ -236,7 +238,8 @@ LionFace.Chat.prototype = {
                 var last_el = $('#message_' + username).find('div:last')
                 if (last_el.length) {
                     last_el = last_el.get(0);
-                    last_el.scrollIntoViewIfNeeded(true);
+                    //last_el.scrollIntoView(true);
+                    last_el.parentNode.scrollTop = last_el.offsetTop;
                 }
                 $this.val('');
                 return false;
@@ -274,7 +277,9 @@ LionFace.Chat.prototype = {
                 var last_el = $('#message_' + username).find('div:last')
                 if (last_el.length) {
                     last_el = last_el.get(0);
-                    last_el.scrollIntoViewIfNeeded(true);
+                    //last_el.scrollIntoView(true);
+                    //parentNode.scrollTop
+                    last_el.parentNode.scrollTop = last_el.offsetTop;
                 }
             }
             else {
