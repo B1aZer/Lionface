@@ -47,7 +47,7 @@ def load_history(request):
     try:
         user_chat = Chat.objects.get(user=user)
     except:
-        return False
+        raise Http404
     """
     friends = user_chat.tabs_to.replace('[','') \
                                 .replace(']','') \
