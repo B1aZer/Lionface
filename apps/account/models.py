@@ -170,7 +170,7 @@ class UserProfile(User):
         if not self.is_visible:
             return False
         if self.last_seen():
-            now = dateclass.datetime.now()
+            now = timezone.now()
             if now > self.last_seen() + dateclass.timedelta(
                          seconds=settings.USER_ONLINE_TIMEOUT):
                 return False
