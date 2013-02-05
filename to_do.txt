@@ -2,7 +2,7 @@
 #administration
 #
 
-history strange open
+maybe rebuild index on cron ?
 
 redis takes too much memory
 memcache ?

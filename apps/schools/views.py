@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q, Count
 
 try:
     import json
@@ -14,7 +14,7 @@ except ImportError:
 from account.models import UserProfile
 from .models import Alum, School
 
-SCHOOLS_PER_PAGE = 25
+SCHOOLS_PER_PAGE = 10
 
 
 @login_required
@@ -37,6 +37,9 @@ def home(request):
                                      | Q(city__icontains=bit)
                                      | Q(state__icontains=bit)
                                      | Q(country__icontains=bit))
+
+    school_list = school_list.annotate(num_al=Count('alumni')) \
+                .order_by('-num_al')
 
     paginator = Paginator(school_list, SCHOOLS_PER_PAGE)
 
