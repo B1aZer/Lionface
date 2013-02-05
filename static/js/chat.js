@@ -15,6 +15,7 @@ LionFace.Chat.prototype = {
 
     bind_chat : function() {
 
+        var cont_width = 234;
         var socket = io.connect("/chat");
         var connected = false;
         auto_size();
@@ -22,7 +23,7 @@ LionFace.Chat.prototype = {
         var source   = $("#message-template").html();
         var template = Handlebars.compile(source);
         
-        source   = $("#message-template-noreply").html();
+        source = $("#message-template-noreply").html();
         var template2 = Handlebars.compile(source);
 
         function auto_size() {
@@ -50,6 +51,18 @@ LionFace.Chat.prototype = {
                     var username = $(e).attr('id').replace('name_','');
                     $('#message_' + username).show();
                     $(e).data('toggled',true);
+                    // left position
+                                var count = i;
+                                var opnind = $(e).index('.tab_opened');
+                                var opened_count = $('.tab_opened:lt('+opnind+')').length;
+                                count = count - opened_count;
+                                //var left = (cont_width + 16 + 5) * count + 210;
+                                var left = (cont_width - 50 + 16 + 5) * count + (cont_width + 16 + 5) * opened_count + 210;
+                                $('#message_'+username).css('left',left);
+
+                    // width
+                    $(e).width(cont_width);
+                                
                     // scroll
                     var last_el = $('#message_' + username).find('div:last')
                     if (last_el.length) {
@@ -66,8 +79,8 @@ LionFace.Chat.prototype = {
             var username = username || LionFace.User.username;
             var tabs = tabs || $('.chat_div');
             var users = [];
-            var user = {};
             tabs.each( function (i,e) {
+                var user = {};
                 //usernames.push( $(e).attr('id').replace('name_','') );
                 var username = $(e).attr('id').replace('name_','');
                 user['username']=username;
@@ -98,11 +111,8 @@ LionFace.Chat.prototype = {
                     if (data.status == 'OK') {
                         for (name in data) {
                             if (!$('#name_'+name).length) {
-                                var count = $('.user_conatiner').length;
-                                var left = 255 * count + 210;
                                 $('#names_chat_container').append(data[name].names);
                                 $('#main_chat_container').append(data[name].messages);
-                                $('#message_'+name).css('left',left);
                                 socket.emit('load history', name); 
                                 auto_size();
                                 toggle_tabs();
@@ -162,11 +172,11 @@ LionFace.Chat.prototype = {
                 //$('.user_content').append(data.message + "<br/>");
                 console.log(data);
                 if (!$('#message_'+data.username).length) {
-                    var count = $('.user_conatiner').length;
-                    var left = 255 * count + 210;
+                    //var count = $('.user_conatiner').length;
+                    //var left = 255 * count + 210;
                     $('#names_chat_container').append(data.names);
                     $('#main_chat_container').append(data.messages);
-                    $('#message_'+data.username).css('left',left);
+                    //$('#message_'+data.username).css('left',left);
                     //blink
                     if (!$('#name_'+data.username).hasClass('new_chat_message') &&
                         !$('#message_'+data.username).find('.kind_start').length) {
@@ -275,10 +285,23 @@ LionFace.Chat.prototype = {
             var username = $(this).attr('id').split('_')[1];
             var toggled = $this.data('toggled');
             if (!toggled) {
-                $('#message_' + username).show();
+                $this.width(cont_width);
+                var mes_order = $('#message_' + username).index('.user_conatiner');
+                var $others = $('.user_conatiner:gt('+mes_order+')');
+                //var left = $('#message_' + username).css('left');
+                // left = parseInt(left) - ( count * 50 )
+                $others.css('left',"+=50");
                 $this.addClass('tab_opened');
                 $this.data('toggled',true);
                 $this.removeClass('new_chat_message');
+                var order = $this.index()-1;
+                var count_c = $('.chat_div:lt('+order+')').length;
+                var opncnt = $this.index('.tab_opened');
+                var opened_count = $('.tab_opened:lt('+opncnt+')').length;
+                var count_o = count_c - opened_count;
+                var left = (cont_width - 50 + 16 + 5) * count_o + (cont_width + 16 + 5) * opened_count + 210;
+                $('#message_' + username).css('left',left);
+                $('#message_' + username).show();
                 // scroll
                 var last_el = $('#message_' + username).find('div:last')
                 if (last_el.length) {
@@ -289,6 +312,10 @@ LionFace.Chat.prototype = {
                 }
             }
             else {
+                $this.width(cont_width-50);
+                var mes_order = $('#message_' + username).index('.user_conatiner');
+                var $others = $('.user_conatiner:gt('+mes_order+')');
+                $others.css('left',"-=50");
                 $('#message_' + username).hide();
                 $this.removeClass('tab_opened');
                 $this.data('toggled',false);
@@ -347,12 +374,13 @@ LionFace.Chat.prototype = {
             if (!connected) { return; }
             var div = $(this).parents('.chat_div');
             var username = $(this).attr('id');
-            div.fadeOut( function() { $(this).remove(); save_history(); }); 
-            $('#message_' + username).remove();
-            $('.user_conatiner').css( 'left', function(index, style) {
+            var indx = $('#message_' + username).index('.user_conatiner');
+            $('.user_conatiner:gt('+indx+')').css( 'left', function(index, style) {
                 var value = parseInt(get_int(style));
                 return value - 255;
             });             
+            div.fadeOut( function() { $(this).remove(); save_history(); }); 
+            $('#message_' + username).remove();
             socket.emit('close chat', username, LionFace.User.username);
         });
 
