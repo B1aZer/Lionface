@@ -1,0 +1,1 @@
+gunicorn --worker-class socketio.sgunicorn.GeventSocketIOWorker -b 0.0.0.0:8887 --workers 3 wsgi:application
