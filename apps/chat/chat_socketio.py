@@ -50,6 +50,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             self.broadcast_event_not_me('add', username, name)
             self.spawn(self.listener, username)
             #self.join(room)
+            self.emit('joined', True)
 
     def on_unjoin(self, username):
         self.log("disconnected from %s" % username)

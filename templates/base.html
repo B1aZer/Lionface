@@ -20,6 +20,7 @@
     {% else %}
          LionFace.User.is_anonymous = false;
          LionFace.User.home = "{{ request.user.get_absolute_url }}";
+         LionFace.User.friends = {{ request.user.get_friends_usernames|safe }};
     {% endif %}
     {% if request.user.is_visible %}
          LionFace.User.is_visible = true;

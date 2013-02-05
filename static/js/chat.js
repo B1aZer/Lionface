@@ -122,20 +122,25 @@ LionFace.Chat.prototype = {
                 $('.turn_off').html('Turn Off');
                 socket.emit('join', LionFace.User.username, LionFace.User.name); 
                 connected = true;
-                load_history();
             }
+        });
+
+        socket.on('joined', function () {
+                load_history();
         });
 
         socket.on('add', function (username, name) {
             // socketio bug (not me broadcast)
             if (username == LionFace.User.username) { return; }
-            var user = '<li id="'+username+'"><div class="online"></div> '+name+'</li>';
-            if (!$('#online_list').find('#'+username).length) {
-                $('#online_list').find('ul').append($(user).hide().fadeIn());
-                var count  = parseInt($('#online_count').html()) + 1;
-                $('#online_count').html(count);
+            if ($.inArray(username, LionFace.User.friends) >= 0) {
+                var user = '<li id="'+username+'"><div class="online"></div> '+name+'</li>';
+                if (!$('#online_list').find('#'+username).length) {
+                    $('#online_list').find('ul').append($(user).hide().fadeIn());
+                    var count  = parseInt($('#online_count').html()) + 1;
+                    $('#online_count').html(count);
+                }
+                $('#name_'+username).find('.offline').removeClass('offline').addClass('online');
             }
-            $('#name_'+username).find('.offline').removeClass('offline').addClass('online');
         });
 
         socket.on('remove', function (username) {

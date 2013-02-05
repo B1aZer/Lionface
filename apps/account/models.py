@@ -18,6 +18,8 @@ from post.utils import QuerySetManager
 from images.fields import ImageWithThumbField
 from chat import redis_connection as redis
 
+import json
+
 
 FILTER_TYPE = (
     ('F', 'Friend Feed'),
@@ -170,7 +172,7 @@ class UserProfile(User):
         if not self.is_visible:
             return False
         if self.last_seen():
-            now = timezone.now()
+            now = dateclass.datetime.now()
             if now > self.last_seen() + dateclass.timedelta(
                          seconds=settings.USER_ONLINE_TIMEOUT):
                 return False
@@ -261,6 +263,11 @@ class UserProfile(User):
     def get_friends(self):
         blocked_ids = [x.id for x in self.get_blocked_self()]
         return self.friends.exclude(id__in=blocked_ids)
+
+    def get_friends_usernames(self):
+        blocked_ids = [x.id for x in self.get_blocked_self()]
+        friends = self.friends.exclude(id__in=blocked_ids)
+        return json.dumps([f.username for f in friends])
 
     def get_friends_count(self, user=None):
         blocked_id = [x.id for x in self.get_blocked()]
