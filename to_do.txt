@@ -1,6 +1,9 @@
 #smileys
 #administration
 #
+
+history strange open
+
 redis takes too much memory
 memcache ?
 
