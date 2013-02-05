@@ -359,6 +359,10 @@ CELERYBEAT_SCHEDULE = {
         "task": "search.tasks.UpdateSearchIndex",
         "schedule": timedelta(seconds=120),
     },
+    "rebuld_search_index": {
+        "task": "search.tasks.RebuildSearchIndex",
+        "schedule": timedelta(minutes=1440),
+    },
     "update_page_event": {
         "task": "pages.tasks.UpdatePageEvent",
         "schedule": timedelta(minutes=30),

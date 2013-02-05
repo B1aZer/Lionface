@@ -6,3 +6,8 @@ class UpdateSearchIndex(Task):
     def run(self, **kwargs):
         management.call_command('update_index', verbosity=0, interactive=False)
 tasks.register(UpdateSearchIndex)
+
+class RebuildSearchIndex(Task):
+    def run(self, **kwargs):
+        management.call_command('rebuild_index', verbosity=0, interactive=False)
+tasks.register(UpdateSearchIndex)

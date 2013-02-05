@@ -23,6 +23,7 @@ by writing blocks with arbitrary name
 {% endblock %}
 
 {% block community_button %}
+{% comment %}
 {% if current_user in page.get_lovers %}
 <a href="#" 
     {% if page.check_employees or page.check_interns or page.check_volunteers %}
@@ -31,5 +32,6 @@ by writing blocks with arbitrary name
     {% endif %}
     class="profile_btn" onClick="ShowContent('select_community_{{page.id}}'); return false;">+ Community</a><br />
 {% endif %}
+{% endcomment %}
 {% endblock %}
 

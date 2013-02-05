@@ -24,7 +24,11 @@ USER_DOING = 'u:%s:d'
 
 def get_online_now(user_id):
     from account.models import UserProfile
-    return UserProfile.objects.get(id=user_id or [])
+    try:
+        up = UserProfile.objects.get(id=user_id or [])
+    except:
+        up = []
+    return up
 
 def seen_user(user):
     """
@@ -47,12 +51,13 @@ def get_active_users(minutes_ago=5):
     for user_id, last_seen in reversed(r.zrangebyscore(ACTIVE_USERS, since_time,
                                                        'inf', withscores=True)):
         user = get_online_now(user_id)
-        if user.is_visible:
-            yield (
-                user
-                #{'id': int(user_id), 'username': r.get(USER_USERNAME % user_id)}
-                #datetime.datetime.fromtimestamp(int(last_seen)),
-            )
+        if user:
+            if user.is_visible:
+                yield (
+                    user
+                    #{'id': int(user_id), 'username': r.get(USER_USERNAME % user_id)}
+                    #datetime.datetime.fromtimestamp(int(last_seen)),
+                )
 
 def get_last_seen(user):
     last_seen = r.get(USER_LAST_SEEN % user.pk)
