@@ -134,13 +134,23 @@ LionFace.Chat.prototype = {
 
 
         socket.on('connect', function () {
-            if (LionFace.User.is_visible && !mobilecheck()) {
+            var mobile = mobilecheck();
+            if (LionFace.User.is_visible && !mobile) {
                 $('#chat_text').html('Online');
                 $('#chat_text').removeClass('offline_text').addClass('online_text');
                 $('#chat_text').parents('#chat_id').find('.offline').removeClass('offline').addClass('online');
                 $('.turn_off').html('Turn Off');
                 socket.emit('join', LionFace.User.username, LionFace.User.name); 
                 connected = true;
+            }
+            if (mobile) {
+                var dict = {'status':'offline'};
+                make_request({
+                    url: LionFace.User.chat_status_url,
+                    data: dict,
+                    callback: function(data) {
+                    }
+                });
             }
         });
 
@@ -364,34 +374,37 @@ LionFace.Chat.prototype = {
             var $this = $(this);
             var text = $('#chat_text');
             var data = {};
+            var mobile = mobilecheck();
             if (text.hasClass('offline_text')) {
                 data['status'] = 'online';
             }
             else {
                 data['status'] = 'offline';
             }
-            make_request({
-                url: LionFace.User.chat_status_url,
-                data: data,
-                callback: function(data) {
-                    if (data.status == 'OK') {
-                        if (text.hasClass('offline_text')) {
-                            text.html('Online');
-                            text.parents('#chat_id').find('.offline').removeClass('offline').addClass('online');
-                            text.removeClass('offline_text').addClass('online_text');
-                            $('.turn_off').html('Turn Off');
-                            socket.emit('join', LionFace.User.username, LionFace.User.name); 
-                        }
-                        else {
-                            text.html('Offline');
-                            text.parents('#chat_id').find('.online').removeClass('online').addClass('offline');
-                            text.removeClass('online_text').addClass('offline_text');
-                            $('.turn_off').html('Turn On');
-                            socket.emit('unjoin', LionFace.User.username); 
+            if (!mobile) {
+                make_request({
+                    url: LionFace.User.chat_status_url,
+                    data: data,
+                    callback: function(data) {
+                        if (data.status == 'OK') {
+                            if (text.hasClass('offline_text')) {
+                                text.html('Online');
+                                text.parents('#chat_id').find('.offline').removeClass('offline').addClass('online');
+                                text.removeClass('offline_text').addClass('online_text');
+                                $('.turn_off').html('Turn Off');
+                                socket.emit('join', LionFace.User.username, LionFace.User.name); 
+                            }
+                            else {
+                                text.html('Offline');
+                                text.parents('#chat_id').find('.online').removeClass('online').addClass('offline');
+                                text.removeClass('online_text').addClass('offline_text');
+                                $('.turn_off').html('Turn On');
+                                socket.emit('unjoin', LionFace.User.username); 
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         });
 
         // start new conversation
