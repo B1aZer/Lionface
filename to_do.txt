@@ -2,7 +2,7 @@
 #administration
 #
 
-mobile chat
+add hours + 16
 
 redis takes too much memory
 memcache ?

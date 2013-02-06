@@ -34,6 +34,7 @@
                 </div>
 				</td><td align="right" style="position: relative;">
                     {% block community_button %}
+                    {% if not page|show_connections:profile_user %}
 					<div id="comm_{{ page.id }}" style="display: none; position: absolute; right: 0px; top: 12px; padding: 10px 0px 10px 40px; background: #FFF;">
                     <a href="#" 
                         {% if page.check_employees or page.check_interns or page.check_volunteers %}
@@ -42,6 +43,7 @@
                         {% endif %}
                         class="profile_btn" onClick="ShowContent('select_community_{{page.id}}'); return false;" style="width: 75px;">+ Community</a><br />
 					</div>
+                    {% endif %}
                     {% endblock %}
                     {% for member in page|show_connections:profile_user %}
                     {% if profile_user|check_profile_eiv:request.user %} 
