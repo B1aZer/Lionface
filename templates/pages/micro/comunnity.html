@@ -5,6 +5,7 @@
     $('.interns_hidden').hide();
     $('.emloyees_hidden').hide();
     $('.volunteers_hidden').hide();
+    $('.members_hidden').hide();
     if (LionFace.User.is_anonymous) {
         $('#community_add_button').hide();
     }
@@ -87,7 +88,7 @@
                         
                         {% for employee in page.get_emloyees_ordered %}
                         <div class="friend_icon
-                            {% if forloop.counter > 10 %} 
+                            {% if forloop.counter > 8 %} 
                             emloyees_hidden
                             {% endif %}
                             ">
@@ -147,7 +148,7 @@
                         
                         {% for member in page.get_members_ordered %}
                         <div class="friend_icon
-                            {% if forloop.counter > 10 %} 
+                            {% if forloop.counter > 8 %} 
                             members_hidden
                             {% endif %}
                             ">
@@ -207,7 +208,7 @@
                         
                         {% for intern in page.get_interns_ordered %}
                         <div class="friend_icon
-                            {% if forloop.counter > 10 %} 
+                            {% if forloop.counter > 8 %} 
                             interns_hidden
                             {% endif %}
                             ">
@@ -266,7 +267,7 @@
                         
                         {% for volunteer in page.get_volunteers_ordered %}
                         <div class="friend_icon
-                            {% if forloop.counter > 10 %} 
+                            {% if forloop.counter > 8 %} 
                             volunteers_hidden
                             {% endif %}
                             ">
