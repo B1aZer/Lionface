@@ -2,7 +2,7 @@
 #administration
 #
 
-maybe rebuild index on cron ?
+mobile chat
 
 redis takes too much memory
 memcache ?
