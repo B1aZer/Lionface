@@ -15,7 +15,7 @@
 	<ul>
         {% for user in online_user_list %}
         {% if user != request.user %}
-        <li id="{{ user.username }}"><div class="online"></div> {{ user.get_full_name }}</li>
+        <li id="{{ user.username }}" class="online_username"><div class="online"></div> {{ user.get_full_name }}</li>
         {% endif %}
         {% endfor %}
 	</ul>

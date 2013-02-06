@@ -98,3 +98,18 @@ class LoadMessageHistory(Task):
             r.publish(user, serializers.serialize("json", messages))
         return True
 tasks.register(LoadMessageHistory)
+
+
+class PublishActiveUsers(Task):
+    def run(self, username, **kwargs):
+        try:
+            user_obj = UserProfile.objects.get(username = username)
+            friends = user_obj.get_friends()
+        except:
+            return False
+        active = list(get_active_users())
+        active = [u.username for u in active if u in friends]
+        r.publish(username, json.dumps({'active':active, 'type':'active'}))
+        return True
+tasks.register(PublishActiveUsers)
+

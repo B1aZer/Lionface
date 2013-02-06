@@ -5,7 +5,7 @@ from socketio.mixins import RoomsMixin, BroadcastMixin
 from socketio.sdjango import namespace
 
 
-from tasks import ProcessMessage, SaveMessageHistory
+from tasks import ProcessMessage, SaveMessageHistory, PublishActiveUsers
 #from .utils import redis_connection
 from django.conf import settings
 
@@ -51,6 +51,9 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             self.spawn(self.listener, username)
             #self.join(room)
             self.emit('joined', True)
+
+    def on_refresh_list(self, username):
+        PublishActiveUsers.delay(username)
 
     def on_unjoin(self, username):
         self.log("disconnected from %s" % username)
