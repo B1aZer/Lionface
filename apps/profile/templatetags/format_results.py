@@ -55,7 +55,7 @@ def format_tag(object, request):
                     result.append(item)
 
         if result:
-            result = sorted(result, key=lambda post: post.date, reverse=True)
+            result = sorted(result, key=lambda post: post.get_post().date, reverse=True)
         return render_to_string('search/_feed.html', {'items': result}, RequestContext(request))
     return ""
 

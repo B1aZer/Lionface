@@ -1,6 +1,7 @@
 #smileys
 #administration
-#
+
+check lionface tags
 
 add hours + 16
 
@@ -14,6 +15,7 @@ safari attach
 do not acount tags with less than 2 characters
 
 1Lion8face.
+mysql -h mydb.c9iodczmwien.us-east-1.rds.amazonaws.com -P 3306 -u root -p
 
 #now
 remove li from attached image on return

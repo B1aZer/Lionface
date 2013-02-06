@@ -18,3 +18,10 @@ class QuerySetManager(models.Manager):
         except AttributeError:
             return getattr(self.get_query_set(), attr, *args)
 
+def list_tags(content):
+    import re
+    #tags = [''.join(e for e in word[1:] if e.isalnum()) for word in content
+    # split string if non aplhabet
+    tags = [word[1:].split(re.sub('[\w]+', '', word[1:]) or ".", 1)[0] for word in content
+                    .split() if word.startswith('#')]
+    return tags

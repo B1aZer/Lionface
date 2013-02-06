@@ -39,6 +39,7 @@ from django.utils.safestring import mark_safe
 
 from images.models import Image, ImageComments
 from images.forms import ImageForm
+from post.utils import list_tags
 
 
 try:
@@ -615,7 +616,7 @@ def update(request):
                         break
 
                 #Tags
-                hashtags = [word[1:] for word in content.split() if word.startswith('#')]
+                hashtags = list_tags(content)
 
                 for hashtag in hashtags:
                     try:
@@ -673,7 +674,7 @@ def feedback(request):
                         break
 
                 #Tags
-                hashtags = [word[1:] for word in content.split() if word.startswith('#')]
+                hashtags = list_tags(content)
 
                 for hashtag in hashtags:
                     try:

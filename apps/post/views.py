@@ -29,6 +29,7 @@ from django.utils import timezone
 import datetime as dateclass
 
 from itertools import chain
+from .utils import list_tags
 
 
 try:
@@ -264,8 +265,7 @@ def save(request):
                 break
 
         #Tags
-        hashtags = [word[1:] for word in request.POST['content']
-                    .split() if word.startswith('#')]
+        hashtags = list_tags(request.POST['content'])
 
         for hashtag in hashtags:
             try:
