@@ -144,11 +144,11 @@ class Pages(models.Model):
     cover_photo = models.ImageField(upload_to="uploads/images", default='uploads/images/noCoverImage.png')
     photo = ImageWithThumbField(upload_to="uploads/images", default='uploads/images/noProfilePhoto.png')
     # members
-    has_employees = models.BooleanField(default=True)
+    has_employees = models.BooleanField(default=False)
     text_employees = models.TextField(blank=True)
-    has_interns = models.BooleanField(default=True)
+    has_interns = models.BooleanField(default=False)
     text_interns = models.TextField(blank=True)
-    has_volunteers = models.BooleanField(default=True)
+    has_volunteers = models.BooleanField(default=False)
     text_volunteers = models.TextField(blank=True)
     members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
     # calendar
