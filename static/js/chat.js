@@ -187,7 +187,7 @@ LionFace.Chat.prototype = {
         // resreshing online list
         setInterval(function() {
             socket.emit('refresh list', LionFace.User.username); 
-        }, 10000);
+        }, 120000);
 
         socket.on('chat', function (data) {
             // removing offline users
