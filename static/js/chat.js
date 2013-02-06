@@ -141,7 +141,6 @@ LionFace.Chat.prototype = {
                 $('#chat_text').parents('#chat_id').find('.offline').removeClass('offline').addClass('online');
                 $('.turn_off').html('Turn Off');
                 socket.emit('join', LionFace.User.username, LionFace.User.name); 
-                connected = true;
             }
             if (mobile) {
                 var dict = {'status':'offline'};
@@ -155,6 +154,7 @@ LionFace.Chat.prototype = {
         });
 
         socket.on('joined', function () {
+                connected = true;
                 load_history();
         });
 
