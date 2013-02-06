@@ -21,7 +21,7 @@
                                 
                                 {% if not page|show_connections:request.user %}
                                 <a id="community_add_button" 
-                                    {% if page.check_employees or page.check_interns or page.check_volunteers %}
+                                    {% if page.check_employees or page.check_interns or page.check_volunteers or page.check_members %}
                                     {% else %}
                                     style="display:none;" 
                                     {% endif %}
@@ -120,6 +120,66 @@
                         </table>
                     </div>
                       
+                    {% endif %}
+                </div><br /><br />
+                {% if request.user|check_pages_community:page %}
+                <input id="members_checkbox" type="checkbox" class="community_checkbox" {% if page.check_members %} checked {% endif %}/> 
+                {% endif %}
+                    {% if page.check_members or request.user|check_pages_community:page %}
+                        {% if page.type == 'BS' %}
+                            <span style="color:#3ea8d2; font-size: 16pt;">Members</span>
+                        {% else %}   
+                            <span style="color:#909E4A; font-size: 16pt;">Members</span>
+                        {% endif %}
+                        <span style="color: #999; font-size: 9pt; margin: 4px;"> Total: {{ page.get_members_ordered_count }}</span><br />
+                    {% endif %}
+                <div id="members_div" {% if not page.check_members %} style="display:none;" {% endif %}>
+                    <div class="add_community_info">
+                        {% if page.text_members %}
+                            {{ page.text_members|linebreaksbr }}
+                        {% elif request.user|check_pages_community:page %}
+                            Click to add text here. (optional)
+                        {% else %}
+                        {% endif %} 
+                    </div>
+                    {% if page.get_members_ordered %}
+                    <div style="text-align: left; margin: 4px 0;">
+                        
+                        {% for member in page.get_members_ordered %}
+                        <div class="friend_icon
+                            {% if forloop.counter > 10 %} 
+                            members_hidden
+                            {% endif %}
+                            ">
+                            <a href="{{ member.get_absolute_url }}">
+                                <img src="{{ member.get_thumb }}" width="54" height="54" />
+                            </a>
+                            <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ member.get_full_name }}</div>
+                        </div>
+                        {% endfor %}
+                        <br /><br />
+                        {% if page.get_members_ordered|length > 10 %}
+                        <a href="#" class="community_see_more members_link"><div style="display: block; text-align: left; padding: 2px 18px;">See More</div></a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% if page.get_community_requests_members and request.user|check_pages_community:page %}
+                    <div class="community_req_div" style="padding: 7px 10px; border: 1px solid #CCC; background: #FAFAFA; text-align: center; margin: 4px 0;">
+                        {% if page.get_community_requests_members_past_count %}
+                        <a href="#" id="members_req_collapse" class="req_collapse"> Past Requests: {{page.get_community_requests_members_past_count}}</a>
+                        {% endif %}
+                        <table id="members_past_table" class="past_table" width="100%" style="display:none">
+                            {% for comrequest in page.get_community_requests_members_past %}
+                            {% include 'pages/micro/_community_req.html' %}
+                            {% endfor %}
+                        </table>
+                        <table width="100%">
+                            {% for comrequest in page.get_community_requests_members_present %}
+                            {% include 'pages/micro/_community_req.html' %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                        
                     {% endif %}
                 </div><br /><br />
                 {% if request.user|check_pages_community:page %}

@@ -38,6 +38,7 @@ MEMBERSHIP_TYPE = (
         ('VL','Volunteer'),
         ('IN','Intern'),
         ('EM','Employee'),
+        ('MM','Member'),
 )
 
 PAGE_LOVE_STATUS = (
@@ -150,6 +151,8 @@ class Pages(models.Model):
     text_interns = models.TextField(blank=True)
     has_volunteers = models.BooleanField(default=False)
     text_volunteers = models.TextField(blank=True)
+    has_members = models.BooleanField(default=False)
+    text_members = models.TextField(blank=True)
     members = models.ManyToManyField(UserProfile, related_name="member_of", through='Membership')
     # calendar
     post_update = models.BooleanField(default=False)
@@ -317,6 +320,30 @@ class Pages(models.Model):
     def get_community_requests_emloyees_present_count(self):
         return self.get_community_requests_emloyees_present().count()
 
+    def get_community_requests_members(self):
+        return Membership.objects.filter(page=self, type='MM', is_confirmed=False)
+
+    def get_community_requests_members_past(self, update=True):
+        requests = Membership.objects.filter(page=self, type='MM', is_confirmed=False, is_present=False)
+        pickle_str = cPickle.dumps(requests)
+        if update:
+            requests.update(is_new=False)
+        requests = cPickle.loads(pickle_str)
+        return requests
+
+    def get_community_requests_members_past_count(self):
+        return self.get_community_requests_members_past(False).count()
+
+    def get_community_requests_members_present(self):
+        requests = Membership.objects.filter(page=self, type='MM', is_confirmed=False, is_present=True)
+        pickle_str = cPickle.dumps(requests)
+        requests.update(is_new=False)
+        requests = cPickle.loads(pickle_str)
+        return requests
+
+    def get_community_requests_members_present_count(self):
+        return self.get_community_requests_members_present().count()
+
     def get_community_requests_interns(self):
         return Membership.objects.filter(page=self, type='IN', is_confirmed=False)
 
@@ -381,6 +408,12 @@ class Pages(models.Model):
         users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
         return users
 
+    def get_members_ordered(self):
+        members = Membership.objects.filter(page=self, type='MM', is_confirmed=True)[:70]
+        users = [member.get_user() for member in members if not member.get_user().check_option('vie_pages','Private')]
+        users = sorted(users, key=lambda s: s.get_followers_count(), reverse=True)
+        return users
+
     def get_volunteers_ordered(self):
         members = Membership.objects.filter(page=self, type='VL', is_confirmed=True)[:70]
         users = [member.get_user() for member in members if not member.get_user().check_option('vie_pages','Private')]
@@ -389,6 +422,10 @@ class Pages(models.Model):
 
     def get_emloyees_ordered_count(self):
         members = Membership.objects.filter(page=self, type='EM', is_confirmed=True).count()
+        return members
+
+    def get_members_ordered_count(self):
+        members = Membership.objects.filter(page=self, type='MM', is_confirmed=True).count()
         return members
 
     def get_interns_ordered_count(self):
@@ -412,6 +449,9 @@ class Pages(models.Model):
 
     def check_interns(self):
         return self.has_interns
+
+    def check_members(self):
+        return self.has_members
 
     def check_volunteers(self):
         return self.has_volunteers

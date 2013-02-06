@@ -1145,6 +1145,7 @@ LionFace.Site.prototype = {
         var volunteer_flag=false;
         var intern_flag=false;
         var employee_flag=false;
+        var member_flag=false;
         var edit_member_url;
 
         $(document).on('click','.edit_member', function(e) {
@@ -1155,18 +1156,28 @@ LionFace.Site.prototype = {
             volunteer_flag = true;
             intern_flag = false;
             employee_flag = false;
+            member_flag = false;
         });
 
         $(document).on('click','#intern_flag', function(e) {
             volunteer_flag = false;
             intern_flag = true;
             employee_flag = false;
+            member_flag = false;
         });
 
         $(document).on('click','#employee_flag', function(e) {
             volunteer_flag = false;
             intern_flag = false;
             employee_flag = true;
+            member_flag = false;
+        });
+
+        $(document).on('click','#member_flag', function(e) {
+            volunteer_flag = false;
+            intern_flag = false;
+            employee_flag = true;
+            member_flag = true;
         });
 
         $(document).on('click','.save_member', function(e) {
@@ -1180,6 +1191,7 @@ LionFace.Site.prototype = {
             if (volunteer_flag) { member_type = 'VL'; }
             if (intern_flag) { member_type = 'IN'; }
             if (employee_flag) { member_type = 'EM'; }
+            if (member_flag) { member_type = 'MM'; }
             var from_date_month = $(this).parent().find('.former_member.month_select').val() || $(this).parent().find('.current_member.month_select').val();
             var from_date_year = $(this).parent().find('.former_member.year_select').val() || $(this).parent().find('.current_member.year_select').val();
             from_date_month = monthtext.indexOf(from_date_month) + 1;

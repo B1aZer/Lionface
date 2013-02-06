@@ -70,6 +70,19 @@ LionFace.Pages.prototype = {
             }
         });
         
+        $(document).on('click','#members_req_collapse',function(e) {
+            e.preventDefault();
+            var self = $(this)
+            if (!self.data('toggled')) {
+                self.data('toggled',true);
+                $('#members_past_table').slideDown();
+            }
+            else {
+                self.data('toggled',false);
+                $('#members_past_table').slideUp();
+            }
+        });
+
         $(document).on('click','#interns_req_collapse',function(e) {
             e.preventDefault();
             var self = $(this)
@@ -497,6 +510,7 @@ LionFace.Pages.prototype = {
             var lovers = self.hasClass('lovers_link');
             var interns = self.hasClass('interns_link');
             var emloyees = self.hasClass('emloyees_link');
+            var members = self.hasClass('members_link');
             var volunteers = self.hasClass('volunteers_link');
             if (!self.data('shown')) {
                 if (lovers) {
@@ -507,6 +521,9 @@ LionFace.Pages.prototype = {
                 }
                 if (emloyees) {
                     $('.emloyees_hidden').show();
+                }
+                if (members) {
+                    $('.members_hidden').show();
                 }
                 if (volunteers) {
                     $('.volunteers_hidden').show();
@@ -520,6 +537,9 @@ LionFace.Pages.prototype = {
                 }
                 if (interns) {
                     $('.interns_hidden').hide();
+                }
+                if (members) {
+                    $('.members_hidden').hide();
                 }
                 if (emloyees) {
                     $('.emloyees_hidden').hide();
@@ -734,6 +754,10 @@ LionFace.Pages.prototype = {
                 var content_div = '#employees_div';
                 var menu_a = '#employee_flag';
             }
+            if (name == 'members_checkbox') {
+                var content_div = '#members_div';
+                var menu_a = '#members_flag';
+            }
             if (name == 'interns_checkbox') {
                 var content_div = '#interns_div';
                 var menu_a = '#intern_flag';
@@ -755,6 +779,7 @@ LionFace.Pages.prototype = {
                             $(menu_a).hide();
                             if (!$('#employees_checkbox').prop('checked') &&
                                 !$('#interns_checkbox').prop('checked') &&
+                                !$('#members_checkbox').prop('checked') &&
                                 !$('#volunteers_checkbox').prop('checked')) {
                                 $('#community_add_button').hide();
                             }

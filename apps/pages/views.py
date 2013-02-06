@@ -1328,6 +1328,10 @@ def community_check(request, slug=None):
         page.has_interns = checked
         page.save()
         data['status'] = 'OK'
+    if name == 'members_checkbox':
+        page.has_members = checked
+        page.save()
+        data['status'] = 'OK'
     if name == 'volunteers_checkbox':
         page.has_volunteers = checked
         page.save()
@@ -1351,6 +1355,10 @@ def community_text(request, slug=None):
         data['status'] = 'OK'
     if parent_id == 'interns_div':
         page.text_interns = content
+        page.save()
+        data['status'] = 'OK'
+    if parent_id == 'members_div':
+        page.text_members = content
         page.save()
         data['status'] = 'OK'
     if parent_id == 'volunteers_div':
