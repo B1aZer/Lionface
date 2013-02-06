@@ -11,6 +11,7 @@ from django.db.models import Count, Max
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
+import pytz
 
 try:
     import json
@@ -42,6 +43,7 @@ def messages(request, username=None):
     user = request.user
     for message in messages_in:
         if not message.user in users:
+            flag = 'today'
             users.append(message.user)
             mess_sent = Messaging.objects.filter(user_to=message.user, user = user).count()
             mess_recv = Messaging.objects.filter(user=message.user, user_to = user).count()
@@ -57,11 +59,13 @@ def messages(request, username=None):
             if diff_date.days <= 0:
                 last_date = last_mess.strftime("%I:%M %p")
             elif diff_date.days >0 and last_mess.year == now.year:
+                flag = 'week'
                 last_date = last_mess.strftime("%b %d")
             else:
+                flag = 'year'
                 last_date = last_mess.strftime("%b %Y")
             names.append({ 'name':message.user.full_name, 'thumb':message.user.get_thumb(), 'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new,
-                'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_mess' : last_mess})
+                'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_date_type': flag, 'last_mess' : last_mess})
         # This counter is for main page only
         message.mark_viewed()
 
@@ -80,12 +84,15 @@ def messages(request, username=None):
             now = timezone.now()
             diff_date = now - last_mess
             if diff_date.days <= 0:
-                last_date = last_mess.strftime("%I:%M %p")
+                flag = 'today'
+                last_date = last_mess.strftime("%I:%M %p %z")
             elif diff_date.days >0 and last_mess.year == now.year:
+                flag = 'week'
                 last_date = last_mess.strftime("%b %d")
             else:
+                flag = 'year'
                 last_date = last_mess.strftime("%b %Y")
-            names.append({ 'name':message.user_to.full_name, 'thumb':message.user.get_thumb(), 'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_mess' : last_mess})
+            names.append({ 'name':message.user_to.full_name, 'thumb':message.user.get_thumb(), 'mess_all':mess_all,'mess_sent':mess_sent,'mess_recv':mess_recv, 'mess_new':mess_new, 'link':link, 'image':image, 'id': id_user, 'last_obj':last_obj, 'last_date':last_date, 'last_date_type': flag, 'last_mess' : last_mess})
 
     #sorting by last message date
     names = sorted(names, key=lambda(s): s['last_mess'], reverse=True)
