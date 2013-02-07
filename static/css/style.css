@@ -1673,6 +1673,16 @@ a.bio_title:hover {
 	color: #F58;
 }
 
+#bio_info_text {
+    /* break words */
+    word-wrap: break-word;
+}
+
+/* .website_link for website a */
+.content_link {
+    word-wrap: break-word;
+}
+
 .user_info { position: absolute; left: 0px; top: 0px; height: 40px; width: 900px; display: block; z-index: 100000; color: #FFF !important;
 	/* Fallback for web browsers that doesn't support RGBa */
 	background: rgb(0, 0, 0);

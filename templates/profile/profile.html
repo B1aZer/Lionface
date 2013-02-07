@@ -98,12 +98,12 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 
 <div style="position: relative;">
 <div class="profile_edit" style="top: 0px; left: 0px;" id="left_bio">
-        <textarea id="bio_info_textarea" class="bio_info" rows="6" maxlength="250" style="display:none; width: 165px;"></textarea><br /><div class="sublink">
+        <textarea id="bio_info_textarea" class="bio_info" rows="6" maxlength="450" style="display:none; width: 165px;"></textarea><br /><div class="sublink">
         <a id="save_bio_text" class="bio_info" href="{% url profile.views.save_bio_info username=profile_user.username %}" style="display:none">Save</a>
         <a id="cacel_bio_text" class="bio_info" href="#" style="display:none">Cancel</a></div>
 </div></div>
 	
-        <div id="bio_info_text">{{ profile_user.get_bio_info }}</div>
+        <div id="bio_info_text">{{ profile_user.get_bio_info|safe }}</div>
 
     {% endif %}
 </div>

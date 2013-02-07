@@ -42,6 +42,7 @@ from django.utils import timezone
 import datetime as dateclass
 
 from itertools import chain
+import bleach
 
 try:
     import json
@@ -1029,15 +1030,26 @@ def add_relation(request, username):
 
 @active_required
 def save_bio_info(request, username):
+    def add_http(url):
+        if re.search('http://', url) or re.search('https://', url):
+            pass
+        else:
+            if not url.startswith('/'):
+                url = u"".join([u'http://', url])
+        return url
     data = {'status':'FAIL'}
     profile_user = request.user
     if not 'text' in request.POST:
         raise Http404
     text = request.POST.get('text')
-    profile_user.bio_text = strip_tags(text)
+    content = bleach.clean(text)
+    #profile_user.bio_text = strip_tags(text)
+    content = bleach.linkify(
+        content, target='_blank', filter_url=add_http)
+    profile_user.bio_text = content
     profile_user.save()
     data['status'] = 'OK'
-    data['text'] = strip_tags(text)
+    data['text'] = content
     return HttpResponse(json.dumps(data), "application/json")
 
 
