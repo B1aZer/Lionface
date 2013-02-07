@@ -487,6 +487,9 @@ class PageSharePost(PagePost):
     def privacy(self):
         return getattr(self.content_object, 'type', "")
 
+    def get_page_type(self):
+        return self.page.type
+
     def get_original_post(self):
         """Return last shared object(child)"""
         try:
@@ -877,6 +880,7 @@ post_save.connect(update_news_feeds, sender=FriendPost)
 post_save.connect(update_news_feeds, sender=ContentPost)
 post_save.connect(update_news_feeds, sender=SharePost)
 post_save.connect(update_news_feeds, sender=PagePost)
+post_save.connect(update_news_feeds, sender=PageSharePost)
 
 def delete_news_feeds(sender, instance, **kwargs):
     """Deletes original post"""
