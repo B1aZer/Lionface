@@ -5,6 +5,8 @@ import datetime as dateclass
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.contrib.sites.models import Site
+import pytz
+
 
 class Command(BaseCommand):
     help = 'Send reminder to inactive users'
@@ -13,9 +15,16 @@ class Command(BaseCommand):
         now = timezone.now()
         last_week = now - dateclass.timedelta(days=7)
         inactive_users = User.objects.filter(last_login__lt=last_week)
+        utc=pytz.UTC
         for user in inactive_users:
             userprofile = user.userprofile
-            if userprofile.last_seen() < last_week:
+            try:
+                comapare = userprofile.last_seen() < last_week
+            except TypeError:
+                last_seen = userprofile.last_seen()
+                last_seen = utc.localize(last_seen)
+                comapare = last_seen < last_week
+            if comapare:
                 new_mess = userprofile.new_messages_count()
                 new_notf = userprofile.new_notifcations()
                 site = Site.objects.get_current()
