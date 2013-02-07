@@ -247,7 +247,8 @@ LionFace.Pages.prototype = {
                             if (data.status === 'OK') {
                                 $('.postbox_textarea').val('');
                                 if (rating) {
-                                    self_class.load_feedback_feed();
+                                    //self_class.load_feedback_feed();
+                                    $('#reviews').click();
                                 }
                                 else {
                                     self_class.load_page_feed();
@@ -265,6 +266,16 @@ LionFace.Pages.prototype = {
             else {
                 //create_message('Please, provide a valid rating.','error');
                 $('.postbox_errors').show();
+            }
+        });
+
+        $(document).on('click','.remove-post', function() {
+            if ($('#reviews').hasClass('business_on')) {
+                setTimeout(function() {
+                    $('#postbox').removeClass('grayed_out');
+                    $('#postbox').find('.postbox_textarea').removeAttr('disabled');
+                    $('#postbox').find('.span-message').remove();
+                }, 2000);
             }
         });
 

@@ -200,7 +200,7 @@
                     {% endif %}
                     {% if item.get_type == 'friend post' and item.user != request.user %}
                     {% else %}
-                    <a href="javascript:LionFace.Site.del_post({{item.id}});">Delete</a>
+                    <a class="remove-post" href="javascript:LionFace.Site.del_post({{item.id}});">Delete</a>
                     {% endif %}
                 {% endif %}
                 {% if item.get_privacy == "P" %}
@@ -215,7 +215,7 @@
                     {% if item.get_type != 'friend post' and item.get_owner == request.user %}
                     <a href="#" class="toggle_settings" >Settings</a>
                     {% endif %}
-                <a href="javascript:del_post_single({{item.id}});">Delete</a>
+                <a class="remove-post" href="javascript:del_post_single({{item.id}});">Delete</a>
                 {% endif %}
                 {% if item.type == "P" %}
                 <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>

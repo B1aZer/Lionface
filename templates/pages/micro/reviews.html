@@ -52,9 +52,9 @@
                     {% endif %}
                     ></textarea>
                 {% if request.user.is_anonymous %}
-                <span style="padding: 4px 0; color: #900;">Only registered users are able to leave feedback</span>
+                <span class="span-message" style="padding: 4px 0; color: #900;">Only registered users are able to leave feedback</span>
                 {% elif request.user|posted_review_for:page %}
-                <span style="padding: 4px 0; color: #900;">Only 1 review per week allowed (days remaining: {{request.user|posted_review_for:page}})</span>
+                <span class="span-message" style="padding: 4px 0; color: #900;">Only 1 review per week allowed (days remaining: {{request.user|posted_review_for:page}})</span>
                 {% endif %}
 
                 <br />
