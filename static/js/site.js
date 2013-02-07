@@ -350,24 +350,6 @@ LionFace.Site.prototype = {
 
         if (post.find('.share_to').length) {
             var shared_div = post.find('.share_to');
-            if (shared_div.is(":visible")) {
-                var share_val = shared_div.find('.share_to_select').val();
-                make_request({
-                    url:url,
-                    data:{
-                        'post_type':meta.type,
-                        'post_model':meta.model,
-                        'share_to': share_val
-                    },
-                    callback: function(data) {
-                        if (data.status == 'OK') {
-                            $('.post_'+elem).find('.share_text').html('<span class="shared"> Shared </span>');
-                            $('.post_'+elem).find('.share_text').show();
-                            shared_div.hide();
-                        }
-                    }
-                });
-            }
             shared_div.show();
         }
         else {
@@ -832,6 +814,31 @@ LionFace.Site.prototype = {
                 });
         });
 
+        $(document).on('click', '.share-button', function (e) {
+            var post = $(this).parents('.result');
+            var meta = post.metadata();
+            var elem = meta.postoriginalid;
+            var url = "/posts/share/" + elem + "/";
+            var shared_div = post.find('.share_to');
+            if (shared_div.is(":visible")) {
+                var share_val = shared_div.find('.share_to_select').val();
+                make_request({
+                    url:url,
+                    data:{
+                        'post_type':meta.type,
+                        'post_model':meta.model,
+                        'share_to': share_val
+                    },
+                    callback: function(data) {
+                        if (data.status == 'OK') {
+                            post.find('.share_text').html('<span class="shared"> Shared </span>');
+                            post.find('.share_text').show();
+                            shared_div.hide();
+                        }
+                    }
+                });
+            }
+        });
     },
 
     attach_image: function(event) {

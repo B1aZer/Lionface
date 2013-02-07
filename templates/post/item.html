@@ -8,10 +8,10 @@
 {# using metadata to pass user's info in popup window #}
 {% if not post_user %}
     {% with news_item_user=item.get_original_author %}
-        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', news_item_user: '{{ item.news_item_user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ news_item_user.username }}', user_full_name: '{{ news_item_user.full_name }}', user_photo_thumb: '/{{ news_item_user.photo.thumb_name }}', user_absolute_url: '{{ news_item_user.get_absolute_url }}' } {% if item.get_type == 'friend post' %} friend_post {% endif %}">
+        <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', news_item_user: '{{ item.news_item_user.id}}', postoriginalid: '{{ item.get_post.id }}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ news_item_user.username }}', user_full_name: '{{ news_item_user.full_name }}', user_photo_thumb: '/{{ news_item_user.photo.thumb_name }}', user_absolute_url: '{{ news_item_user.get_absolute_url }}' } {% if item.get_type == 'friend post' %} friend_post {% endif %}">
     {% endwith %}
 {% else %}
-    <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', username: '{{ post_user.username }}', user_full_name: '{{ post_user.full_name }}', user_photo_thumb: '/{{ post_user.photo.thumb_name }}', user_absolute_url: '{{ post_user.get_absolute_url }}' } {% if item.get_type == 'friend post' %} friend_post {% endif %}">
+    <div id="post_{{ item.get_post.id }}" class="result post_feed post_{{ item.id }}  {type: '{{item.get_type}}', user: '{{ item.user.id}}', postid: '{{ item.id }}', model: '{{ item.get_type_class }}', postoriginalid: '{{ item.get_post.id }}, username: '{{ post_user.username }}', user_full_name: '{{ post_user.full_name }}', user_photo_thumb: '/{{ post_user.photo.thumb_name }}', user_absolute_url: '{{ post_user.get_absolute_url }}' } {% if item.get_type == 'friend post' %} friend_post {% endif %}">
 {% endif %}
 <div class="result_post" style="padding: 15px 8px 5px 8px; width: 535px;">
     {% block thumbnail %}
@@ -114,6 +114,7 @@
                     <option value="{{ page.id }}">{{ page.name }}</option>
                     {% endfor %}
             </select>
+            <button class="share-button"> Share </button>
         </div>
         {% endif %}
         {% if item.get_owner == request.user %}
