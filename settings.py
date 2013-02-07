@@ -330,6 +330,18 @@ ACCOUNT_ACTIVATION_DAYS = 7
 # Number of seconds of inactivity before a user is marked offline
 USER_ONLINE_TIMEOUT = 300
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+WEBSOCKET_REDIS_BROKER = {
+    'HOST': 'localhost',
+    'PORT': 6379,
+    'DB': 0
+}
+
 if os.environ.get('production'):
     try:
         from settings_production import *
@@ -347,18 +359,6 @@ ABSOLUTE_URL_OVERRIDES = {
 
 CELERY_QUEUES = {"lionface": {"exchange": "lionface", "binding_key": "lionface"}}
 CELERY_DEFAULT_QUEUE = "lionface"
-
-WEBSOCKET_REDIS_BROKER = {
-    'HOST': 'localhost',
-    'PORT': 6379,
-    'DB': 0
-}
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    }
-}
 
 from celery.schedules import crontab
 from datetime import timedelta
