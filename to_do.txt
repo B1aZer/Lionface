@@ -1,6 +1,9 @@
 #smileys
 #administration
 
+ Exclude tags that only contain numbers. So #12512 would /not/ be a tag, but #1life would be...
+we would also need to exlude 1 symbol tags. 
+
 add hours + 16
 
 redis takes too much memory
