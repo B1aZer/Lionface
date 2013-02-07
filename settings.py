@@ -363,13 +363,15 @@ CELERY_DEFAULT_QUEUE = "lionface"
 from celery.schedules import crontab
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
-    "update_search_index": {
-        "task": "search.tasks.UpdateSearchIndex",
-        "schedule": timedelta(seconds=120),
-    },
     "rebuld_search_index": {
         "task": "search.tasks.RebuildSearchIndex",
-        "schedule": timedelta(minutes=1440),
+        #"schedule": timedelta(minutes=1440),
+        'schedule': crontab(hour='0', minute='0', day_of_week='*'),
+    },
+    "update_search_index": {
+        "task": "search.tasks.UpdateSearchIndex",
+        #"schedule": timedelta(seconds=120),
+        'schedule': crontab(hour='*', minute='2-58/2'),
     },
     "update_page_event": {
         "task": "pages.tasks.UpdatePageEvent",
@@ -382,6 +384,12 @@ CELERYBEAT_SCHEDULE = {
     "delete_inactive_users": {
         "task": "account.tasks.DeleteInactiveUsers",
         "schedule": timedelta(minutes=1440),
+    },
+    "send_reminder_to_inactive": {
+         "task": "account.tasks.SendReminderToInactiveUsers",
+         #"schedule": timedelta(minutes=5),
+         'schedule': crontab(hour=18, minute=0, day_of_week='*'),
+         #'schedule': crontab(hour=14, minute=0, day_of_week=1),
     },
     "process_bids": {
         'task': 'pages.tasks.ProcessBids',

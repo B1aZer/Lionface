@@ -164,8 +164,6 @@ class UserProfile(User):
     objects = UserQuerySet.as_manager()
 
     def last_seen(self):
-        log = logging.getLogger("account")
-        log.debug(cache.get('seen_%s' % self.username))
         return redis.get_last_seen(self)
 
     def online(self):
@@ -480,6 +478,10 @@ class UserProfile(User):
             options = self.useroptions_set.filter(name__startswith=name, name__endswith=page_name)
         return options
 
+    def new_messages_count(self):
+        messages = self.message_to.filter(viewed=False, in_chat=False).count()
+        return messages
+
     def new_messages(self):
         #messages = self.message_to.filter(viewed=False).count()
         messages = self.message_to.filter(viewed=False, in_chat=False).aggregate(Count('user', distinct='True'))
@@ -783,7 +785,7 @@ class UserOptions(models.Model):
 
 
 def update_user_actions(sender, instance, using, **kwargs):
-    # add loves limit to all loved pages 
+    # add loves limit to all loved pages
     pages = instance.get_loved()
     for page in pages:
         page.loves_limit = page.loves_limit + 1

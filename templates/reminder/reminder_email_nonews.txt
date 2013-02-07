@@ -1,0 +1,5 @@
+Not a lot has happened for you on {{ site.name }} since you last logged in. 
+
+Sincerely,
+{{ site.name }} Management
+        

@@ -1,0 +1,11 @@
+A lot has happened on {{ site.name }} since you last logged in. 
+{% if messages_count %}
+You have {{ messages_count }} new message{{ messages_count|pluralize}}.
+{% endif %}
+{% if notifications_count %}
+You have {{ notifications_count }} new notification{{ notifications_count|pluralize}}.
+{% endif %}
+
+Sincerely,
+{{ site.name }} Management
+        

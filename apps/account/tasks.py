@@ -7,4 +7,9 @@ class DeleteInactiveUsers(Task):
         management.call_command('cleanupregistration', verbosity=0, interactive=False)
 tasks.register(DeleteInactiveUsers)
 
+class SendReminderToInactiveUsers(Task):
+    def run(self, **kwargs):
+        management.call_command('send_reminder', verbosity=0, interactive=False)
+tasks.register(SendReminderToInactiveUsers)
+
 
