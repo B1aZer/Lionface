@@ -95,7 +95,7 @@ TEMPLATE_LOADERS = (
 # this is re valued in local
 MIDDLEWARE_CLASSES = (
     'mediagenerator.middleware.MediaMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -104,7 +104,7 @@ MIDDLEWARE_CLASSES = (
     'current_user.middleware.CurrentUserMiddleware',
     'account.middleware.TimezoneMiddleware',
     'account.middleware.ActiveUserMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
