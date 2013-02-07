@@ -737,6 +737,7 @@ LionFace.Pages.prototype = {
             });
 
         });
+
     },
     /*
      * moved to user.js

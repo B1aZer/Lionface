@@ -803,6 +803,8 @@ LionFace.Site.prototype = {
                                 else {
                                     love_count = love_count + 1;
                                 }
+                                // for single page only
+                                $('#pages_nav_page').find('.grayed_out').removeClass('grayed_out');
 
                             }
                             else {
@@ -819,6 +821,10 @@ LionFace.Site.prototype = {
                                 else {
                                     love_count = love_count - 1;
                                 }
+
+                                $('#pages_nav_page').find('#discussions').addClass('grayed_out');
+                                $('#pages_nav_page').find('#calendar').addClass('grayed_out');
+                                $('#pages_nav_page').find('#comunnity').addClass('grayed_out');
                             }
                             love_div.html(love_count);
                         }
