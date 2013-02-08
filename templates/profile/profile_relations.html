@@ -34,6 +34,7 @@
 <div class="profile_edit" id="left_rel" style="width: 40%; left: 30%; top: 100px; height: 80px;">
 <table width="100%" height="100%"><tr><td align="center">
     <select id="inter_relation_select" class="inter-relation" style="display:none; padding: 3px; margin: 3px;">
+        <option value='' {% if profile_user.get_relation == '' %}selected=""{% endif %}></option>
         <option value='S' {% if profile_user.get_relation == 'S' %}selected=""{% endif %}>Single</option>
         <option value='D' {% if profile_user.get_relation == 'D' %}selected=""{% endif %}>Dating</option>
         <option value='E' {% if profile_user.get_relation == 'E' %}selected=""{% endif %}>Engaged</option>

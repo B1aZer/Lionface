@@ -616,7 +616,7 @@ LionFace.Profile.prototype = {
             else {
                 $('.inter-relation').show();
                 $('#left_rel').show();
-                if ($('#inter_relation_select').val() != 'S') {
+                if ($('#inter_relation_select').val() != 'S' && $('#inter_relation_select').val()) {
                     $('.inter_relation_container').show();
                 }
                 self.data('toggled',true);
@@ -625,7 +625,7 @@ LionFace.Profile.prototype = {
 
         $(document).on('change','#inter_relation_select', function(e) {
             var self = $(this);
-            if (self.val() != 'S') {
+            if (self.val() != 'S' && $('#inter_relation_select').val()) {
                 $('.inter_relation_container').show();
             }
             else {
@@ -809,9 +809,6 @@ LionFace.Profile.prototype = {
             var self = $(this);
             var url = self.attr('href');
             var data = {'url' : $('#url_input').val()};
-            if (!data.url) {
-                return;
-            }
             make_request({
                 url:url,
                 data: data,

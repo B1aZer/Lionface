@@ -1074,17 +1074,23 @@ def save_url_field(request, username):
     data = {'status':'FAIL'}
     profile_user = request.user
     url = request.POST.get('url')
-    if not url:
+    if not url and url != '':
         return HttpResponse(json.dumps(data), "application/json")
-    valudate_url = URLValidator()
-    try:
-        valudate_url(url)
+    if url == '':
         profile_user.url = url
         profile_user.save()
         data['status'] = 'OK'
-        data['link'] = profile_user.get_website()
-    except:
-        data['error'] = True
+        data['link'] = ''
+    else:
+        valudate_url = URLValidator()
+        try:
+            valudate_url(url)
+            profile_user.url = url
+            profile_user.save()
+            data['status'] = 'OK'
+            data['link'] = profile_user.get_website()
+        except:
+            data['error'] = True
     return HttpResponse(json.dumps(data), "application/json")
 
 

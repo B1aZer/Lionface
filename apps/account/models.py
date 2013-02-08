@@ -75,7 +75,7 @@ class RelationRequest(models.Model):
             for rlt in IN_RELATIONSHIP:
                 if rlt[0] == relation:
                     return rlt[1]
-        return relation
+        return ''
 
 
 class FriendRequest(models.Model):
