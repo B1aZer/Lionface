@@ -23,16 +23,29 @@ except ImportError:
 def messages(request, username=None):
     form = MessageForm()
     send = False
+    user_id_after = ''
 
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
-            user_to_id = form.cleaned_data['user_id']
-            user_to = UserProfile.objects.get(id=int(user_to_id))
-            content = form.cleaned_data['content']
-            mess = Messaging(user=request.user,user_to=user_to,content=content)
-            send = mess.save()
-            form = MessageForm()
+            user_to_id = form.cleaned_data.get('user_id')
+            if not user_to_id:
+                try:
+                    user_to = UserProfile.objects.get(username = form.cleaned_data.get('user_to'))
+                    content = form.cleaned_data['content']
+                    mess = Messaging(user=request.user,user_to=user_to,content=content)
+                    send = mess.save()
+                    if send:
+                        user_id_after = user_to.id
+                    form = MessageForm()
+                except:
+                    form = MessageForm()
+            else:
+                user_to = UserProfile.objects.get(id=int(user_to_id))
+                content = form.cleaned_data['content']
+                mess = Messaging(user=request.user,user_to=user_to,content=content)
+                send = mess.save()
+                form = MessageForm()
 
     messages_in = Messaging.objects.filter(user_to=request.user).order_by('date')
     messages_out = Messaging.objects.filter(user=request.user).order_by('date')
@@ -124,6 +137,7 @@ def messages(request, username=None):
             'form':form,
             'send':send,
             'user_messages':names,
+            'user_id_after':user_id_after,
         },
         RequestContext(request)
     )

@@ -181,6 +181,8 @@ function load_messages(user_id, sort, page, incolumn) {
                     else {
                         $('#show_older').hide();
                     }
+                    // adding active class
+                    $('.user_id_'+user_id).addClass('active_message');
                 },
                 error: function() {
                     alert('Unable to retrieve data.');
@@ -215,14 +217,20 @@ $(document).ready(function() {
         make_request({url:url, data:$('#message_form').serialize(), callback:function(data) {
 
                     var out = ($("#message_form", data).html());
+                    var left = ($(".left_col", data).html());
                     var user_id = $('#id_user_id').val();
                     var check = $('.form_changed').length;
                     $("#message_form").html(out);
                     if ($('.success').length) {
+                        if (!user_id) {
+                            user_id = $('#user_id_after').html();
+                        }
+                        $(".left_col").html(left);
                         $('.success').parent().remove();
                         load_messages(user_id,false,1);
                     }
                     else {
+                        var error = ($("#error-div", data).html());
                         if (check) {
                             change_form();
                         }
@@ -231,7 +239,8 @@ $(document).ready(function() {
                         if ($('.message_feed').length) {
                             $('#id_user_to').parent().parent().hide();
                         }
-                        alert("Message was not sent.");
+                        $('#send_button').before(error);
+                        //alert("Message was not sent.");
                     }
                 }
         });
