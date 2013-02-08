@@ -4,6 +4,7 @@
 
 <table height="55"><tr><td>
 <a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a> <div class="username"> {{ user.username }}  </div><br/>
+{% if not request.user.is_anonymous %}
 <span class="subtext" style="margin: 7px 0;">
 
 {% if current_user|mutual_friends:user %} 
@@ -60,4 +61,5 @@ This is your friend!
 {% endif %}
 </tr></table></div>
 </span>
+{% endif %}
 </td></tr></table>

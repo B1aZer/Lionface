@@ -192,8 +192,9 @@ class UserProfile(User):
         return self.friends.filter(id=user.id).count() > 0
 
     def has_friends_friend(self, user):
+        #if user.is_anonymous(): return False
         for friend in self.friends.all():
-            if self.friends.filter(id=friend.id).count() > 0 or friend == user:
+            if friend.friends.filter(id=user.id).count() > 0 or friend == user:
                 return True
         return False
 

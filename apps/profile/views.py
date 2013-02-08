@@ -838,7 +838,6 @@ def delete_profile(request, username):
 
 
 @active_required
-@login_required
 @unblocked_users
 def related_users(request, username):
     form_mess = MessageForm()
