@@ -13,11 +13,12 @@ class TimezoneMiddleware(object):
 
 class ActiveUserMiddleware:
     def process_request(self, request):
-        current_user = request.user
-        if request.user.is_authenticated():
-            #now = timezone.now()
-            if request.user.is_visible:
-                redis.seen_user(current_user)
-            #cache.set('seen_%s' % (current_user.username), now,
-                           #settings.USER_LASTSEEN_TIMEOUT)
+        if not '/socket.io/' in request.path:
+            current_user = request.user
+            if request.user.is_authenticated():
+                #now = timezone.now()
+                if request.user.is_visible:
+                    redis.seen_user(current_user)
+                #cache.set('seen_%s' % (current_user.username), now,
+                               #settings.USER_LASTSEEN_TIMEOUT)
 

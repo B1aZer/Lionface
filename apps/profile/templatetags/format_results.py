@@ -110,10 +110,19 @@ def get_comment_counter(item, user):
 # Function for stripping tags.
 @register.filter(name='color_tags', is_safe=True)
 def color_tags(text):
+    def replace_ment(matchobj):
+        if matchobj.group(2).isdigit():
+            return matchobj.group(1)
+        else:
+            return r'<a href="/tag/?models=tags_tag&q=%s" class="colored_tag">%s</a>' % (matchobj.group(2), matchobj.group(1))
     # Has problems with urls(#) (?<!http)
     # re (?<!\)) for excluding from substitude color tag like #FFF in style
     # attribute e.g. style='backgound: ("/test/img.jpg") #FFF'
-    text = re.sub(r'((?<!\))(?:\A|\s)#([\w]+))', r'<a href="/tag/?models=tags_tag&q=\2" class="colored_tag">\1</a>', text)
+    #text = re.sub(r'((?<!\))(?:\A|\s)#([a-zA-Z0-9]{2,}))', r'<a href="/tag/?models=tags_tag&q=\2" class="colored_tag">\1</a>', text)
+    #regex2 = re.compile('(?<!\)(?:\A|\s)#\b[0-9]+\b')
+    #import pdb;pdb.set_trace()
+    #if not regex2.match(text):
+    text = re.sub(r'((?<!\))(?:\A|\s)#([a-zA-Z0-9]{2,}))', replace_ment , text)
     return text
 
 

@@ -48,14 +48,14 @@ signals.pre_save.connect(update_users, weak=False)
 
 class CurrentUserMiddleware(object):
     def process_request(self, request):
-        if hasattr(request, 'user') and request.user.is_authenticated():
-            from account.models import UserProfile
-            request.user = UserProfile.objects.get(user_ptr=request.user)
-            user = request.user
-        else:
-            user = None
-        
-        _thread_locals.user = user
+        if not '/socket.io/' in request.path:
+            if hasattr(request, 'user') and request.user.is_authenticated():
+                from account.models import UserProfile
+                request.user = UserProfile.objects.get(user_ptr=request.user)
+                user = request.user
+            else:
+                user = None
+            _thread_locals.user = user
     
                
     

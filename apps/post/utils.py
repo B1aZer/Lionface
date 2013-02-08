@@ -20,8 +20,14 @@ class QuerySetManager(models.Manager):
 
 def list_tags(content):
     import re
+    def check_word(word):
+        if word.startswith('#'):
+            if not word.replace('#','').isdigit():
+                if len(word.replace('#','')) > 1:
+                    return True
+        return False
     #tags = [''.join(e for e in word[1:] if e.isalnum()) for word in content
     # split string if non aplhabet
     tags = [word[1:].split(re.sub('[\w]+', '', word[1:]) or ".", 1)[0] for word in content
-                    .split() if word.startswith('#')]
+                    .split() if check_word(word)]
     return tags

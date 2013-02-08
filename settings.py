@@ -388,7 +388,7 @@ CELERYBEAT_SCHEDULE = {
     "send_reminder_to_inactive": {
          "task": "account.tasks.SendReminderToInactiveUsers",
          #"schedule": timedelta(minutes=5),
-         'schedule': crontab(hour=18, minute=0, day_of_week='*'),
+         'schedule': crontab(hour=18, minute=0, day_of_week='1'),
          #'schedule': crontab(hour=14, minute=0, day_of_week=1),
     },
     "process_bids": {
