@@ -53,7 +53,7 @@ $(document).ready(function() {
 			</td><td>
 
         <a href="{% url users-albums username=profile_user.username %}" id="albums_link" class="dashboard_nav {% if album_view %}active_dash_head{% endif %}">
-            <table width="100%" height="100%"><tr><td align="right" width="35%"><img class="db_albums_icon icon_album" {% if album_view %} src="{% media_url 'images/iconAlbum.hover.png' %}" {% else %} src="{% media_url 'images/iconAlbum.png' %}" {% endif %}></img></td><td align="left" valign="top" style="padding-top: 15px; padding-left: 2px;">Albums</td></tr></table></a>
+            <table width="100%" height="100%"><tr><td align="right" width="35%"><img class="db_albums_icon icon_album" {% if album_view %} src="{% media_url 'images/iconAlbum.hover.png' %}" {% else %} src="{% media_url 'images/iconAlbum.png' %}" {% endif %}></img></td><td align="left" valign="top" style="padding-top: 15px; padding-left: 2px;" {% if request.user.is_anonymous %} class="grayed_out" {% endif %}>Albums</td></tr></table></a>
 
 			</td><td>
 

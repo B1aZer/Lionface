@@ -13,6 +13,9 @@ LionFace.Profile.prototype = {
             this.bind_love_list();
             this.bind_profile_functions();
         }
+        else {
+            this.bind_public_functions();
+        }
     },
 
     //restrict image size and format before upload
@@ -838,8 +841,13 @@ LionFace.Profile.prototype = {
             $('.url_errors').hide();
             $('#url_input').val('');
         });
-        
-        
+
+    },
+
+    bind_public_functions: function() {
+        $(document).on('click', '#albums_link', function (e) {
+            e.preventDefault();
+        });
     }
 
 }
