@@ -1,5 +1,5 @@
-Not a lot has happened for you on {{ site.name }} since you last logged in. 
+{{ site.name }} is growing more every day. Remember to come visit us!
 
 Sincerely,
-{{ site.name }} Management
+{{ site.name }}
         

@@ -1,4 +1,4 @@
-A lot has happened on {{ site.name }} since you last logged in. 
+{{ site.name }} is growing more every day, and people have tried to connect with you since you last logged in.
 {% if messages_count %}
 You have {{ messages_count }} new message{{ messages_count|pluralize}}.
 {% endif %}
@@ -7,5 +7,5 @@ You have {{ notifications_count }} new notification{{ notifications_count|plural
 {% endif %}
 
 Sincerely,
-{{ site.name }} Management
+{{ site.name }}
         
