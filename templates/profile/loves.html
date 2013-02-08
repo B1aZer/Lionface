@@ -10,7 +10,8 @@
 {% endblock %}
 
 {% block left_col %}
-<div onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;" 
+<div {% if profile_user|check_profile_image_visibility:request.user and not request.user.is_anonymous %}
+    onclick="window.location.href = '{% url profile.views.images profile_user.username %}';return false;" {% endif %} 
     class="noPhoto" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 190px 192px; -moz-background-size: 190px 192px !important; background-size: 190px 192px; background-position: center center; background-repeat: no-repeat;"></div>
 
     <div style="position: relative; left: 0px; z-index: 100;">
