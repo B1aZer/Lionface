@@ -565,6 +565,7 @@ LionFace.Pages.prototype = {
 
         $(document).on('click','.feedback_opinion',function(e) {
             e.preventDefault();
+            if (LionFace.User.is_anonymous) { return; }
             var url = $(this).attr('href');
             var self = $(this);
             if (self.hasClass('agrees')) {

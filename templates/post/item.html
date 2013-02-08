@@ -41,7 +41,7 @@
     <div class="subtext">
         <div>
             {% block subtext %}
-            {% if item.get_type != 'feedback post' %}
+            {% if item.get_type != 'feedback post' and not request.user.is_anonymous %}
             <span id="love_post_{{ item.get_post.id }}" data-love-color="#2AB4EA" data-loved-color="#F58" {% if not item.get_love_settings %} style="display: none;" {% endif %}>
                 {% if request.user in item.get_post.get_lovers %}
                 <a href="javascript:LionFace.Site.love_post({{ item.get_post.id }});" style="color: #F58;">
@@ -195,6 +195,7 @@
         <div class="post_bottom">
             {% if not del_false %}
             <!--This will fire on news feed-->
+                {% if not request.user.is_anonymous %}
                 {% if item.get_owner.id == request.user.id  or item.get_post.user_to.id == request.user.id %}
                     {% if item.get_type != 'friend post' and item.get_type != 'feedback post' and item.get_type != 'discuss post' and item.get_owner == request.user %}
                     <a href="#" class="toggle_settings" >Settings</a>
@@ -203,6 +204,7 @@
                     {% else %}
                     <a class="remove-post" href="javascript:LionFace.Site.del_post({{item.id}});">Delete</a>
                     {% endif %}
+                {% endif %}
                 {% endif %}
                 {% if item.get_privacy == "P" %}
                 <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>

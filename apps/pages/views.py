@@ -1704,6 +1704,8 @@ def count_agrees(request, item_id):
         post = FeedbackPost.objects.get(id=item_id)
     except FeedbackPost.DoesNotExist:
         raise Http404
+    if request.user.is_anonymous():
+        raise Http404
     if request.user not in post.get_agreed_list():
         #post.agrees += 1
         post.agreed.add(request.user)
@@ -1721,6 +1723,8 @@ def count_disagrees(request, item_id):
     try:
         post = FeedbackPost.objects.get(id=item_id)
     except FeedbackPost.DoesNotExist:
+        raise Http404
+    if request.user.is_anonymous():
         raise Http404
     if request.user not in post.get_disagreed_list():
         #post.disagrees += 1
