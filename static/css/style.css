@@ -742,6 +742,32 @@ a.profile_btn:hover {
 	margin: 0;
 	padding: 0;
 }
+.image_album.feedone {
+	-webkit-background-size: 525px 525px !important;
+	-moz-background-size: 525px 525px !important;
+	background-size: 525px 525px;
+ 	width: 525px;
+ 	height: 525px;
+ 	border: 1px solid #E7E7E7;
+	position: relative;
+	top: -8px;
+	z-index: 0;
+	margin: 0;
+	padding: 0;
+}
+.image_album.feedtwo {
+	-webkit-background-size: 262px 262px !important;
+	-moz-background-size: 262px 262px !important;
+	background-size: 262px 262px;
+ 	width: 260px;
+ 	height: 260px;
+ 	border: 1px solid #E7E7E7;
+	position: relative;
+	top: -8px;
+	z-index: 0;
+	margin: 0;
+	padding: 0;
+}
 
 .album_shadow.feed {
 	padding: 0px;
@@ -765,6 +791,20 @@ a.profile_btn:hover {
 	margin-top: 2px;
 }
 
+.image_container.feed ul li.feedone {
+	/*float: left;*/
+	width: 525px;
+	height: 525px;
+	margin-right: 3px;
+	margin-top: 2px;
+}
+.image_container.feed ul li.feedtwo {
+	/*float: left;*/
+	width: 260px;
+	height: 260px;
+	margin-right: 3px;
+	margin-top: 2px;
+}
 #image_settings.feed {
 	display: block;
 	height: 25px;

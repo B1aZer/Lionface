@@ -587,3 +587,7 @@ def get_online_users(context, as_tag, as_name):
             online_friends.append(friend)
     context[as_name] = online_friends
     return ''
+
+@register.filter
+def mod_by_three(value):
+    return int(float(value)) % 3
