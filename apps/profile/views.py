@@ -896,7 +896,6 @@ def related_users(request, username):
 
 
 @active_required
-@login_required
 @unblocked_users
 def loves(request, username):
     data = {}

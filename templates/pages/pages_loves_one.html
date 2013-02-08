@@ -25,16 +25,18 @@
                     {% endif %}
                 <div>
                     {% block love_button %}
+                    {% if not request.user.is_anonymous %}
                     {% if request.user in page.get_lovers %}
                         <span class="love_count" style="font-size: 12px; color: #E39;">{{ page.get_loves }}</span> <a href="#" class="love love_button loved" style="font-size: 8pt; border: 3px solid #F7F7F7;">Loved</a>
                     {% else %}
                         <span class="love_count" style="font-size: 12px; color: #E39;">{{ page.get_loves }}</span> <a href="#" class="love love_button" style="font-size: 8pt; border: 3px solid #F7F7F7; color: #FFF;">Love</a>
                     {% endif %} 
+                    {% endif %} 
                     {% endblock %}
                 </div>
 				</td><td align="right" style="position: relative;">
                     {% block community_button %}
-                    {% if not page|show_connections:profile_user %}
+                    {% if not page|show_connections:profile_user and not request.user.is_anonymous %}
 					<div id="comm_{{ page.id }}" style="display: none; position: absolute; right: 0px; top: 12px; padding: 10px 0px 10px 40px; background: #FFF;">
                     <a href="#" 
                         {% if page.check_employees or page.check_interns or page.check_volunteers %}
@@ -45,6 +47,7 @@
 					</div>
                     {% endif %}
                     {% endblock %}
+                    {% if not request.user.is_anonymous %}
                     {% for member in page|show_connections:profile_user %}
                     {% if profile_user|check_profile_eiv:request.user %} 
                     <div id="member_{{ member.id }}">
@@ -61,6 +64,7 @@
                     </div>
                     {% endif %}
                     {% endfor %}
+                    {% endif %}
 				</td></tr>
                     {% include 'pages/page_members.html' %}
                 </table>
