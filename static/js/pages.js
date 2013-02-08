@@ -298,6 +298,7 @@ LionFace.Pages.prototype = {
             var post = $('#cover_image').position();
             var url = 'reposition/';
             var pattern = /url\(|\)|"|'/g;
+            $('.large_loader').show();
             make_request({
                 url:url,
                 data:{
@@ -307,6 +308,9 @@ LionFace.Pages.prototype = {
                 callback:function(data) {
                     //location.reload();
                     window.location = LionFace.User.page_url;
+                },
+                errorback: function() {
+                    $('.large_loader').hide();
                 }
             });
         });

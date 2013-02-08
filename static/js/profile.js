@@ -171,6 +171,7 @@ LionFace.Profile.prototype = {
             var post = $('.profile_cover').position();
             var url = 'reposition/';
             var pattern = /url\(|\)|"|'/g;
+            $('.large_loader').show();
             make_request({
                 url:url,
                 data:{
@@ -181,6 +182,9 @@ LionFace.Profile.prototype = {
                     //history.go(0);
                     //location.reload();
                     window.location = LionFace.User.home;
+                },
+                errorback: function() {
+                    $('.large_loader').hide();
                 }
             });
         });
