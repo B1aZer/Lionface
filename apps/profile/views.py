@@ -1,5 +1,6 @@
 from django.http import *
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
@@ -828,6 +829,7 @@ def delete_profile(request, username):
             password = request.POST['confirm_password']
             if check_password(password, request.user.password):
                 request.user.user_ptr.delete()
+                logout(request)
                 data['status'] = 'OK'
                 data['redirect'] = reverse('account.views.home')
             else:
