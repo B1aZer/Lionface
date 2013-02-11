@@ -597,17 +597,17 @@ LionFace.PostImages.prototype = {
         // arrows
         $popup.find('.image_zone_view').find('.prev, .next').hover(
             function(event) {
-                if ($('.image_container li').length > 1) {
+                if ($('.image_container li[popup=true]').siblings('li').length > 0) {
                     $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
                 }
             },
             function(event) {
-                if ($('.image_container li').length > 1) {
+                if ($('.image_container li[popup=true]').siblings('li').length > 0) {
                     $(this).find('img').fadeOut(_this.options.popup_fadeDuration);
                 }
             }
         ).mousemove(function(event) {
-            if ($('.image_container li').length > 1) {
+            if ($('.image_container li[popup=true]').siblings('li').length > 0) {
                 $(this).find('img').fadeIn(_this.options.popup_fadeDuration);
             }
         });
