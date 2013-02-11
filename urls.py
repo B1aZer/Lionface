@@ -13,6 +13,8 @@ admin.autodiscover()
 import socketio.sdjango
 from chat.views import HomeView
 
+import pages.views
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'lionface.views.home', name='home'),

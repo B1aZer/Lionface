@@ -2,7 +2,7 @@ from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('profile.views',
     url(r'^(?P<username>\w+)/delete/$', 'delete_profile'),
-    url(r'^(?P<username>\w+)/account/$', 'settings'),
+    url(r'^(?P<username>\w+)/account$', 'settings'),
     url(r'^(?P<username>\w+)/send_message/$', 'send_message'),
 
     url(r'^(?P<username>\w+)/add_bio_info/$', 'save_bio_info'),
@@ -11,12 +11,12 @@ urlpatterns = patterns('profile.views',
     url(r'^(?P<username>\w+)/add_relation/$', 'add_relation'),
     url(r'^(?P<username>\w+)/add_url_field/$', 'save_url_field'),
     url(r'^(?P<username>\w+)/del_favourite_page/(?P<page_id>\d+)$', 'remove_favourite_page'),
-    url(r'^(?P<username>\w+)/feed/$', 'feed'),
+    url(r'^(?P<username>\w+)/feed$', 'feed'),
     url(r'^(?P<username>\w+)/favourites_reposition/$', 'favourites_reposition'),
-    url(r'^(?P<username>\w+)/related/$', 'related_users'),
+    url(r'^(?P<username>\w+)/related$', 'related_users'),
     url(r'^(?P<username>\w+)/reset_picture/$', 'reset_picture'),
     url(r'^(?P<username>\w+)/reposition/$', 'reposition'),
-    url(r'^(?P<username>\w+)/images/$', 'images'),
+    url(r'^(?P<username>\w+)/images$', 'images'),
     url(r'^(?P<username>\w+)/images/reset/$', 'images_reset'),
     url(r'^(?P<username>\w+)/images/ajax/$', 'images_ajax'),
     url(r'^(?P<username>\w+)/images/ajax/rotate/$', 'rotate_image'),
@@ -34,5 +34,5 @@ urlpatterns = patterns('profile.views',
 
     url(r'^(?P<username>\w+)/loves/$', 'loves', name="user-loves"),
 
-    url(r'^(?P<username>\w+)/$', 'profile', name="provile-view"),
+    url(r'^(?P<username>\w+)$', 'profile', name="provile-view"),
 )

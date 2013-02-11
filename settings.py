@@ -321,6 +321,8 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 7
 
 STRIPE_API_KEY = '5IFFCmgHYrLqVm6ISBhhtq1Va7I80J9J'
 
+APPEND_SLASH = False
+
 SITE_ID = 1
 
 # caelery django db queue
