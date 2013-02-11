@@ -74,12 +74,16 @@ def feed(request, user_id=None):
             items = sorted(items, key=lambda post: post.timestamp, reverse=True)
         # adding page filter here, since we need to extend the query
         if 'B' in filters:
-            business_pages = NewsItem.objects.get_business_feed(request.user)
+            #business_pages = NewsItem.objects.get_business_feed(request.user)
+            loved_pages = request.user.get_loved().filter(type='BS')
+            business_pages = PagePost.objects.filter(page__in=loved_pages)
             items = list(chain(items, business_pages))
             items = list(set(items))
             items = sorted(items, key=lambda post: post.timestamp, reverse=True)
         if 'N' in filters:
-            nonprofit_pages = NewsItem.objects.get_nonprofit_feed(request.user)
+            loved_pages = request.user.get_loved().filter(type='NP')
+            #nonprofit_pages = NewsItem.objects.get_nonprofit_feed(request.user)
+            nonprofit_pages = PagePost.objects.filter(page__in=loved_pages)
             items = list(chain(items, nonprofit_pages))
             items = list(set(items))
             items = sorted(items, key=lambda post: post.timestamp, reverse=True)
