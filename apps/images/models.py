@@ -141,8 +141,17 @@ class Image(models.Model):
         pil_object.save(self.image.path)
         return True
 
-    def change_thumb_orientation(self, angle=False):
-        pil_object = pilImage.open(self.image.thumb_path)
+    def change_thumb_orientation(self, angle=False, size=None):
+        if not size:
+            pil_object = pilImage.open(self.image.thumb_path)
+        elif size == 'medium':
+            name, ext = os.path.splitext(self.image.thumb_path)
+            name = name + '_med' + ext
+            pil_object = pilImage.open(name)
+        elif size == 'large':
+            name, ext = os.path.splitext(self.image.thumb_path)
+            name = name + '_lrg' + ext
+            pil_object = pilImage.open(name)
         # reading and applying orientation
         for orientation in ExifTags.TAGS.keys() :
             if ExifTags.TAGS[orientation]=='Orientation' : break
@@ -158,7 +167,12 @@ class Image(models.Model):
             pass
         if angle:
             pil_object=pil_object.rotate(angle, expand=False)
-        pil_object.save(self.image.thumb_path)
+        if not size:
+            pil_object.save(self.image.thumb_path)
+        elif size == 'medium':
+            pil_object.save(name)
+        elif size == 'large':
+            pil_object.save(name)
         return True
 
     def generate_thumbnail(self, width, height, quiet=True, angle=None, size=None):

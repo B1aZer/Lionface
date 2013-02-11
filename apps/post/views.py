@@ -673,6 +673,11 @@ def rotate_image(request):
     rotate = (rotate * 90 * -1) % 360
     image.change_orientation(rotate)
     image.change_thumb_orientation(rotate)
+    if image.get_medium_thumb() != image.image.thumb_name:
+        image.change_thumb_orientation(rotate, size='medium')
+    if image.get_large_thumb() != image.image.thumb_name:
+        image.change_thumb_orientation(rotate, size='large')
+
     data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")
 
