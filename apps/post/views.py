@@ -255,9 +255,13 @@ def save(request):
                     rotate = int(rotate)
                     rotate = (rotate * 90 * -1) % 360
                     img.generate_thumbnail(200, 200, angle = rotate)
+                    img.generate_thumbnail(262, 262, angle = rotate, size = 'medium')
+                    img.generate_thumbnail(530, 530, angle = rotate, size = 'large')
                     img.change_orientation(rotate)
                 else:
                     img.generate_thumbnail(200, 200)
+                    img.generate_thumbnail(262, 262, size = 'medium')
+                    img.generate_thumbnail(530, 530, size = 'large')
                     img.change_orientation()
             else:
                 data['status'] = 'fail'

@@ -606,9 +606,13 @@ def update(request):
                             rotate = int(rotate)
                             rotate = (rotate * 90 * -1) % 360
                             img.generate_thumbnail(158, 158, angle = rotate)
+                            img.generate_thumbnail(262, 262, angle = rotate, size = 'medium')
+                            img.generate_thumbnail(530, 530, angle = rotate, size = 'large')
                             img.change_orientation(rotate)
                         else:
                             img.generate_thumbnail(158, 158)
+                            img.generate_thumbnail(262, 262, size = 'medium')
+                            img.generate_thumbnail(530, 530, size = 'large')
                             img.change_orientation(rotate)
                     else:
                         data['status'] = 'fail'
@@ -664,9 +668,13 @@ def feedback(request):
                             rotate = int(rotate)
                             rotate = (rotate * 90 * -1) % 360
                             img.generate_thumbnail(158, 158, angle = rotate)
+                            img.generate_thumbnail(262, 262, angle = rotate, size = 'medium')
+                            img.generate_thumbnail(530, 530, angle = rotate, size = 'large')
                             img.change_orientation(rotate)
                         else:
                             img.generate_thumbnail(158, 158)
+                            img.generate_thumbnail(262, 262, size = 'medium')
+                            img.generate_thumbnail(530, 530, size = 'large')
                             img.change_orientation()
                     else:
                         data['status'] = 'fail'
@@ -2098,9 +2106,13 @@ def start_topic(request, slug):
                             rotate = int(rotate)
                             rotate = (rotate * 90 * -1) % 360
                             img.generate_thumbnail(158, 158, angle = rotate)
+                            img.generate_thumbnail(262, 262, angle = rotate, size = 'medium')
+                            img.generate_thumbnail(530, 530, angle = rotate, size = 'large')
                             img.change_orientation(rotate)
                         else:
                             img.generate_thumbnail(158, 158)
+                            img.generate_thumbnail(262, 262, size = 'medium')
+                            img.generate_thumbnail(530, 530, size = 'large')
                             img.change_orientation()
                     else:
                         data['status'] = 'fail'
@@ -2162,9 +2174,13 @@ def list_topic(request, slug, topic_id):
                     rotate = int(rotate)
                     rotate = (rotate * 90 * -1) % 360
                     img.generate_thumbnail(158, 158, angle = rotate)
+                    img.generate_thumbnail(262, 262, angle = rotate, size = 'medium')
+                    img.generate_thumbnail(530, 530, angle = rotate, size = 'large')
                     img.change_orientation(rotate)
                 else:
                     img.generate_thumbnail(158, 158)
+                    img.generate_thumbnail(262, 262, size = 'medium')
+                    img.generate_thumbnail(530, 530, size = 'large')
                     img.change_orientation()
             else:
                 data['status'] = 'fail'

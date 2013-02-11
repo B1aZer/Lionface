@@ -10,6 +10,8 @@ from account.models import UserProfile
 from post.models import QuerySet as CustomQuerySet
 from .fields import ImageWithThumbField
 
+import os
+
 
 class ImageQuerySet(CustomQuerySet):
     DEFAULT_ROW_SIZE = 4
@@ -57,6 +59,22 @@ class Image(models.Model):
                 return user
             except:
                 return None
+
+    def get_medium_thumb(self):
+        name, ext = os.path.splitext(self.image.thumb_name)
+        name = name + '_med' + ext
+        if os.path.exists(name):
+            return name
+        else:
+            return self.image.thumb_name
+
+    def get_large_thumb(self):
+        name, ext = os.path.splitext(self.image.thumb_name)
+        name = name + '_lrg' + ext
+        if os.path.exists(name):
+            return name
+        else:
+            return self.image.thumb_name
 
     def change_position(self, old, new, save=True, selflock=None):
         if old == new:
@@ -143,7 +161,7 @@ class Image(models.Model):
         pil_object.save(self.image.thumb_path)
         return True
 
-    def generate_thumbnail(self, width, height, quiet=True, angle=None):
+    def generate_thumbnail(self, width, height, quiet=True, angle=None, size=None):
         try:
             pil_object = pilImage.open(self.image.path)
             # reading and applying orientation
@@ -171,7 +189,16 @@ class Image(models.Model):
             new_pil_object = pil_object \
                 .crop((x, y, x + w, y + h)) \
                 .resize((width, height), pilImage.ANTIALIAS)
-            new_pil_object.save(self.image.thumb_path)
+            if not size:
+                new_pil_object.save(self.image.thumb_path)
+            elif size == 'medium':
+                name, ext = os.path.splitext(self.image.thumb_path)
+                name = name + '_med' + ext
+                new_pil_object.save(name)
+            elif size == 'large':
+                name, ext = os.path.splitext(self.image.thumb_path)
+                name = name + '_lrg' + ext
+                new_pil_object.save(name)
         except:
             if not quiet:
                 raise

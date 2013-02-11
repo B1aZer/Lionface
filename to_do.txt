@@ -1,6 +1,8 @@
 #smileys
 #administration
 
+fix cover save
+
 • The scrolling issue returned: if I open the popup div when I post, before reload, and close it, scroll is disabled for the page.
 
 redis takes too much memory
