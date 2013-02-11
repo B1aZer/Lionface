@@ -3051,6 +3051,12 @@ a.show_more_friends, a.business_friends_show, a.nonprofits_friends_show {
     opacity : 0.4;
 }
 
+#pages_nav_page a.business_btn.grayed_out:hover {
+    background: #F0F3F5;
+    opacity: 0.4;
+    color: #666;
+}
+
 /* Schools */
 .school_note {
 	color: #555; font-size: 14pt; font-family: Tahoma; font-weight: bold; padding: 26px 17px; width: 614px; display: block; text-align: center; position: relative; left: -10px;
