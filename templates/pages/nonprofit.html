@@ -20,7 +20,7 @@ $(function() {
 
 <div class="content_area">
 
-    <div id="profile_top">
+    <div id="profile_top" style="position: relative; top: -6px;">
 {% block content_middle %}
 	<table width="100%"><tr><td align="left" width="200">
 		 <a href="{% url pages.views.page_browsing page_type='nonprofit' %}" style="margin: 0px; font-size: 8pt; color: #999; padding: 3px;">Browse</a>
@@ -40,7 +40,7 @@ $(function() {
 		<div class="pages_nav_area">
 			<table width="100%"><tr>
 			<td align="left">
-				<a href="{% url pages.views.main %}" style="margin-left: 8px;">Business Pages</a> 
+				<a href="{% url pages.views.main %}">Business Pages</a> 
                 <a href="{% url pages.views.leaderboard %}">Leaderboard</a>
 			</td>
 			<td align="right">

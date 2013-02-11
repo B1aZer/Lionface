@@ -17,7 +17,7 @@ $(function() {
 {% block content %}
   <div class="content_area">
 
-    <div id="profile_top">
+    <div id="profile_top" style="position: relative; top: -6px;">
 {% block content_middle %}
 	<table width="100%"><tr><td align="left" width="200">
 		 <a href="{% url pages.views.page_browsing %}" style="margin: 0px; font-size: 8pt; color: #999; padding: 3px;">Browse</a>
@@ -46,7 +46,7 @@ $(function() {
 		</div>
 	</div>
 
-<div class="business_unique"><span style="font-size: 18pt; font-weight: bold;">What's unique about Lionface?</span><br /> Lionface believes in you, the community, and humanity.</div>
+<div class="business_unique"><span style="font-size: 18pt; font-weight: bold;">What's unique about Lionface?</span><br />Businesses aren't here to degrade the social experience with advertisements,<br />they're here to enrich the social experience with their participation.</div>
 
 {% include "pages/create_page.html" %}
 

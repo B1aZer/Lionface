@@ -1,13 +1,11 @@
-	<form id="business_submit_form" action="" method="post">{% csrf_token %} 
+	<form id="business_submit_form" action="" method="post" style="z-index: 999999;">{% csrf_token %} 
         <div class="create_business" id="create_business">
             <table width="100%"><tr>
-                <td align="right">Business Name</td>
-                <td align="left">
+                <td align="left">Business Name<br />
                     {{ form_busn.name.errors }}
                     {{ form_busn.name }}
                     <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
-                <td align="right"><div style="position: relative;">Business Username</td>
-                    <td width="200" align="left">
+                <td align="left">Business Username<br />
                         {{ form_busn.username.errors }}
                         {{ form_busn.username }}
                         <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/business/(page username)</div></div></td>
@@ -16,7 +14,7 @@
                     {{ form_busn.category }}
                     </td>
             </tr><tr>
-                <td colspan="4" align="right" style="font-size: 8pt; color: #999;">
+                <td colspan="2" align="right" style="font-size: 8pt; color: #999;">
                     <div>
                         <span style="margin-right: 170px;">{{ form_busn.represent.errors }}</span>
                         <span style="margin-left: 20px;">{{ form_busn.terms.errors }}</span>
@@ -31,14 +29,12 @@
     </form>
     <form id="nonprofit_submit_form" action="" method="post">{% csrf_token %} 
 	<div class="create_nonprofit" id="create_nonprofit">
-		<table width="100%"><tr>
-			<td align="right">Nonprofit Name</td>
-			<td align="left">
+		<table width="100%" style="z-index: 999999;"><tr>
+			<td align="left">Nonprofit Name<br />
                 {{ form_nonp.name.errors }}
                 {{ form_nonp.name }}
                 <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">You can adjust this later.</div></td>
-			<td align="right"><div style="position: relative;">Nonprofit Username</div></td>
-			<td width="200" align="left">
+			<td align="left">Nonprofit Username<br />
                 {{ form_nonp.username.errors }}
                 {{ form_nonp.username }}
                 <div style="font-size: 8pt; color: #AAA; padding: 4px 0;">lionface.org/nonprofit/(page username)</div></td>
@@ -47,7 +43,7 @@
                 {{ form_nonp.category }}
 				</td>
 		</tr><tr>
-			<td colspan="4" align="right" style="font-size: 8pt; color: #999;">
+			<td colspan="2" align="right" style="font-size: 8pt; color: #999;">
                 <div>
                     <span style="margin-right: 170px;">{{ form_nonp.represent.errors }}</span>
                     <span style="margin-left: 20px;">{{ form_nonp.terms.errors }}</span>

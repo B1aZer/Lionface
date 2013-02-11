@@ -139,7 +139,7 @@ $(document).ready(function() {
 </form> 
 </div>
 
-<div class="profile_cover_container" style="overflow:hidden;" onMouseOver="ShowContent('user_info'); return false;" onMouseOut="HideContent('user_info'); return false;">
+<div class="profile_cover_container" style="overflow:hidden;">
 <div style="background: #DDD; 
             {% if data_uri %}
             height: {{ data_uri.height }}px; 
@@ -169,7 +169,7 @@ $(document).ready(function() {
 
     {% if profile_user|check_profile_bio:request.user %}
 
-<div class="user_info" id="user_info" style="display: none;">
+<div class="user_info" id="user_info">
 
 <table width="900" height="100%"><tr><td width="33%" style="padding-left: 8px;">
 

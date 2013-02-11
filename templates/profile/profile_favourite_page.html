@@ -1,5 +1,5 @@
         {% for page in profile_user.get_favourite_pages %}
-        <div id="{{ page.id }}" class="favorite_page">
+        <div id="{{ page.id }}" class="favorite_page" onMouseOver="ShowContent('remove-{{ page.id }}'); return false;" onMouseOut="HideContent('remove-{{ page.id }}'); return false;">
             <table>
                 <tbody>
                 <tr>
@@ -11,7 +11,7 @@
                     </td>
                     {% if profile_user == request.user %}
                     <td>
-                        <a class="rem-favourite-page" href="{% url profile.views.remove_favourite_page username=request.user.username page_id=page.id %}" style="color: #CCC;">x</a>
+                        <a class="rem-favourite-page" href="{% url profile.views.remove_favourite_page username=request.user.username page_id=page.id %}" style="color: #555; display: none;" id="remove-{{ page.id }}">x</a>
                     </td>
                     {% endif %}
                 </tr>
