@@ -41,7 +41,7 @@
         <option value='M' {% if profile_user.get_relation == 'M' %}selected=""{% endif %}>Married</option>
     </select>
     <span class="inter_relation_container" style="display:none">
-        <input id="inter_relation_input" type="text" {% if profile_user.get_relation != 'S' %}style="display:none"{% endif %}/>
+        <input id="inter_relation_input" type="text" {% if profile_user.get_relation != 'S' and profile_user.get_relation != '' %}style="display:none"{% endif %}/>
     </span><br />
 
     <div class="sublink"><a id="save_inter_relation" class="inter-relation" href="#" style="display:none">Save</a>

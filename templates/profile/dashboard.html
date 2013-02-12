@@ -169,7 +169,7 @@ $(document).ready(function() {
 
     {% if profile_user|check_profile_bio:request.user %}
 
-<div class="user_info" id="user_info">
+    <div class="user_info" id="user_info" {% if not profile_user.get_birth_date and not profile_user.get_relation_type and not profile_user.get_website and profile_user != request.user %} style="display:none" {% endif %}>
 
 <table width="900" height="100%"><tr><td width="33%" style="padding-left: 8px;">
 
@@ -197,7 +197,8 @@ $(document).ready(function() {
     <select class="birth_select birth_year_select" style="display:none"></select>
 </td></tr></table>
     <div class="sublink"><a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none" >Save</a>
-    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none" >Cancel</a></div>
+    <a id="cancel_birth_date" class="birth_select" href="#" style="display:none" >Cancel</a>
+    <a id="remove_birth_date" class="birth_select" href="{% url profile.views.remove_birth_date username=profile_user.username %}" style="display:none" >Remove</a></div>
     </div>
 </td></tr></table>
 </div>
@@ -222,7 +223,8 @@ $(document).ready(function() {
     <input id="url_input" class="bio_website" type="text" style="display:none; width: 165px;"></input>
     <div class="url_errors" style="display:none">URL must contain http://</div><br />
     <div class="sublink"><a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
-    <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a></div>
+    <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a>
+    <a id="remove_url_input" class="bio_website" href="{% url profile.views.remove_url_field username=profile_user.username %}" style="display:none">Remove</a></div>
 </td></tr></table>
 </div>
 

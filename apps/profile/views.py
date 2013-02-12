@@ -1070,6 +1070,14 @@ def save_birth_date(request, username):
     data['year'] = date.strftime('%Y')
     return HttpResponse(json.dumps(data), "application/json")
 
+@active_required
+def remove_birth_date(request, username):
+    data = {'status':'FAIL'}
+    profile_user = request.user
+    profile_user.birth_date = None
+    profile_user.save()
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
 
 @active_required
 def save_url_field(request, username):
@@ -1095,6 +1103,14 @@ def save_url_field(request, username):
             data['error'] = True
     return HttpResponse(json.dumps(data), "application/json")
 
+@active_required
+def remove_url_field(request, username):
+    data = {'status':'FAIL'}
+    profile_user = request.user
+    profile_user.url = ''
+    profile_user.save()
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
 
 @active_required
 def favourites_reposition(request, username):
