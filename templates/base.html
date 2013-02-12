@@ -5,7 +5,7 @@
       xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{% block title %}Lionface{% endblock %}</title>
+    <title>{% block title %}Lionface{% endblock %}{% if request.user.new_overall %} ({{ request.user.new_overall }}){% endif %}</title>
     {% include_media 'main.css' %}
     {% block css %}{% endblock %}
     <script>
