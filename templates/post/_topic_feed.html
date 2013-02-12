@@ -48,12 +48,7 @@
         <a href="javascript:LionFace.Site.del_post({{item.id}});">Delete</a>
         {% endif %}
     {% endif %}
-    {% if item.get_privacy == "P" %}
-    <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">Public</span></a>
-    {% elif item.get_privacy == "F" %}
-    <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Friends Only">Friends</span></a>
-    {% else %}
-    {% endif %}
+    <a style="cursor:pointer;"><span class="toggle_privacy" title="Privacy Settings: Public">{{ topic.get_privacy }}</span></a>
     {% url users-albums-posts username=item.get_owner.username album_id=item.get_album.id as the_url %}
     <a href="{{ the_url }}" class="album_name" style="color: #C92;{% if not the_url %} display:none;{% endif %}">{{ item.get_album.name }}</a>
 </div>
