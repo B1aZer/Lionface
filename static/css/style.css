@@ -402,20 +402,14 @@ a.coomments_see_more:link {
 	position: absolute;
 	right: -83px;
 	top: 23px;
-	background: #555555; /* Old browsers */
-	background: -moz-linear-gradient(top, #555555 0%, #333333 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#555555), color-stop(100%,#333333)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #555555 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #555555 0%,#333333 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #555555 0%,#333333 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #555555 0%,#333333 100%); /* W3C */
+	background: #555;
 	color: #FFF;
 	padding: 7px;
 	display: block;
 	width: 150px;
 	text-align: center;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 	z-index: 99999;
 	-moz-box-shadow: 0 4px 8px -4px #777;
 	box-shadow: 0 4px 8px -4px #777;
@@ -648,7 +642,7 @@ a.profile_btn:hover {
 	font-family: Tahoma, "Kievit-Custom";
 	padding: 4px 0 4px 0px;
 	margin: 3px 0;
-	font-size: 13px;
+	font-size: 10pt !important;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	line-height: 125%;
@@ -696,16 +690,9 @@ a.profile_btn:hover {
 
 #postbox {
 	width: 600px;
-	background: #fafafa; /* Old browsers */
-	background: -moz-linear-gradient(top, #fafafa 0%, #eeeeee 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#eeeeee)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #fafafa 0%,#eeeeee 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #fafafa 0%,#eeeeee 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#eeeeee',GradientType=0 ); /* IE6-9 */
-	-moz-border-radius: 5px; border-radius: 5px;
-	z-index: 2 !important;
+	background: #f3F3F3;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
 #postbox_shadow {
@@ -1543,11 +1530,6 @@ a.profile_btn:hover {
 	-moz-border-radius: 3px 0 0 3px;
 	border-radius: 3px 0 0 3px;
 	margin: 4px 0;
-}
-
-.DoS_profile:hover {
-	color: #FFF;
-	background: #333;
 }
 
 .profile_cover_container {
@@ -3238,13 +3220,14 @@ a.sub_filter_feedON {
 	box-shadow: 0 4px 8px -4px #999;
 	z-index: 99999;
 	line-height: 13pt;
+	font-family: Tahoma;
 }
 
 .chat_container li {
 	list-style: none;
 	padding: 4px 8px;
 	cursor: pointer;
-	padding: 8px 8px 4px 8px;
+	padding: 8px 8px 8px 8px;
 	border-top: 1px solid #EEE;
 	border-bottom: 1px solid #FFF;
 	color: #777;

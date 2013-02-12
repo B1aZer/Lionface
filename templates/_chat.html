@@ -1,4 +1,5 @@
 {% load format_results %}
+{% load media %}
 {% get_online_users 'as' 'online_user_list' %}
 {% include 'chat/message_yours_first.html' %}
 {% include 'chat/message_yours_noreply.html' %}
@@ -7,6 +8,7 @@
 <div id="chat_id" class="chat">
     <table width="100%"><tr><td><div class="offline"></div> <span id="chat_text" class="offline_text">Offline</span> <span id="online_count" style="font-size: 9pt; color: #999;">{% if request.user in online_user_list %} {{ online_user_list|length|add:-1 }} {% else %} {{ online_user_list|length }} {% endif %}</span></td>
 		<td align="right"><span class="chat_off turn_off">Turn On</span>
+			<img src="{% media_url 'images/soundON.png' %}" width="10" style="margin-left: 6px; float: right; display: none;" title="Sound On" />
 	</td></tr></table>
 </div>
 </div>
