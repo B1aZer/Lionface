@@ -41,7 +41,7 @@ def change_status(request):
 
 
 def load_history(request):
-    data = {'status':'FAIL'}
+    data = {}
     user = request.user
     #minutes_ago = 5
     try:
@@ -56,6 +56,8 @@ def load_history(request):
                                 .replace('"','') \
                                 .split(',')
     """
+    if user_chat.chat_list:
+        data['list_status'] = True
     #friends = user_chat.tabs_to.all()
     friends = ChatHistory.objects.filter(tab_from=user_chat)
     #since = datetime.datetime.now() - datetime.timedelta(minutes=minutes_ago)
@@ -71,5 +73,4 @@ def load_history(request):
         names_templ = render_to_string('chat/names.html', {'user':friend.from_user, 'active':friend.active, 'opened':friend.opened})
         mess_templ = render_to_string('chat/history_messages.html', {'user':friend.from_user, 'messages':messages, 'current_user': request.user})
         data[friend.from_user.username] = {'names': names_templ, 'messages' : mess_templ}
-        data['status'] = 'OK'
     return HttpResponse(json.dumps(data), "application/json")

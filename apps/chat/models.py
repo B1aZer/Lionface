@@ -7,6 +7,7 @@ class Chat(models.Model):
     user = models.ForeignKey(UserProfile)
     #tabs_to = models.TextField(blank=True)
     tabs_to = models.ManyToManyField(UserProfile, related_name='chat_tabs', symmetrical=False, through="ChatHistory")
+    chat_list = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now=True)
 
 class ChatHistory(models.Model):

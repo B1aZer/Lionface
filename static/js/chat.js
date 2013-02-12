@@ -92,6 +92,7 @@ LionFace.Chat.prototype = {
             var username = username || LionFace.User.username;
             var tabs = tabs || $('.chat_div');
             var users = [];
+            var list_opened = $('#chat_id').data('toggled') || false;
             tabs.each( function (i,e) {
                 var user = {};
                 //usernames.push( $(e).attr('id').replace('name_','') );
@@ -112,7 +113,7 @@ LionFace.Chat.prototype = {
                 users.push(user);
             });
             if (users) {
-                socket.emit('save history', username, JSON.stringify(users)); 
+                socket.emit('save history', username, JSON.stringify(users), list_opened); 
             }
         }
         function load_history() {
@@ -121,9 +122,12 @@ LionFace.Chat.prototype = {
                 url:url,
                 multi:true,
                 callback: function(data) {
-                    if (data.status == 'OK') {
                         for (name in data) {
-                            if (!$('#name_'+name).length) {
+                            if (name == 'list_status') {
+                                $('#online_list').show();
+                                $('#chat_id').data('toggled',true);
+                            }
+                            else if (!$('#name_'+name).length) {
                                 $('#names_chat_container').append(data[name].names);
                                 $('#main_chat_container').append(data[name].messages);
                                 socket.emit('load history', name); 
@@ -131,7 +135,6 @@ LionFace.Chat.prototype = {
                                 toggle_tabs();
                             }
                         }
-                    }
                 }
             });
         }
@@ -350,6 +353,7 @@ LionFace.Chat.prototype = {
                 $('#online_list').hide();
                 $this.data('toggled',false);
             }
+            save_history();
         });
 
         // collapse conversations

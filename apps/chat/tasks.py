@@ -47,7 +47,7 @@ tasks.register(ProcessMessage)
 
 
 class SaveMessageHistory(Task):
-    def run(self, username, usernames, **kwargs):
+    def run(self, username, usernames, list_opened, **kwargs):
         logger = ProcessMessage.get_logger()
         try:
             user = UserProfile.objects.get(username=username)
@@ -55,6 +55,12 @@ class SaveMessageHistory(Task):
             return False
         user_chat, created = Chat.objects.get_or_create(user=user)
         user_chat.tabs_to.clear()
+        if list_opened:
+            user_chat.chat_list = True
+            user_chat.save()
+        else:
+            user_chat.chat_list = False
+            user_chat.save()
         logger.info(usernames)
         for user_obj in usernames:
             try:
