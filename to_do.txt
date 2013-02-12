@@ -1,8 +1,6 @@
 #smileys
 #administration
 
-? [2/12/13 6:40:22 AM] Nick: Password reset on the production server is getting the 500 error.
-
 [2/11/13 9:49:25 PM] Nick: And would it be a quick fix to make http://youtu.be/OOpkr8uNWpk style links embed? People keep using them, to their disappointment.
 
  added ping.ogg to the static directoy, and I added the sound img to the chat tab, however the display is currently "none". the soundOFF.png and soundON.png are both in static/images.

@@ -143,6 +143,7 @@ LionFace.Pages.prototype = {
 
         $(document).on('click','.browse_rows',function(e) {
             e.preventDefault();
+            var $this = $(this);
             var tr = $(this).parents('tr')
             var category = tr.attr('class');
             var url = $(this).attr('href');
@@ -152,6 +153,7 @@ LionFace.Pages.prototype = {
                 tr.data('toggled',true);
                 tr.data('entangled',false);
                 make_request({url:url});
+                $this.html('Collapse');
             }
             else {
                 $("." + category + ".hidden_row").hide();
@@ -159,6 +161,7 @@ LionFace.Pages.prototype = {
                 make_request({url:url,
                             data:{'collapsed':true,}
                 });
+                $this.html('Expand');
             }
         });
 
