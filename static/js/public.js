@@ -29,7 +29,7 @@ $(document).ready(function() {
             });
     });
 
-    var random = Math.round(Math.random() * 10);
+    var random = Math.floor(Math.random() * 7);
     $('.public_link').eq(random).click();
 
     $(document).on('click', '.about_tags', function() {
