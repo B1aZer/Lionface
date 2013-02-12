@@ -247,6 +247,10 @@ LionFace.Chat.prototype = {
                         !$('#message_'+data.username).find('.kind_start').length) {
                         $('#name_'+data.username).addClass('new_chat_message');
                     }
+                    else {
+                        $('#name_'+data.username).addClass('tab_opened');
+                        toggle_tabs();
+                    }
                 }
                 else {
                     if ($('#message_'+data.username).find('.user_content:last').length) {
