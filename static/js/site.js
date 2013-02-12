@@ -375,7 +375,7 @@ LionFace.Site.prototype = {
             return;
         }
         var data = $('.post_'+elem).metadata();
-        url = "/posts/del/" + elem + "?user="+data.user+"&type="+data.type+"&model="+data.model;
+        url = "/posts/del/" + elem + "/?user="+data.user+"&type="+data.type+"&model="+data.model;
         make_request({
             url:url,
             callback:function(post_data)
@@ -416,6 +416,7 @@ LionFace.Site.prototype = {
         var data = $('#comment_form_'+form_id+' form').serialize();
         $('#comment_form_'+form_id+' form input.submit-preview').remove();
         url = '/posts/test/'
+        if (!$('#comment_form_'+form_id+' form').find('.text_comment').val()) { return;}
         make_request({
             url: url,
             data: data,
@@ -429,6 +430,7 @@ LionFace.Site.prototype = {
                 $('#comment_form_'+form_id+' form textarea').val('');
                 /** following mark */
                 $('#comment_form_'+form_id).closest('.result').find('.follow_post').html('Unfollow');
+                $('.text_comment').height(40);
 
             },
             errorback: function () {

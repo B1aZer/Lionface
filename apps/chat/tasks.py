@@ -102,6 +102,7 @@ tasks.register(LoadMessageHistory)
 
 class PublishActiveUsers(Task):
     def run(self, username, **kwargs):
+        logger = PublishActiveUsers.get_logger()
         try:
             user_obj = UserProfile.objects.get(username = username)
             friends = user_obj.get_friends()
@@ -109,6 +110,7 @@ class PublishActiveUsers(Task):
             return False
         active = list(get_active_users())
         active = [u.username for u in active if u in friends]
+        logger.info(active)
         r.publish(username, json.dumps({'active':active, 'type':'active'}))
         return True
 tasks.register(PublishActiveUsers)

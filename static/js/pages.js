@@ -666,6 +666,8 @@ LionFace.Pages.prototype = {
                         if (!self.hasClass('topics_bottom')) {
                             self.find('.topic_views_count').html(data.views);
                             $('.active_topic').removeClass('active_topic');
+                            make_excerpts();
+                            $('.postbox_textarea').autosize();
                             self.addClass('active_topic');
                         }
                     }

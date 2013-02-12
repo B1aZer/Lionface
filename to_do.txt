@@ -1,15 +1,9 @@
 #smileys
 #administration
 
-[2/12/13 6:40:22 AM] Nick: Password reset on the production server is getting the 500 error.
-
-[2/12/13 6:44:45 AM] Nick: People (and me) are also getting the Unable to retrieve data error a lot.
-
-[2/11/13 9:45:37 PM] Nick: would making it shorter put a huge load on the server?
+? [2/12/13 6:40:22 AM] Nick: Password reset on the production server is getting the 500 error.
 
 [2/11/13 9:49:25 PM] Nick: And would it be a quick fix to make http://youtu.be/OOpkr8uNWpk style links embed? People keep using them, to their disappointment.
-
-Can you add the ability to change Page usernames to the django admin... someone signed up with the wrong username and I can't adjust it for them.
 
 Also, on Chat, if my message is long and it expands the textarea to more than 1 row, can you reset it to 1 row when I press enter, instead of when I begin typing the next message.
 

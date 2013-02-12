@@ -42,7 +42,7 @@ function loadNewsFeed(elem, page, url) {
             //LionFace.PostImages.bind_settings();
         },
         errorback: function() {
-            $elem.html('Unable to retrieve data.');
+            console.log('Unable to retrieve data.');
         }
     });
 }

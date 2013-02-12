@@ -1,5 +1,11 @@
 {% load comments i18n %}
 
+<script>
+$(document).ready(function(){
+    $('.text_comment').autosize();
+});
+</script>
+
 <div id="comment_form_{{ item.id }}" class="comment_form_class" >
 
 <form onsubmit="javascript:LionFace.Site.post_comment('{{ item.id }}', '{% comment_form_target %}'); return false;" action="{% comment_form_target %}" method="post">{% csrf_token %}

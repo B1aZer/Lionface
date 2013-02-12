@@ -27,7 +27,6 @@ LionFace.Chat.prototype = {
         var cont_width = 234;
         var socket = io.connect("/chat");
         var connected = false;
-        auto_size();
 
         var source   = $("#message-template").html();
         var template = Handlebars.compile(source);
@@ -187,11 +186,13 @@ LionFace.Chat.prototype = {
         // resreshing online list
         setInterval(function() {
             socket.emit('refresh list', LionFace.User.username); 
-        }, 120000);
+        }, 60000);
 
         socket.on('chat', function (data) {
-            // removing offline users
+            // removing/adding offline users
             if (data.type == 'active') {
+                console.log(data)
+                // removing
                 $('.online_username').each( function (i,e) {
                     var username = $(e).attr('id');
                     if ($.inArray(username,data.active) >= 0) {
@@ -209,6 +210,21 @@ LionFace.Chat.prototype = {
                         $('#name_'+username).find('.online').removeClass('online').addClass('offline');
                     }
                 });
+                // adding
+                for (var i = 0; i < data.active.length; i++) {
+                    var username = data.active[i];
+                    if ($('#online_list').find('#'+username).length) {
+                    }
+                    else {
+                        var user = '<li id="'+username+'"><div class="online"></div> '+name+'</li>';
+                        if (!$('#online_list').find('#'+username).length) {
+                            $('#online_list').find('ul').append($(user).hide().fadeIn());
+                            var count  = parseInt($('#online_count').html()) + 1;
+                            $('#online_count').html(count);
+                        }
+                        $('#name_'+username).find('.offline').removeClass('offline').addClass('online');
+                    }
+                }
             }
             else {
             // check if message from this user exists
@@ -262,6 +278,7 @@ LionFace.Chat.prototype = {
                     }
                 }
             }
+            auto_size();
         });
 
         $(document).on('keypress','#chat_input', function(event) {
@@ -304,6 +321,7 @@ LionFace.Chat.prototype = {
                     $('#message_' + username).find('.message_content').scrollTop(last_el.offsetTop);
                 }
                 $this.val('');
+                $this.height(16);
                 return false;
             }
         });
