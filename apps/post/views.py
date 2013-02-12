@@ -6,7 +6,7 @@ from django.template import RequestContext, loader
 from .models import *
 from account.models import UserProfile
 from tags.models import Tag
-from pages.models import Pages
+from pages.models import Pages, Topics
 from profile.decorators import unblocked_users
 from notification.models import Notification
 from agenda.models import Events
@@ -358,6 +358,13 @@ def show(request):
             # int(post_id))]
             if post_ids:
                 items = Post.objects.filter(id__in=post_ids)
+
+        elif post_type in ('discuss post'):
+            try:
+                topic = Topics.objects.get(id=int(post_id))
+                items = topic.get_feed()
+            except:
+                items = []
 
         if len(items) > 0:
                 t = loader.get_template('post/_feed.html')

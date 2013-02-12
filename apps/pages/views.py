@@ -943,7 +943,8 @@ def settings(request, slug=None):
                 except:
                     stripe_error = 'An error occurred while processing your card'
         # bidding
-        elif amount or lamount:
+        #elif amount or lamount:
+        elif 'increase_loves' in request.POST or 'save_bids' in request.POST:
             # loves
             if lamount and 'increase_loves' in request.POST:
                 # if mod 100
@@ -2306,4 +2307,38 @@ def comments_event_pagination(request, event_id, page):
         data['next'] = comment_list.next_page_number()
     data['status'] = 'OK'
 
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@active_required
+@login_required
+def follow_topic(request, slug, topic_id):
+    data = {'status': 'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    try:
+        topic = Topics.objects.get(id=topic_id)
+    except Topics.DoesNotExist:
+        raise Http404
+    request.user.following_topics.add(topic)
+    data['follow'] = 'follow'
+    return HttpResponse(json.dumps(data), "application/json")
+
+
+@active_required
+@login_required
+def unfollow_topic(request, slug, topic_id):
+    data = {'status': 'OK'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    try:
+        topic = Topics.objects.get(id=topic_id)
+    except Topics.DoesNotExist:
+        raise Http404
+    request.user.following_topics.remove(topic)
+    data['follow'] = 'unfollow'
     return HttpResponse(json.dumps(data), "application/json")

@@ -754,6 +754,28 @@ LionFace.Pages.prototype = {
 
         });
 
+        /** topic following */
+        $(document).on('click', '.following_topic', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        if (data.follow == 'follow') {
+                            $('.follow_topic').hide();
+                            $('.unfollow_topic').show();
+                        }
+                        else {
+                            $('.unfollow_topic').hide();
+                            $('.follow_topic').show();
+                        }
+                    }
+                }
+            });
+        });
+
     },
     /*
      * moved to user.js

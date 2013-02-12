@@ -735,6 +735,7 @@ class Topics(models.Model):
     tagged = models.ManyToManyField(Pages, related_name="tagged_in_topics", null=True, blank=True)
     content = models.TextField(blank=True)
     viewed = models.ManyToManyField(UserProfile, related_name="viewed_topics", null=True, blank=True)
+    following = models.ManyToManyField(UserProfile, related_name="following_topics", null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def get_privacy(self):

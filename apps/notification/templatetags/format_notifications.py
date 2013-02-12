@@ -41,6 +41,8 @@ def format_notification(notification):
         return render_to_string('notification/_follow_comment.html', data)
     if notification.type == 'LP':
         return render_to_string('notification/_loves_post.html', data)
+    if notification.type == 'DP':
+        return render_to_string('notification/_discussion_post.html', data)
     if notification.type == 'FS':
         return render_to_string('notification/_follow_shared.html', data)
     if notification.type == 'MC':
@@ -59,4 +61,6 @@ def format_notification(notification):
         return render_to_string('notification/_profile_post_multiple.html', data)
     if notification.type == 'ML':
         return render_to_string('notification/_loves_post_multiple.html', data)
+    if notification.type == 'DM':
+        return render_to_string('notification/_discussion_post_multiple.html', data)
     return ""

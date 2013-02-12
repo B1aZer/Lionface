@@ -736,6 +736,9 @@ class UserProfile(User):
         shared = self.topics_set.filter(tagged=page, privacy='I').count()
         return shared
 
+    def get_following_topics(self):
+        return self.following_topics.all()
+
     @models.permalink
     def get_absolute_url(self):
         return ('profile.views.profile', [str(self.username)])

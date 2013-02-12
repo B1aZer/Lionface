@@ -1,0 +1,9 @@
+{% load format_results %}
+<li class="discuss_post notification {type: 'discuss post', id: '{{ notification.content_object.id }}'}">
+<div style="padding: 15px;" class="link-output">
+    {{ notification.post_counter }} new discussion post{{ notification.post_counter|pluralize }} has been made to {{ notification.content_object.name }}.
+  </div>
+  <div class="separator"></div>
+</li>
+
+
