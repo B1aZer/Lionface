@@ -672,7 +672,7 @@ a.profile_btn:hover {
 	padding: 6px 10px;
 }
 
-.post_option:hover {
+.post_option:hover, .active_option {
 	background: #E0E3E5;
 	color: #555;
 	-moz-border-radius: 3px;

@@ -248,6 +248,8 @@ LionFace.Profile.prototype = {
 
         $(document).on('click','.post_option',function(){
             $(this).find('input').prop('checked', true);
+            $('.active_option').removeClass('active_option');
+            $(this).addClass('active_option');
         });
 
         $('#postbox').on('dragover', function(e) {

@@ -134,7 +134,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 											<div class="post_option">
 												<input name="type" type="radio" value="P" id="checkbox1" name="public" style="cursor: pointer;">
 											<label for="checkbox1" style="cursor: pointer;"> Public</label></div>
-											<div class="post_option">
+											<div class="post_option active_option">
 												<input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;">
 											<label for="checkbox" style="cursor: pointer;"> Friends</label>
 												</div>
@@ -144,12 +144,12 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 													<input name="type" type="radio" value="P" id="checkbox1" name="public" style="cursor: pointer;">
 													<label for="checkbox1" style="cursor: pointer;"> Public</label>
 												</div>
-												<div class="post_option">
+												<div class="post_option active_option">
 													<input name="type" type="radio" value="F" checked id="checkbox" style="cursor: pointer;">
 													<label for="checkbox" style="cursor: pointer;"> Friends</label>
 												</div>
 											{% else %}
-												<div class="post_option">
+												<div class="post_option active_option">
 													<input name="type" type="radio" value="P" checked id="checkbox1" name="public" style="cursor: pointer;">
 													<label for="checkbox1" style="cursor: pointer;"> Public</label>
 												</div>
