@@ -69,9 +69,11 @@ class TagSearchForm(SF):
         # First, store the SearchQuerySet received from other processing.
         sqs = super(TagSearchForm, self).search()
         # Remove tags from friendly table
+	"""
         if sqs.count() > 1:
             for sq in sqs:
                 if hasattr(sq.object,'user_tag'):
                     sqs = sqs.exclude(id = sq.id)
+	"""
         return sqs
 
