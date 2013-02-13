@@ -58,6 +58,14 @@ iframe {
 
 /* News Feed */
 
+#friends_count, #following_count, #businesses_count, #nonprofits_count {
+	font-family: Tahoma;
+	font-size: 8pt;
+	color: #777;
+	position: relative;
+	left: -4px;
+}
+
 #editbox { width: 100px; margin-right: 5px; padding: 3px; border: 1px solid #CCC; }
 #button_save { font-size: 8pt; color: #FFF; }
 
@@ -71,7 +79,7 @@ iframe {
 }
 
 a.filter:link, a.filter:active, a.filter:visited {
-	color: #AAA;
+	color: #808385;
 	position: relative;
 	display: block;
 	text-decoration: none;
@@ -80,22 +88,26 @@ a.filter:link, a.filter:active, a.filter:visited {
 	font-size: 10pt;
 	margin: 5px 0px;
 	border: 1px solid #EEE;
-	border-left: 5px solid #DDD;
-	-moz-border-radius: 5px 0 0 5px;
-	border-radius: 5px 0 0 5px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=75);
+	-moz-opacity: 0.75;
+	opacity: 0.75;
 }
 a.filter:hover, a.sub_filter:hover {
-	color: #777;
-	background: #F7F9FB;
-	border-color: #DDD;
-	border-left-color: #777;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+	-moz-opacity: 1;
+	opacity: 1;
+	background: #FAFAFA;
+	color: #555;
 }
 
-a.filter img {
+a.filterON img {
 	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 	-moz-opacity: 0.50;
 	opacity: 0.50;
 }
+
 
 .filter_header {
 	color: #333;
@@ -122,18 +134,13 @@ a.filterON:link, a.filterON:active, a.filterON:visited {
 	color: #000;
 	margin: 5px 0px;
 	border: 1px solid #DDD;
-	border-left: 5px solid #444;
-	border-right-color: #FFF;
 	background: #FFF;
-	-moz-border-radius: 5px 0 0 5px;
-	border-radius: 5px 0 0 5px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
 a.filterON:hover, a.sub_filterON:hover {
-	color: #777;
-	background: #F7F9FB;
-	border-color: #EEE;
-	border-left-color: #777;
+
 }
 
 a.filterON img {
@@ -153,7 +160,7 @@ a.filterON img {
 
 .remove_tag {
 	padding: 7px;
-	position: relative; top: -7px; right: 7px;
+	position: relative; top: -7px; right: 0px;
 	border: 1px soild #EEE;
 	color: #777;
 }
@@ -400,24 +407,24 @@ a.coomments_see_more:link {
 
 .post_feature {
 	position: absolute;
-	right: -83px;
+	right: -22px;
 	top: 23px;
-	background: #555;
+	background: #444;
 	color: #FFF;
 	padding: 7px;
 	display: block;
-	width: 150px;
+	width: 200px;
 	text-align: center;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	z-index: 99999;
-	-moz-box-shadow: 0 4px 8px -4px #777;
-	box-shadow: 0 4px 8px -4px #777;
+	-moz-box-shadow: 0 8px 8px -4px #333;
+	box-shadow: 0 8px 8px -4px #333;
 	line-height: 15pt;
 }
 
 .post_feature_sub {
-	background: #FFF; color: #333; padding: 4px 4px 2px 4px; -moz-border-radius: 3px; border-radius: 3px; margin: 2px;
+	background: #000; color: #FFF; padding: 4px 4px 2px 4px; -moz-border-radius: 3px; border-radius: 3px; margin: 2px;
 }
 
 a.post:link, a.post:active, a.post:visited, .submit_comment, .send {
@@ -1544,6 +1551,26 @@ a.profile_btn:hover {
 
 /* Albums */
 
+.explain_albums {
+	text-decoration: none;
+	color: #777;
+	cursor: pointer;
+	padding: 6px 8px 4px 8px;
+	border: 1px solid #EEE;
+	margin: 0 0 10px 0;
+	display: block;
+	width: 250px;
+	text-align: center;
+	background: #F0F3F5;
+}
+
+.explain_albums:hover {
+	color: #333;
+	background: #E0E3E5;
+	border-color: #DDD;
+}
+
+
 .albums {
 	width: 560px;
 	padding: 10px 20px;
@@ -1619,9 +1646,9 @@ a.albums_edit:link, a.albums_edit:visted, a.albums_edit:active {
 
 #create_album_link:hover {
 	color: #333;
-	background: #F7F7F7;
-	-moz-box-shadow: 0 2px 4px -2px #777;
-	box-shadow: 0 2px 4px -2px #777;
+	background: #F0F3F5;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 
 #create_album_form {
@@ -2250,6 +2277,7 @@ a.nav_notifications:hover {
 	line-height: 8pt;
 	color: #777;
 	padding: 0 0 4px 0;
+	font-family: Tahoma;
 }
 
 .result_related, .result_post, .result_search {
