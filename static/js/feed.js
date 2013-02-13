@@ -452,6 +452,8 @@ $(document).ready(function(){
 
     $(document).on('click', '.tringing-tags', function(e) {
         e.preventDefault();
+        var $this = $(this);
+        $('.active_trending').removeClass('active_trending');
         var url = $(this).find('.tag_link').attr('href');
         $("#news_feed").html("<div class='large_loader'></div>");
         make_request({
@@ -460,6 +462,7 @@ $(document).ready(function(){
                 if (data.status == 'OK') {
                     $('.filterON').toggleClass('filterON').toggleClass('filter');
                     $("#news_feed").html(data.html);
+                    $this.addClass('active_trending');
                 }
             },
             errorback: function(data) {

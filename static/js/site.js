@@ -819,7 +819,7 @@ LionFace.Site.prototype = {
         $(document).on('click', '.share-button', function (e) {
             var post = $(this).parents('.result');
             var meta = post.metadata();
-            var elem = meta.postoriginalid;
+            var elem = meta.postid;
             var url = "/posts/share/" + elem + "/";
             var shared_div = post.find('.share_to');
             if (shared_div.is(":visible")) {

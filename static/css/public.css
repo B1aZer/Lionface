@@ -354,7 +354,7 @@ a.home_link:hover {
 	border: 1px solid #CCC;
 }
 
-.micro_page_about:hover, .micro_page:hover {
+.micro_page_about:hover, .micro_page:hover, .active_trending {
 	cursor: pointer;
 	background: #FFF;
 	border-color: #DDD;
