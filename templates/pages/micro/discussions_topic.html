@@ -8,7 +8,7 @@ $(document).ready(function () {
 <div class="page_center">
     <div style="padding: 15px;">
 
-        <span id="topic_name_id">{{ topic.name }}</span> <a href="{% url pages.views.unfollow_topic page.username topic.id %}" class="unfollow_topic following_topic" {% if topic in request.user.get_following_topics %}{% else %} style="display:none;" {% endif %}>Unfollow</a><a href="{% url pages.views.follow_topic page.username topic.id %}" class="follow_topic following_topic" {% if topic in request.user.get_following_topics %}style="display:none;"{% else %}{% endif %}>Follow</a>
+        <span id="topic_name_id" style="font-size: 17pt; line-height: 200%;">{{ topic.name }}</span> <a href="{% url pages.views.unfollow_topic page.username topic.id %}" class="unfollow_topic following_topic" {% if topic in request.user.get_following_topics %}{% else %} style="display:none;" {% endif %}>Unfollow</a><a href="{% url pages.views.follow_topic page.username topic.id %}" class="follow_topic following_topic" {% if topic in request.user.get_following_topics %}style="display:none;"{% else %}{% endif %} style="padding: 4px; margin-left: 4px; font-size: 9pt;">Follow</a>
         <div>
             <div style="padding: 10px;" align="center">
                 <form id="postform" enctype="multipart/form-data">{% csrf_token %}

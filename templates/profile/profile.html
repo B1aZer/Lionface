@@ -129,7 +129,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 							<td align="left" style="color: #999; font-size: 8pt;" width="50%">
 								<input name="profile_id" type="hidden" value="{{profile_user.id}}" >
 									<div style="position: relative; width: 100%; height: 100%;">
-										<div style="position: absolute; left: 0px; top: -12px; {% if profile_user|has_friend:request.user %} display:none {% endif %}">
+										<div style="position: absolute; left: -1px; top: -12px; {% if profile_user|has_friend:request.user %} display:none {% endif %}">
 										{% if profile_user|has_friend:request.user %}
 											<div class="post_option">
 												<input name="type" type="radio" value="P" id="checkbox1" name="public" style="cursor: pointer;">
@@ -165,16 +165,25 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 							</td>
 								<td align="right">
 									<span class="post_feature_container">
-										<span onMouseOver="ShowContent('tags'); return false;" onMouseOut="HideContent('tags'); return false;">#</span>
-										<span onMouseOver="ShowContent('embed'); return false;" onMouseOut="HideContent('embed'); return false;">embed</span>
-										<span onMouseOver="ShowContent('href'); return false;" onMouseOut="HideContent('href'); return false;">href</span></span>
+									    {% if profile_user == request.user %}
+											<span onMouseOver="ShowContent('tags'); return false;" onMouseOut="HideContent('tags'); return false;">#</span>
+											<span onMouseOver="ShowContent('embed'); return false;" onMouseOut="HideContent('embed'); return false;">embed</span>
+											<span onMouseOver="ShowContent('href'); return false;" onMouseOut="HideContent('href'); return false;">href</span>
+										{% else %}
+											<span style="color: #BBB;">#</span>
+											<span style="color: #BBB;">embed</span>
+											<span style="color: #BBB;">href</span>
+										{% endif %}</span>
 										<div class="attach attaching_class" onMouseOver="ShowContent('attach'); return false;" onMouseOut="HideContent('attach'); return false;">Attach</div>
 										<div style="position: relative; display: inline-block;">
-											<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol <span class="post_feature_sub"><span style="font-size: 11pt; position: relative; left: 0px; top: 1px;">#</span></span> to create tags.</div>
+    {% if profile_user == request.user %}
+											<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol <span class="post_feature_sub"><span style="font-size: 11pt; position: relative; left: 0px; top: 1px;">#</span></span><br /> to create tags.</div>
 											<div class="post_feature" style="display: none;" id="embed">Copy and paste links from sites like Youtube and Vimeo and videos will automatically embed once you submit your post. We also support TED.com videos.</div>
 											<div class="post_feature" style="display: none;" id="href">Use standard HTML a href code to create links within your post.</div>
-											<div class="post_feature" style="display: none;" id="attach">You can attach up to <span class="post_feature_sub">21</span> images per post.</div>
+											<div class="post_feature" style="display: none;" id="attach">You can attach up to <span class="post_feature_sub">21</span><br /> images per post.</div>
+
 										</div>
+	{% else %} {% endif %}
 								<a href="#" class="post" id="postboxbutton">Post</a>
 							</td>
 				</tr></table>

@@ -361,6 +361,11 @@ a.home_link:hover {
 	color: #3ea8d2;
 }
 
+.micro_page_about.tringing-tags {
+	border-color: transparent;
+	line-height: 200%;
+}
+
 .float_right {
 	float: right; width: 230px; padding: 10px;
 }
