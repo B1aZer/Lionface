@@ -40,12 +40,14 @@ def seen_user(user):
     r.setnx(USER_USERNAME % user.pk, user.username)
     r.set(USER_LAST_SEEN % user.pk, last_seen)
 
-def get_active_users(minutes_ago=5):
+def get_active_users(minutes_ago=2):
     """
     Yields active Users in the last ``minutes_ago`` minutes, returning
     2-tuples of (user_detail_dict, last_seen_time) in most-to-least recent
     order by time.
     """
+    if settings.USER_ONLINE_TIMEOUT:
+        minutes_ago = settings.USER_ONLINE_TIMEOUT / 60
     since = datetime.datetime.now() - datetime.timedelta(minutes=minutes_ago)
     since_time = int(time.mktime(since.timetuple()))
     for user_id, last_seen in reversed(r.zrangebyscore(ACTIVE_USERS, since_time,

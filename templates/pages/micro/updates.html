@@ -11,7 +11,7 @@
         {% if request.user in page.get_admins and request.user|check_pages_updates:page %}
 
         <div>
-            <div style="padding: 10px;" align="center">
+            <div style="padding: 10px; background: #F3F3F3;	-moz-border-radius: 3px; border-radius: 3px;" align="center">
                 <form id="postform" enctype="multipart/form-data">{% csrf_token %}
 
                 <textarea class="postbox_textarea" name="content" style="line-height:1; font-size: 15px;"></textarea>

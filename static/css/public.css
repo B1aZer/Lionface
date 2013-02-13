@@ -354,11 +354,16 @@ a.home_link:hover {
 	border: 1px solid #CCC;
 }
 
-.micro_page_about:hover, .micro_page:hover {
+.micro_page_about:hover, .micro_page:hover, .active_trending {
 	cursor: pointer;
 	background: #FFF;
 	border-color: #DDD;
 	color: #3ea8d2;
+}
+
+.micro_page_about.tringing-tags {
+	border-color: transparent;
+	line-height: 200%;
 }
 
 .float_right {

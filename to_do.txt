@@ -1,9 +1,14 @@
 #smileys
 #administration
 
-fix cover save
+[2/11/13 9:49:25 PM] Nick: And would it be a quick fix to make http://youtu.be/OOpkr8uNWpk style links embed? People keep using them, to their disappointment.
+
+ added ping.ogg to the static directoy, and I added the sound img to the chat tab, however the display is currently "none". the soundOFF.png and soundON.png are both in static/images.
 
 • The scrolling issue returned: if I open the popup div when I post, before reload, and close it, scroll is disabled for the page.
+#
+#for page posts we take PagePost objects not Newsfeed
+#these posts are adding to feed but not deleting from it
 
 redis takes too much memory
 memcache ?

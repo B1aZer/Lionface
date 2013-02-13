@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load media header %}
 
+{% block css %}
+<style>
+body { background: #FFF; }
+</style>
+{% endblock %}
+
 {% block body %}
     {% block header  %}
         {% header request.user %}

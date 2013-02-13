@@ -321,6 +321,8 @@ HAYSTACK_SEARCH_RESULTS_PER_PAGE = 7
 
 STRIPE_API_KEY = '5IFFCmgHYrLqVm6ISBhhtq1Va7I80J9J'
 
+APPEND_SLASH = False
+
 SITE_ID = 1
 
 # caelery django db queue
@@ -328,7 +330,7 @@ SITE_ID = 1
 
 ACCOUNT_ACTIVATION_DAYS = 7
 # Number of seconds of inactivity before a user is marked offline
-USER_ONLINE_TIMEOUT = 300
+USER_ONLINE_TIMEOUT = 120
 
 CACHES = {
     'default': {

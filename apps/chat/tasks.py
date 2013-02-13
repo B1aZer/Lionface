@@ -47,7 +47,7 @@ tasks.register(ProcessMessage)
 
 
 class SaveMessageHistory(Task):
-    def run(self, username, usernames, **kwargs):
+    def run(self, username, usernames, list_opened, **kwargs):
         logger = ProcessMessage.get_logger()
         try:
             user = UserProfile.objects.get(username=username)
@@ -55,6 +55,12 @@ class SaveMessageHistory(Task):
             return False
         user_chat, created = Chat.objects.get_or_create(user=user)
         user_chat.tabs_to.clear()
+        if list_opened:
+            user_chat.chat_list = True
+            user_chat.save()
+        else:
+            user_chat.chat_list = False
+            user_chat.save()
         logger.info(usernames)
         for user_obj in usernames:
             try:
@@ -102,6 +108,7 @@ tasks.register(LoadMessageHistory)
 
 class PublishActiveUsers(Task):
     def run(self, username, **kwargs):
+        logger = PublishActiveUsers.get_logger()
         try:
             user_obj = UserProfile.objects.get(username = username)
             friends = user_obj.get_friends()
@@ -109,6 +116,7 @@ class PublishActiveUsers(Task):
             return False
         active = list(get_active_users())
         active = [u.username for u in active if u in friends]
+        logger.info(active)
         r.publish(username, json.dumps({'active':active, 'type':'active'}))
         return True
 tasks.register(PublishActiveUsers)

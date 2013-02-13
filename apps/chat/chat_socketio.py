@@ -93,9 +93,9 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         if username not in self.nicknames:
             self.nicknames.append(username)
 
-    def on_save_history(self, username, usernames):
+    def on_save_history(self, username, usernames, list_opened):
         self.log('saving')
         self.log(username)
         usernames = json.loads(usernames)
-        self.log(usernames)
-        SaveMessageHistory.delay(username, usernames)
+        self.log(list_opened)
+        SaveMessageHistory.delay(username, usernames, list_opened)

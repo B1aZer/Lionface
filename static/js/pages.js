@@ -143,6 +143,7 @@ LionFace.Pages.prototype = {
 
         $(document).on('click','.browse_rows',function(e) {
             e.preventDefault();
+            var $this = $(this);
             var tr = $(this).parents('tr')
             var category = tr.attr('class');
             var url = $(this).attr('href');
@@ -152,6 +153,7 @@ LionFace.Pages.prototype = {
                 tr.data('toggled',true);
                 tr.data('entangled',false);
                 make_request({url:url});
+                $this.html('Collapse');
             }
             else {
                 $("." + category + ".hidden_row").hide();
@@ -159,6 +161,7 @@ LionFace.Pages.prototype = {
                 make_request({url:url,
                             data:{'collapsed':true,}
                 });
+                $this.html('Expand');
             }
         });
 
@@ -666,6 +669,8 @@ LionFace.Pages.prototype = {
                         if (!self.hasClass('topics_bottom')) {
                             self.find('.topic_views_count').html(data.views);
                             $('.active_topic').removeClass('active_topic');
+                            make_excerpts();
+                            $('.postbox_textarea').autosize();
                             self.addClass('active_topic');
                         }
                     }
@@ -752,6 +757,28 @@ LionFace.Pages.prototype = {
                 }
             });
 
+        });
+
+        /** topic following */
+        $(document).on('click', '.following_topic', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        if (data.follow == 'follow') {
+                            $('.follow_topic').hide();
+                            $('.unfollow_topic').show();
+                        }
+                        else {
+                            $('.unfollow_topic').hide();
+                            $('.follow_topic').show();
+                        }
+                    }
+                }
+            });
         });
 
     },

@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 from registration.views import activate
 from django.core.urlresolvers import reverse
 import views
+from account.forms import SignupForm
 
 urlpatterns = patterns('',
     url(r'^activate/(?P<activation_key>\w+)/$',
@@ -20,6 +21,7 @@ urlpatterns = patterns('',
     url(r'signup/$', views.signup, name='signup'),
     url(r'login/$', views.login),
     url(r'logout/$', 'django.contrib.auth.views.logout_then_login', name='logout'),
+    url(r'^password_reset/$', 'django.contrib.auth.views.password_reset',{'extra_context':{'signup_form':SignupForm}}, name='password_reset' ),
     url(r'', include('django.contrib.auth.urls')),
     #url(r'', include('registration.backends.default.urls')),
 

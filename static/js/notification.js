@@ -110,6 +110,7 @@ LionFace.Notification.prototype = {
             '.comment_submitted',
             '.comment_image',
             '.follow_comment',
+            '.discuss_post',
             '.follow_shared'
         ];
 

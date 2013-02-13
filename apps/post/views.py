@@ -6,7 +6,7 @@ from django.template import RequestContext, loader
 from .models import *
 from account.models import UserProfile
 from tags.models import Tag
-from pages.models import Pages
+from pages.models import Pages, Topics
 from profile.decorators import unblocked_users
 from notification.models import Notification
 from agenda.models import Events
@@ -74,12 +74,16 @@ def feed(request, user_id=None):
             items = sorted(items, key=lambda post: post.timestamp, reverse=True)
         # adding page filter here, since we need to extend the query
         if 'B' in filters:
-            business_pages = NewsItem.objects.get_business_feed(request.user)
+            #business_pages = NewsItem.objects.get_business_feed(request.user)
+            loved_pages = request.user.get_loved().filter(type='BS')
+            business_pages = PagePost.objects.filter(page__in=loved_pages)
             items = list(chain(items, business_pages))
             items = list(set(items))
             items = sorted(items, key=lambda post: post.timestamp, reverse=True)
         if 'N' in filters:
-            nonprofit_pages = NewsItem.objects.get_nonprofit_feed(request.user)
+            loved_pages = request.user.get_loved().filter(type='NP')
+            #nonprofit_pages = NewsItem.objects.get_nonprofit_feed(request.user)
+            nonprofit_pages = PagePost.objects.filter(page__in=loved_pages)
             items = list(chain(items, nonprofit_pages))
             items = list(set(items))
             items = sorted(items, key=lambda post: post.timestamp, reverse=True)
@@ -354,6 +358,13 @@ def show(request):
             # int(post_id))]
             if post_ids:
                 items = Post.objects.filter(id__in=post_ids)
+
+        elif post_type in ('discuss post'):
+            try:
+                topic = Topics.objects.get(id=int(post_id))
+                items = topic.get_feed()
+            except:
+                items = []
 
         if len(items) > 0:
                 t = loader.get_template('post/_feed.html')

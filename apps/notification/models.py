@@ -26,6 +26,7 @@ NOTIFICATION_TYPES = (
     ('FC', 'Follow Comment'),
     ('FS', 'Follow Shared'),
     ('LP', 'Loves Post'),
+    ('DP', 'Discussion Post'),
     ('MC', 'Multiple Comment'),
     ('MI', 'Multiple Image Comment'),
     ('MF', 'Multiple Comment Following'),
@@ -35,6 +36,7 @@ NOTIFICATION_TYPES = (
     ('FM', 'Multiple Following Acquired'),
     ('MP', 'Multiple Profile Post'),
     ('ML', 'Multiple Loves Post'),
+    ('DM', 'Multiple Discussion Post'),
 )
 
 
@@ -64,6 +66,9 @@ class Notification(models.Model):
         if not hasattr(self, '_people_counter'):
             setattr(self, '_people_counter', self.extra_set.filter(user_id__gt=0).count() or 1)
         return getattr(self, '_people_counter')
+
+    def post_counter(self):
+        return self.extra_set.filter(item_id__gt=0).count() or 1
 
     def mark_read(self):
         if not self.read:
@@ -136,6 +141,14 @@ class Notification(models.Model):
                                                          read=False)
             for origianl_not in original_notfs:
                     self.extra_set.create(item_id=origianl_not.content_object.id)
+            if original_notfs.count():
+                original_notfs.update(read=True)
+        if self.type == 'DM':
+            original_notfs = Notification.objects.filter(user=self.user,
+                                                         type='DP',
+                                                         read=False)
+            for origianl_not in original_notfs:
+                    self.extra_set.create(item_id=origianl_not.related_object.id)
             if original_notfs.count():
                 original_notfs.update(read=True)
 
@@ -211,6 +224,12 @@ def create_friend_request_notification(sender, instance, created, **kwargs):
         Notification(user=instance.to_user, type='FR', friend_request=instance, content_object=instance).save()
 post_save.connect(create_friend_request_notification, sender=FriendRequest)
 
+def create_discuss_post_notification(sender, instance, created, **kwargs):
+    if created:
+        for user in instance.topic.following.all():
+            if user != instance.user:
+                Notification(user=user, type='DP', other_user=instance.user, content_object=instance.topic, related_object=instance).save()
+post_save.connect(create_discuss_post_notification, sender=DiscussPost)
 
 def create_profile_post_notification(sender, instance, created, **kwargs):
     if created:
@@ -424,11 +443,13 @@ def update_notification_count(sender, instance, **kwargs):
             Notification.objects.filter(**data) \
                 .filter(hidden=False) \
                 .update(hidden=True)
-    if instance.type in ('FF', 'PP', 'LP'):
+    if instance.type in ('FF', 'PP', 'LP', 'DP'):
         if instance.type == 'FF':
             notification_type = 'FM'
         if instance.type == 'PP':
             notification_type = 'MP'
+        if instance.type == 'DP':
+            notification_type = 'DM'
         if instance.type == 'LP':
             notification_type = 'ML'
         content_object = instance.content_object
@@ -448,18 +469,20 @@ def update_notification_count(sender, instance, **kwargs):
                                    content_object=content_object)
                 # people counter
                 obj.save()
-                for user_notf in notfs:
-                    if obj.extra_set.all():
-                        if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                if not instance.type == 'DP':
+                    for user_notf in notfs:
+                        if obj.extra_set.all():
+                            if user_notf.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                                obj.extra_set.create(user_id=user_notf.other_user.id)
+                        else:
                             obj.extra_set.create(user_id=user_notf.other_user.id)
-                    else:
-                        obj.extra_set.create(user_id=user_notf.other_user.id)
 
             else:
-                obj = notf.get()
-                if obj.extra_set.all():
-                    if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
-                        obj.extra_set.create(user_id=instance.other_user.id)
+                if not instance.type == 'DP':
+                    obj = notf.get()
+                    if obj.extra_set.all():
+                        if instance.other_user.id not in [x.user_id for x in obj.extra_set.all()]:
+                            obj.extra_set.create(user_id=instance.other_user.id)
             # hide all original notifications
             original_notfs = Notification.objects.filter(user=instance.user,
                                                          type=instance.type,

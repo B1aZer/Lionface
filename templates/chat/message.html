@@ -1,5 +1,6 @@
+{% load format_results %}
 {% if message %}
-<div style="padding-top: 8px; margin-top: 4px; border-top: 1px solid #DDD;">
-<a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a><br /> <span class="user_content message_from_{{ user.username }}">{{ message }}</span> 
+<div style="padding-top: 8px; margin-top: 8px; border-top: 1px solid #DDD;">
+<a href="{{ user.get_absolute_url }}">{{ user.get_full_name }}</a><br /> <span class="user_content message_from_{{ user.username }}">{{ message|strip_comment|safe }}</span> 
 </div>
 {% endif %}

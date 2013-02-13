@@ -24,17 +24,12 @@
 <div style="padding: 10px; position: relative; left: 40px;">
 
     {% if profile_user == request.user %}
-    <span class="profile_micro_header">Albums</span><div id="create_album_link" style="cursor:pointer">+ Create an Album</div>
+    <span class="profile_micro_header" style="position: relative; top: 3px;">Albums</span><div id="create_album_link" style="cursor:pointer">+ Create an Album</div>
     <form id="create_album_form" style="display:none">
         <input id="album_name" name="album_name">
         <input type="submit" value="+ Create" class="blue_btn" style="padding: 6px 13px 7px 13px;" style="font-size: 8pt;">
     </form>
-	<br /><br />
-	<div style="width: 600px;">
-	Albums on Lionface are non-traditional. Instead of directly collecting images into albums, entire posts are collected. The benefit of this is that posts can contain not only images, but text and videos as well. We believe this makes Lionface albums much more enjoyable.<br /><br /> 
-	To begin, create an Album on this page by clicking the link above. Once you have an Album, return to your profile. You will notice that when you mouse over any one of your posts, additional options appear at the bottom of that post. Look for the "Settings" option, and click that. Here you will find a drop-down menu that lists your Albums. All you have to do is select the Album you would like that post to be attached to.<br /><br />
-	The name of the Album will appear on the same line as where you found the Settings link, and clicking this Album name will bring you to a new page that loads only posts in that Album. Or, you can return to this page to view all your Albums.
-	</div>
+
     {% endif %}
 
     
@@ -44,7 +39,22 @@
         {% include 'profile/album.html' %}
 
         {% endfor %}  
+
         </div>
+
+    {% if profile_user == request.user %}
+	<div align="center" style="width: 600px;">
+	<div onClick="ShowContent('explain'); ShowContent('hide_exp'); HideContent('show_exp'); return false;" id="show_exp" class="explain_albums">I don't understand how albums work.</div>
+	<div onClick="ShowContent('show_exp'); HideContent('hide_exp'); HideContent('explain'); return false;" id="hide_exp" style="display: none; width: 100px;" class="explain_albums">Okay, I get it.</div>
+	</div>
+	<div style="width: 600px; display: none; line-height: 125%; margin-bottom: 20px;" id="explain">
+	Albums on Lionface are non-traditional. Instead of directly collecting images into albums, entire posts are collected. The benefit of this is that posts can contain not only images, but text and videos as well. We believe this makes Lionface albums much more enjoyable.<br /><br /> 
+	To begin, create an Album on this page by clicking the link above. Once you have an Album, return to your profile. You will notice that when you mouse over any one of your posts, additional options appear at the bottom of that post. Look for the "Settings" option, and click that. Here you will find a drop-down menu that lists your Albums. All you have to do is select the Album you would like that post to be attached to.<br /><br />
+	The name of the Album will appear on the same line as where you found the Settings link, and clicking this Album name will bring you to a new page that loads only posts in that Album. Or, you can return to this page to view all your Albums.
+	</div>
+    {% endif %}
+
+
     
 
 </div>

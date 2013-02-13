@@ -248,6 +248,8 @@ LionFace.Profile.prototype = {
 
         $(document).on('click','.post_option',function(){
             $(this).find('input').prop('checked', true);
+            $('.active_option').removeClass('active_option');
+            $(this).addClass('active_option');
         });
 
         $('#postbox').on('dragover', function(e) {
@@ -787,6 +789,25 @@ LionFace.Profile.prototype = {
             $('#left_birth').hide();
             $('#show_birth_select').data('toggled',false);
         });
+
+        $(document).on('click', '#remove_birth_date', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            make_request({
+                url:url,
+                callback: function (data) {
+                    if (data.status == 'OK') {
+                        $('.birth_select').hide();
+                        $('#left_birth').hide();
+                        $('#show_birth_select').data('toggled',false);
+                        $('#birth_day_id').html('');
+                        $('#birth_month_id').html('');
+                        $('#birth_year_id').html('');
+                    }
+                }
+            });
+        });
         
         $(document).on('click', '#show_url_input', function (e) {
             e.preventDefault();
@@ -841,6 +862,24 @@ LionFace.Profile.prototype = {
             $('#show_url_input').data('toggled',false);
             $('.url_errors').hide();
             $('#url_input').val('');
+        });
+
+        $(document).on('click', '#remove_url_input', function (e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            make_request({
+                url:url,
+                callback : function (data) {
+                    if (data.status == 'OK') {
+                        $('.bio_website').hide();
+                        $('#left_web').hide();
+                        $('#show_url_input').data('toggled',false);
+                        $('#url_container').html('');
+                        $('#url_input').val('');
+                    }
+                }
+            });
         });
 
     },

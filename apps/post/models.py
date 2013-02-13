@@ -873,6 +873,12 @@ post_save.connect(add_post_to_followings, sender=ContentPost)
 post_save.connect(add_post_to_followings, sender=PagePost)
 post_save.connect(add_post_to_followings, sender=FeedbackPost)
 
+def add_user_to_following_discussion(sender, instance, created, **kwargs):
+    if created:
+        if instance.user not in instance.topic.following.all():
+            instance.topic.following.add(instance.user)
+post_save.connect(add_user_to_following_discussion, sender=DiscussPost)
+
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
         UpdateNewsFeeds.delay(instance.get_inherited())

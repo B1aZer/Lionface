@@ -488,6 +488,10 @@ class UserProfile(User):
         messages = self.message_to.filter(viewed=False, in_chat=False).aggregate(Count('user', distinct='True'))
         return messages.get('user__count')
 
+    def new_chat_messages(self):
+        messages = self.message_to.filter(viewed=False, in_chat=True).count()
+        return messages
+
     def new_notifcations(self):
         """
         notifications_count = self.notification_set.filter(read=False) \
@@ -498,6 +502,10 @@ class UserProfile(User):
                                                            hidden=False) \
             .count()
         return notifications_count
+
+    def new_overall(self):
+        count = self.new_messages() + self.new_notifcations()
+        return count
 
     def add_follower(self, person):
         relationship, created = Relationship.objects.get_or_create(
@@ -735,6 +743,9 @@ class UserProfile(User):
     def have_shared_topic_with(self, page):
         shared = self.topics_set.filter(tagged=page, privacy='I').count()
         return shared
+
+    def get_following_topics(self):
+        return self.following_topics.all()
 
     @models.permalink
     def get_absolute_url(self):

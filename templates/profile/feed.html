@@ -29,11 +29,11 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 </td>
 <!--
 <td align-"left">
-	<a href="{% url discussions.views.home %}" class="">Discussions ></a>
+	<a href="{% url discussions.views.home %}" class="">Photos ></a>
 </td>
 -->
 <td align="right" width="150">
-	<span style="color: #AAADAC; padding-right: 17px;">share your heart</span>
+	<span style="color: #fafafa; padding-right: 17px;">hm</span>
 </td></tr></table>
 </div>
 {% endblock %}
@@ -42,24 +42,47 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 
    
 		<div class="filter_header" style="margin-bottom: 8px;">News Feed Filters<br /><span style="color: #BBB; font-size: 8pt;">Shift+click to select multiple filters.</span></div>
-        <a href="javascript:;" id="Friends" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'F' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Friends.png' %}" /> Friends <span id="friends_count"></span></a>
-        <a href="javascript:;" id="Following" class="feed_type {% if 'W' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'W' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Following <span id="following_count"></span></a>
-        <a href="javascript:;" id="Businesses" class="feed_type {% if 'B' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'B' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_Business.png' %}" /> Businesses <span id="businesses_count"></span></a>
-        <a href="javascript:;" id="Nonprofits" class="feed_type {% if 'N' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'N' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}><img class="NF_icon" src="{% media_url 'images/Icon_NF_NPs.png' %}" /> Nonprofits <span id="nonprofits_count"></span></a>
 
+        <a href="javascript:;" id="Friends" class="feed_type {% if 'F' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'F' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}>
+			<table width="100%" height="100%"><tr><td align="left">
+			<img class="NF_icon" src="{% media_url 'images/Icon_NF_Friends.png' %}" /> Friends</td><td align="right">
+			<span id="friends_count"></span>
+			</td></tr></table></a>
+        <a href="javascript:;" id="Following" class="feed_type {% if 'W' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'W' in request.user.get_filters %} title=" Turn filter off. " {% else %} title=" Turn filter on. " {% endif %}>
+			<table width="100%" height="100%"><tr><td align="left">
+			<img class="NF_icon" src="{% media_url 'images/Icon_NF_Following.png' %}" /> Following</td><td align="right">
+			<span id="following_count"></span>
+			</td></tr></table></a>
+        <a href="javascript:;" id="Businesses" class="feed_type {% if 'B' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'B' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}>
+			<table width="100%" height="100%"><tr><td align="left">
+			<img class="NF_icon" src="{% media_url 'images/Icon_NF_Business.png' %}" /> Businesses</td><td align="right">
+			<span id="businesses_count"></span>
+			</td></tr></table></a>
+        <a href="javascript:;" id="Nonprofits" class="feed_type {% if 'N' in request.user.get_filters %} filterON {% else %} filter {% endif %}" {% if 'N' in request.user.get_filters %} title=" Turn filter off. "  {% else %} title=" Turn filter on. " {% endif %}>
+			<table width="100%" height="100%"><tr><td align="left">
+			<img class="NF_icon" src="{% media_url 'images/Icon_NF_NPs.png' %}" /> Nonprofits</td><td align="right">
+			<span id="nonprofits_count"></span>
+			</td></tr></table></a>
+		
+		<div style="display: block; width: 195px; border: 2px solid #FFF; height: 0px; margin: 8px 0;"></div>
 
-		<div class="filter_header" style="margin: 8px 0;">Follow <span style="color: #000;">Tags</span></div>
         {% for tag in request.user.user_tag_set.all %}
         <a href="javascript:;" onClick="return false;" class="tagged {% if tag.active %} filterON {%else%} filter {% endif %}" {% if tag.active %} title=" Turn filter off. " {%else%} title=" Turn filter on. " {% endif %}>{{ tag.name }}<span class="remove_tag" style="float:right; display:none;" title="Remove Tag">x</span></a>
         {% empty %}
         {% endfor %}
-        <a href="javascript:;" class="filter tags" style="height:12px; border: 0px; background: transparent;"><span class="add_tag">Add +</span></a>
+		<div align="right" style="padding-right: 8px;">
+        <a href="javascript:;" class="filter tags" style="height:12px; border: 0px; background: transparent;" title="You can follow a custom tag by adding it to your News Feed here."><span class="add_tag">Add Tag +</span></a>
+		</div>
 
         {% if popular_tags %}
-		<div class="filter_header" style="margin: 8px 0;">Trending Tags<br /><span style="color: #BBB; font-size: 8pt;">Previous 7 days</span></div>
+		<div class="filter_header" style="margin: 8px 0;">Popular Tags</div>
         {% endif %}
         {% for tag in popular_tags %}
-        <div class="micro_page_about tringing-tags" style="margin: 2px 0; width: 175px;">#<span class="tag_name">{{ tag.name }}</span><br /><span style="font-size: 7pt;">{{ tag.get_posts_count }} Tagged Posts</span><a class="tag_link" href="{% url post.views.tag_feed tag_id=tag.id %}" style="display:none"></a></div>
+        <div class="micro_page_about tringing-tags" style="margin: 2px 0; width: 175px;" onMouseOver="ShowContent('count_{{ tag.name }}'); return false;" onMouseOut="HideContent('count_{{ tag.name }}'); return false;">
+			<table width="100%" height="100%"><tr><td align="left">
+			#<span class="tag_name">{{ tag.name }}</span></td><td align="right">
+			<div style="font-size: 7pt; color: #777; display: none; z-index: 999;" id="count_{{ tag.name }}">{{ tag.get_posts_count }}</div><a class="tag_link" href="{% url post.views.tag_feed tag_id=tag.id %}" style="display:none"></a>
+			</td></tr></table></div>
         {% endfor %}
 
 {% endblock %}
