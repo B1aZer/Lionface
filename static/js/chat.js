@@ -127,6 +127,12 @@ LionFace.Chat.prototype = {
                                 $('#online_list').show();
                                 $('#chat_id').data('toggled',true);
                             }
+                            else if (name == 'sound_status') {
+                                $('#sound_on_id').hide();
+                                $('#sound_off_id').show();
+                                var sound = document.getElementById('new_mess_audio');
+                                sound.muted = !sound.muted;
+                            }
                             else if (!$('#name_'+name).length) {
                                 $('#names_chat_container').append(data[name].names);
                                 $('#main_chat_container').append(data[name].messages);
@@ -278,6 +284,8 @@ LionFace.Chat.prototype = {
                     }
                 }
                 save_history();
+                // play sound
+                document.getElementById('new_mess_audio').play();
                 // if opened
                 if ($('#name_'+data.username).data('toggled')) {
                     // scroll
@@ -463,6 +471,23 @@ LionFace.Chat.prototype = {
             div.fadeOut( function() { $(this).remove(); save_history(); }); 
             $('#message_' + username).remove();
             socket.emit('close chat', username, LionFace.User.username);
+        });
+
+        $(document).on('click', '.sound_ctrl', function(e) {
+            e.stopPropagation();
+            if (!connected) { return; }
+            var $this = $(this);
+            var sound = document.getElementById('new_mess_audio');
+            sound.muted = !sound.muted;
+            $this.hide();
+            if ($this.attr('id') == 'sound_on_id') {
+                $('#sound_off_id').show();
+                socket.emit('sound', LionFace.User.username, 'off'); 
+            }
+            else {
+                $('#sound_on_id').show();
+                socket.emit('sound', LionFace.User.username, 'on'); 
+            }
         });
 
     },

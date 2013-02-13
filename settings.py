@@ -323,6 +323,9 @@ STRIPE_API_KEY = '5IFFCmgHYrLqVm6ISBhhtq1Va7I80J9J'
 
 APPEND_SLASH = False
 
+COPY_MEDIA_FILETYPES = ('gif', 'jpg', 'jpeg', 'png', 'svg', 'svgz', 'ico', 'swf', 'ttf', 'otf',
+     'eot', 'woff', 'ogg', 'wav')
+
 SITE_ID = 1
 
 # caelery django db queue

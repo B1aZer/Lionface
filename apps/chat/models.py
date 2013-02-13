@@ -8,6 +8,7 @@ class Chat(models.Model):
     #tabs_to = models.TextField(blank=True)
     tabs_to = models.ManyToManyField(UserProfile, related_name='chat_tabs', symmetrical=False, through="ChatHistory")
     chat_list = models.BooleanField(default=False)
+    sound = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now=True)
 
 class ChatHistory(models.Model):

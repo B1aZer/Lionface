@@ -121,3 +121,17 @@ class PublishActiveUsers(Task):
         return True
 tasks.register(PublishActiveUsers)
 
+class ToggleSound(Task):
+    def run(self, username, value, **kwargs):
+        try:
+            user = UserProfile.objects.get(username=username)
+        except:
+            return False
+        user_chat, created = Chat.objects.get_or_create(user=user)
+        if value == 'on':
+            user_chat.sound = True
+        else:
+            user_chat.sound = False
+        user_chat.save()
+tasks.register(ToggleSound)
+

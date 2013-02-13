@@ -5,7 +5,7 @@ from socketio.mixins import RoomsMixin, BroadcastMixin
 from socketio.sdjango import namespace
 
 
-from tasks import ProcessMessage, SaveMessageHistory, PublishActiveUsers
+from tasks import ProcessMessage, SaveMessageHistory, PublishActiveUsers, ToggleSound
 #from .utils import redis_connection
 from django.conf import settings
 
@@ -99,3 +99,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         usernames = json.loads(usernames)
         self.log(list_opened)
         SaveMessageHistory.delay(username, usernames, list_opened)
+
+    def on_sound(self, username, value):
+        ToggleSound.delay(username, value)
