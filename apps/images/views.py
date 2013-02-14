@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from account.models import UserProfile
-from post.models import ContentPost
+from post.models import *
 from .models import Image
 
 try:
@@ -22,20 +22,18 @@ def notifications(request):
     data = {}
     try:
         if owner_id:
-            if owner_type == 'content post':
-                post = get_object_or_404(ContentPost, id=owner_id)
-                ctype = ContentType.objects.get_for_model(post)
-                qs = Image.objects.filter(owner_type=ctype, owner_id=post.id)
-                try:
-                    image_pk = request.REQUEST.get('pk', None)
-                    image = qs.get(pk=image_pk)
-                except Image.DoesNotExist:
-                    return HttpResponseBadRequest('Bad PK was received.')
-                data['owner'] = 'post'
-                data['images_comments_ajax'] = reverse(
-                    'post_images_ajax_comments')
-            else:
-                raise Http404
+            post = get_object_or_404(Post, id=owner_id)
+            post = post.get_inherited()
+            ctype = ContentType.objects.get_for_model(post)
+            qs = Image.objects.filter(owner_type=ctype, owner_id=post.id)
+            try:
+                image_pk = request.REQUEST.get('pk', None)
+                image = qs.get(pk=image_pk)
+            except Image.DoesNotExist:
+                return HttpResponseBadRequest('Bad PK was received.')
+            data['owner'] = 'post'
+            data['images_comments_ajax'] = reverse(
+                'post_images_ajax_comments')
         else:
             ctype = ContentType.objects.get_for_model(UserProfile)
             qs = Image.objects.filter(owner_type=ctype, owner_id=request.user.id)
