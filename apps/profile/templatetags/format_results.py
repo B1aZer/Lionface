@@ -598,3 +598,9 @@ def image_get_followings(image):
     following =  image.following.all()
     following = [u.username for u in following]
     return json.dumps(following)
+
+@register.filter
+def image_get_lovers(image):
+    lovers =  image.users_loved.all()
+    lovers = [u.username for u in lovers]
+    return json.dumps(lovers)

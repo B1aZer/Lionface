@@ -520,6 +520,16 @@ LionFace.Images.prototype = {
             $popup.find('#add_post_follower').show();
             $popup.find('#rem_post_follower').hide();
         }
+        // lovers
+        var lovers = $(item).data('lovers');
+        if ($.inArray(LionFace.User.username,lovers) >= 0) {
+            $popup.find('#add_post_lovers').hide();
+            $popup.find('#rem_post_lovers').show();
+        }
+        else {
+            $popup.find('#add_post_lovers').show();
+            $popup.find('#rem_post_lovers').hide();
+        }
     },
 
     popup_start: function(item) {
@@ -759,6 +769,47 @@ LionFace.Images.prototype = {
         });
     },
 
+    post_lovers: function(e, el) {
+        e.preventDefault();
+        var _this = this;
+        var $this = el;
+        var id = $this.attr('id');
+        var url = $this.attr('href');
+        var post = $('.image_container');
+        var item = post.find('li[popup=true]');
+        var followings = item.data('following');
+        var data = {
+            'user': LionFace.User.username,
+            'imagepk': item.data('pk')
+            }
+        if (id == 'add_post_lovers') {
+            data['add'] = true;
+        }
+        else {
+            data['add'] = false;
+        }
+        make_request({ 
+            url:url,
+            data:JSON.stringify(data),
+            callback: function (data) {
+                if (data.status == 'OK') {
+                    if (data.rem) {
+                        var index = followings.indexOf(LionFace.User.username);
+                        followings.splice(index, 1);
+                        $('.image_popup').find('#rem_post_lovers').hide();
+                        $('.image_popup').find('#add_post_lovers').show();
+                    }
+                    else {
+                        followings.push(LionFace.User.username);
+                        $('.image_popup').find('#add_post_lovers').hide();
+                        $('.image_popup').find('#rem_post_lovers').show();
+                    }
+                    item.data('lovers',followings)
+                }
+            }
+        });
+    },
+
     post_followers: function(e, el) {
         e.preventDefault();
         var _this = this;
@@ -860,6 +911,9 @@ LionFace.Images.prototype = {
         });
         $popup.find('.post_followers').click(function(e) {
             _this.post_followers(e, $(this));
+        });
+        $popup.find('.post_lovers').click(function(e) {
+            _this.post_lovers(e, $(this));
         });
         this.popup_comments_bind_make_comment();
     },

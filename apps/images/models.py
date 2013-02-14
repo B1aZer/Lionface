@@ -36,6 +36,10 @@ class ImageQuerySet(CustomQuerySet):
             [(d['pk'], d['rating']) for d in self.values('pk', 'rating')]
         )
 
+class ImageLoves(models.Model):
+    post = models.ForeignKey('Image')
+    user = models.ForeignKey(UserProfile)
+    date = models.DateTimeField(auto_now_add=True)
 
 class Image(models.Model):
     image = ImageWithThumbField(upload_to="uploads/images")
@@ -45,6 +49,8 @@ class Image(models.Model):
     rating = models.IntegerField(blank=True, null=True)
     activity = models.BooleanField(default=False)
     following = models.ManyToManyField( UserProfile, related_name='follows_images', null=True, blank=True)
+    users_loved = models.ManyToManyField(
+        UserProfile, related_name='images_loved', through='ImageLoves', null=True, blank=True)
 
     objects = ImageQuerySet.as_manager()
 

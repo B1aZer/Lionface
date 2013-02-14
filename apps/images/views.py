@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 
 from account.models import UserProfile
 from post.models import *
-from .models import Image
+from .models import *
 
 try:
     import json
@@ -85,4 +85,32 @@ def add_followings(request):
 
 def del_followings(request):
     data = {'status':'FAIL'}
+    return HttpResponse(json.dumps(data), "application/json")
+
+def add_lovers(request):
+    data = {'status':'FAIL'}
+    if not request.is_ajax():
+        raise Http404
+    request_post = json.loads(request.raw_post_data)
+    username = request_post.get('user')
+    imagepk = request_post.get('imagepk')
+    add = request_post.get('add')
+    try:
+        user = UserProfile.objects.get(username=username)
+    except:
+        raise Http404
+    try:
+        image = Image.objects.get(id=imagepk)
+    except:
+        raise Http404
+    if add:
+        #image.following.add(user)
+        ImageLoves.objects.get_or_create(user=user, post=image)
+        data['status'] = 'OK'
+        data['rem'] = False
+    else:
+        #image.following.remove(user)
+        ImageLoves.objects.filter(user=user, post=image).delete()
+        data['status'] = 'OK'
+        data['rem'] = True
     return HttpResponse(json.dumps(data), "application/json")
