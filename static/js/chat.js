@@ -118,22 +118,25 @@ LionFace.Chat.prototype = {
         }
         function load_history() {
             var url = LionFace.User.chat_loadhistory_url;
+            var count  = parseInt($('#online_count').html());
             make_request({ 
                 url:url,
                 multi:true,
                 callback: function(data) {
                         for (name in data) {
                             if (name == 'list_status') {
-                                $('#online_list').show();
-                                $('#chat_id').data('toggled',true);
+                                if (count != 0) {
+                                    $('#online_list').show();
+                                    $('#chat_id').data('toggled',true);
+                                }
                             }
                             else if (name == 'sound_status') {
                                 $('#sound_on_id').hide();
                                 $('#sound_off_id').show();
-                                var sound = document.getElementById('new_mess_audio');
+                                var sound = document.getElementById('new_mess_audio_wav');
                                 sound.muted = !sound.muted;
                             }
-                            else if (!$('#name_'+name).length) {
+                            else if (!$('#name_'+name).length && name != 'list_status' && name != 'sound_status') {
                                 $('#names_chat_container').append(data[name].names);
                                 $('#main_chat_container').append(data[name].messages);
                                 socket.emit('load history', name); 
@@ -255,6 +258,8 @@ LionFace.Chat.prototype = {
                     if (!$('#name_'+data.username).hasClass('new_chat_message') &&
                         !$('#message_'+data.username).find('.kind_start').length) {
                         $('#name_'+data.username).addClass('new_chat_message');
+                        // play sound
+                        document.getElementById('new_mess_audio_wav').play();
                     }
                     else {
                         $('#name_'+data.username).addClass('tab_opened');
@@ -282,10 +287,10 @@ LionFace.Chat.prototype = {
                     if (!$('#name_'+data.username).hasClass('new_chat_message') && !$('#name_'+data.username).data('toggled')) {
                         $('#name_'+data.username).addClass('new_chat_message');
                     }
+                    // play sound
+                    document.getElementById('new_mess_audio_wav').play();
                 }
                 save_history();
-                // play sound
-                document.getElementById('new_mess_audio').play();
                 // if opened
                 if ($('#name_'+data.username).data('toggled')) {
                     // scroll
@@ -477,7 +482,7 @@ LionFace.Chat.prototype = {
             e.stopPropagation();
             if (!connected) { return; }
             var $this = $(this);
-            var sound = document.getElementById('new_mess_audio');
+            var sound = document.getElementById('new_mess_audio_wav');
             sound.muted = !sound.muted;
             $this.hide();
             if ($this.attr('id') == 'sound_on_id') {
