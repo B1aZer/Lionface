@@ -365,11 +365,11 @@ CELERY_DEFAULT_QUEUE = "lionface"
 from celery.schedules import crontab
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
-    "rebuld_search_index": {
-        "task": "search.tasks.RebuildSearchIndex",
-        #"schedule": timedelta(minutes=1440),
-        'schedule': crontab(hour='0', minute='0', day_of_week='*'),
-    },
+    #"rebuld_search_index": {
+    #    "task": "search.tasks.RebuildSearchIndex",
+    #    #"schedule": timedelta(minutes=1440),
+    #    'schedule': crontab(hour='0', minute='0', day_of_week='*'),
+    #},
     "update_search_index": {
         "task": "search.tasks.UpdateSearchIndex",
         #"schedule": timedelta(seconds=120),
