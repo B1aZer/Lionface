@@ -14,7 +14,7 @@ body { background: #FFF; }
 {% block dashboard %}
 	{% include "profile/dashboard.html" %}
         <div style="position: relative;">
-            <form action="." method="post" class="upload_pforile_cover_form" enctype="multipart/form-data" style="display:none" >
+            <form action="{% url provile-view profile_user.username %}" method="post" class="upload_pforile_cover_form" enctype="multipart/form-data" style="display:none" >
                 <div style="padding: 4px 8px; background: #EEE; border: 1px solid #FFF; border-width: 1px 3px 3px 3px;">
                 {% csrf_token %}
                 {{ cover_form.cover_photo.errors }}
@@ -43,7 +43,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 </div></div>
 {% if request.user == profile_user %}
 <div style="position: relative;">
-<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
+    <form action="{% url provile-view profile_user.username %}" method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
 	{% csrf_token %}
 	{{ form.image.errors }}
 	<p><label for="id_photo">Upload</label></p>

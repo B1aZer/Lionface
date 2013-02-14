@@ -36,9 +36,10 @@ def notifications(request):
                 'post_images_ajax_comments')
         else:
             ctype = ContentType.objects.get_for_model(UserProfile)
-            qs = Image.objects.filter(owner_type=ctype, owner_id=request.user.id)
+            qs = Image.objects.filter(owner_type=ctype)
             try:
-                image = qs.get(pk=request.REQUEST.get('pk', None))
+                #image = qs.get(pk=request.REQUEST.get('pk', None))
+                image = Image.objects.get(pk=request.REQUEST.get('pk', None))
             except Image.DoesNotExist:
                 return HttpResponseBadRequest('Bad PK was received.')
             data['owner'] = 'user'

@@ -40,7 +40,7 @@ body { background: #FFF; }
 
 {% if request.user == profile_user %}
 <div style="position: relative;">
-<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -65px; height: 28px; padding: 18px; width: 662px;">
+<form action="{% url profile.views.images profile_user.username %}" method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -65px; height: 28px; padding: 18px; width: 662px;">
 	{% csrf_token %}
 	{{ form.image.errors }}
 	<label for="id_photo">Upload</label>

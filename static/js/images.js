@@ -510,6 +510,16 @@ LionFace.Images.prototype = {
                 $(this).val('').fadeIn(_this.options.popup_fadeDuration);
             }
         );
+        // toggle image following
+        var follonwings = $(item).data('following');
+        if ($.inArray(LionFace.User.username,follonwings) >= 0) {
+            $popup.find('#add_post_follower').hide();
+            $popup.find('#rem_post_follower').show();
+        }
+        else {
+            $popup.find('#add_post_follower').show();
+            $popup.find('#rem_post_follower').hide();
+        }
     },
 
     popup_start: function(item) {
@@ -749,6 +759,47 @@ LionFace.Images.prototype = {
         });
     },
 
+    post_followers: function(e, el) {
+        e.preventDefault();
+        var _this = this;
+        var $this = el;
+        var id = $this.attr('id');
+        var url = $this.attr('href');
+        var post = $('.image_container');
+        var item = post.find('li[popup=true]');
+        var followings = item.data('following');
+        var data = {
+            'user': LionFace.User.username,
+            'imagepk': item.data('pk')
+            }
+        if (id == 'add_post_follower') {
+            data['add'] = true;
+        }
+        else {
+            data['add'] = false;
+        }
+        make_request({ 
+            url:url,
+            data:JSON.stringify(data),
+            callback: function (data) {
+                if (data.status == 'OK') {
+                    if (data.rem) {
+                        var index = followings.indexOf(LionFace.User.username);
+                        followings.splice(index, 1);
+                        $('.image_popup').find('#rem_post_follower').hide();
+                        $('.image_popup').find('#add_post_follower').show();
+                    }
+                    else {
+                        followings.push(LionFace.User.username);
+                        $('.image_popup').find('#add_post_follower').hide();
+                        $('.image_popup').find('#rem_post_follower').show();
+                    }
+                    item.data('following',followings)
+                }
+            }
+        });
+    },
+
     bind_popup: function() {
         var _this = this;
         var $popup = $('.image_popup');
@@ -806,6 +857,9 @@ LionFace.Images.prototype = {
         });
         $popup.find('.image_zone_view .next').click(function(event) {
             _this.popup_to_next();
+        });
+        $popup.find('.post_followers').click(function(e) {
+            _this.post_followers(e, $(this));
         });
         this.popup_comments_bind_make_comment();
     },

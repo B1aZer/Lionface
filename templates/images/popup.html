@@ -20,12 +20,20 @@
                         <div class="fullname">{{ page.name }}</div>
                         <div class="username">{{ page.category }}</div>
                     </a>
+                        <div class="image-subtext" style="position: relative; left: 15px; top: 10px;">
+                            <a id="add_post_follower" class="post_followers" href="{% url images.views.add_followings %}">Follow</a>
+                            <a id="rem_post_follower" class="post_followers" href="{% url images.views.add_followings %}">Unfollow</a>
+                        </div>
                   {% else %}
                     <a href="{{ profile_user.get_absolute_url }}">
                         <div class="thumb{% if manage_perm %} images_profile_thumb{% endif %}" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 50px 50px; -moz-background-size: 50px 50px; background-size: 50px 50px;"></div>
                         <div class="fullname">{{ profile_user.full_name }}</div>
                         <div class="username">{{ profile_user.username }}</div>
                     </a>
+                        <div class="image-subtext" style="position: relative; left: 15px; top: 10px;">
+                            <a id="add_post_follower" class="post_followers" href="{% url images.views.add_followings %}">Follow</a>
+                            <a id="rem_post_follower" class="post_followers" href="{% url images.views.add_followings %}">Unfollow</a>
+                        </div>
                   {% endif %}
                 </div>
                 <div class="comments">

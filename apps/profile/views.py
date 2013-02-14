@@ -268,11 +268,12 @@ def images_comments_ajax(request, username):
         raise Http404
 
     ctype = ContentType.objects.get_for_model(UserProfile)
-    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
+    qs = Image.objects.filter(owner_type=ctype)
     manage_perm = request.user == profile_user
 
     try:
-        image = qs.get(pk=request.REQUEST.get('pk', None))
+        #image = qs.get(pk=request.REQUEST.get('pk', None))
+        image = Image.objects.get(pk=request.REQUEST.get('pk', None))
     except Image.DoesNotExist:
         return HttpResponseBadRequest('Bad pk was received.')
 
