@@ -122,7 +122,7 @@ def color_tags(text):
     #regex2 = re.compile('(?<!\)(?:\A|\s)#\b[0-9]+\b')
     #import pdb;pdb.set_trace()
     #if not regex2.match(text):
-    text = re.sub(r'((?<!\))(?:\A|\s)#([a-zA-Z0-9]{2,}))', replace_ment , text)
+    text = re.sub(r'((?<!\))(?:\A|\s|<br />|<p>)#([a-zA-Z0-9]{2,}))', replace_ment , text)
     return text
 
 
