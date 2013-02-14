@@ -1073,6 +1073,8 @@ def save_birth_date(request, username):
 @active_required
 def remove_birth_date(request, username):
     data = {'status':'FAIL'}
+    if request.user.is_anonymous():
+        return HttpResponse(json.dumps(data), "application/json")
     profile_user = request.user
     profile_user.birth_date = None
     profile_user.save()
@@ -1106,6 +1108,8 @@ def save_url_field(request, username):
 @active_required
 def remove_url_field(request, username):
     data = {'status':'FAIL'}
+    if request.user.is_anonymous():
+        return HttpResponse(json.dumps(data), "application/json")
     profile_user = request.user
     profile_user.url = ''
     profile_user.save()

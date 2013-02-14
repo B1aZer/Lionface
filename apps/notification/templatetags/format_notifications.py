@@ -21,6 +21,14 @@ def format_notification(notification):
             'object_id': notification.object_id,
         }
         data['events_count'] = Notification.objects.filter(**fdata).count()
+    if notification.type in ('IM',):
+        fdata = {
+            'user': notification.user,
+            'type': 'FI',
+            'content_type__id': notification.content_type_id,
+            'object_id': notification.object_id,
+        }
+        data['events_count'] = Notification.objects.filter(**fdata).count()
     if notification.type == 'FR':
         return render_to_string('notification/_friend_request.html', data)
     if notification.type == 'RR':
@@ -45,6 +53,8 @@ def format_notification(notification):
         return render_to_string('notification/_discussion_post.html', data)
     if notification.type == 'FS':
         return render_to_string('notification/_follow_shared.html', data)
+    if notification.type in ('FI', 'IM'):
+        return render_to_string('notification/_follow_comment_image.html', data)
     if notification.type == 'MC':
         return render_to_string('notification/_comment_multiple.html', data)
     if notification.type == 'MF':

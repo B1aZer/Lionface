@@ -3,4 +3,5 @@ import views
 
 urlpatterns = patterns('',
     url(r'^notifications/$', views.notifications),
+    url(r'^following/add/$', views.add_followings),
 )

@@ -321,6 +321,16 @@ LionFace.PostImages.prototype = {
                 $(this).val('').fadeIn(_this.options.popup_fadeDuration);
             }
         );
+        // toggle image following
+        var follonwings = $(item).data('following');
+        if ($.inArray(LionFace.User.username,follonwings) >= 0) {
+            $popup.find('#add_post_follower').hide();
+            $popup.find('#rem_post_follower').show();
+        }
+        else {
+            $popup.find('#add_post_follower').show();
+            $popup.find('#rem_post_follower').hide();
+        }
     },
 
     popup_start: function(item, newsitem) {
@@ -560,6 +570,48 @@ LionFace.PostImages.prototype = {
         });
     },
 
+    post_followers: function(e, el) {
+        e.preventDefault();
+        var _this = this;
+        var $this = el;
+        var $ul = $('.image_comments ul');
+        var id = $this.attr('id');
+        var url = $this.attr('href');
+        var post = $(_this.$popup_posts);
+        var item = post.find('li[popup=true]');
+        var followings = item.data('following');
+        var data = {
+            'user': LionFace.User.username,
+            'imagepk': $ul.data('image-pk')
+            }
+        if (id == 'add_post_follower') {
+            data['add'] = true;
+        }
+        else {
+            data['add'] = false;
+        }
+        make_request({ 
+            url:url,
+            data:JSON.stringify(data),
+            callback: function (data) {
+                if (data.status == 'OK') {
+                    if (data.rem) {
+                        var index = followings.indexOf(LionFace.User.username);
+                        followings.splice(index, 1);
+                        $('#rem_post_follower').hide();
+                        $('#add_post_follower').show();
+                    }
+                    else {
+                        followings.push(LionFace.User.username);
+                        $('#add_post_follower').hide();
+                        $('#rem_post_follower').show();
+                    }
+                    item.data('following',followings)
+                }
+            }
+        });
+    },
+
     popup_comments_delete: function($item) {
         var _this = this,
             $ul = $('.post_image_popup .image_comments ul');
@@ -631,6 +683,9 @@ LionFace.PostImages.prototype = {
         });
         $popup.find('.image_zone_view .rotate-right').click(function(event) {
             _this.rotate_image_right();
+        });
+        $popup.find('.post_followers').click(function(e) {
+            _this.post_followers(e, $(this));
         });
         this.popup_comments_bind_make_comment();
     }

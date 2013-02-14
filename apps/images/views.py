@@ -59,3 +59,31 @@ def notifications(request):
     else:
         data['status'] = 'ok'
     return HttpResponse(json.dumps(data), "application/json")
+
+def add_followings(request):
+    data = {'status':'FAIL'}
+    request_post = json.loads(request.raw_post_data)
+    username = request_post.get('user')
+    imagepk = request_post.get('imagepk')
+    add = request_post.get('add')
+    try:
+        user = UserProfile.objects.get(username=username)
+    except:
+        raise Http404
+    try:
+        image = Image.objects.get(id=imagepk)
+    except:
+        raise Http404
+    if add:
+        image.following.add(user)
+        data['status'] = 'OK'
+        data['rem'] = False
+    else:
+        image.following.remove(user)
+        data['status'] = 'OK'
+        data['rem'] = True
+    return HttpResponse(json.dumps(data), "application/json")
+
+def del_followings(request):
+    data = {'status':'FAIL'}
+    return HttpResponse(json.dumps(data), "application/json")

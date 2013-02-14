@@ -44,6 +44,7 @@ class Image(models.Model):
     owner = generic.GenericForeignKey('owner_type', 'owner_id')
     rating = models.IntegerField(blank=True, null=True)
     activity = models.BooleanField(default=False)
+    following = models.ManyToManyField( UserProfile, related_name='follows_images', null=True, blank=True)
 
     objects = ImageQuerySet.as_manager()
 

@@ -591,3 +591,10 @@ def get_online_users(context, as_tag, as_name):
 @register.filter
 def mod_by_three(value):
     return int(float(value)) % 3
+
+
+@register.filter
+def image_get_followings(image):
+    following =  image.following.all()
+    following = [u.username for u in following]
+    return json.dumps(following)

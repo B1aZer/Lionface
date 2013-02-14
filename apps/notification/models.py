@@ -25,10 +25,12 @@ NOTIFICATION_TYPES = (
     ('FF', 'Following Acquired'),
     ('FC', 'Follow Comment'),
     ('FS', 'Follow Shared'),
+    ('FI', 'Follow Comment Image'),
     ('LP', 'Loves Post'),
     ('DP', 'Discussion Post'),
     ('MC', 'Multiple Comment'),
     ('MI', 'Multiple Image Comment'),
+    ('IM', 'Multiple Image Comment Following'),
     ('MF', 'Multiple Comment Following'),
     ('MS', 'Multiple Shared'),
     ('MD', 'Multiple Page Shared'),
@@ -224,12 +226,14 @@ def create_friend_request_notification(sender, instance, created, **kwargs):
         Notification(user=instance.to_user, type='FR', friend_request=instance, content_object=instance).save()
 post_save.connect(create_friend_request_notification, sender=FriendRequest)
 
+
 def create_discuss_post_notification(sender, instance, created, **kwargs):
     if created:
         for user in instance.topic.following.all():
             if user != instance.user:
                 Notification(user=user, type='DP', other_user=instance.user, content_object=instance.topic, related_object=instance).save()
 post_save.connect(create_discuss_post_notification, sender=DiscussPost)
+
 
 def create_profile_post_notification(sender, instance, created, **kwargs):
     if created:
@@ -303,7 +307,7 @@ comment_was_posted.connect(create_comment_notifiaction)
 
 def create_comment_image_notification(sender, instance, created, **kwargs):
     if created:
-        if instance.owner != instance.image.get_owner():
+        if instance.owner != instance.image.get_owner() and instance.image.get_owner() in instance.image.following.all():
             data = {
                 'user': instance.image.get_owner(),
                 'type': 'CI',
@@ -312,6 +316,19 @@ def create_comment_image_notification(sender, instance, created, **kwargs):
                 'related_object': instance,
             }
             Notification.objects.create(**data)
+        #create notifiactions for all followers of this post
+        for user in instance.image.following.all():
+            if user != instance.owner and user != instance.image.get_owner() \
+                    and instance.owner not in user.get_blocked():
+                data = {
+                    'user': user,
+                    'type': 'FI',
+                    'other_user': instance.owner,
+                    'content_object': instance.image,
+                    'related_object': instance,
+                }
+                Notification.objects.create(**data)
+
 post_save.connect(create_comment_image_notification, sender=ImageComments)
 
 
@@ -363,9 +380,13 @@ pre_delete.connect(delete_dated_notifications, sender=NewsItem)
 
 def update_notification_count(sender, instance, **kwargs):
     """ merge unread notifications to one """
-    if instance.type in ('CS', 'CI', 'FC', 'PS', 'FS'):
+    if instance.type in ('CS', 'CI', 'FC', 'PS', 'FS', 'FI'):
         if instance.type == 'CS':
             notification_type = 'MC'
+        if instance.type == 'CI':
+            notification_type = 'MI'
+        if instance.type == 'FI':
+            notification_type = 'IM'
         if instance.type == 'CI':
             notification_type = 'MI'
         if instance.type == 'FC':
