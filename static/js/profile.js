@@ -223,6 +223,7 @@ LionFace.Profile.prototype = {
                 success: function(data) {
                     if (data.status === 'OK') {
                         $("#news_feed").prepend(data.html);
+                        //loadNewsFeed($("#news_feed"));
                         $('.postbox_textarea').val('');
                         make_excerpts();
                         LionFace.Site.revert_textbox_height();

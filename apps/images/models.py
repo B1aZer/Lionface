@@ -222,6 +222,7 @@ class Image(models.Model):
 def create_image(sender, instance, created, **kwargs):
     if created:
         instance.rating = instance.pk
+        instance.following.add(instance.get_owner())
         instance.save()
 post_save.connect(
     create_image,
@@ -235,6 +236,7 @@ def delete_image(sender, instance, **kwargs):
         owner = instance.owner
         owner.photo = owner.photo.field.default
         owner.save()
+    instance.following.clear()
     instance.image.storage.delete(instance.image.thumb_path)
     instance.image.delete(save=False)
 post_delete.connect(

@@ -52,7 +52,7 @@ function del_post_single(elem) {
 
     if(data.type !== undefined) {
 
-    url = "/posts/del/" + elem + "?type="+data.type+"&ajax=true";
+    url = "/posts/del/" + elem + "/?type="+data.type+"&ajax=true";
 
     }
     $.ajax(url,
