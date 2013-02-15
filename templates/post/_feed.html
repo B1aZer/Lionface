@@ -61,7 +61,7 @@
                 {% ifnotequal item.get_post.get_loves 0 %}
                 <span class="post_love_count">{{ item.get_post.loves }}</span>
                 {% endifnotequal %}
-                <span style="color: transparent;"> - | - </span>
+                <span style="color: transparent;"> - <span style="color: #BBB;">-</span> - </span>
             </span>
             {% endif %}
             {% if request.user.is_anonymous and item.get_post|get_comment_counter:request.user == 0 %}
@@ -71,7 +71,7 @@
                 {% ifequal item.get_post|get_comment_counter:request.user 0 %} {% else %}
                     <span style="color: #555; padding: 2px;" class="comment_counter" >{{ item.get_post|get_comment_counter:request.user }}</span>
                 {% endifequal %}
-                <span style="color: transparent;"> - | - </span>
+                <span style="color: transparent;"> - <span style="color: #BBB;">-</span> - </span>
             </span>
             {% endif %}
             {% if not request.user.is_anonymous %}

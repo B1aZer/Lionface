@@ -7,6 +7,8 @@
         
 
 <span id="realtions_container">
+
+<div class="trans">
     {% if profile_user == request.user %}
     <a id="inter_relation_btn" href="#" class="bio_title">Relationship</a>
     {% if not profile_user.has_pending_notifications %}
@@ -15,7 +17,7 @@
     <span  class="inter-relation" style="display:none; color: #f88;"> Request Pending </span>
     {% endif %}
     {% elif profile_user.get_relation_type %}
-    <span style="font-weight: bold; padding: 4px;">Relationship</span>
+    <span style="padding: 4px; color: #777;">Relationship</span>
     {% else %}
     {% endif %}
 
@@ -31,7 +33,9 @@
     {% endif %}
 </span>
 
-<div class="profile_edit" id="left_rel" style="width: 40%; left: 30%; top: 100px; height: 80px;">
+</div>
+
+<div class="profile_edit" id="left_rel" style="width: 40%; left: 30%; top: -100px; height: 80px;">
 <table width="100%" height="100%"><tr><td align="center">
     <select id="inter_relation_select" class="inter-relation" style="display:none; padding: 3px; margin: 3px;">
         <option value='' {% if profile_user.get_relation == '' %}selected=""{% endif %}></option>
@@ -40,6 +44,18 @@
         <option value='E' {% if profile_user.get_relation == 'E' %}selected=""{% endif %}>Engaged</option>
         <option value='M' {% if profile_user.get_relation == 'M' %}selected=""{% endif %}>Married</option>
     </select>
+
+    {% if profile_user.get_related_person %} 
+        {% if profile_user.get_relation_type == 'married' or profile_user.get_relation_type == 'engaged' %} 
+        <a href="{{ profile_user.get_related_person.get_absolute_url }}">{{ profile_user.get_related_person.get_full_name }}</a></span>
+        {% endif %}
+        {% if profile_user.get_relation_type == 'dating' %} 
+        <a href="{{ profile_user.get_related_person.get_absolute_url }}">{{ profile_user.get_related_person.get_full_name }}</a></span>
+        {% endif %}
+    {% else %}
+        <span id="relation_type_id" >{{ profile_user.get_relation_type }} </span>
+    {% endif %}
+
     <span class="inter_relation_container" style="display:none">
         <input id="inter_relation_input" type="text" {% if profile_user.get_relation != 'S' and profile_user.get_relation != '' %}style="display:none"{% endif %}/>
     </span><br />

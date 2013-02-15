@@ -229,6 +229,7 @@ a.filter .tags {
     height: 25px;
     margin-top: 10px;
     top: 0;
+	font-size: 9pt;
 }
 
 #foma {
@@ -1330,10 +1331,11 @@ a.profile_btn:hover {
 	height: 100%;
 	margin: 5px 20px 0 25px;
 	#background-color: #EDEFF4;
+	position: relative;
 }
 .image_zone_info .scroll_area .comments .delete {
 	right: 20px;
-	float: right;
+	position: absolute; right: -18px; top: 4px;
 	display: none;
 }
 .image_zone_info .scroll_area .comments .thumb {
@@ -1362,9 +1364,9 @@ a.profile_btn:hover {
 }
 .image_zone_info .scroll_area .comments .date {
 	text-align: left;
-	margin: auto auto 5px 42px;
 	font-size: 8pt;
 	color: #BBB;
+	display: inline-block;
 }
 .image_zone_info .make_comment {
 	position: absolute;
@@ -1401,6 +1403,16 @@ a.profile_btn:hover {
 	padding-top: 3px;
 	padding-left: 3px;
 	padding-right: 3px;
+}
+
+a.post_followers:link, a.post_foloowers:active, a.post_followers:visited {
+	font-size: 8pt;
+}
+
+a.post_followers:hover {
+	text-decoration: underline;
+	color: #2ab4ea;
+	cursor: pointer;
 }
 
 /* style for shared post's feed*/
@@ -1705,19 +1717,31 @@ a.bio_title:hover {
     word-wrap: break-word;
 }
 
-.user_info { position: absolute; left: 0px; top: 0px; height: 35px; width: 900px; display: block; z-index: 100000; color: #FFF !important;
-	/* Fallback for web browsers that doesn't support RGBa */
-	background: rgb(0, 0, 0);
-	/* RGBa with 0.6 opacity */
-	background: rgba(0, 0, 0, 0.6);
-	/* For IE 5.5 - 7*/
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
-	/* For IE 8*/
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+.user_info { 
+	position: relative; 
+	height: 35px;
+	width: 898px; display: 
+	block;
+ 	color: #333 !important;
+	background: #FFF; 
+	margin-bottom: 8px;
+	border: 1px solid #EEE;
+	z-index: 999999;
+}
+
+.user_info .trans {
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=71);
+	-moz-opacity: 0.71;
+	opacity: 0.71;
 }
 
 .user_info a.bio_title:link, .user_info a.bio_title:active, .user_info a.bio_title:visited {
-	color: #FFF; padding: 4px; display: inline-block;
+	color: #777; padding: 4px; display: inline-block; font-size: 10pt;
+}
+
+.user_info a.bio_title:hover {
+	text-decoration: underline;
+	color: #555;
 }
 
 .add_filter {
@@ -3255,7 +3279,6 @@ a.sub_filter_feedON {
 	list-style: none;
 	padding: 4px 8px;
 	cursor: pointer;
-	padding: 8px 8px 8px 8px;
 	border-top: 1px solid #EEE;
 	border-bottom: 1px solid #FFF;
 	color: #777;

@@ -17,8 +17,11 @@
         <a href="{{ comment.owner.get_absolute_url }}">
             <div class="thumb" style="background: url('/{{ comment.owner.photo.thumb_name }}') #FFF; -webkit-background-size: 50px 50px; -moz-background-size: 50px 50px; background-size: 50px 50px;"></div>
         </a>
-        <div class="text"><a href="{{ comment.owner.get_absolute_url }}">{{ comment.owner.full_name }}</a><br />{{ comment.message }}</div>
-        <div class="date">{{ comment.date }}</div>
+        <div class="text">
+			<table width="100%" style="border-bottom: 1px solid #EEE;"><tr><td style="padding-left: 4px;"><a href="{{ comment.owner.get_absolute_url }}">{{ comment.owner.full_name }}</a></td><td align="right"> <div class="date">{{ comment.date }}</div>
+			</td></tr><tr><td colspan="2" style="padding: 4px 4px 10px 4px;">
+			{{ comment.message }}</div>
+			</td></tr></table>
     </div>
     </li>
 {% endfor %}
