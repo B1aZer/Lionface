@@ -20,8 +20,11 @@ class ImageQuerySet(CustomQuerySet):
         from math import ceil
         return int(ceil(self.count() / float(row_size)))
 
-    def get_rows(self, start, count, row_size=DEFAULT_ROW_SIZE):
-        qs = self.order_by('rating')
+    def get_rows(self, start, count, row_size=DEFAULT_ROW_SIZE, order=True):
+        if order:
+            qs = self.order_by('rating')
+        else:
+            qs = self
         objs = qs[start * row_size:(start + count) * row_size]
         rows = []
         for i in xrange(0, len(objs), row_size):

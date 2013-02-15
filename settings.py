@@ -168,6 +168,7 @@ INSTALLED_APPS = (
     'ecomm',
     'schools',
     'chat',
+    'photos',
 )
 
 # A sample logging configuration. The only tangible logging
