@@ -46,6 +46,7 @@ gunicorn --worker-class socketio.sgunico.GeventSocketIOWorker wsgi:app
 mysql -h mydb.c9iodczmwien.us-east-1.rds.amazonaws.com -P 3306 -u root -p
 #production
 1. genrate media
+2.5 migrate
 2. restart celery
 3. restart server
 4. restart nginx

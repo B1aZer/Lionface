@@ -1,0 +1,30 @@
+{% load format_notifications %}
+
+{% with image=notification.content_object %}
+  {% if notification.type == 'II' %}
+  <li class="comment_image notification {type: 'comment image', id: '{{ image.id }}', owner_id: '{{ image.owner.id }}', owner_type: '{{ image.owner.get_type }}'}">
+      <div style="padding: 15px;" class="link-output">
+          <span{% if notification.new_one %} class="new_notification"{% endif %}>
+            {% if notification.people_counter == 1 %}
+                1 person{% if events_count %} ({{events_count}} events){% endif %}
+            {% else %}
+                {{ notification.people_counter }} people{% if events_count %} ({{events_count}} events){% endif %}
+            {% endif %}
+          </span><br /><span style="color: #777; text-decoration: underline;">loved</span> an image.
+          <div style="font-size: 8pt; color: #999; margin-top: 5px;">You are following this post.</div>
+      </div>
+      <div class="separator"></div>
+  </li>
+  {% else %}
+  <li class="comment_image notification {type: 'comment image', id: '{{ image.id }}', owner_id: '{{ image.owner.id }}', owner_type: '{{ image.owner.get_type }}'}">
+      <div style="padding: 15px;" class="link-output">
+          <a{% if notification.new_one %} class="new_notification"{% endif %} href="{{ notification.other_user.get_absolute_url }}">
+              {{ notification.other_user.get_full_name }}
+          </a><br />
+          <span style="color: #777; text-decoration: underline;">loved</span> an image.
+          <div style="font-size: 8pt; color: #999; margin-top: 5px;">You are following this post.</div>
+      </div>
+      <div class="separator"></div>
+  </li>
+  {% endif %}
+{% endwith %}

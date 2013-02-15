@@ -919,7 +919,7 @@ def loves(request, username):
             pages = pages.filter(type='NP')
         if 'posts' in request.GET:
             pages = profile_user.get_loved_posts()
-            pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=request.user).date, reverse=True)
+            pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=profile_user).date, reverse=True)
 
     if request.method == 'GET' and 'ajax' in request.GET:
         data['html'] = render_to_string('profile/loves_items.html',

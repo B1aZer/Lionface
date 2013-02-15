@@ -544,6 +544,8 @@ LionFace.PostImages.prototype = {
                 if (data.status == 'ok') {
                     $textarea.val('');
                     _this.popup_comments_refresh($(data.comments).filter('li'));
+                    // follow image
+                    $('#add_post_follower:visible').click();
                 } else {
                     this.error(jqXHR, textStatus);
                 }

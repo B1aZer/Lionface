@@ -272,3 +272,11 @@ class ImageComments(models.Model):
     class Meta:
         ordering = ['date']
         db_table = 'images_comments'
+
+
+"""
+def add_image_to_followings(sender, instance, created, **kwargs):
+    if created:
+        instance.image.following.add(instance.owner)
+post_save.connect(add_image_to_followings, sender=ImageComments)
+"""
