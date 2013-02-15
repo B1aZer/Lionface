@@ -920,6 +920,19 @@ def loves(request, username):
         if 'posts' in request.GET:
             pages = profile_user.get_loved_posts()
             pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=profile_user).date, reverse=True)
+        if 'images' in request.GET:
+            #pages = profile_user.get_loved_images()
+            pages = Image.objects.filter(users_loved = profile_user)
+            manage_perm = request.user == profile_user
+            data['html'] = render_to_string('images/images.html',
+                                            {
+                                            'image_rows': pages.get_rows(0, 4, row_size=3),
+                                            'profile_user': profile_user,
+                                            'total_rows': pages.total_rows(),
+                                            'photos_count': pages.count(),
+                                            'manage_perm': manage_perm,
+                                            }, context_instance=RequestContext(request))
+            return HttpResponse(json.dumps(data), "application/json")
 
     if request.method == 'GET' and 'ajax' in request.GET:
         data['html'] = render_to_string('profile/loves_items.html',

@@ -607,6 +607,9 @@ class UserProfile(User):
     def get_loved_posts(self):
         return self.posts_loved.all()
 
+    def get_loved_images(self):
+        return self.images_loved.all()
+
     def get_pages(self):
         return self.pages.all()
 

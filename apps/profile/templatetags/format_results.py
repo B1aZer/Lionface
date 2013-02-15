@@ -4,6 +4,7 @@ from django.template import RequestContext
 
 from tags.models import *
 from pages.models import Pages
+from images.models import Image
 from smileys.models import Smiley
 
 import re

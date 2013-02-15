@@ -1007,6 +1007,10 @@ a.profile_btn:hover {
 	background: #EEE;
 }
 
+#result_table .album_shadow {
+	margin: 4px 2px 8px 2px;
+}
+
 /* !!! jquery class */
 .ui-state-default {
     /*margin: 10px 3px 10px 3px;*/
@@ -1041,6 +1045,10 @@ a.profile_btn:hover {
 	list-style-type: none;
 	width: 900px;
 	position: relative; left: 3px;
+}
+
+#result_table .image_container ul {
+	width: 655px;
 }
 
 .image_container ul li {
@@ -1113,6 +1121,14 @@ a.profile_btn:hover {
 	background: #FFF;
 	position: relative;
 	text-align: center;
+}
+
+#result_table .image_container {
+	max-width: 648px;
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+    
 }
 
 .image_container:before, .image_container:after
