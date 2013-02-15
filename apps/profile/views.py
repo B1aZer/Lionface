@@ -931,6 +931,7 @@ def loves(request, username):
                                             'total_rows': pages.total_rows(),
                                             'photos_count': pages.count(),
                                             'manage_perm': manage_perm,
+                                            'ajax': True,
                                             }, context_instance=RequestContext(request))
             return HttpResponse(json.dumps(data), "application/json")
 
