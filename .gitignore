@@ -11,6 +11,7 @@ celerybeat.pid
 celerybeat-schedule
 _generated_media/
 _generated_media_names.py
+django_cache/
 uploads/images/
 logs/
 tmp/
