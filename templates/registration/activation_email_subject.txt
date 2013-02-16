@@ -1,1 +1,1 @@
-Account registration for {{ site.name }}
+Email Verification for {{ site.name }}

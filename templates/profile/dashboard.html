@@ -180,7 +180,7 @@ $(document).ready(function() {
     {% if profile_user == request.user %}
     <a id="show_birth_select" href="#" class="bio_title" style="padding-right: 4px;">Birthday</a>
     {% elif profile_user.get_birth_date %}
-    <span style="padding-right: 4px; color: #777;">Birthday</span>
+    <span style="padding-right: 4px; color: #777; font-size: 9pt;">Birthday</span>
     {% else %}
     {% endif %}
 
@@ -221,7 +221,7 @@ $(document).ready(function() {
     {% if profile_user == request.user %}
     <a id="show_url_input" href="#" class="bio_title" style="padding-right: 4px;">Website</a>
     {% elif profile_user.get_website %}
-    <span style="padding-right: 4px; color: #777;">Website</span>
+    <span style="padding-right: 4px; color: #777; font-size: 9pt;">Website</span>
     {% else %}
     {% endif %}
 

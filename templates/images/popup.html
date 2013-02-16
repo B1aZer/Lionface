@@ -47,7 +47,7 @@
             </div>
             {% if request.user.is_authenticated %}
             <div class="make_comment">
-                <div class="thumb{% if manage_perm %} images_profile_thumb{% endif %}" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF;"></div>
+                <div class="thumb{% if manage_perm %} images_profile_thumb{% endif %}" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF; -webkit-background-size: 32px 32px; -moz-background-size: 32px 32px; bakground-size: 32px 32px;"></div>
                 <form>
                     <textarea name="add_comment_text" placeholder="Add comment..."></textarea>
                 </form>

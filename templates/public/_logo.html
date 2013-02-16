@@ -1,0 +1,15 @@
+{% load media %}
+
+				<table height="100"><tr><td>
+				<a href="{% url account.views.login %}" class="home_link"><img src="{% media_url 'images/logo300.png' %}" border="0" height="100" /></a>
+				</td><td style="padding-left: 17px;">
+					<div style="position: relative; top: 4px;">
+						<a href="{% url account.views.login %}" class="home_link">Lionface</a><br /><span style="font-size: 8pt; color: #FFF;">The Next Generation in Social Networking</span>
+				</td><td>
+           					 {% if request.path != '/' and request.path != '/account/login/' and request.path != '/account/signup/' %}
+                		<a href="{% url account.views.login %}" style="margin-left: 17pt; display: none;">Register</a>
+           					 {% else %}
+              			&nbsp;
+          					 {% endif %}
+					</div>
+				</td></tr></table>

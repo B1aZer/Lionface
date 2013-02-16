@@ -25,14 +25,10 @@ LionFace.User['feed_comet_url'] = '{% url comet.views.feed_posts %}';
 <div class="profile_micro_header" style="padding-left: 17px;">Hello, {{ request.user.first_name }}</div>
 </td>
 <td align-"left">
+	<a href="{% url photos.views.home %}" class="popular_photos">Popular Photos</a>
 	<a href="{% url schools.views.home %}" class="find_friends">School Networks ></a>
 </td>
-<td align-"left">
-	<a href="{% url photos.views.home %}" class="">Photos ></a>
-</td>
-<td align="right" width="150">
-	<span style="color: #fafafa; padding-right: 17px;"></span>
-</td></tr></table>
+</tr></table>
 </div>
 {% endblock %}
 
