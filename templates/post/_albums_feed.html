@@ -4,10 +4,9 @@
 
 {% block empty %}
     {% if profile_user == request.user %}
-    <!--your album-->
-    {% else %}
-    <!--their album-->
-    {% endif %}
     <div class="no_posts" style="position: relative; left: 25px;">There are no posts in this album yet.<br />
-		<span style="font-size: 11pt;">If this is your album, you can add posts by clicking<br /> the Settings link at the bottom of any of your posts.</span></div>
+		<span style="font-size: 11pt;">You can add posts by clicking<br /> the Settings link at the bottom of any of your posts.</span></div>
+    {% else %}
+    <div class="no_posts" style="position: relative; left: 25px;">There are no posts in this album yet.</div>
+    {% endif %}
 {% endblock %}

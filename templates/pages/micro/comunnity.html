@@ -19,8 +19,10 @@
     <div style="padding: 15px;">
 				<div style="display: block; text-align: right; border-bottom: 1px solid #DDD; padding: 3px 0; margin: 0 0 10px 0;">
 					<table width="100%"><tr><td align="left">
-                                
-                                {% if not page|show_connections:request.user %}
+              	      {% include 'pages/micro/_community_list.html' %}     
+                    <td>
+                    <td align="right">
+  							    {% if not page|show_connections:request.user %}
                                 <a id="community_add_button" 
                                     {% if page.check_employees or page.check_interns or page.check_volunteers or page.check_members %}
                                     {% else %}
@@ -28,9 +30,6 @@
                                     {% endif %}
                                     href="#" class="profile_btn" onClick="ShowContent('select_community_{{page.id}}'); return false;">+ Community</a>
                                 {% endif %}
-                    <td>
-                    <td align="right">
-                    {% include 'pages/micro/_community_list.html' %}
 					</td></tr>
                     {% include 'pages/page_members.html' %}
                 </table>

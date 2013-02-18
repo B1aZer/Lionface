@@ -172,7 +172,11 @@ $(document).ready(function() {
     {% if show_cover_form %}
     {% if profile_user|check_profile_bio:request.user %}
 
-    <div class="user_info" id="user_info" {% if not profile_user.get_birth_date and not profile_user.get_relation_type and not profile_user.get_website and profile_user != request.user %} style="display:none" {% endif %}>
+	<div class="user_info_open" id="user_info_open" onClick="ShowContent('user_info'); ShowContent('user_info_close'); HideContent('user_info_open'); return false;" {% if not profile_user.get_birth_date and not profile_user.get_relation_type and not profile_user.get_website and profile_user != request.user %} style="display: none" {% endif %} title="Show Information">i</div>
+
+	<div class="user_info_open" id="user_info_close" onClick="ShowContent('user_info_open'); HideContent('user_info'); HideContent('user_info_close'); return false;" title="Hide Information" style="display: none;">i</div>
+
+    <div class="user_info" id="user_info" {% if not profile_user.get_birth_date and not profile_user.get_relation_type and not profile_user.get_website and profile_user != request.user %} style="display: none" {% else %} style="display: none;" {% endif %}>
 
 <table width="900" height="100%"><tr><td width="33%" style="padding-left: 8px;">
 
