@@ -781,6 +781,20 @@ LionFace.Pages.prototype = {
             });
         });
 
+        $(document).on('click', '.remove_member_class', function(e) {
+            e.preventDefault();
+            var self = $(this);
+            var url = self.attr('href');
+            make_request({
+                url:url,
+                callback: function(data) {
+                    if (data.status == 'OK') {
+                        self.parents('.friend_icon').fadeOut( function() { $(this).remove(); });
+                    }
+                }
+            });
+        });
+
     },
     /*
      * moved to user.js

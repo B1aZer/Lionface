@@ -35,6 +35,7 @@ function loadNewsFeed(elem, page, url) {
             }
             */
             make_excerpts();
+            toggle_comments();
             if (data.page) {
                 $(document).data('feed_page', data.page);
             }
@@ -76,6 +77,16 @@ function hide_add_link() {
    $('.tags').show();
    }
 
+}
+
+function toggle_comments() {
+    $('.comment_counter').each( function(i,e) {
+        if (get_int($(e).html()) > 0) {
+            //$(e).parents('.toggle_comments').click();
+            $(e).parents('.result').find('.comments').show();
+            $(e).parents('.result').find('.toggle_comments').data('toggled',true);
+        }
+    });
 }
 
 function check_for_new_posts(filter, initial) {
@@ -232,6 +243,7 @@ $(document).ready(function(){
                             if (tag_val == 'Nonprofits') {
                                 $('#nonprofits_count').html('');
                             }
+                            $('.active_trending').removeClass('active_trending');
                             loadNewsFeed($("#news_feed"));
                         }
                     },
@@ -292,6 +304,7 @@ $(document).ready(function(){
                         self.removeClass('filter');
                         self.addClass('filterON');
                         self.attr('title','Turn filter off.');
+                        $('.active_trending').removeClass('active_trending');
                         loadNewsFeed($("#news_feed"));
                     },
                     errorback: function (XMLHttpRequest, textStatus, errorThrown) {

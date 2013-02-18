@@ -1477,6 +1477,69 @@ def page_members(request, slug=None, member_id=None):
                 pass
     return HttpResponse(json.dumps(data), "application/json")
 
+@active_required
+@login_required
+def member_remove(request, slug=None, user_id=None):
+    data = {'status': 'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    try:
+        user = UserProfile.objects.get(id=user_id)
+    except UserProfile.DoesNotExist:
+        raise Http404
+    Membership.objects.filter(page=page, type='MM', is_confirmed=True, user=user).delete()
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+@active_required
+@login_required
+def emloyee_remove(request, slug=None, user_id=None):
+    data = {'status': 'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    try:
+        user = UserProfile.objects.get(id=user_id)
+    except UserProfile.DoesNotExist:
+        raise Http404
+    Membership.objects.filter(page=page, type='EM', is_confirmed=True, user=user).delete()
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+@active_required
+@login_required
+def intern_remove(request, slug=None, user_id=None):
+    data = {'status': 'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    try:
+        user = UserProfile.objects.get(id=user_id)
+    except UserProfile.DoesNotExist:
+        raise Http404
+    Membership.objects.filter(page=page, type='IN', is_confirmed=True, user=user).delete()
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
+
+@active_required
+@login_required
+def volunteer_remove(request, slug=None, user_id=None):
+    data = {'status': 'FAIL'}
+    try:
+        page = Pages.objects.get(username=slug)
+    except Pages.DoesNotExist:
+        raise Http404
+    try:
+        user = UserProfile.objects.get(id=user_id)
+    except UserProfile.DoesNotExist:
+        raise Http404
+    Membership.objects.filter(page=page, type='VL', is_confirmed=True, user=user).delete()
+    data['status'] = 'OK'
+    return HttpResponse(json.dumps(data), "application/json")
 
 @active_required
 def images(request, slug, rows_show=4):

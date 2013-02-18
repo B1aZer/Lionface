@@ -211,7 +211,7 @@ LionFace.Chat.prototype = {
                 // removing
                 $('.online_username').each( function (i,e) {
                     var username = $(e).attr('id');
-                    if ($.inArray(username,data.active) >= 0) {
+                    if ($.inArray(username,data.active.usernames) >= 0) {
                     }
                     else {
                         console.log('removing');
@@ -227,8 +227,9 @@ LionFace.Chat.prototype = {
                     }
                 });
                 // adding
-                for (var i = 0; i < data.active.length; i++) {
-                    var username = data.active[i];
+                for (var i = 0; i < data.active.usernames.length; i++) {
+                    var username = data.active.usernames[i];
+                    var name = data.active.names[i];
                     if ($('#online_list').find('#'+username).length) {
                     }
                     else {
@@ -348,6 +349,7 @@ LionFace.Chat.prototype = {
                 }
                 $this.val('');
                 $this.height(16);
+                $this.siblings('.message_content').css('max-height','230px');
                 return false;
             }
         });

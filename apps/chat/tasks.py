@@ -115,11 +115,13 @@ class PublishActiveUsers(Task):
         except:
             return False
         active = list(get_active_users())
+        names = [u.get_full_name() for u in active if u in friends]
         active = [u.username for u in active if u in friends]
         logger.info(active)
-        r.publish(username, json.dumps({'active':active, 'type':'active'}))
+        r.publish(username, json.dumps({'active':{'usernames':active,'names':names}, 'type':'active'}))
         return True
 tasks.register(PublishActiveUsers)
+
 
 class ToggleSound(Task):
     def run(self, username, value, **kwargs):

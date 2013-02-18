@@ -26,6 +26,7 @@ LionFace.Notification.prototype = {
             if (get_int($(e).html()) > 0) {
                 //$(e).parents('.toggle_comments').click();
                 $(e).parents('.result').find('.comments').show();
+                $(e).parents('.result').find('.toggle_comments').data('toggled',true);
             }
         });
     },

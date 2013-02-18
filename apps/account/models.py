@@ -38,9 +38,9 @@ RELATIONSHIP_STATUSES = (
 
 IN_RELATIONSHIP = (
     ('S', 'single'),
-    ('D', 'dating'),
-    ('E', 'engaged'),
-    ('M', 'married'),
+    ('D', 'DATING'),
+    ('E', 'ENGAGED'),
+    ('M', 'MARRIED'),
 )
 
 
