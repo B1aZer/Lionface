@@ -5,12 +5,14 @@ from django.template import RequestContext
 from images.models import *
 from account.models import UserProfile
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.decorators import login_required
 
 from django.utils import timezone
 import datetime
 
 from django.db.models import Count
 
+@login_required
 def home(request):
     manage_perm = False
     rows_show = 4

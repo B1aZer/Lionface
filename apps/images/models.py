@@ -70,6 +70,9 @@ class Image(models.Model):
             except:
                 return None
 
+    def get_loves(self):
+        return self.users_loved.count()
+
     def get_medium_thumb(self):
         name, ext = os.path.splitext(self.image.thumb_name)
         name = name + '_med' + ext

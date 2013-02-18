@@ -21,8 +21,8 @@
                         <div class="username">{{ page.category }}</div>
                     </a>
                         <div class="image-subtext" style="position: relative; left: 15px; top: 10px;">
-                            <a id="add_post_lovers" class="post_lovers" href="{% url images.views.add_lovers %}">Love</a>
-                            <a id="rem_post_lovers" class="post_lovers" href="{% url images.views.add_lovers %}">Loved</a>
+                            <a id="add_post_lovers" class="post_lovers" href="{% url images.views.add_lovers %}">Love <span class="loves_count"></span></a>
+                            <a id="rem_post_lovers" class="post_lovers" href="{% url images.views.add_lovers %}">Loved <span class="loves_count"></span></a>
                             <a id="add_post_follower" class="post_followers" href="{% url images.views.add_followings %}">Follow</a>
                             <a id="rem_post_follower" class="post_followers" href="{% url images.views.add_followings %}">Unfollow</a>
                         </div>
@@ -33,8 +33,8 @@
                         <div class="username">{{ profile_user.username }}</div>
                     </a>
                         <div class="image-subtext" style="position: relative; left: 15px; top: 10px;">
-                            <a id="add_post_lovers" class="post_lovers" href="{% url images.views.add_lovers %}">Love</a>
-                            <a id="rem_post_lovers" class="post_lovers" href="{% url images.views.add_lovers %}">Loved</a>
+                            <a id="add_post_lovers" class="post_lovers" href="{% url images.views.add_lovers %}">Love <span class="loves_count"></span></a>
+                            <a id="rem_post_lovers" class="post_lovers" href="{% url images.views.add_lovers %}">Loved <span class="loves_count"></span></a>
                             <a id="add_post_follower" class="post_followers" href="{% url images.views.add_followings %}">Follow</a>
                             <a id="rem_post_follower" class="post_followers" href="{% url images.views.add_followings %}">Unfollow</a>
                         </div>
