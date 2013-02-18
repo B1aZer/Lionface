@@ -94,6 +94,9 @@
                             ">
                             <a href="{{ employee.get_absolute_url }}">
                                 <img src="{{ employee.get_thumb }}" width="72" height="72" />
+                                {% if request.user|check_pages_community:page %}
+                                <a href="{% url pages.views.emloyee_remove slug=page.username user_id=employee.id %}" class="remove_member_class" >X</a>
+                                {% endif %}
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ employee.get_full_name }}</div>
                         </div>
@@ -154,6 +157,9 @@
                             ">
                             <a href="{{ member.get_absolute_url }}">
                                 <img src="{{ member.get_thumb }}" width="54" height="54" />
+                                {% if request.user|check_pages_community:page %}
+                                <a href="{% url pages.views.member_remove slug=page.username user_id=member.id %}" class="remove_member_class" >X</a>
+                                {% endif %}
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ member.get_full_name }}</div>
                         </div>
@@ -214,6 +220,9 @@
                             ">
                             <a href="{{ intern.get_absolute_url }}">
                                 <img src="{{ intern.get_thumb }}" width="54" height="54" />
+                                {% if request.user|check_pages_community:page %}
+                                <a href="{% url pages.views.intern_remove slug=page.username user_id=intern.id %}" class="remove_member_class" >X</a>
+                                {% endif %}
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ intern.get_full_name }}</div>
                         </div>
@@ -273,6 +282,9 @@
                             ">
                             <a href="{{ volunteer.get_absolute_url }}">
                                 <img src="{{ volunteer.get_thumb }}" width="54" height="54" />
+                                {% if request.user|check_pages_community:page %}
+                                <a href="{% url pages.views.volunteer_remove slug=page.username user_id=volunteer.id %}" class="remove_member_class" >X</a>
+                                {% endif %}
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ volunteer.get_full_name }}</div>                      
                         </div>

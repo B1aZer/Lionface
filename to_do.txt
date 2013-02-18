@@ -3,6 +3,11 @@
 
 Actually, a lot of messages aren't going through. It seems kind of random.
 
+* The predefined AWS RDS settings for MySQL max. connections are:
+
+*    Small Instance: 150 connections  (1.7GB of RAM)
+*    Large instance: 640 connections  (7.5GB of RAM)
+
 [2/11/13 9:49:25 PM] Nick: And would it be a quick fix to make http://youtu.be/OOpkr8uNWpk style links embed? People keep using them, to their disappointment.
 
 Discussions template you made (with the link on the News Feed) and change that to Photos (with the url lionface.org/photos) and show the most 100 Loved photos from all public user posts, and all Page updates from the previous 7 days. It should follow the same ul/li template as the profile pictures for users.
