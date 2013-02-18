@@ -169,7 +169,7 @@ LionFace.Profile.prototype = {
         $(document).on('click','#save_image_profile',function(e){
             e.preventDefault();
             var post = $('.profile_cover').position();
-            var url = 'reposition/';
+            var url = $(this).attr('href');
             var pattern = /url\(|\)|"|'/g;
             $('.large_loader').show();
             make_request({
