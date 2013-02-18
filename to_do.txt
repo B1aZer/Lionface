@@ -1,6 +1,8 @@
 #smileys
 #administration
 
+Actually, a lot of messages aren't going through. It seems kind of random.
+
 [2/11/13 9:49:25 PM] Nick: And would it be a quick fix to make http://youtu.be/OOpkr8uNWpk style links embed? People keep using them, to their disappointment.
 
 Discussions template you made (with the link on the News Feed) and change that to Photos (with the url lionface.org/photos) and show the most 100 Loved photos from all public user posts, and all Page updates from the previous 7 days. It should follow the same ul/li template as the profile pictures for users.
@@ -8,6 +10,8 @@ Discussions template you made (with the link on the News Feed) and change that t
 • The scrolling issue returned: if I open the popup div when I post, before reload, and close it, scroll is disabled for the page.
 
 • If it's quick, I'd really like to add "Just Me" option to /my/ profile postbox, so then I can keep a private diary (the love, comment, share, settings, privacy and follow links should be hidden, only showing the delete option and the timestamp). I also want to add "Just [Friend's FirstName]" to friend's postbox, so that just me, and just that single friend, can see the post (sublinks should be available as normal, except for share (be sure to gray out share in post settings).
+
+Would it also be quick to get rid of the account/signup/ appendage to the URL for this page, so it always just says lionface.org/
 
 redis on dev is taking too much CPU # or no ?
 

@@ -232,6 +232,7 @@ $(document).ready(function(){
                             if (tag_val == 'Nonprofits') {
                                 $('#nonprofits_count').html('');
                             }
+                            $('.active_trending').removeClass('active_trending');
                             loadNewsFeed($("#news_feed"));
                         }
                     },
@@ -292,6 +293,7 @@ $(document).ready(function(){
                         self.removeClass('filter');
                         self.addClass('filterON');
                         self.attr('title','Turn filter off.');
+                        $('.active_trending').removeClass('active_trending');
                         loadNewsFeed($("#news_feed"));
                     },
                     errorback: function (XMLHttpRequest, textStatus, errorThrown) {
