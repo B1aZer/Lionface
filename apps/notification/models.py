@@ -361,6 +361,19 @@ def create_love_image_notifiaction(sender, instance, created, **kwargs):
 post_save.connect(create_love_image_notifiaction, sender=ImageLoves)
 
 
+def delete_love_image_notifiaction(sender, instance, **kwargs):
+    data = {
+        'other_user': instance.user,
+        'type__in': ('LI','FL'),
+        'content_type': ContentType.objects.get_for_model(instance.post),
+        'object_id': instance.post.id,
+        'related_type': ContentType.objects.get_for_model(instance),
+        'related_id': instance.id,
+    }
+    Notification.objects.filter(**data).delete()
+post_delete.connect(delete_love_image_notifiaction, sender=ImageLoves)
+
+
 def delete_comment_image_notification(sender, instance, **kwargs):
     if instance.owner != instance.image.owner:
         data = {
