@@ -33,7 +33,7 @@
 <script type="text/javascript">
     $(function() {
         LionFace.User['images_type'] = 'profile';
-        LionFace.User['images_manage'] = {% if request.user == profile_user %}true{% else %}false{% endif %};
+        LionFace.User['images_manage'] = false;
         LionFace.User['images_total_rows'] = {{ total_rows }};
         LionFace.User['images_now_rows'] = {{ image_rows|length }};
         LionFace.User['images_ajax'] = "{% url profile.views.images_ajax profile_user.username %}";

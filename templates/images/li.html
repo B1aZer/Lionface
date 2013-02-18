@@ -1,6 +1,6 @@
 {% load format_results %}
 {% for row in rows %}
-<li class="album_shadow" data-position="{{ row.rating }}" data-pk="{{ row.pk }}" data-following='{{ row|image_get_followings }}' data-lovers='{{ row|image_get_lovers }}'>
+<li class="album_shadow" data-position="{{ row.rating }}" data-pk="{{ row.pk }}" data-following='{{ row|image_get_followings }}' data-lovers='{{ row|image_get_lovers }}' data-loves='{{ row.get_loves }}'>
     <div style="background: url('/{{ row.image.thumb_name }}') #FFF;" data-original-url="/{{ row.image.name }}"  class="image_album">
     </div>
         {% if manage_perm %}

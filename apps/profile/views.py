@@ -922,11 +922,11 @@ def loves(request, username):
             pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=profile_user).date, reverse=True)
         if 'images' in request.GET:
             #pages = profile_user.get_loved_images()
-            pages = Image.objects.filter(users_loved = profile_user)
-            manage_perm = request.user == profile_user
+            pages = Image.objects.filter(users_loved = profile_user).order_by('-imageloves__date')
+            manage_perm = False
             data['html'] = render_to_string('images/images.html',
                                             {
-                                            'image_rows': pages.get_rows(0, 4, row_size=3),
+                                            'image_rows': pages.get_rows(0, 4, row_size=3, order=False),
                                             'profile_user': profile_user,
                                             'total_rows': pages.total_rows(),
                                             'photos_count': pages.count(),

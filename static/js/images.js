@@ -16,8 +16,8 @@ LionFace.Images.prototype = {
         $('.image_container li').each(function(index, elem) {
             _this.create_settings(elem);
         });
-        this.sort_images();
         if (!LionFace.User.is_anonymous && LionFace.User.images_manage) {
+            this.sort_images();
             this.bind_sorting();
         }
         this.bind_popup();
@@ -494,7 +494,7 @@ LionFace.Images.prototype = {
             $popup.find('.image_zone_view .image').show();
             $popup.find('.image_zone_view').find('.prev, .next').show();
             // privacy
-            if (LionFace.User.profile_user == LionFace.User.username || LionFace.User.images_manage) {
+            if (LionFace.User.images_manage) {
                 $popup.find('.image_zone_view').find('.rotate-left, .rotate-right').show();
             }
             _this.popup_resize();
@@ -530,6 +530,15 @@ LionFace.Images.prototype = {
             $popup.find('#add_post_lovers').show();
             $popup.find('#rem_post_lovers').hide();
         }
+        //loves count
+        var love_count = parseInt($(item).data('loves'));
+        if (love_count == 0) {
+            $popup.find('.loves_count').hide();
+        }
+        else {
+            $popup.find('.loves_count').show();
+        }
+        $popup.find('.loves_count').html(love_count);
     },
 
     popup_start: function(item) {
@@ -780,6 +789,7 @@ LionFace.Images.prototype = {
         var post = $('.image_container');
         var item = post.find('li[popup=true]');
         var followings = item.data('following');
+        var loves_count = parseInt(item.data('loves'));
         var data = {
             'user': LionFace.User.username,
             'imagepk': item.data('pk')
@@ -798,15 +808,24 @@ LionFace.Images.prototype = {
                     if (data.rem) {
                         var index = followings.indexOf(LionFace.User.username);
                         followings.splice(index, 1);
+                        loves_count = loves_count - 1;
+                        $('.image_popup').find('.loves_count').html(loves_count);
+                        if (loves_count == 0) {
+                            $('.image_popup').find('.loves_count').hide();
+                        }
                         $('.image_popup').find('#rem_post_lovers').hide();
                         $('.image_popup').find('#add_post_lovers').show();
                     }
                     else {
                         followings.push(LionFace.User.username);
+                        loves_count = loves_count + 1;
+                        $('.image_popup').find('.loves_count').html(loves_count);
                         $('.image_popup').find('#add_post_lovers').hide();
                         $('.image_popup').find('#rem_post_lovers').show();
+                        $('.image_popup').find('.loves_count').show();
                     }
                     item.data('lovers',followings)
+                    item.data('loves',loves_count)
                 }
             }
         });
