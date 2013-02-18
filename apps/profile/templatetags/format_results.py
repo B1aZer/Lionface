@@ -115,15 +115,16 @@ def color_tags(text):
         if matchobj.group(2).isdigit():
             return matchobj.group(1)
         else:
-            return r'<a href="/tag/?models=tags_tag&q=%s" class="colored_tag">%s</a>' % (matchobj.group(2), matchobj.group(1))
+            return r'%s<a href="/tag/?models=tags_tag&q=%s" class="colored_tag">%s</a>' % (matchobj.group(1), matchobj.group(3), matchobj.group(2))
     # Has problems with urls(#) (?<!http)
     # re (?<!\)) for excluding from substitude color tag like #FFF in style
+    # changed to (?<!style) (dr why this was here (
     # attribute e.g. style='backgound: ("/test/img.jpg") #FFF'
     #text = re.sub(r'((?<!\))(?:\A|\s)#([a-zA-Z0-9]{2,}))', r'<a href="/tag/?models=tags_tag&q=\2" class="colored_tag">\1</a>', text)
     #regex2 = re.compile('(?<!\)(?:\A|\s)#\b[0-9]+\b')
     #import pdb;pdb.set_trace()
     #if not regex2.match(text):
-    text = re.sub(r'((?<!\))(?:\A|\s|<br />|<p>)#([a-zA-Z0-9]{2,}))', replace_ment , text)
+    text = re.sub(r'(?<!style)(\A|\s|<br />|<p>)(#([a-zA-Z0-9_]{2,}))', replace_ment , text)
     return text
 
 
