@@ -78,7 +78,7 @@
                         {% if page.text_employees %}
                             {{ page.text_employees|linebreaksbr }}
                         {% elif request.user|check_pages_community:page %}
-                            Click to add text here. (optional)
+                            <span style="cursor: pointer;">Click to add text here. (optional)</span>
                         {% else %}
                         {% endif %} 
                     </div>
@@ -94,7 +94,7 @@
                             <a href="{{ employee.get_absolute_url }}">
                                 <img src="{{ employee.get_thumb }}" width="72" height="72" />
                                 {% if request.user|check_pages_community:page %}
-                                <a href="{% url pages.views.emloyee_remove slug=page.username user_id=employee.id %}" class="remove_member_class" >X</a>
+                                <a href="{% url pages.views.emloyee_remove slug=page.username user_id=employee.id %}" class="remove_member_class" title="Remove this person.">X</a>
                                 {% endif %}
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ employee.get_full_name }}</div>
@@ -141,7 +141,7 @@
                         {% if page.text_members %}
                             {{ page.text_members|linebreaksbr }}
                         {% elif request.user|check_pages_community:page %}
-                            Click to add text here. (optional)
+                            <span style="cursor: pointer;">Click to add text here. (optional)</span>
                         {% else %}
                         {% endif %} 
                     </div>
@@ -157,7 +157,7 @@
                             <a href="{{ member.get_absolute_url }}">
                                 <img src="{{ member.get_thumb }}" width="54" height="54" />
                                 {% if request.user|check_pages_community:page %}
-                                <a href="{% url pages.views.member_remove slug=page.username user_id=member.id %}" class="remove_member_class" >X</a>
+                                <a href="{% url pages.views.member_remove slug=page.username user_id=member.id %}" class="remove_member_class" title="Remove this person.">X</a>
                                 {% endif %}
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ member.get_full_name }}</div>
@@ -204,7 +204,7 @@
                         {% if page.text_interns %}
                             {{ page.text_interns|linebreaksbr }}
                         {% elif request.user|check_pages_community:page %}
-                            Click to add text here. (optional)
+                            <span style="cursor: pointer;">Click to add text here. (optional)</span>
                         {% else %}
                         {% endif %} 
                     </div>
@@ -220,7 +220,7 @@
                             <a href="{{ intern.get_absolute_url }}">
                                 <img src="{{ intern.get_thumb }}" width="54" height="54" />
                                 {% if request.user|check_pages_community:page %}
-                                <a href="{% url pages.views.intern_remove slug=page.username user_id=intern.id %}" class="remove_member_class" >X</a>
+                                <a href="{% url pages.views.intern_remove slug=page.username user_id=intern.id %}" class="remove_member_class" title="Remove this person.">X</a>
                                 {% endif %}
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ intern.get_full_name }}</div>
@@ -265,7 +265,7 @@
                         {% if page.text_volunteers %}
                             {{ page.text_volunteers|linebreaksbr }}
                         {% elif request.user|check_pages_community:page %}
-                            Click to add text here. (optional)
+                            <span style="cursor: pointer;">Click to add text here. (optional)</span>
                         {% else %}
                         {# not com admin and no text #}
                         {% endif %} 
@@ -282,7 +282,7 @@
                             <a href="{{ volunteer.get_absolute_url }}">
                                 <img src="{{ volunteer.get_thumb }}" width="54" height="54" />
                                 {% if request.user|check_pages_community:page %}
-                                <a href="{% url pages.views.volunteer_remove slug=page.username user_id=volunteer.id %}" class="remove_member_class" >X</a>
+                                <a href="{% url pages.views.volunteer_remove slug=page.username user_id=volunteer.id %}" class="remove_member_class" title="Remove this person.">X</a>
                                 {% endif %}
                             </a>
                             <div class="friend_name" style="text-align: center; display:none; left: 50px; top: -1px;">{{ volunteer.get_full_name }}</div>                      

@@ -331,6 +331,18 @@ a.home_link:hover {
 	color: #3ea8d2;
 }
 
+.float_right.terms a:link, .float_right.terms a:active, .float_right.terms a:visited {
+	display: block;
+	line-height: 200%;
+	font-size: 14pt;
+	color: #999;
+}
+
+.float_right.terms a:hover {
+	text-decoration: none;
+	color: #777;
+}
+
 .micro_container {
 	width: 950px; background: #EAECEE; text-align: left; position: relative;
 }
