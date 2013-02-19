@@ -539,11 +539,24 @@ LionFace.Images.prototype = {
             $popup.find('.loves_count').show();
         }
         $popup.find('.loves_count').html(love_count);
+        // owner name
+        var name = $(item).data('owner_name');
+        var username = $(item).data('owner_username');
+        var owner = $('.image_popup .owner');
+
+        if (name) {
+            owner.find('.fullname').html(name);
+        }
+        if (username) {
+            owner.find('.username').html(username);
+        }
+
     },
 
     popup_start: function(item) {
         $('.image_popup .image_zone, .image_popup .image_info').show();
         $('.image_popup').fadeIn(this.options.popup_fadeDuration);
+
         this.popup_enableKeyboard();
         this.popup_change_item(item, false);
         this.popup_start.overflow = $('body').css('overflow');

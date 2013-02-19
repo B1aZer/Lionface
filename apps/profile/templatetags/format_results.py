@@ -113,7 +113,7 @@ def get_comment_counter(item, user):
 def color_tags(text):
     def replace_ment(matchobj):
         if matchobj.group(4).isdigit():
-            return matchobj.group(3)
+            return r'%s%s' % (matchobj.group(2),matchobj.group(3))
         else:
             return r'%s<a href="/tag/?models=tags_tag&q=%s" class="colored_tag">%s</a>' % (matchobj.group(2), matchobj.group(4), matchobj.group(3))
     # Has problems with urls(#) (?<!http)
