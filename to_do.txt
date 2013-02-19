@@ -49,13 +49,24 @@ CELERYD AND CELERYBEAT (do not forget to run them)
 
 gunicorn --worker-class socketio.sgunico.GeventSocketIOWorker wsgi:app
 
+./rds-modify-db-parameter-group mydbparametergroup1 --parameters="name=general_log, value=0, method=immediate"
+
+./rds-describe-db-instances mydb
+
 1Lion8face.
 mysql -h mydb.c9iodczmwien.us-east-1.rds.amazonaws.com -P 3306 -u root -p
+
+mysqldump -P 3306 -h mydb.c9iodczmwien.us-east-1.rds.amazonaws.com -u root -p mydb > backup.sql
+
+mysql -u root mydb < backup.sql
+
+scp -i admin.pem ubuntu@54.235.222.88:/var/www/whispering-anchorage-2296/uploads/images/* ~/Sites/clients/Nick/lionface/uploads/images/
+
 #production
 1. genrate media
-2.5 migrate
-2. restart celery
+2.5 python manage migrate
+2. restart celery (sudo service celeryd restart)
 3. restart server
-4. restart nginx
+4. restart nginx (sudo service nginx restart)
 celery aint running on boot
 

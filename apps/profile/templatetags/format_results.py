@@ -112,8 +112,8 @@ def get_comment_counter(item, user):
 @register.filter(name='color_tags', is_safe=True)
 def color_tags(text):
     def replace_ment(matchobj):
-        if matchobj.group(2).isdigit():
-            return matchobj.group(1)
+        if matchobj.group(4).isdigit():
+            return matchobj.group(3)
         else:
             return r'%s<a href="/tag/?models=tags_tag&q=%s" class="colored_tag">%s</a>' % (matchobj.group(2), matchobj.group(4), matchobj.group(3))
     # Has problems with urls(#) (?<!http)

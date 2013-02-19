@@ -31,6 +31,8 @@ import datetime as dateclass
 from itertools import chain
 from .utils import list_tags
 
+from django.db import connection
+
 
 try:
     import json
@@ -165,6 +167,12 @@ def feed(request, user_id=None):
                 items = paginator.page(paginator.num_pages)
         else:
             page = 1
+    """
+    """
+    f = open('queries.sql', 'w')
+    for l in connection.queries:
+        f.write('%s\n' % l)
+    f.close
     """
 
     data['html'] = loader.render_to_string(
