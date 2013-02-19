@@ -937,9 +937,11 @@ LionFace.Images.prototype = {
         $popup.find('.image_zone_view .rotate-right').click(function(event) {
             _this.rotate_image_right();
         });
+        $popup.find('.image_zone_view .prev').unbind('click');
         $popup.find('.image_zone_view .prev').click(function(event) {
             _this.popup_to_prev();
         });
+        $popup.find('.image_zone_view .next').unbind('click');
         $popup.find('.image_zone_view .next').click(function(event) {
             _this.popup_to_next();
         });
