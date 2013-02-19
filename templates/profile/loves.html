@@ -22,7 +22,8 @@ body { background: #FFF; }
 
     <div style="position: relative; left: 0px; z-index: 100;">
 
-    <a href="javascript:;" id="posts" class="feed_type filter loving"> Posts</a>
+    <a href="javascript:;" id="posts" class="feed_type filter loving"><img class="NF_icon" src="{% media_url 'images/iconPost.hover.png' %}" style="left: 1px; top: -2px;" /> Posts</a>
+    <a href="javascript:;" id="images" class="feed_type filter loving"><img class="NF_icon" src="{% media_url 'images/icon_camera.png' %}" style="height: 10px; width: 12px; top: -1px; left:2px; margin-right: 10px;" /> Photos</a>
     <a href="javascript:;" id="business" class="feed_type filterON loving"><img class="NF_icon" src="{% media_url 'images/Icon_NF_Business.png' %}" /> Businesses</a>
     <a href="javascript:;" id="nonprofit" class="feed_type filter loving"><img class="NF_icon" src="{% media_url 'images/Icon_NF_NPs.png' %}" /> Nonprofits</a>
 
@@ -40,5 +41,23 @@ body { background: #FFF; }
 </div>
 
   {% include_media 'profile.js' %}
+  {% include_media 'post.js' %}
+    {% include "images/popup.html" %}
+{% endblock %}
+
+{% block footer_js %}
+<script type="text/javascript">
+    $(function() {
+        LionFace.User['images_type'] = 'profile';
+        LionFace.User['images_manage'] = false;
+        LionFace.User['images_total_rows'] = '{{ total_rows }}';
+        LionFace.User['images_now_rows'] = '{{ image_rows|length }}';
+        LionFace.User['images_ajax'] = "{% url profile.views.images_ajax profile_user.username %}";
+        LionFace.User['images_comments_ajax'] = "{% url profile.views.images_comments_ajax profile_user.username %}";
+        LionFace.User['images_quote_ajax'] = '{% url profile-images-quote profile_user.username %}';
+        LionFace.User['images_rotation'] = '{% url profile.views.rotate_image profile_user.username %}';
+        LionFace.User['profile_user'] = '{{ profile_user.username }}';
+    });
+</script>
 {% endblock %}
 

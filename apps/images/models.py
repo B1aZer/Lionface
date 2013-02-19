@@ -20,8 +20,11 @@ class ImageQuerySet(CustomQuerySet):
         from math import ceil
         return int(ceil(self.count() / float(row_size)))
 
-    def get_rows(self, start, count, row_size=DEFAULT_ROW_SIZE):
-        qs = self.order_by('rating')
+    def get_rows(self, start, count, row_size=DEFAULT_ROW_SIZE, order=True):
+        if order:
+            qs = self.order_by('rating')
+        else:
+            qs = self
         objs = qs[start * row_size:(start + count) * row_size]
         rows = []
         for i in xrange(0, len(objs), row_size):
@@ -36,6 +39,10 @@ class ImageQuerySet(CustomQuerySet):
             [(d['pk'], d['rating']) for d in self.values('pk', 'rating')]
         )
 
+class ImageLoves(models.Model):
+    post = models.ForeignKey('Image')
+    user = models.ForeignKey(UserProfile)
+    date = models.DateTimeField(auto_now_add=True)
 
 class Image(models.Model):
     image = ImageWithThumbField(upload_to="uploads/images")
@@ -44,6 +51,9 @@ class Image(models.Model):
     owner = generic.GenericForeignKey('owner_type', 'owner_id')
     rating = models.IntegerField(blank=True, null=True)
     activity = models.BooleanField(default=False)
+    following = models.ManyToManyField( UserProfile, related_name='follows_images', null=True, blank=True)
+    users_loved = models.ManyToManyField(
+        UserProfile, related_name='images_loved', through='ImageLoves', null=True, blank=True)
 
     objects = ImageQuerySet.as_manager()
 
@@ -59,6 +69,9 @@ class Image(models.Model):
                 return user
             except:
                 return None
+
+    def get_loves(self):
+        return self.users_loved.count()
 
     def get_medium_thumb(self):
         name, ext = os.path.splitext(self.image.thumb_name)
@@ -221,6 +234,7 @@ class Image(models.Model):
 def create_image(sender, instance, created, **kwargs):
     if created:
         instance.rating = instance.pk
+        instance.following.add(instance.get_owner())
         instance.save()
 post_save.connect(
     create_image,
@@ -234,6 +248,7 @@ def delete_image(sender, instance, **kwargs):
         owner = instance.owner
         owner.photo = owner.photo.field.default
         owner.save()
+    instance.following.clear()
     instance.image.storage.delete(instance.image.thumb_path)
     instance.image.delete(save=False)
 post_delete.connect(
@@ -263,3 +278,11 @@ class ImageComments(models.Model):
     class Meta:
         ordering = ['date']
         db_table = 'images_comments'
+
+
+"""
+def add_image_to_followings(sender, instance, created, **kwargs):
+    if created:
+        instance.image.following.add(instance.owner)
+post_save.connect(add_image_to_followings, sender=ImageComments)
+"""

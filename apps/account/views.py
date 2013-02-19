@@ -45,7 +45,8 @@ def signup(request, template='public/home.html'):
         {
             'login_form': LoginForm(prefix='login'),
             'signup_form': form,
-            'signup': signup
+            'signup': signup,
+            'signup_page': True
         }
     )
 

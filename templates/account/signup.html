@@ -1,13 +1,16 @@
 {% load media %}
 
-<div class="center_container">
-  <table width="400" height="325" class="heart">
+<div class="center_container" align="center">
+  <table width="475" height="325" class="heart">
     <tr>
       <td>
         <form id="signup_form" method="POST" action="{% url signup %}">{% csrf_token %}
           <div class="dark_box">
-            <table width="100%" border="0" cellspacing="0" cellpadding="4">
-				<tr><td colspan="2" align="right"><div style="font-size: 14pt; position: relative; top: -8px;">Are you new to Lionface? Create an account.</div></td></tr>
+            <table width="475" border="0" cellspacing="0" cellpadding="4">
+				<tr><td colspan="2" align="right"><div style="font-size: 14pt; position: relative; top: -8px;">Are you new to Lionface? Create an account.</div>
+					<div style="position: absolute; bottom: 40px; right: 14px; color: #BBB; font-size: 7pt; cursor: pointer;"
+						onClick="HideContent('create_table'); ShowContent('open_create'); return false;">Cancel</div>
+				</td></tr>
               <tr>
                 <td align="right" width="200">{{ signup_form.full_name.label }}:<br /><span style="color: #BBB; font-size: 8pt;">{{ signup_form.full_name.help_text }}</span></td>
                 <td align="right">{{ signup_form.full_name }}</td>
@@ -48,7 +51,7 @@
                 </td>
               </tr>
               <tr>
-                <td align="right">{{ signup_form.email.label }}:<br /><span class="help_text">{{ signup_form.email.help_text }}</span></td>
+                <td align="right">{{ signup_form.email.label }}:<br /><span style="color: #BBB; font-size: 8pt;">You will need to verify this.</span><span class="help_text">{{ signup_form.email.help_text }}</span></td>
                 <td align="right">{{ signup_form.email }}</td>
                 <td width="20">
                   {% if signup_form.email.errors %}
@@ -86,11 +89,11 @@
                   <input id="signup_submit" type="submit" value="Create an Account">
                 </td>
               </tr>
-
             </table>
           </div>
         </form>
       </td>
     </tr>
   </table>
+
 </div>

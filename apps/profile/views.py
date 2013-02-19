@@ -268,11 +268,12 @@ def images_comments_ajax(request, username):
         raise Http404
 
     ctype = ContentType.objects.get_for_model(UserProfile)
-    qs = Image.objects.filter(owner_type=ctype, owner_id=profile_user.id)
+    qs = Image.objects.filter(owner_type=ctype)
     manage_perm = request.user == profile_user
 
     try:
-        image = qs.get(pk=request.REQUEST.get('pk', None))
+        #image = qs.get(pk=request.REQUEST.get('pk', None))
+        image = Image.objects.get(pk=request.REQUEST.get('pk', None))
     except Image.DoesNotExist:
         return HttpResponseBadRequest('Bad pk was received.')
 
@@ -918,7 +919,29 @@ def loves(request, username):
             pages = pages.filter(type='NP')
         if 'posts' in request.GET:
             pages = profile_user.get_loved_posts()
-            pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=request.user).date, reverse=True)
+            pages = sorted(pages, key=lambda item: PageLoves.objects.get(page=item, user=request.user).date if isinstance(item, Pages) else PostLoves.objects.get(post=item, user=profile_user).date, reverse=True)
+            page_type = 'news_feed'
+            data['html'] = render_to_string('post/_feed.html',
+                                            {
+                                                'profile_user': profile_user,
+                                                'items': pages,
+                                                'page_type': page_type,
+                                            }, context_instance=RequestContext(request))
+            return HttpResponse(json.dumps(data), "application/json")
+        if 'images' in request.GET:
+            #pages = profile_user.get_loved_images()
+            pages = Image.objects.filter(users_loved = profile_user).order_by('-imageloves__date')
+            manage_perm = False
+            data['html'] = render_to_string('images/images_loves.html',
+                                            {
+                                            'image_rows': pages.get_rows(0, 4, row_size=3, order=False),
+                                            'profile_user': profile_user,
+                                            'total_rows': pages.total_rows(),
+                                            'photos_count': pages.count(),
+                                            'manage_perm': manage_perm,
+                                            'ajax': True,
+                                            }, context_instance=RequestContext(request))
+            return HttpResponse(json.dumps(data), "application/json")
 
     if request.method == 'GET' and 'ajax' in request.GET:
         data['html'] = render_to_string('profile/loves_items.html',

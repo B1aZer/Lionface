@@ -11,7 +11,7 @@ from account.models import *
 from agenda.models import *
 from post.models import *
 from pages.models import Pages
-from images.models import Image, ImageComments
+from images.models import *
 
 
 NOTIFICATION_TYPES = (
@@ -20,15 +20,19 @@ NOTIFICATION_TYPES = (
     ('FA', 'Friend Accepted'),
     ('CS', 'Comment Submitted'),
     ('CI', 'Comment Image'),
+    ('LI', 'Loves Image'),
     ('PS', 'Post Shared'),
     ('PP', 'Profile Post'),
     ('FF', 'Following Acquired'),
     ('FC', 'Follow Comment'),
     ('FS', 'Follow Shared'),
+    ('FI', 'Follow Comment Image'),
+    ('FL', 'Follow Loves Image'),
     ('LP', 'Loves Post'),
     ('DP', 'Discussion Post'),
     ('MC', 'Multiple Comment'),
     ('MI', 'Multiple Image Comment'),
+    ('IM', 'Multiple Image Comment Following'),
     ('MF', 'Multiple Comment Following'),
     ('MS', 'Multiple Shared'),
     ('MD', 'Multiple Page Shared'),
@@ -36,6 +40,8 @@ NOTIFICATION_TYPES = (
     ('FM', 'Multiple Following Acquired'),
     ('MP', 'Multiple Profile Post'),
     ('ML', 'Multiple Loves Post'),
+    ('II', 'Multiple Loves Image Following'),
+    ('LM', 'Multiple Loves Image'),
     ('DM', 'Multiple Discussion Post'),
 )
 
@@ -224,12 +230,14 @@ def create_friend_request_notification(sender, instance, created, **kwargs):
         Notification(user=instance.to_user, type='FR', friend_request=instance, content_object=instance).save()
 post_save.connect(create_friend_request_notification, sender=FriendRequest)
 
+
 def create_discuss_post_notification(sender, instance, created, **kwargs):
     if created:
         for user in instance.topic.following.all():
             if user != instance.user:
                 Notification(user=user, type='DP', other_user=instance.user, content_object=instance.topic, related_object=instance).save()
 post_save.connect(create_discuss_post_notification, sender=DiscussPost)
+
 
 def create_profile_post_notification(sender, instance, created, **kwargs):
     if created:
@@ -303,7 +311,7 @@ comment_was_posted.connect(create_comment_notifiaction)
 
 def create_comment_image_notification(sender, instance, created, **kwargs):
     if created:
-        if instance.owner != instance.image.get_owner():
+        if instance.owner != instance.image.get_owner() and instance.image.get_owner() in instance.image.following.all():
             data = {
                 'user': instance.image.get_owner(),
                 'type': 'CI',
@@ -312,7 +320,58 @@ def create_comment_image_notification(sender, instance, created, **kwargs):
                 'related_object': instance,
             }
             Notification.objects.create(**data)
+        #create notifiactions for all followers of this post
+        for user in instance.image.following.all():
+            if user != instance.owner and user != instance.image.get_owner() \
+                    and instance.owner not in user.get_blocked():
+                data = {
+                    'user': user,
+                    'type': 'FI',
+                    'other_user': instance.owner,
+                    'content_object': instance.image,
+                    'related_object': instance,
+                }
+                Notification.objects.create(**data)
 post_save.connect(create_comment_image_notification, sender=ImageComments)
+
+
+def create_love_image_notifiaction(sender, instance, created, **kwargs):
+    if created:
+        if instance.user != instance.post.get_owner() and instance.post.get_owner() in instance.post.following.all():
+            data = {
+                'user': instance.post.get_owner(),
+                'type': 'LI',
+                'other_user': instance.user,
+                'content_object': instance.post,
+                'related_object': instance,
+            }
+            Notification.objects.create(**data)
+        #create notifiactions for all followers of this post
+        for user in instance.post.following.all():
+            if user != instance.user and user != instance.post.get_owner() \
+                    and instance.user not in user.get_blocked():
+                data = {
+                    'user': user,
+                    'type': 'FL',
+                    'other_user': instance.user,
+                    'content_object': instance.post,
+                    'related_object': instance,
+                }
+                Notification.objects.create(**data)
+post_save.connect(create_love_image_notifiaction, sender=ImageLoves)
+
+
+def delete_love_image_notifiaction(sender, instance, **kwargs):
+    data = {
+        'other_user': instance.user,
+        'type__in': ('LI','FL'),
+        'content_type': ContentType.objects.get_for_model(instance.post),
+        'object_id': instance.post.id,
+        'related_type': ContentType.objects.get_for_model(instance),
+        'related_id': instance.id,
+    }
+    Notification.objects.filter(**data).delete()
+post_delete.connect(delete_love_image_notifiaction, sender=ImageLoves)
 
 
 def delete_comment_image_notification(sender, instance, **kwargs):
@@ -363,9 +422,17 @@ pre_delete.connect(delete_dated_notifications, sender=NewsItem)
 
 def update_notification_count(sender, instance, **kwargs):
     """ merge unread notifications to one """
-    if instance.type in ('CS', 'CI', 'FC', 'PS', 'FS'):
+    if instance.type in ('CS', 'CI', 'LI', 'FC', 'PS', 'FS', 'FI', 'FL'):
         if instance.type == 'CS':
             notification_type = 'MC'
+        if instance.type == 'CI':
+            notification_type = 'MI'
+        if instance.type == 'FI':
+            notification_type = 'IM'
+        if instance.type == 'FL':
+            notification_type = 'II'
+        if instance.type == 'LI':
+            notification_type = 'LM'
         if instance.type == 'CI':
             notification_type = 'MI'
         if instance.type == 'FC':

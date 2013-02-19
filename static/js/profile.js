@@ -169,7 +169,7 @@ LionFace.Profile.prototype = {
         $(document).on('click','#save_image_profile',function(e){
             e.preventDefault();
             var post = $('.profile_cover').position();
-            var url = 'reposition/';
+            var url = $(this).attr('href');
             var pattern = /url\(|\)|"|'/g;
             $('.large_loader').show();
             make_request({
@@ -223,6 +223,7 @@ LionFace.Profile.prototype = {
                 success: function(data) {
                     if (data.status === 'OK') {
                         $("#news_feed").prepend(data.html);
+                        //loadNewsFeed($("#news_feed"));
                         $('.postbox_textarea').val('');
                         make_excerpts();
                         LionFace.Site.revert_textbox_height();

@@ -13,8 +13,8 @@ body { background: #FFF; }
 
 {% block dashboard %}
 	{% include "profile/dashboard.html" %}
-        <div style="position: relative;">
-            <form action="." method="post" class="upload_pforile_cover_form" enctype="multipart/form-data" style="display:none" >
+        <div style="position: relative; margin-bottom: 7px;">
+            <form action="{% url provile-view profile_user.username %}" method="post" class="upload_pforile_cover_form" enctype="multipart/form-data" style="display:none" >
                 <div style="padding: 4px 8px; background: #EEE; border: 1px solid #FFF; border-width: 1px 3px 3px 3px;">
                 {% csrf_token %}
                 {{ cover_form.cover_photo.errors }}
@@ -43,7 +43,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 </div></div>
 {% if request.user == profile_user %}
 <div style="position: relative;">
-<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
+    <form action="{% url provile-view profile_user.username %}" method="post" class="upload_form" enctype="multipart/form-data" style="display:none;">
 	{% csrf_token %}
 	{{ form.image.errors }}
 	<p><label for="id_photo">Upload</label></p>
@@ -57,13 +57,12 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 {% endif %}
 
 {% if request.user == profile_user %}
-<div class="DoS_profile">This is you.</div>
 {% else %}
 {% if profile_user|check_message_sending:request.user %}
 	{% if profile_user|degree_of_separation:request.user or profile_user|degree_of_separation:request.user == 0 %}
 	<div class="DoS_profile">Degree of Separation: {{ profile_user|degree_of_separation:request.user }}</div>
 	{% else %}
-	<div class="DoS_profile">Degree of Separation: <span title="Unknown">--</span></div>
+	<div class="DoS_profile">Degree of Separation: <span title="Unknown">unknown</span></div>
 	{% endif %}
 
 {% endif %}
@@ -178,7 +177,7 @@ onclick="window.location.href = '{% url profile.views.images profile_user.userna
 										<div style="position: relative; display: inline-block;">
     {% if profile_user == request.user %}
 											<div class="post_feature" style="display: none;" id="tags">Use the hashtag symbol <span class="post_feature_sub"><span style="font-size: 11pt; position: relative; left: 0px; top: 1px;">#</span></span><br /> to create tags.</div>
-											<div class="post_feature" style="display: none;" id="embed">Copy and paste links from sites like Youtube and Vimeo and videos will automatically embed once you submit your post. We also support TED.com videos.</div>
+											<div class="post_feature" style="display: none;" id="embed">Copy and paste URLs from sites like Youtube and Vimeo and videos will automatically embed once you submit your post. We also support TED.com videos.</div>
 											<div class="post_feature" style="display: none;" id="href">Use standard HTML a href code to create links within your post.</div>
 											<div class="post_feature" style="display: none;" id="attach">You can attach up to <span class="post_feature_sub">21</span><br /> images per post.</div>
 

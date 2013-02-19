@@ -115,9 +115,25 @@ class PublishActiveUsers(Task):
         except:
             return False
         active = list(get_active_users())
+        names = [u.get_full_name() for u in active if u in friends]
         active = [u.username for u in active if u in friends]
         logger.info(active)
-        r.publish(username, json.dumps({'active':active, 'type':'active'}))
+        r.publish(username, json.dumps({'active':{'usernames':active,'names':names}, 'type':'active'}))
         return True
 tasks.register(PublishActiveUsers)
+
+
+class ToggleSound(Task):
+    def run(self, username, value, **kwargs):
+        try:
+            user = UserProfile.objects.get(username=username)
+        except:
+            return False
+        user_chat, created = Chat.objects.get_or_create(user=user)
+        if value == 'on':
+            user_chat.sound = True
+        else:
+            user_chat.sound = False
+        user_chat.save()
+tasks.register(ToggleSound)
 

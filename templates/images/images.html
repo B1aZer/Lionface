@@ -1,6 +1,8 @@
 {% load media %}
 {% include_media 'images.js' %}
+{% if not ajax %}
 {% include "images/popup.html" %}
+{% endif %}
 <div class="image_container">
     <ul>
     {% for rows in image_rows %}

@@ -72,8 +72,7 @@ class Post(models.Model):
     users_loved = models.ManyToManyField(
         UserProfile, related_name='posts_loved', through='PostLoves', null=True, blank=True)
     loves = models.PositiveIntegerField(default=0)
-    following = models.ManyToManyField(
-        UserProfile, related_name='follows', null=True, blank=True)
+    following = models.ManyToManyField( UserProfile, related_name='follows', null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     shared = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)

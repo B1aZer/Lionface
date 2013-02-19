@@ -1,43 +1,30 @@
 #smileys
 #administration
 
+Actually, a lot of messages aren't going through. It seems kind of random.
+
+* The predefined AWS RDS settings for MySQL max. connections are:
+
+*    Small Instance: 150 connections  (1.7GB of RAM)
+*    Large instance: 640 connections  (7.5GB of RAM)
+
 [2/11/13 9:49:25 PM] Nick: And would it be a quick fix to make http://youtu.be/OOpkr8uNWpk style links embed? People keep using them, to their disappointment.
 
- added ping.ogg to the static directoy, and I added the sound img to the chat tab, however the display is currently "none". the soundOFF.png and soundON.png are both in static/images.
+Discussions template you made (with the link on the News Feed) and change that to Photos (with the url lionface.org/photos) and show the most 100 Loved photos from all public user posts, and all Page updates from the previous 7 days. It should follow the same ul/li template as the profile pictures for users.
 
 • The scrolling issue returned: if I open the popup div when I post, before reload, and close it, scroll is disabled for the page.
-#
+
+• If it's quick, I'd really like to add "Just Me" option to /my/ profile postbox, so then I can keep a private diary (the love, comment, share, settings, privacy and follow links should be hidden, only showing the delete option and the timestamp). I also want to add "Just [Friend's FirstName]" to friend's postbox, so that just me, and just that single friend, can see the post (sublinks should be available as normal, except for share (be sure to gray out share in post settings).
+
+Would it also be quick to get rid of the account/signup/ appendage to the URL for this page, so it always just says lionface.org/
+
+redis on dev is taking too much CPU # or no ?
+
+Alex sent me a message today. 
+He said he was trying to contact you for a while now, but with no luck.
+
 #for page posts we take PagePost objects not Newsfeed
 #these posts are adding to feed but not deleting from it
-
-redis takes too much memory
-memcache ?
-
-gunicorn --worker-class socketio.sgunico.GeventSocketIOWorker wsgi:app
-
-safari attach
-
-do not acount tags with less than 2 characters
-
-1Lion8face.
-mysql -h mydb.c9iodczmwien.us-east-1.rds.amazonaws.com -P 3306 -u root -p
-
-#now
-remove li from attached image on return
-#production
-add hours
-celery aint running on boot
-#posts
-attaching mp3 ?
-#pages#
-left column = admin + owned > 12
-##next###
-commit f943cbf0ed09680316caa7fb7addd89ace399d11
-Author: Dmitry on Server <dmitry.branitskiy@gmail.com>
-Date:   Thu Dec 27 12:51:36 2012 +0400
-
-    server changes
-
 
 ###later###
 deleting sharing origin wont delete children
@@ -59,4 +46,16 @@ for page in Pages.objects.all():
     page.user.set_option('pages_loves__%s' % page.id,True)
 
 CELERYD AND CELERYBEAT (do not forget to run them)
+
+gunicorn --worker-class socketio.sgunico.GeventSocketIOWorker wsgi:app
+
+1Lion8face.
+mysql -h mydb.c9iodczmwien.us-east-1.rds.amazonaws.com -P 3306 -u root -p
+#production
+1. genrate media
+2.5 migrate
+2. restart celery
+3. restart server
+4. restart nginx
+celery aint running on boot
 

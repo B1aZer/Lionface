@@ -4,6 +4,7 @@ from django.template import RequestContext
 
 from tags.models import *
 from pages.models import Pages
+from images.models import Image
 from smileys.models import Smiley
 
 import re
@@ -114,15 +115,15 @@ def color_tags(text):
         if matchobj.group(2).isdigit():
             return matchobj.group(1)
         else:
-            return r'<a href="/tag/?models=tags_tag&q=%s" class="colored_tag">%s</a>' % (matchobj.group(2), matchobj.group(1))
+            return r'%s<a href="/tag/?models=tags_tag&q=%s" class="colored_tag">%s</a>' % (matchobj.group(2), matchobj.group(4), matchobj.group(3))
     # Has problems with urls(#) (?<!http)
-    # re (?<!\)) for excluding from substitude color tag like #FFF in style
+    # re (?<!\)) for excluding from substitude color tag like #FFF in feed (background: url)
     # attribute e.g. style='backgound: ("/test/img.jpg") #FFF'
     #text = re.sub(r'((?<!\))(?:\A|\s)#([a-zA-Z0-9]{2,}))', r'<a href="/tag/?models=tags_tag&q=\2" class="colored_tag">\1</a>', text)
     #regex2 = re.compile('(?<!\)(?:\A|\s)#\b[0-9]+\b')
     #import pdb;pdb.set_trace()
     #if not regex2.match(text):
-    text = re.sub(r'((?<!\))(?:\A|\s)#([a-zA-Z0-9]{2,}))', replace_ment , text)
+    text = re.sub(r'(?<!\.(jpg|png|gif)"\))(?<!\.jpeg"\))(\A|\s|<br />|<p>)(#([a-zA-Z0-9_]{2,}))', replace_ment , text)
     return text
 
 
@@ -591,3 +592,16 @@ def get_online_users(context, as_tag, as_name):
 @register.filter
 def mod_by_three(value):
     return int(float(value)) % 3
+
+
+@register.filter
+def image_get_followings(image):
+    following =  image.following.all()
+    following = [u.username for u in following]
+    return json.dumps(following)
+
+@register.filter
+def image_get_lovers(image):
+    lovers =  image.users_loved.all()
+    lovers = [u.username for u in lovers]
+    return json.dumps(lovers)

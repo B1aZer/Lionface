@@ -7,8 +7,8 @@
                 <tr>
                     <td align="left"> 
                     <div style="font-size: 9pt !important; position: relative;">
-                        <div id="p{{ comment.id }}" class="comment_thumbnail" style="background: url('/{{ comment.user.userprofile.photo.thumb_name }}') #FFF; background-size: 40px 40px;"></div>
-                        <div class="comment_header">
+                        <a href='{{ comment.user.get_absolute_url }}'><div id="p{{ comment.id }}" class="comment_thumbnail" style="background: url('/{{ comment.user.userprofile.photo.thumb_name }}') #FFF; background-size: 40px 40px; z-index: 999;"></div></a>
+                        <div class="comment_header" style="padding-left: 50px;">
 							<a href='{{ comment.user.get_absolute_url }}'>{{ comment.user.userprofile.get_full_name }}</a>
                         	<div style="display: inline-block; color: #CCC; font-size: 8pt !important; margin-left: 10px;">
                             	<span style="padding-right: 10px; display: none;">Friends</span> <span title="{% widthratio item.timestamp|date:"Z" 3600 1 %}:00">{{ comment.submit_date }}</span>
@@ -27,7 +27,7 @@
             </table>
             </dt>
             <dd>
-            <div class="comment">{{ comment.comment|strip_comment|safe|smileys|linebreaks }}</div>
+            <div class="comment" style="padding-left: 50px; padding-bottom: 4px;">{{ comment.comment|strip_comment|safe|smileys|linebreaks }}</div>
             </dd>
         </div>
         <hr noshade="noshade" style="border: 0px; height: 1px; background: #FFF;" size="1" />

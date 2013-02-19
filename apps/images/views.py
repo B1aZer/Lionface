@@ -6,8 +6,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from account.models import UserProfile
-from post.models import ContentPost
-from .models import Image
+from post.models import *
+from .models import *
 
 try:
     import json
@@ -22,25 +22,24 @@ def notifications(request):
     data = {}
     try:
         if owner_id:
-            if owner_type == 'content post':
-                post = get_object_or_404(ContentPost, id=owner_id)
-                ctype = ContentType.objects.get_for_model(post)
-                qs = Image.objects.filter(owner_type=ctype, owner_id=post.id)
-                try:
-                    image_pk = request.REQUEST.get('pk', None)
-                    image = qs.get(pk=image_pk)
-                except Image.DoesNotExist:
-                    return HttpResponseBadRequest('Bad PK was received.')
-                data['owner'] = 'post'
-                data['images_comments_ajax'] = reverse(
-                    'post_images_ajax_comments')
-            else:
-                raise Http404
+            post = get_object_or_404(Post, id=owner_id)
+            post = post.get_inherited()
+            ctype = ContentType.objects.get_for_model(post)
+            qs = Image.objects.filter(owner_type=ctype, owner_id=post.id)
+            try:
+                image_pk = request.REQUEST.get('pk', None)
+                image = qs.get(pk=image_pk)
+            except Image.DoesNotExist:
+                return HttpResponseBadRequest('Bad PK was received.')
+            data['owner'] = 'post'
+            data['images_comments_ajax'] = reverse(
+                'post_images_ajax_comments')
         else:
             ctype = ContentType.objects.get_for_model(UserProfile)
-            qs = Image.objects.filter(owner_type=ctype, owner_id=request.user.id)
+            qs = Image.objects.filter(owner_type=ctype)
             try:
-                image = qs.get(pk=request.REQUEST.get('pk', None))
+                #image = qs.get(pk=request.REQUEST.get('pk', None))
+                image = Image.objects.get(pk=request.REQUEST.get('pk', None))
             except Image.DoesNotExist:
                 return HttpResponseBadRequest('Bad PK was received.')
             data['owner'] = 'user'
@@ -58,4 +57,60 @@ def notifications(request):
         print e
     else:
         data['status'] = 'ok'
+    return HttpResponse(json.dumps(data), "application/json")
+
+def add_followings(request):
+    data = {'status':'FAIL'}
+    request_post = json.loads(request.raw_post_data)
+    username = request_post.get('user')
+    imagepk = request_post.get('imagepk')
+    add = request_post.get('add')
+    try:
+        user = UserProfile.objects.get(username=username)
+    except:
+        raise Http404
+    try:
+        image = Image.objects.get(id=imagepk)
+    except:
+        raise Http404
+    if add:
+        image.following.add(user)
+        data['status'] = 'OK'
+        data['rem'] = False
+    else:
+        image.following.remove(user)
+        data['status'] = 'OK'
+        data['rem'] = True
+    return HttpResponse(json.dumps(data), "application/json")
+
+def del_followings(request):
+    data = {'status':'FAIL'}
+    return HttpResponse(json.dumps(data), "application/json")
+
+def add_lovers(request):
+    data = {'status':'FAIL'}
+    if not request.is_ajax():
+        raise Http404
+    request_post = json.loads(request.raw_post_data)
+    username = request_post.get('user')
+    imagepk = request_post.get('imagepk')
+    add = request_post.get('add')
+    try:
+        user = UserProfile.objects.get(username=username)
+    except:
+        raise Http404
+    try:
+        image = Image.objects.get(id=imagepk)
+    except:
+        raise Http404
+    if add:
+        #image.following.add(user)
+        ImageLoves.objects.get_or_create(user=user, post=image)
+        data['status'] = 'OK'
+        data['rem'] = False
+    else:
+        #image.following.remove(user)
+        ImageLoves.objects.filter(user=user, post=image).delete()
+        data['status'] = 'OK'
+        data['rem'] = True
     return HttpResponse(json.dumps(data), "application/json")

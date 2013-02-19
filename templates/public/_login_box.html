@@ -1,38 +1,8 @@
+{% load media %}
+
 <div id="login" align="center">
-<form method="POST" action="{% url account.views.login %}">{% csrf_token %}
-<div id="login_box" align="right">
-
-	<table border="0" cellspacing="0" cellpadding="0" width="900" height="65">
-	  <tr>
-        <td rowspan="2" align="left">
-            {% if request.path != '/' and request.path != '/account/login/' and request.path != '/account/signup/' %}
-                <a href="{% url account.views.login %}">Register</a>
-            {% else %}
-                &nbsp;
-            {% endif %}
-        </td>
-	    <td align="right" width="220"><label>{{ login_form.email.label }}</label> {{ login_form.email }}</td>
-	    <td align="right" width="240"><label>{{ login_form.password.label }}</label> {{ login_form.password }}
-
-		</td>
-	    {{ login_form.tzone }}
-        <td align="right" width="100">
-            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-			<input type="submit" class="login_button" value="Sign In"/>
-			</td>
-      </tr>
-	  <tr>
-
-		<td align="right" valign="top"><span style="font-size: 8pt;">{{ login_form.preserve }} <label for="id_login-preserve">{{ login_form.preserve.label }}</label></span></td>
-	    <td align="right" valign="top"><a href="{% url django.contrib.auth.views.password_reset %}" title=" Forgot your password? " class="reset">Forgot your password?</a></td>
-	    <td align="right"><div style="position: relative; width: 100%; height: 100%;"><div class="login_error">{{ login_form.error_message }}</div></div></td>
-      </tr>
-    </table>
-
-
+	<table width="950"><tr><td align="left" width="475">
+  {% include "public/_logo.html" %}</td><td align="right" width="475">
+  {% include "public/_login.html" %}
+	</td></tr></table>
 </div>
-</form>
-</div>
-<script>
-$('#id_login-tzone').val(timezone.name())
-</script>

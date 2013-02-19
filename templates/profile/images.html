@@ -16,7 +16,7 @@ body { background: #FFF; }
 {% endblock %}
 
 {% block left_col %}
-<div class="noPhoto images_profile_thumb" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 67px 67px; -moz-background-size: 67px 67px; background-size: 67px 67px; height: 67px; background-position: center left; -moz-box-shadow: 0 4px 8px -4px #777; box-shadow: 0 4px 8px -4px #777; border: 0px; margin-bottom: 12px; background-repeat: no-repeat; cursor: default;">
+<div class="noPhoto images_profile_thumb" style="background: url('/{{ profile_user.photo.thumb_name }}') #FFF; -webkit-background-size: 67px 67px; -moz-background-size: 67px 67px; background-size: 67px 67px; height: 65px; background-position: center left; border-bottom: 1px solid #EEE; margin-bottom: 12px; background-repeat: no-repeat; cursor: default;">
 	{% if request.user == profile_user %}
 	<div style="position: relative; top: 4px; left: 72px; display: block; width: 126px; background: #FFF; z-index: 997;" align="center">
 		<a id="upload_picture" class="upload" style="display:none;">Upload</a><br />
@@ -33,14 +33,14 @@ body { background: #FFF; }
 
 {% block right_col %}
 <div id="image_quote" style="padding: 10px; height: 45px;">
-	<div style="position: relative; top: 18px; left: 25px; color: #CCC;">
+	<div style="position: relative; top: 18px; left: 25px; color: #AAA;" title="Customize this Quote">
 	<i><span id="quote" {% if manage_perm %}contenteditable="true"{% endif %}></span> - <span id="author" {% if manage_perm %}contenteditable="true"{% endif %}></span></i>{% if manage_perm %}<a href="#" id="reset-quote" style="margin-left: 4px;">Reset</a>{% endif %}
 	</div>
 </div>
 
 {% if request.user == profile_user %}
 <div style="position: relative;">
-<form action="." method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -65px; height: 28px; padding: 18px; width: 662px;">
+<form action="{% url profile.views.images profile_user.username %}" method="post" class="upload_form" enctype="multipart/form-data" style="display:none; top: -65px; height: 28px; padding: 18px; width: 662px;">
 	{% csrf_token %}
 	{{ form.image.errors }}
 	<label for="id_photo">Upload</label>

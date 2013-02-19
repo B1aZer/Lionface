@@ -118,16 +118,25 @@ LionFace.Chat.prototype = {
         }
         function load_history() {
             var url = LionFace.User.chat_loadhistory_url;
+            var count  = parseInt($('#online_count').html());
             make_request({ 
                 url:url,
                 multi:true,
                 callback: function(data) {
                         for (name in data) {
                             if (name == 'list_status') {
-                                $('#online_list').show();
-                                $('#chat_id').data('toggled',true);
+                                if (count != 0) {
+                                    $('#online_list').show();
+                                    $('#chat_id').data('toggled',true);
+                                }
                             }
-                            else if (!$('#name_'+name).length) {
+                            else if (name == 'sound_status') {
+                                $('#sound_on_id').hide();
+                                $('#sound_off_id').show();
+                                var sound = document.getElementById('new_mess_audio_wav');
+                                sound.muted = !sound.muted;
+                            }
+                            else if (!$('#name_'+name).length && name != 'list_status' && name != 'sound_status') {
                                 $('#names_chat_container').append(data[name].names);
                                 $('#main_chat_container').append(data[name].messages);
                                 socket.emit('load history', name); 
@@ -202,7 +211,7 @@ LionFace.Chat.prototype = {
                 // removing
                 $('.online_username').each( function (i,e) {
                     var username = $(e).attr('id');
-                    if ($.inArray(username,data.active) >= 0) {
+                    if ($.inArray(username,data.active.usernames) >= 0) {
                     }
                     else {
                         console.log('removing');
@@ -218,8 +227,9 @@ LionFace.Chat.prototype = {
                     }
                 });
                 // adding
-                for (var i = 0; i < data.active.length; i++) {
-                    var username = data.active[i];
+                for (var i = 0; i < data.active.usernames.length; i++) {
+                    var username = data.active.usernames[i];
+                    var name = data.active.names[i];
                     if ($('#online_list').find('#'+username).length) {
                     }
                     else {
@@ -249,6 +259,8 @@ LionFace.Chat.prototype = {
                     if (!$('#name_'+data.username).hasClass('new_chat_message') &&
                         !$('#message_'+data.username).find('.kind_start').length) {
                         $('#name_'+data.username).addClass('new_chat_message');
+                        // play sound
+                        document.getElementById('new_mess_audio_wav').play();
                     }
                     else {
                         $('#name_'+data.username).addClass('tab_opened');
@@ -276,6 +288,8 @@ LionFace.Chat.prototype = {
                     if (!$('#name_'+data.username).hasClass('new_chat_message') && !$('#name_'+data.username).data('toggled')) {
                         $('#name_'+data.username).addClass('new_chat_message');
                     }
+                    // play sound
+                    document.getElementById('new_mess_audio_wav').play();
                 }
                 save_history();
                 // if opened
@@ -335,6 +349,7 @@ LionFace.Chat.prototype = {
                 }
                 $this.val('');
                 $this.height(16);
+                $this.siblings('.message_content').css('max-height','230px');
                 return false;
             }
         });
@@ -463,6 +478,23 @@ LionFace.Chat.prototype = {
             div.fadeOut( function() { $(this).remove(); save_history(); }); 
             $('#message_' + username).remove();
             socket.emit('close chat', username, LionFace.User.username);
+        });
+
+        $(document).on('click', '.sound_ctrl', function(e) {
+            e.stopPropagation();
+            if (!connected) { return; }
+            var $this = $(this);
+            var sound = document.getElementById('new_mess_audio_wav');
+            sound.muted = !sound.muted;
+            $this.hide();
+            if ($this.attr('id') == 'sound_on_id') {
+                $('#sound_off_id').show();
+                socket.emit('sound', LionFace.User.username, 'off'); 
+            }
+            else {
+                $('#sound_on_id').show();
+                socket.emit('sound', LionFace.User.username, 'on'); 
+            }
         });
 
     },

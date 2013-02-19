@@ -168,6 +168,7 @@ INSTALLED_APPS = (
     'ecomm',
     'schools',
     'chat',
+    'photos',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -323,6 +324,9 @@ STRIPE_API_KEY = '5IFFCmgHYrLqVm6ISBhhtq1Va7I80J9J'
 
 APPEND_SLASH = False
 
+COPY_MEDIA_FILETYPES = ('gif', 'jpg', 'jpeg', 'png', 'svg', 'svgz', 'ico', 'swf', 'ttf', 'otf',
+     'eot', 'woff', 'ogg', 'wav', 'mp3')
+
 SITE_ID = 1
 
 # caelery django db queue
@@ -356,7 +360,7 @@ else:
         pass
 
 ABSOLUTE_URL_OVERRIDES = {
-    'auth.user': lambda o: "/%s/" % o.username,
+    'auth.user': lambda o: "/%s" % o.username,
 }
 
 CELERY_QUEUES = {"lionface": {"exchange": "lionface", "binding_key": "lionface"}}

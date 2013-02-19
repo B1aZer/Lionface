@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+<!--or you can extend base.html here-->
+<!--but then you need to populate another block below-->
+{% load media %}
+{% block css %}
+<style>
+body { background: #FFF; }
+</style>
+{% endblock %}
+
+{% block body %}
+{% include '_header.html' %}
+
+{% block content_title %}{% endblock %}
+{% block content_middle %}
+  <div class="content_area">
+    <div id="profile_top">
+	<table width="100%"><tr><td align="left" width="200" style="color: #333; font-size: 14pt;">
+		<div style="position: relative; top: -8px;"><img src="{% media_url 'images/icon_camera.png' %}" border="0" height="14" style="margin-right: 8px;" /> Popular Photos on Lionface</span>
+	</td><td align="left">
+		
+	</td><td align="right" width="200">
+
+	</td></tr></table>
+	</div>
+	</div>
+{% endblock %}
+{% block content_subtitle %}{% endblock %}
+
+  {% block content %}
+
+    <div class="content_area">
+      {% include "images/images.html" %}
+    </div>
+  {% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function() {
+        LionFace.User['images_type'] = 'profile';
+        LionFace.User['images_manage'] = false;
+        LionFace.User['images_total_rows'] = {{ total_rows }};
+        LionFace.User['images_now_rows'] = {{ image_rows|length }};
+        LionFace.User['images_ajax'] = "{% url profile.views.images_ajax profile_user.username %}";
+        LionFace.User['images_comments_ajax'] = "{% url profile.views.images_comments_ajax profile_user.username %}";
+        LionFace.User['images_quote_ajax'] = '{% url profile-images-quote profile_user.username %}';
+        LionFace.User['images_rotation'] = '{% url profile.views.rotate_image profile_user.username %}';
+        LionFace.User['profile_user'] = '{{ profile_user.username }}';
+    });
+</script>
+{% endblock %}
+
+{% endblock %}   

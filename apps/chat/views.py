@@ -58,6 +58,8 @@ def load_history(request):
     """
     if user_chat.chat_list:
         data['list_status'] = True
+    if not user_chat.sound:
+        data['sound_status'] = False
     #friends = user_chat.tabs_to.all()
     friends = ChatHistory.objects.filter(tab_from=user_chat)
     #since = datetime.datetime.now() - datetime.timedelta(minutes=minutes_ago)

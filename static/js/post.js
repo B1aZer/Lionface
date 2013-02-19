@@ -321,6 +321,35 @@ LionFace.PostImages.prototype = {
                 $(this).val('').fadeIn(_this.options.popup_fadeDuration);
             }
         );
+        // toggle image following
+        var follonwings = $(item).data('following');
+        if ($.inArray(LionFace.User.username,follonwings) >= 0) {
+            $popup.find('#add_post_follower').hide();
+            $popup.find('#rem_post_follower').show();
+        }
+        else {
+            $popup.find('#add_post_follower').show();
+            $popup.find('#rem_post_follower').hide();
+        }
+        // toggle lovers
+        var lovers = $(item).data('lovers');
+        if ($.inArray(LionFace.User.username,lovers) >= 0) {
+            $popup.find('#add_post_lovers').hide();
+            $popup.find('#rem_post_lovers').show();
+        }
+        else {
+            $popup.find('#add_post_lovers').show();
+            $popup.find('#rem_post_lovers').hide();
+        }
+        //loves count
+        var love_count = parseInt($(item).data('loves'));
+        if (love_count == 0) {
+            $popup.find('.loves_count').hide();
+        }
+        else {
+            $popup.find('.loves_count').show();
+        }
+        $popup.find('.loves_count').html(love_count);
     },
 
     popup_start: function(item, newsitem) {
@@ -524,6 +553,8 @@ LionFace.PostImages.prototype = {
                 if (data.status == 'ok') {
                     $textarea.val('');
                     _this.popup_comments_refresh($(data.comments).filter('li'));
+                    // follow image
+                    $('#add_post_follower:visible').click();
                 } else {
                     this.error(jqXHR, textStatus);
                 }
@@ -555,6 +586,100 @@ LionFace.PostImages.prototype = {
             success: function(data, textStatus, jqXHR) {
                 if (data.status == 'ok') {
                     _this.popup_comments_refresh($(data.comments).filter('li'));
+                }
+            }
+        });
+    },
+
+    post_lovers: function(e, el) {
+        e.preventDefault();
+        var _this = this;
+        var $this = el;
+        var $ul = $('.image_comments ul');
+        var id = $this.attr('id');
+        var url = $this.attr('href');
+        var post = $(_this.$popup_posts);
+        var item = post.find('li[popup=true]');
+        var followings = item.data('following');
+        var loves_count = parseInt(item.data('loves'));
+        var data = {
+            'user': LionFace.User.username,
+            'imagepk': $ul.data('image-pk')
+            }
+        if (id == 'add_post_lovers') {
+            data['add'] = true;
+        }
+        else {
+            data['add'] = false;
+        }
+        make_request({ 
+            url:url,
+            data:JSON.stringify(data),
+            callback: function (data) {
+                if (data.status == 'OK') {
+                    if (data.rem) {
+                        var index = followings.indexOf(LionFace.User.username);
+                        followings.splice(index, 1);
+                        loves_count = loves_count - 1;
+                        $('.loves_count').html(loves_count);
+                        if (loves_count == 0) {
+                            $('.loves_count').hide();
+                        }
+                        $('#rem_post_lovers').hide();
+                        $('#add_post_lovers').show();
+                    }
+                    else {
+                        followings.push(LionFace.User.username);
+                        loves_count = loves_count + 1;
+                        $('.loves_count').html(loves_count);
+                        $('#rem_post_lovers').show();
+                        $('#add_post_lovers').hide();
+                        $('.loves_count').show();
+                    }
+                    item.data('lovers',followings)
+                    item.data('loves',loves_count)
+                }
+            }
+        });
+    },
+
+    post_followers: function(e, el) {
+        e.preventDefault();
+        var _this = this;
+        var $this = el;
+        var $ul = $('.image_comments ul');
+        var id = $this.attr('id');
+        var url = $this.attr('href');
+        var post = $(_this.$popup_posts);
+        var item = post.find('li[popup=true]');
+        var followings = item.data('following');
+        var data = {
+            'user': LionFace.User.username,
+            'imagepk': $ul.data('image-pk')
+            }
+        if (id == 'add_post_follower') {
+            data['add'] = true;
+        }
+        else {
+            data['add'] = false;
+        }
+        make_request({ 
+            url:url,
+            data:JSON.stringify(data),
+            callback: function (data) {
+                if (data.status == 'OK') {
+                    if (data.rem) {
+                        var index = followings.indexOf(LionFace.User.username);
+                        followings.splice(index, 1);
+                        $('#rem_post_follower').hide();
+                        $('#add_post_follower').show();
+                    }
+                    else {
+                        followings.push(LionFace.User.username);
+                        $('#add_post_follower').hide();
+                        $('#rem_post_follower').show();
+                    }
+                    item.data('following',followings)
                 }
             }
         });
@@ -631,6 +756,12 @@ LionFace.PostImages.prototype = {
         });
         $popup.find('.image_zone_view .rotate-right').click(function(event) {
             _this.rotate_image_right();
+        });
+        $popup.find('.post_followers').click(function(e) {
+            _this.post_followers(e, $(this));
+        });
+        $popup.find('.post_lovers').click(function(e) {
+            _this.post_lovers(e, $(this));
         });
         this.popup_comments_bind_make_comment();
     }

@@ -165,18 +165,26 @@ $(document).ready(function() {
                         {% endif %}
                         {% endblock %}
                         
-                        {% if show_cover_form %}
+</div>
+</div>
 
+
+    {% if show_cover_form %}
     {% if profile_user|check_profile_bio:request.user %}
 
-    <div class="user_info" id="user_info" {% if not profile_user.get_birth_date and not profile_user.get_relation_type and not profile_user.get_website and profile_user != request.user %} style="display:none" {% endif %}>
+	<div class="user_info_open" id="user_info_open" onClick="ShowContent('user_info'); ShowContent('user_info_close'); HideContent('user_info_open'); return false;" {% if not profile_user.get_birth_date and not profile_user.get_relation_type and not profile_user.get_website and profile_user != request.user %} style="display: none" {% endif %} title="Show Information">i</div>
+
+	<div class="user_info_open" id="user_info_close" onClick="ShowContent('user_info_open'); HideContent('user_info'); HideContent('user_info_close'); return false;" title="Hide Information" style="display: none;">i</div>
+
+    <div class="user_info" id="user_info" {% if not profile_user.get_birth_date and not profile_user.get_relation_type and not profile_user.get_website and profile_user != request.user %} style="display: none" {% else %} style="display: none;" {% endif %}>
 
 <table width="900" height="100%"><tr><td width="33%" style="padding-left: 8px;">
 
+<div class="trans">
     {% if profile_user == request.user %}
     <a id="show_birth_select" href="#" class="bio_title" style="padding-right: 4px;">Birthday</a>
     {% elif profile_user.get_birth_date %}
-    <span style="font-weight: bold; padding-right: 4px;">Birthday</span>
+    <span style="padding-right: 4px; color: #777; font-size: 9pt;">Birthday</span>
     {% else %}
     {% endif %}
 
@@ -186,7 +194,9 @@ $(document).ready(function() {
         <span id="birth_year_id">{{ profile_user.get_birth_date|date:"Y" }}</span>
     </span>
 
-<div class="profile_edit" id="left_birth" style="width: 40%; left: 30%; top: 100px; height: 80px;">
+</div>
+
+<div class="profile_edit" id="left_birth" style="width: 40%; left: 30%; top: -100px; height: 80px;">
 <table width="100%" height="100%"><tr><td align="center">
     <div>
 <table><tr><td>
@@ -197,8 +207,9 @@ $(document).ready(function() {
     <select class="birth_select birth_year_select" style="display:none"></select>
 </td></tr></table>
     <div class="sublink"><a id="save_birth_date" class="birth_select" href="{% url profile.views.save_birth_date username=profile_user.username %}" style="display:none" >Save</a>
+    <a id="remove_birth_date" class="birth_select" href="{% url profile.views.remove_birth_date username=profile_user.username %}" style="display:none">Clear</a>
     <a id="cancel_birth_date" class="birth_select" href="#" style="display:none" >Cancel</a>
-    <a id="remove_birth_date" class="birth_select" href="{% url profile.views.remove_birth_date username=profile_user.username %}" style="display:none" >Remove</a></div>
+</div>
     </div>
 </td></tr></table>
 </div>
@@ -210,30 +221,30 @@ $(document).ready(function() {
 
 </td><td width="33" align="right" style="padding-right: 16px;">
 
+<div class="trans">
     {% if profile_user == request.user %}
     <a id="show_url_input" href="#" class="bio_title" style="padding-right: 4px;">Website</a>
     {% elif profile_user.get_website %}
-    <span style="font-weight: bold; padding-right: 4px;">Website</span>
+    <span style="padding-right: 4px; color: #777; font-size: 9pt;">Website</span>
     {% else %}
     {% endif %}
-    
 
-<div class="profile_edit" id="left_web" style="width: 40%; left: 30%; top: 100px; height: 80px;">
+    <span id="url_container">{{ profile_user.get_website|safe }}</span>
+</div>
+
+</td></tr></table>
+
+<div class="profile_edit" id="left_web" style="width: 40%; left: 30%; top: -100px; height: 80px;">
 <table width="100%" height="100%"><tr><td align="center">
     <input id="url_input" class="bio_website" type="text" style="display:none; width: 165px;"></input>
     <div class="url_errors" style="display:none">URL must contain http://</div><br />
     <div class="sublink"><a id="save_url_input" class="bio_website" href="{% url profile.views.save_url_field username=profile_user.username %}" style="display:none">Save</a>
+    <a id="remove_url_input" class="bio_website" href="{% url profile.views.remove_url_field username=profile_user.username %}" style="display:none">Clear</a>
     <a id="cancel_url_input" class="bio_website" href="#" style="display:none">Cancel</a>
-    <a id="remove_url_input" class="bio_website" href="{% url profile.views.remove_url_field username=profile_user.username %}" style="display:none">Remove</a></div>
+</div>
 </td></tr></table>
 </div>
-
-    <span id="url_container">{{ profile_user.get_website|safe }}</span>
-
-</td></tr></table>
 
 </div>
 {% endif %}
 {% endif %}
-</div>
-</div>
