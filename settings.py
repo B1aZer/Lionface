@@ -360,7 +360,7 @@ else:
         pass
 
 ABSOLUTE_URL_OVERRIDES = {
-    'auth.user': lambda o: "/%s/" % o.username,
+    'auth.user': lambda o: "/%s" % o.username,
 }
 
 CELERY_QUEUES = {"lionface": {"exchange": "lionface", "binding_key": "lionface"}}

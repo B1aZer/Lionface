@@ -80,12 +80,10 @@ function hide_add_link() {
 }
 
 function toggle_comments() {
-    $('.comment_counter').each( function(i,e) {
-        if (get_int($(e).html()) > 0) {
+    $('.toggle_comments').each( function(i,e) {
             //$(e).parents('.toggle_comments').click();
             $(e).parents('.result').find('.comments').show();
-            $(e).parents('.result').find('.toggle_comments').data('toggled',true);
-        }
+            $(e).data('toggled',true);
     });
 }
 
