@@ -241,15 +241,17 @@ LionFace.Site.prototype = {
                 var $outElem = $this.closest('.link-output');
                 var $ohtml = $outElem.html();
                 $outElem.html('<div class="link_loader"></div>');
-                $.ajax('/account/friend/accept/' + data.request + '/',{
+                make_request({
+                    url:'/account/friend/accept/' + data.request + '/',
+                    multi: true,
                     type: 'GET',
-                    success: function(data) {
+                    callback: function(data) {
                         $outElem.html($ohtml);
                         if(data.status == 'OK') {
                             $outElem.html('Friend request accepted.');
                         }
                     },
-                    error: function() {
+                    errorback: function() {
                         $outElem.html($ohtml);
                     }
                 });
