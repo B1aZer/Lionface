@@ -162,7 +162,7 @@ data-url="{% url pages.views.images page.username %}">
   </div>
     {% endblock %}
     {% block page_micro %}
-  <div class="pages_nav_area" id="pages_nav_page">
+  <div class="pages_nav_area" id="pages_nav_page" style="text-align: center;">
     	<a href="#" id="updates" class="page_btn business_btn business_on">Updates</a>
         <a href="#" id="comunnity" class="page_btn business_btn {% if request.user not in page.get_lovers_active %} grayed_out {% endif %} ">Community 
             {% if page.get_community_requests_count_new and request.user|check_pages_community:page %}

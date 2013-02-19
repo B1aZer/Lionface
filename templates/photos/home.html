@@ -2,6 +2,11 @@
 <!--or you can extend base.html here-->
 <!--but then you need to populate another block below-->
 {% load media %}
+{% block css %}
+<style>
+body { background: #FFF; }
+</style>
+{% endblock %}
 
 {% block body %}
 {% include '_header.html' %}
@@ -10,8 +15,8 @@
 {% block content_middle %}
   <div class="content_area">
     <div id="profile_top">
-	<table width="100%"><tr><td align="left" width="200" style="color: #999;">
-		Popular Photos on Lionface
+	<table width="100%"><tr><td align="left" width="200" style="color: #333; font-size: 14pt;">
+		<div style="position: relative; top: -8px;"><img src="{% media_url 'images/icon_camera.png' %}" border="0" height="14" style="margin-right: 8px;" /> Popular Photos on Lionface</span>
 	</td><td align="left">
 		
 	</td><td align="right" width="200">

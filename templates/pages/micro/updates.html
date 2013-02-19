@@ -1,12 +1,11 @@
 {% load media format_results %}
-{% include 'pages/micro/_friends.html' %}
 <script>
     $('.postbox_textarea').autosize();
     $('.pending_images').sortable();
 </script> 
 
-<div class="page_center">
-    <div style="padding: 15px;">
+<div class="page_center" style="width: 878px; left: 0px;">
+    <div style="padding: 15px; width: 598px; position: relative; left:125px;">
 
         {% if request.user in page.get_admins and request.user|check_pages_updates:page %}
 
