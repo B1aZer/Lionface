@@ -95,6 +95,7 @@ NONPROFIT_CATEGORY = (
     ('People with Disabilities', 'People with Disabilities'),
     ('Poverty Relief', 'Poverty Relief'),
     ('Refugee/Immigrant Support', 'Refugee/Immigrant Support'),
+    ('Religious', 'Religious'),
     ('Science/Technology', 'Science/Technology'),
     ('Social Justice', 'Social Justice'),
 )

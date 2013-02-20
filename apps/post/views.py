@@ -32,6 +32,9 @@ from itertools import chain
 from .utils import list_tags
 
 from django.db import connection
+from django.db.models import Q, F
+
+from timeit import Timer
 
 
 try:
@@ -39,6 +42,61 @@ try:
 except ImportError:
     import simplejson as json
 
+def remove_page_posts(items):
+    to_return = []
+    for item in items:
+        #if isinstance(item.post.get_inherited(), PagePost):
+        try:
+            item.post.pagepost
+        except PagePost.DoesNotExist:
+            to_return.append(item.post)
+    return to_return
+
+def remove_to_other(items):
+    to_return = []
+    for item in items:
+        try:
+            item.post.contentpost
+            if item.post.user != item.post.user_to:
+                pass
+            else:
+                to_return.append(item.post)
+        except ContentPost.DoesNotExist:
+            #if isinstance(item.post.get_inherited(), ContentPost):
+            to_return.append(item.post)
+    return to_return
+
+def get_public_posts(items, user):
+    def get_privacy(post):
+        original = post.post.get_inherited()
+        # special inherition for friend connection's posts
+        if original._meta.verbose_name == 'friend post':
+            owner = post.user
+            if owner.check_option('friend_list', 'Public'):
+                return 'P'
+            elif owner.check_option('friend_list', 'Just Me'):
+                return 'X'
+            else:
+                return 'F'
+        return original.privacy()
+    to_return = [x
+                        for x in items
+                        if get_privacy(x) == 'P' or
+                        (get_privacy(x) == 'F' and x.get_owner().has_friend(user)) or
+                        (get_privacy(x) == 'F' and x.get_owner() == user) or
+                        get_privacy(x) == '']
+    # get_privacy will make 2 requests to db
+    # we dont need to chack every post, if have only 2 users in get_privacy
+    return to_return
+
+def remove_similar(items):
+    to_return = []
+    dupls = []
+    for item in items:
+        if item['post__id'] not in to_return:
+            to_return.append(item['post__id'])
+            dupls.append(item['id'])
+    return dupls
 
 def feed(request, user_id=None):
     data = {}
@@ -53,14 +111,40 @@ def feed(request, user_id=None):
         user_id = request.user.id
         filters = request.user.filters.split(',')
         items = request.user.get_messages() \
-            .remove_page_posts() \
+        .filter_blocked(user=request.user)
+        """
             .remove_similar() \
+            .remove_page_posts() \
             .remove_to_other() \
-            .filter_blocked(user=request.user) \
             .get_public_posts(request.user)
+        """
+        #.remove_similar()
+        items = items.filter(id__in=remove_similar(items.values('id','post__id')))
+        #items = remove_page_posts(items)
+        items = items.filter(post__pagepost=None)
+        #items = remove_to_other(items)
+        items = items.filter(Q(~Q(post__contentpost=None),post__user=F('post__user_to'))| Q(post__contentpost=None))
+        #.get_public_posts(request.user)
+        if 'W' in filters:
+            remove_ids = [u.id for u in request.user.get_following_active()
+                    if u.check_option('friend_list', 'Just Me')
+                    or (u.check_option('friend_list', "Friend's Friends") and not request.user.has_friends_friend(u))
+                    or (u.check_option('friend_list', "Friends") and not request.user.has_friend(u))]
+            # removing freind posts
+            items = items.exclude(~Q(post__friendpost=None), user__id__in=remove_ids)
+            # removing content posts
+            items = items.exclude(~Q(post__contentpost=None), post__contentpost__type='F', user__id__in=remove_ids)
+            # removing share posts
+            items_to_check = items.filter(~Q(post__sharepost=None), user__id__in=remove_ids).select_related()
+            if items_to_check:
+                rem_ids = [x.id for x in items_to_check if x.post.get_inherited().get_privacy() == 'F']
+                items = items.exclude(id__in=rem_ids)
+
+
         tags = request.user.user_tag_set.all()
         if tags:
             tags = [x.name.upper() for x in tags if x.active]
+        if tags:
             tagged_posts = Post.objects.all()
             try:
                 tagged_posts = [x
@@ -129,8 +213,10 @@ def feed(request, user_id=None):
     if page_next == 1:
         page_next = 0
 
+    # TODO OPTIMIZE
     # do not count friend posts in pagination
-    friend_posts = [p for p in items[page_next:page_next + max_count] if p.get_type() == 'friend post']
+    this_items = items[page_next:page_next + max_count]
+    friend_posts = [p for p in this_items if p.get_type() == 'friend post']
     fp_count = len(friend_posts)
     this_count = max_count+fp_count
     next_count = page_next + this_count
@@ -168,6 +254,7 @@ def feed(request, user_id=None):
         else:
             page = 1
     """
+    # OPTIMIZE DEBUG
     """
     f = open('queries.sql', 'w')
     for l in connection.queries:
