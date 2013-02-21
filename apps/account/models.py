@@ -661,8 +661,10 @@ class UserProfile(User):
             roles.append('A')
         if self.membership_set.filter(page=page, type='EM', is_confirmed=True).count():
             roles.append('E')
+        if self.membership_set.filter(page=page, type='MM', is_confirmed=True).count():
+            roles.append('M')
         if self.membership_set.filter(page=page, type='VL', is_confirmed=True).count():
-            roles.append('E')
+            roles.append('V')
         if self.membership_set.filter(page=page, type='IN', is_confirmed=True).count():
             roles.append('I')
         return roles

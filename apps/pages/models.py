@@ -18,7 +18,9 @@ import logging
 import cPickle
 
 from images.fields import ImageWithThumbField
+from django.db.models import Q, F
 
+import operator
 
 REQUEST_TYPE = (
         ('ER','Event Request'),
@@ -55,6 +57,7 @@ TOPIC_PRIVACY_SET = (
 TOPIC_MEMBERS_SET = (
         ('A','Admins'),
         ('E','Employees'),
+        ('M','Members'),
         ('I','Interns'),
         ('V','Volunteers'),
 )
@@ -584,12 +587,17 @@ class Pages(models.Model):
         priv_topics = sorted(priv_topics, key=sort_by_both_values, reverse = True)
         return priv_topics
 
-    def get_popular_topics(self):
+    def get_popular_topics(self, user=None):
         # owned topics
-        topics = self.topics_set.all()
+        argument_list = [Q(**{'privacy__icontains':'P'} )]
+        if user:
+            roles = user.get_user_roles_for(self)
+            for role in roles:
+                argument_list.append( Q(**{'members__icontains':role} ) )
+        topics = self.topics_set.filter(reduce(operator.or_, argument_list))
         def popular_sort(topic):
-            # (1 point per view) + 
-            # total posts (1 point) + 
+            # (1 point per view) +
+            # total posts (1 point) +
             # total comments (.5 point)
             value = 0
             value = value + topic.get_views_count()

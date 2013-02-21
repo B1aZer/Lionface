@@ -123,7 +123,7 @@ def color_tags(text):
     #regex2 = re.compile('(?<!\)(?:\A|\s)#\b[0-9]+\b')
     #import pdb;pdb.set_trace()
     #if not regex2.match(text):
-    text = re.sub(r'(?<!\.(jpg|png|gif)"\))(?<!\.jpeg"\))(\A|\s|<br />|<p>)(#([a-zA-Z0-9_]{2,}))', replace_ment , text)
+    text = re.sub(r'(?<!\.(jpg|png|gif|JPG|PNG|GIF)"\))(?<!\.jpeg"\))(\A|\s|<br />|<p>)(#([a-zA-Z0-9_]{2,}))', replace_ment , text)
     return text
 
 
@@ -605,3 +605,7 @@ def image_get_lovers(image):
     lovers =  image.users_loved.all()
     lovers = [u.username for u in lovers]
     return json.dumps(lovers)
+
+@register.filter
+def get_popular_topics(page, user):
+    return page.get_popular_topics(user)
