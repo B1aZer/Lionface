@@ -61,6 +61,8 @@ def notifications(request):
 
 def add_followings(request):
     data = {'status':'FAIL'}
+    if not request.is_ajax():
+        raise Http404
     request_post = json.loads(request.raw_post_data)
     username = request_post.get('user')
     imagepk = request_post.get('imagepk')
