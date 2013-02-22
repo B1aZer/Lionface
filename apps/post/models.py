@@ -6,6 +6,8 @@ from pages.models import Pages, Topics
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
+from django.contrib.comments.signals import comment_was_posted
+
 from django.db.models.signals import post_save, post_delete
 from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
@@ -877,6 +879,14 @@ def add_user_to_following_discussion(sender, instance, created, **kwargs):
         if instance.user not in instance.topic.following.all():
             instance.topic.following.add(instance.user)
 post_save.connect(add_user_to_following_discussion, sender=DiscussPost)
+
+def add_user_to_following_discussion_by_comment(sender, comment, request, **kwargs):
+    if comment.content_object:
+        post = comment.content_object.get_inherited()
+        if isinstance(post, DiscussPost):
+            if comment.user not in post.topic.following.all():
+                post.topic.following.add(comment.user)
+comment_was_posted.connect(add_user_to_following_discussion_by_comment)
 
 def update_news_feeds(sender, instance, created, **kwargs):
     if created:
