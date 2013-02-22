@@ -1,0 +1,116 @@
+# DEVELOPER DMITRY BRANITSKIY
+# blaze.imba@gmail.com
+
+#smileys
+#administration
+
+Actually, a lot of messages aren't going through. It seems kind of random.
+
+* The predefined AWS RDS settings for MySQL max. connections are:
+
+*    Small Instance: 150 connections  (1.7GB of RAM)
+*    Large instance: 640 connections  (7.5GB of RAM)
+
+[2/11/13 9:49:25 PM] Nick: And would it be a quick fix to make http://youtu.be/OOpkr8uNWpk style links embed? People keep using them, to their disappointment.
+
+Discussions template you made (with the link on the News Feed) and change that to Photos (with the url lionface.org/photos) and show the most 100 Loved photos from all public user posts, and all Page updates from the previous 7 days. It should follow the same ul/li template as the profile pictures for users.
+
+• The scrolling issue returned: if I open the popup div when I post, before reload, and close it, scroll is disabled for the page.
+
+• If it's quick, I'd really like to add "Just Me" option to /my/ profile postbox, so then I can keep a private diary (the love, comment, share, settings, privacy and follow links should be hidden, only showing the delete option and the timestamp). I also want to add "Just [Friend's FirstName]" to friend's postbox, so that just me, and just that single friend, can see the post (sublinks should be available as normal, except for share (be sure to gray out share in post settings).
+
+Would it also be quick to get rid of the account/signup/ appendage to the URL for this page, so it always just says lionface.org/
+
+redis on dev is taking too much CPU # or no ?
+
+Alex sent me a message today. 
+He said he was trying to contact you for a while now, but with no luck.
+
+#for page posts we take PagePost objects not Newsfeed
+#these posts are adding to feed but not deleting from it
+
+###later###
+deleting sharing origin wont delete children
+wrong privacy on deleted (newsfeed)
+notifiaction flashing is wrong on page load
+###
+users case insensative ?
+prevent new posts (not right ly)
+notf nullify (wrong on messages)
+###
+friends did not see own posts after unfrending.
+###temp
+visiblity for mess(?) is wrong for user = self
+
+
+###USEFUL###
+from pages.models import Pages
+for page in Pages.objects.all():
+    page.user.set_option('pages_loves__%s' % page.id,True)
+
+CELERYD AND CELERYBEAT (do not forget to run them)
+
+gunicorn --worker-class socketio.sgunico.GeventSocketIOWorker wsgi:app
+
+./rds-modify-db-parameter-group mydbparametergroup1 --parameters="name=general_log, value=0, method=immediate"
+
+./rds-describe-db-instances mydb
+
+1Lion8face.
+mysql -h mydb.c9iodczmwien.us-east-1.rds.amazonaws.com -P 3306 -u root -p
+
+mysqldump -P 3306 -h mydb.c9iodczmwien.us-east-1.rds.amazonaws.com -u root -p mydb > backup.sql
+
+mysql -u root mydb < backup.sql
+
+scp -i admin.pem ubuntu@54.235.222.88:/var/www/whispering-anchorage-2296/uploads/images/* ~/Sites/clients/Nick/lionface/uploads/images/
+
+
+#production
+1. genrate media
+2.5 python manage migrate
+2. restart celery (sudo service celeryd restart)
+3. restart server
+4. restart nginx (sudo service nginx restart)
+celery aint running on boot
+
+### OPTIMIZATION ###
+1014 q ~= 5-7s
+len(connection.queries)
+
+.get_messages = 0.246222019196 /126
+.filter_blocked(user=request.user) / 128
+.page_posts = 2.86551403999 / 1349
+.remove_similar = 0.29073882103 / 227
+.remove_to_other = 3.12102103233  / 1441
+.get_public_posts(request.user) / 583
+===========================================
+.get_messages / 901 N
+===========================================
+ request.user.get_messages() \ .filter_blocked(user=request.user) \ .remove_similar()  / 215  /399 Nick
+
+ ==========================================
+ items = remove_page_posts(items)     / 301 - 215 = 86
+        items = remove_to_other(items) / 466 - 301 = 165
+        items = get_public_posts(items, request.user) / 741 - 466 = 275 /3208 Nick
+ ==========================================
+ .remove_page_posts() \
+            .remove_to_other() \
+            .get_public_posts(request.user) / 1077 /3974 Nick
+
+ ==========================================
+            items = items.filter(post__pagepost=None)  /399
+            items = remove_page_posts(items) / 873
+ ==========================================
+            ~Q(post__contentpost=None) = content posts
+
+ContentType.objects.get_for_model(ContentPost).id
+36L
+ContentType.objects.get_for_model(SharePost).id
+37L
+ContentType.objects.get_for_model(Post).id
+30L
+ContentType.objects.get_for_model(FriendPost).id
+31L
+ContentType.objects.get_for_model(FeedbackPost).id
+32L
