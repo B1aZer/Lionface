@@ -5,6 +5,8 @@ settings_local.py
 *.bc
 *.zip
 *.swp
+*.sql
+*.gz
 logging.log.*
 celerybeat-schedule.db
 celerybeat.pid
