@@ -2046,7 +2046,7 @@ a.send_message:hover {
 }
 
 #header .left_links {
-  float: left; position: relative; left: 1px; top: -10px;
+  float: left; position: relative; left: 1px; top: -5px; line-height: 20px;
 }
 #header .left_links ul { list-style: none; padding: 0px; margin: 0px; }
 #header .left_links ul li { padding: 0px; margin: 0px; display: inline-block; }
@@ -2082,17 +2082,17 @@ a.send_message:hover {
 
 .header_profile_image div {
 	display: inline-block;
-	-moz-background-size: 34px 34px !important;
-	-moz-background-size: 34px 34px !important;
-	background-size: 34px 34px;
+	-moz-background-size: 26px 26px !important;
+	-moz-background-size: 26px 26px !important;
+	background-size: 26px 26px;
 	background-repeat: no-repeat;
 	background-position: center center;
-	width: 34px; height: 34px;
-	position: relative; left: -4px; top: 12px;
+	width: 26px; height: 26px;
+	position: relative; left: -4px; top: 8px;
 	background: #DDD;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	border: 1px solid #AAA;
+	border: 1px solid #222;
 }
 
 a.header_profile_image:hover {

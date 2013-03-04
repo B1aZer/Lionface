@@ -5,11 +5,12 @@
   <div class="content_area">
     <div class="left_links">
       <ul>
-        <li><a href="{% url profile.views.profile username=request.user.username %}" style="font-size: 12pt;" class="header_profile_image">
-			<div class="images_profile_thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF; background-size: 34px 34px;"></div>
+		<li><a href="{% url profile.views.feed username=request.user.username %}"><img src="{% media_url 'images/logo300.png' %}" height="25" style="position: relative; top: 6px; border: 0px;" border="0" /></a></li>
+        <li><a href="{% url profile.views.profile username=request.user.username %}" class="header_profile_image" title="View your Profile">
+			<div class="images_profile_thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #FFF; background-size: 26px 26px;"></div>
 			 {{ request.user.first_name }}</a></li>
         <li><a href="{% url profile.views.feed username=request.user.username %}">News Feed</a></li>
-        <li><a href="{% url pages.views.main %}">Pages</a></li>
+        <li><a href="{% url pages.views.nonprofit %}">Pages</a></li>
 		<li>
 			<a href="{% url profile.views.settings request.user.username %}" class="settings">Account</a>
 			</li>
@@ -21,9 +22,7 @@
     <div id="search_bar">
         <input name="models" type="hidden" value="account.userprofile">
         <input id="search_input" name="q" type="text">
-        
         <input type="submit" value="Search" />
-		
     </div>
     	</form>
   </div>

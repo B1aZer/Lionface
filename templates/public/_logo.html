@@ -1,10 +1,12 @@
 {% load media %}
 
 				<table height="100" id="top"><tr><td>
-				<a href="{% url account.views.login %}" class="home_link"><img src="{% media_url 'images/logo300.png' %}" border="0" height="98" /></a>
+				<div style="position: relative; top: 4px;">
+				<a href="{% url account.views.login %}" class="home_link"><img src="{% media_url 'images/logo300.png' %}" border="0" height="78" /></a>
+				</div>
 				</td><td style="padding-left: 17px;">
 					<div style="position: relative; top: 4px;">
-						<a href="{% url account.views.login %}" class="home_link">Lionface</a><br /><span style="font-size: 8pt; color: #EEE;">The Next Generation in Social Networking</span>
+						<a href="{% url account.views.login %}" class="home_link">L<span style="color: #FB1">i</span>onface<span style="font-size: 11pt; letter-spacing: 1.25pt; color: #EEE; font-family: Tahoma; margin-left: 2px;">.org</span></a><br /><span style="font-size: 9pt; color: #EEE; font-family: Tahoma;">Connecting People on the Path to World Peace</span>
 				</td><td>
            					 {% if request.path != '/' and request.path != '/account/login/' and request.path != '/account/signup/' %}
                 		<a href="{% url account.views.login %}" style="margin-left: 17pt; display: none;">Register</a>

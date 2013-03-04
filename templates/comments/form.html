@@ -27,7 +27,7 @@ $(document).ready(function(){
     <div>
 		<table width="100%" style="position: relative; top: -10px;"><tr>
 		<td align="right" style="position: relative;">
-		<div class="comment_form_thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #F7F7F7; -webkit-background-size: 35px 35px; -moz-background-size: 35px 35px; background-size: 35px 35px;background-position: bottom left; background-repeat: no-repeat;"></div>
+		<a href="{% url profile.views.profile username=request.user.username %}"<div class="comment_form_thumb" style="background: url('/{{ request.user.photo.thumb_name }}') #F7F7F7; -webkit-background-size: 35px 35px; -moz-background-size: 35px 35px; background-size: 35px 35px;background-position: bottom left; background-repeat: no-repeat;"></div></a>
         <textarea class="text_comment" id="id_comment" cols="40" name="comment" style="width: 360px !important; min-height: 40px !important; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #DDD;"></textarea> 
 		</td><td width="75" valign="top">
 			<div style="position: relative; left: 8px; top: 4px; cursor: pointer; font-size: 8pt; width: 70px !important; display: none;">

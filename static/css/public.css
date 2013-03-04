@@ -4,6 +4,7 @@
 	height: 100px;
 	background: #333;
 	margin: 0 0 0px 0;
+	border-bottom: 1px solid #E7E7E7;
 }
 
 blockquote {
@@ -51,7 +52,7 @@ a.reset:hover {
 #center_box { 
 	height: 525px;
 	width: 950px;	
-	background: url(../images/bg.jpg);
+	background: url(../images/bg.png);
 	background-position: center bottom;
 	background-repeat: no-repeat;
 	-webkit-background-size: 950px auto;
@@ -214,7 +215,7 @@ a.reset:hover {
 }
 
 a.home_link:link, a.home_link:active, a.home_link:visited {
-	border: 0px none; color: #FFF; text-decoration: none; font-size: 26pt; font-weight: bold; letter-spacing: 1.5pt;
+	border: 0px none; color: #FFF; text-decoration: none; font-size: 26pt; font-family: Tahoma;
 }
 a.home_link:hover {
 
