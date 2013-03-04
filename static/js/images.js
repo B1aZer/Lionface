@@ -539,9 +539,10 @@ LionFace.Images.prototype = {
             $popup.find('.loves_count').show();
         }
         $popup.find('.loves_count').html(love_count);
-        // owner name
+        // owner name and thumb
         var name = $(item).data('owner_name');
         var username = $(item).data('owner_username');
+        var thumb = $(item).data('owner_thumb');
         var owner = $('.image_popup .owner');
 
         if (name) {
@@ -549,6 +550,9 @@ LionFace.Images.prototype = {
         }
         if (username) {
             owner.find('.username').html(username);
+        }
+        if (thumb) {
+            owner.find('.thumb').css('background-image', 'url(' + thumb + ')');
         }
 
     },

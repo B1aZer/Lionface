@@ -1,6 +1,6 @@
 {% load format_results %}
 {% for row in rows %}
-<li class="album_shadow" data-position="{{ row.rating }}" data-pk="{{ row.pk }}" data-following='{{ row|image_get_followings }}' data-lovers='{{ row|image_get_lovers }}' data-loves='{{ row.get_loves }}' data-owner_name='{{ row.get_owner.get_full_name }}' data-owner_username='{{ row.get_owner.username }}'>
+<li class="album_shadow" data-position="{{ row.rating }}" data-pk="{{ row.pk }}" data-following='{{ row|image_get_followings }}' data-lovers='{{ row|image_get_lovers }}' data-loves='{{ row.get_loves }}' {% if page %} data-owner_name='{{ page.name }}' data-owner_username='{{ page.category }}' data-owner_thumb='{{ page.get_thumb }}' {% else %} {% endif %} data-owner_name='{{ row.get_owner.get_full_name }}' data-owner_username='{{ row.get_owner.username }}' data-owner_thumb='{{ row.get_owner.get_thumb }}'>
     <div style="background: url('/{{ row.image.thumb_name }}') #FFF;" data-original-url="/{{ row.image.name }}"  class="image_album">
     </div>
         {% if manage_perm %}
